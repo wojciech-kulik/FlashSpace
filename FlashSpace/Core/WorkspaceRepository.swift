@@ -9,9 +9,17 @@ import Foundation
 
 final class WorkspaceRepository {
     private(set) var workspaces: [Workspace] = []
+    private let dataUrl = FileManager.default.urls(
+        for: .libraryDirectory,
+        in: .userDomainMask
+    )[0].appendingPathComponent("Containers/pl.wojciechkulik.FlashSpace/Data/workspaces.json")
+
+    private let encoder = JSONEncoder()
+    private let decoder = JSONDecoder()
 
     init() {
         loadFromDisk()
+        print(dataUrl)
     }
 
     func addWorkspace(name: String) {
@@ -53,33 +61,14 @@ final class WorkspaceRepository {
     }
 
     private func saveToDisk() {
-        let encoder = JSONEncoder()
-
         guard let data = try? encoder.encode(workspaces) else { return }
 
-        let url = FileManager.default.urls(
-            for: .documentDirectory,
-            in: .userDomainMask
-        ).first?.appendingPathComponent("workspaces.json")
-
-        guard let url else { return }
-
-        try? data.write(to: url)
+        try? data.write(to: dataUrl)
     }
 
     private func loadFromDisk() {
-        let decoder = JSONDecoder()
-
-        let url = FileManager.default.urls(
-            for: .documentDirectory,
-            in: .userDomainMask
-        ).first?.appendingPathComponent("workspaces.json")
-
-        guard let url else { return }
-        guard FileManager.default.fileExists(atPath: url.path) else { return }
-        guard let data = try? Data(contentsOf: url) else { return }
-
-        print(url)
+        guard FileManager.default.fileExists(atPath: dataUrl.path) else { return }
+        guard let data = try? Data(contentsOf: dataUrl) else { return }
 
         workspaces = (try? decoder.decode([Workspace].self, from: data)) ?? []
     }
