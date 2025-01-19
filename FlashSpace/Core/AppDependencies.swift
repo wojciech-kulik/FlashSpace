@@ -16,5 +16,7 @@ struct AppDependencies {
     let hotKeysMonitor: HotKeysMonitorProtocol = GlobalShortcutMonitor.shared
     let hotKeysManager = HotKeysManager(hotKeysMonitor: GlobalShortcutMonitor.shared)
 
+    let autostartService = AutostartService()
+
     private init() {}
 }

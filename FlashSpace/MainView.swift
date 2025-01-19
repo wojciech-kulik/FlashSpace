@@ -97,7 +97,7 @@ struct MainView: View {
             .disabled(viewModel.selectedWorkspace == nil)
             Spacer()
 
-            Toggle("Launch at startup", isOn: .constant(false))
+            Toggle("Launch at startup", isOn: $viewModel.isAutostartEnabled)
                 .frame(maxWidth: .infinity, alignment: .trailing)
         }
     }
