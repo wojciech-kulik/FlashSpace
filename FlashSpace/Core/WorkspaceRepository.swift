@@ -26,6 +26,13 @@ final class WorkspaceRepository {
         saveToDisk()
     }
 
+    func updateWorkspace(_ workspace: Workspace) {
+        guard let workspaceIndex = workspaces.firstIndex(where: { $0.id == workspace.id }) else { return }
+
+        workspaces[workspaceIndex] = workspace
+        saveToDisk()
+    }
+
     func deleteWorkspace(id: WorkspaceID) {
         workspaces.removeAll { $0.id == id }
         saveToDisk()

@@ -88,9 +88,8 @@ struct MainView: View {
                 .padding(.bottom)
                 .disabled(viewModel.selectedWorkspace == nil)
 
-            Button("Save") {
-                viewModel.selectedWorkspace = nil
-            }.disabled(viewModel.selectedWorkspace == nil)
+            Button("Save", action: viewModel.updateWorkspace)
+                .disabled(viewModel.selectedWorkspace == nil)
 
             Spacer()
 

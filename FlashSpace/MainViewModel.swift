@@ -71,6 +71,22 @@ extension MainViewModel {
         self.selectedWorkspace = nil
     }
 
+    func updateWorkspace() {
+        guard let selectedWorkspace else { return }
+
+        let updatedWorkspace = Workspace(
+            id: selectedWorkspace.id,
+            name: workspaceName,
+            display: workspaceDisplay,
+            shortcut: workspaceShortcut,
+            apps: selectedWorkspace.apps
+        )
+
+        workspaceRepository.updateWorkspace(updatedWorkspace)
+        workspaces = workspaceRepository.workspaces
+        self.selectedWorkspace = workspaces.first { $0.id == selectedWorkspace.id }
+    }
+
     func addApp() {
         guard let selectedWorkspace else { return }
 
