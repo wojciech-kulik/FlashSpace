@@ -19,6 +19,13 @@ struct MainView: View {
         }
         .padding()
         .fixedSize()
+        .sheet(isPresented: $viewModel.isInputDialogPresented) {
+            InputDialog(
+                title: "Enter workspace name:",
+                userInput: $viewModel.userInput,
+                isPresented: $viewModel.isInputDialogPresented
+            )
+        }
     }
 
     private var workspaces: some View {
@@ -35,8 +42,9 @@ struct MainView: View {
             .frame(width: 200, height: 400)
 
             HStack {
-                Button("Add") {}
-                Button("Delete") {}.disabled(viewModel.selectedWorkspace == nil)
+                Button("Add", action: viewModel.addWorkspace)
+                Button("Delete", action: viewModel.deleteWorkspace)
+                    .disabled(viewModel.selectedWorkspace == nil)
             }
         }
     }
@@ -55,8 +63,10 @@ struct MainView: View {
             .frame(width: 200, height: 400)
 
             HStack {
-                Button("Add") {}.disabled(viewModel.selectedWorkspace == nil)
-                Button("Delete") {}.disabled(viewModel.selectedApp == nil)
+                Button("Add", action: viewModel.addApp)
+                    .disabled(viewModel.selectedWorkspace == nil)
+                Button("Delete", action: viewModel.deleteApp)
+                    .disabled(viewModel.selectedApp == nil)
             }
         }
     }
@@ -84,7 +94,7 @@ struct MainView: View {
 
             Spacer()
 
-            Toggle("Launch at startup", isOn: .constant(true))
+            Toggle("Launch at startup", isOn: .constant(false))
                 .frame(maxWidth: .infinity, alignment: .trailing)
         }
     }

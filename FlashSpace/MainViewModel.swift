@@ -6,6 +6,7 @@
 //
 
 import AppKit
+import Combine
 import ShortcutRecorder
 import SwiftUI
 
@@ -25,13 +26,82 @@ final class MainViewModel: ObservableObject {
         }
     }
 
+    @Published var isInputDialogPresented = false
+    @Published var userInput = ""
+
+    private var cancellables: Set<AnyCancellable> = []
+
     private let workspaceManager = WorkspaceManager()
+    private let workspaceRepository = AppDependencies.shared.workspaceRepository
+
+    init() {
+        self.workspaces = workspaceRepository.workspaces
+    }
 
     private func updateSelectedWorkspace() {
         workspaceName = selectedWorkspace?.name ?? ""
         workspaceShortcut = selectedWorkspace?.shortcut
         workspaceDisplay = selectedWorkspace?.display ?? ""
         workspaceApps = selectedWorkspace?.apps
+    }
+}
+
+extension MainViewModel {
+    func addWorkspace() {
+        userInput = ""
+        isInputDialogPresented = true
+
+        $isInputDialogPresented
+            .first { !$0 }
+            .sink { [weak self] _ in
+                guard let self, !self.userInput.isEmpty else { return }
+
+                self.workspaceRepository.addWorkspace(name: self.userInput)
+                self.workspaces = self.workspaceRepository.workspaces
+                self.selectedWorkspace = self.workspaces.last
+            }
+            .store(in: &cancellables)
+    }
+
+    func deleteWorkspace() {
+        guard let selectedWorkspace else { return }
+
+        workspaceRepository.deleteWorkspace(id: selectedWorkspace.id)
+        workspaces = workspaceRepository.workspaces
+        self.selectedWorkspace = nil
+    }
+
+    func addApp() {
+        guard let selectedWorkspace else { return }
+
+        let fileChooser = FileChooser()
+        let appUrl = fileChooser.runModalOpenPanel(
+            allowedFileTypes: [.application],
+            directoryURL: URL(filePath: "/Applications")
+        )
+
+        guard let appUrl else { return }
+
+        workspaceRepository.addApp(
+            to: selectedWorkspace.id,
+            app: appUrl.lastPathComponent.replacingOccurrences(of: ".app", with: "")
+        )
+
+        workspaces = workspaceRepository.workspaces
+        self.selectedWorkspace = workspaces.first { $0.id == selectedWorkspace.id }
+    }
+
+    func deleteApp() {
+        guard let selectedWorkspace, let selectedApp else { return }
+
+        workspaceRepository.deleteApp(
+            from: selectedWorkspace.id,
+            app: selectedApp
+        )
+
+        workspaces = workspaceRepository.workspaces
+        self.selectedApp = nil
+        self.selectedWorkspace = workspaces.first { $0.id == selectedWorkspace.id }
     }
 }
 

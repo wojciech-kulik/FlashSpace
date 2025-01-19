@@ -11,8 +11,8 @@ typealias WorkspaceID = UUID
 
 struct Workspace: Identifiable, Codable, Hashable {
     let id: WorkspaceID
-    let name: String
-    let display: String
-    let shortcut: HotKeyShortcut
-    let apps: [String]
+    var name: String
+    var display: String
+    var shortcut: HotKeyShortcut?
+    var apps: [String]
 }
