@@ -13,7 +13,6 @@
 		3ACB59EE25A1239F4348AE27 /* Workspace.swift in Sources */ = {isa = PBXBuildFile; fileRef = C57751E3F8DD122D98ED8D06 /* Workspace.swift */; };
 		452BEC518A2B8A22B6FB7EA7 /* HotKeysManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 023F66384918C89558995EC6 /* HotKeysManager.swift */; };
 		4D19E30B5D2B6CACF42FE5E7 /* WorkspaceRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F937D2CBFA74640A70D5236 /* WorkspaceRepository.swift */; };
-		62C845AEFBDC302E33368014 /* Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5470797B291F900C78C8126D /* Global.swift */; };
 		736FB1E0859ACC9321BD2863 /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70138FD5AE794EE94F006CC1 /* MainViewModel.swift */; };
 		81CADED6E04777ADA49C2257 /* HotKeysMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9DED2837DB55CC0C1B7F5BA /* HotKeysMonitor.swift */; };
 		A56B6FA68C5C688C5BAD2682 /* Shortcut.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F8D90F8EE33FFC0DB1A2DC7 /* Shortcut.swift */; };
@@ -28,7 +27,6 @@
 		023F66384918C89558995EC6 /* HotKeysManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HotKeysManager.swift; sourceTree = "<group>"; };
 		16999A052D3D97770006EA91 /* FlashSpace.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlashSpace.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		36E4723ECEA5C6DD2BDA559F /* FileChooser.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FileChooser.swift; sourceTree = "<group>"; };
-		5470797B291F900C78C8126D /* Global.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Global.swift; sourceTree = "<group>"; };
 		5F8D90F8EE33FFC0DB1A2DC7 /* Shortcut.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Shortcut.swift; sourceTree = "<group>"; };
 		70138FD5AE794EE94F006CC1 /* MainViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
 		8808B0E6B40949F55A001A63 /* CGRect.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CGRect.swift; sourceTree = "<group>"; };
@@ -117,7 +115,6 @@
 			children = (
 				B9DED2837DB55CC0C1B7F5BA /* HotKeysMonitor.swift */,
 				023F66384918C89558995EC6 /* HotKeysManager.swift */,
-				5470797B291F900C78C8126D /* Global.swift */,
 				36E4723ECEA5C6DD2BDA559F /* FileChooser.swift */,
 			);
 			name = Utils;
@@ -223,7 +220,6 @@
 				25750D5FABBBF407779F2274 /* HotKeyControl.swift in Sources */,
 				81CADED6E04777ADA49C2257 /* HotKeysMonitor.swift in Sources */,
 				452BEC518A2B8A22B6FB7EA7 /* HotKeysManager.swift in Sources */,
-				62C845AEFBDC302E33368014 /* Global.swift in Sources */,
 				4D19E30B5D2B6CACF42FE5E7 /* WorkspaceRepository.swift in Sources */,
 				D34527E759926A9F18A2FAB9 /* AppDependencies.swift in Sources */,
 				F5B4F8D82EBC8712EE792F81 /* FileChooser.swift in Sources */,

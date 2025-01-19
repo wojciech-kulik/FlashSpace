@@ -16,6 +16,12 @@ struct HotKeyShortcut: Codable, Hashable {
 final class HotKeysManager {
     private var registeredHotKeys: [WorkspaceID: HotKeyShortcut] = [:]
 
+    private let hotKeysMonitor: HotKeysMonitorProtocol
+
+    init(hotKeysMonitor: HotKeysMonitorProtocol) {
+        self.hotKeysMonitor = hotKeysMonitor
+    }
+
     func register(workspaces: [Workspace]) {
         for workspace in workspaces {
             registeredHotKeys[workspace.id] = workspace.shortcut

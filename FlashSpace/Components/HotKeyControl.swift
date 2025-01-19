@@ -28,6 +28,8 @@ struct HotKeyControl: NSViewRepresentable {
     final class Coordinator: NSObject, RecorderControlDelegate {
         var parent: HotKeyControl
 
+        private let hotKeysManager = AppDependencies.shared.hotKeysManager
+
         init(parent: HotKeyControl) {
             self.parent = parent
         }

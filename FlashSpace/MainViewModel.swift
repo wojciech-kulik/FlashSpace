@@ -31,7 +31,7 @@ final class MainViewModel: ObservableObject {
 
     private var cancellables: Set<AnyCancellable> = []
 
-    private let workspaceManager = WorkspaceManager()
+    private let workspaceManager = AppDependencies.shared.workspaceManager
     private let workspaceRepository = AppDependencies.shared.workspaceRepository
 
     init() {
