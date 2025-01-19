@@ -73,24 +73,21 @@ struct MainView: View {
 
     private var workspaceSettings: some View {
         VStack(alignment: .leading, spacing: 0.0) {
-            Text("Workspace Configuration:")
-                .padding(.bottom, 16.0)
-                .fixedSize()
+            VStack(alignment: .leading, spacing: 0.0) {
+                Text("Workspace Configuration:")
+                    .padding(.bottom, 16.0)
+                    .fixedSize()
 
-            Text("Name:")
-            TextField("Name", text: $viewModel.workspaceName)
-                .padding(.bottom)
-            Text("Display:")
-            TextField("Display", text: $viewModel.workspaceDisplay)
-                .padding(.bottom)
-            Text("Shortcut:")
-            HotKeyControl(workspace: viewModel.selectedWorkspace)
-                .padding(.bottom)
-                .disabled(viewModel.selectedWorkspace == nil)
-
-            Button("Save", action: viewModel.updateWorkspace)
-                .disabled(viewModel.selectedWorkspace == nil)
-
+                Text("Name:")
+                TextField("Name", text: $viewModel.workspaceName).padding(.bottom)
+                Text("Display:")
+                TextField("Display", text: $viewModel.workspaceDisplay).padding(.bottom)
+                Text("Shortcut:")
+                HotKeyControl(shortcut: $viewModel.workspaceShortcut).padding(.bottom)
+                Button("Save", action: viewModel.updateWorkspace)
+                    .disabled(viewModel.isSaveButtonDisabled)
+            }
+            .disabled(viewModel.selectedWorkspace == nil)
             Spacer()
 
             Toggle("Launch at startup", isOn: .constant(false))

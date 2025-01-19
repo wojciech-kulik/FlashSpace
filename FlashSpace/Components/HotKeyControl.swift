@@ -10,20 +10,28 @@ import ShortcutRecorder
 import SwiftUI
 
 struct HotKeyControl: NSViewRepresentable {
-    // @Binding var shortcut: Shortcut
-    let workspace: Workspace?
+    @Binding var shortcut: HotKeyShortcut?
 
     func makeNSView(context: Context) -> RecorderControl {
         let control = RecorderControl(frame: .zero)
         control.delegate = context.coordinator
+        control.objectValue = shortcut.flatMap(shortcut(for:))
+
         return control
     }
 
     func updateNSView(_ nsView: RecorderControl, context: Context) {
         context.coordinator.parent = self
+        nsView.objectValue = shortcut.flatMap(shortcut(for:))
     }
 
     func makeCoordinator() -> Coordinator { Coordinator(parent: self) }
+
+    private func shortcut(for hotKey: HotKeyShortcut) -> Shortcut? {
+        guard let keyCode = KeyCode(rawValue: hotKey.keyCode) else { return nil }
+
+        return Shortcut(code: keyCode, modifierFlags: NSEvent.ModifierFlags(rawValue: hotKey.modifiers))
+    }
 
     final class Coordinator: NSObject, RecorderControlDelegate {
         var parent: HotKeyControl
@@ -39,19 +47,15 @@ struct HotKeyControl: NSViewRepresentable {
         }
 
         func recorderControl(_ aControl: RecorderControl, canRecord aShortcut: Shortcut) -> Bool {
-            parent.workspace != nil
+            true
         }
 
         func recorderControlDidEndRecording(_ aControl: RecorderControl) {
-            guard let workspace = parent.workspace,
-                  let shortcut = aControl.objectValue else { return }
+            guard let shortcut = aControl.objectValue else { return }
 
-            hotKeysManager.update(
-                workspaceId: workspace.id,
-                shortcut: .init(
-                    keyCode: shortcut.keyCode.rawValue,
-                    modifiers: shortcut.modifierFlags.rawValue
-                )
+            parent.shortcut = .init(
+                keyCode: shortcut.keyCode.rawValue,
+                modifiers: shortcut.modifierFlags.rawValue
             )
             hotKeysManager.enableAll()
         }

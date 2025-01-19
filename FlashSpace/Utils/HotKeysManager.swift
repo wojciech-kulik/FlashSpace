@@ -30,6 +30,7 @@ final class HotKeysManager {
 
     func update(workspaceId: WorkspaceID, shortcut: HotKeyShortcut) {
         registeredHotKeys[workspaceId] = shortcut
+        print("Updated shortcut for workspace: \(workspaceId)")
     }
 
     func enableAll() {
@@ -39,16 +40,23 @@ final class HotKeysManager {
                 continue
             }
 
-            let action = ShortcutAction(shortcut: shortcut) { [weak self] _ in
-                true
+            let action = ShortcutAction(shortcut: shortcut) { _ in
+                let workspaces = AppDependencies.shared.workspaceRepository.workspaces
+                guard let workspace = workspaces.first(where: { $0.id == workspaceID }) else { return false }
+
+                AppDependencies.shared.workspaceManager.activateWorkspace(workspace)
+                return true
             }
 
             hotKeysMonitor.addAction(action, forKeyEvent: .down)
         }
+
+        print("Enabled all shortcuts")
     }
 
     func disableAll() {
         hotKeysMonitor.removeAllActions()
+        print("Disabled all shortcuts")
     }
 
     private func shortcut(for hotKey: HotKeyShortcut) -> Shortcut? {

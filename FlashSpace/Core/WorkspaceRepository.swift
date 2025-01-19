@@ -79,6 +79,8 @@ final class WorkspaceRepository {
         guard FileManager.default.fileExists(atPath: url.path) else { return }
         guard let data = try? Data(contentsOf: url) else { return }
 
+        print(url)
+
         workspaces = (try? decoder.decode([Workspace].self, from: data)) ?? []
     }
 }

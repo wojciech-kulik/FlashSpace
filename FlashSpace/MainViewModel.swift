@@ -12,14 +12,17 @@ import SwiftUI
 
 final class MainViewModel: ObservableObject {
     @Published var workspaces: [Workspace] = []
+    @Published var workspaceApps: [String]?
+
     @Published var workspaceName = ""
     @Published var workspaceShortcut: HotKeyShortcut?
     @Published var workspaceDisplay = ""
-    @Published var workspaceApps: [String]?
 
     @Published var selectedApp: String?
     @Published var selectedWorkspace: Workspace? {
         didSet {
+            guard selectedWorkspace?.id != oldValue?.id else { return }
+
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 self.updateSelectedWorkspace()
             }
@@ -29,13 +32,25 @@ final class MainViewModel: ObservableObject {
     @Published var isInputDialogPresented = false
     @Published var userInput = ""
 
+    var isSaveButtonDisabled: Bool {
+        guard let selectedWorkspace else { return true }
+        guard !workspaceName.isEmpty, !workspaceDisplay.isEmpty else { return true }
+
+        return selectedWorkspace.name == workspaceName &&
+            selectedWorkspace.display == workspaceDisplay &&
+            selectedWorkspace.shortcut == workspaceShortcut
+    }
+
     private var cancellables: Set<AnyCancellable> = []
 
     private let workspaceManager = AppDependencies.shared.workspaceManager
     private let workspaceRepository = AppDependencies.shared.workspaceRepository
+    private let hotKeysManager = AppDependencies.shared.hotKeysManager
 
     init() {
         self.workspaces = workspaceRepository.workspaces
+        hotKeysManager.register(workspaces: workspaces)
+        hotKeysManager.enableAll()
     }
 
     private func updateSelectedWorkspace() {
@@ -81,6 +96,10 @@ extension MainViewModel {
             shortcut: workspaceShortcut,
             apps: selectedWorkspace.apps
         )
+
+        if let workspaceShortcut {
+            hotKeysManager.update(workspaceId: selectedWorkspace.id, shortcut: workspaceShortcut)
+        }
 
         workspaceRepository.updateWorkspace(updatedWorkspace)
         workspaces = workspaceRepository.workspaces

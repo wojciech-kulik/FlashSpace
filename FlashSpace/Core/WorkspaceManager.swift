@@ -13,7 +13,7 @@ final class WorkspaceManager {
         _ = AXIsProcessTrustedWithOptions(options)
     }
 
-    func showWorkspace(_ workspace: Workspace) {
+    func activateWorkspace(_ workspace: Workspace) {
         print("\n\nWORKSPACE: \(workspace.name)")
         print("----")
 
