@@ -1,0 +1,15 @@
+{
+  "originHash" : "0e384404867419f3da3da59ee70e4fe8e55017cf6e9a247995b86fe7358fdde7",
+  "pins" : [
+    {
+      "identity" : "shortcutrecorder",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Kentzo/ShortcutRecorder",
+      "state" : {
+        "revision" : "c86ce0f9be5353ba998966121c7631602a9a36f7",
+        "version" : "3.4.0"
+      }
+    }
+  ],
+  "version" : 3
+}

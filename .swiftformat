@@ -1,0 +1,34 @@
+--swiftversion 5.7.1
+
+# indent
+--indent 4
+--maxwidth 130
+--ifdef no-indent
+
+# wrap
+--allman false
+--wraparguments before-first
+--wrapparameters before-first
+--wrapcollections before-first
+--wrapreturntype preserve
+--wrapternary before-operators
+--nowrapoperators .,??,=,->
+
+# numbers
+--decimalgrouping ignore
+
+# separators
+--ranges no-space
+--commas inline
+
+# other
+--stripunusedargs closure-only
+--voidtype tuple
+--self init-only
+--selfrequired expectation,wait
+--patternlet inline
+
+--disable wrapMultilineStatementBraces, blankLinesAroundMark
+
+--exclude Pods, Scripts, Generated
+
