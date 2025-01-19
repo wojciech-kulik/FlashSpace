@@ -5,6 +5,7 @@
 //  Copyright © 2025 Wojciech Kulik. All rights reserved.
 //
 
+import AppKit
 import Foundation
 
 final class WorkspaceRepository {
@@ -18,6 +19,7 @@ final class WorkspaceRepository {
     private let decoder = JSONDecoder()
 
     init() {
+        encoder.outputFormatting = .prettyPrinted
         loadFromDisk()
         print(dataUrl)
     }
@@ -26,7 +28,7 @@ final class WorkspaceRepository {
         let workspace = Workspace(
             id: .init(),
             name: name,
-            display: "",
+            display: NSScreen.main?.localizedName ?? "",
             shortcut: nil,
             apps: []
         )

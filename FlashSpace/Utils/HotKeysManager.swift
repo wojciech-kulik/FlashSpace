@@ -30,6 +30,8 @@ final class HotKeysManager {
 
     func update(workspaceId: WorkspaceID, shortcut: HotKeyShortcut) {
         registeredHotKeys[workspaceId] = shortcut
+        disableAll()
+        enableAll()
         print("Updated shortcut for workspace: \(workspaceId)")
     }
 

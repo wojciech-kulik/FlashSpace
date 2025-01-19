@@ -32,6 +32,14 @@ final class MainViewModel: ObservableObject {
     @Published var isInputDialogPresented = false
     @Published var userInput = ""
 
+    var screens: [String] {
+        let set = Set<String>(NSScreen.screens.compactMap(\.localizedName))
+        let otherScreens = workspaces.map(\.display)
+        return Array(set.union(otherScreens))
+            .filter { !$0.isEmpty }
+            .sorted()
+    }
+
     var isSaveButtonDisabled: Bool {
         guard let selectedWorkspace else { return true }
         guard !workspaceName.isEmpty, !workspaceDisplay.isEmpty else { return true }
@@ -49,6 +57,7 @@ final class MainViewModel: ObservableObject {
 
     init() {
         self.workspaces = workspaceRepository.workspaces
+
         hotKeysManager.register(workspaces: workspaces)
         hotKeysManager.enableAll()
     }

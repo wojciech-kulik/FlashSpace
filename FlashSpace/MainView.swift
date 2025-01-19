@@ -73,17 +73,24 @@ struct MainView: View {
 
     private var workspaceSettings: some View {
         VStack(alignment: .leading, spacing: 0.0) {
-            VStack(alignment: .leading, spacing: 0.0) {
+            VStack(alignment: .leading, spacing: 1.0) {
                 Text("Workspace Configuration:")
                     .padding(.bottom, 16.0)
                     .fixedSize()
 
                 Text("Name:")
                 TextField("Name", text: $viewModel.workspaceName).padding(.bottom)
-                Text("Display:")
-                TextField("Display", text: $viewModel.workspaceDisplay).padding(.bottom)
+
+                Picker("Display:", selection: $viewModel.workspaceDisplay) {
+                    ForEach(viewModel.screens, id: \.self) {
+                        Text($0).tag($0)
+                    }
+                }
+                .padding(.bottom)
+
                 Text("Shortcut:")
                 HotKeyControl(shortcut: $viewModel.workspaceShortcut).padding(.bottom)
+
                 Button("Save", action: viewModel.updateWorkspace)
                     .disabled(viewModel.isSaveButtonDisabled)
             }
