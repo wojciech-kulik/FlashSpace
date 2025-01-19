@@ -9,19 +9,27 @@
 /* Begin PBXBuildFile section */
 		08406D87E8AE70A10C694762 /* WorkspaceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99435101C2716BDC6A29E276 /* WorkspaceManager.swift */; };
 		16999A192D3D978E0006EA91 /* ShortcutRecorder in Frameworks */ = {isa = PBXBuildFile; productRef = 16999A182D3D978E0006EA91 /* ShortcutRecorder */; };
+		25750D5FABBBF407779F2274 /* HotKeyControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97BED2C7A17B2EF8E64279EA /* HotKeyControl.swift */; };
 		3ACB59EE25A1239F4348AE27 /* Workspace.swift in Sources */ = {isa = PBXBuildFile; fileRef = C57751E3F8DD122D98ED8D06 /* Workspace.swift */; };
+		452BEC518A2B8A22B6FB7EA7 /* HotKeysManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 023F66384918C89558995EC6 /* HotKeysManager.swift */; };
+		62C845AEFBDC302E33368014 /* Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5470797B291F900C78C8126D /* Global.swift */; };
 		736FB1E0859ACC9321BD2863 /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70138FD5AE794EE94F006CC1 /* MainViewModel.swift */; };
+		81CADED6E04777ADA49C2257 /* HotKeysMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9DED2837DB55CC0C1B7F5BA /* HotKeysMonitor.swift */; };
 		A56B6FA68C5C688C5BAD2682 /* Shortcut.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F8D90F8EE33FFC0DB1A2DC7 /* Shortcut.swift */; };
 		BE02D61152666F82BA9C68D1 /* CGRect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8808B0E6B40949F55A001A63 /* CGRect.swift */; };
 		CA65DED962CD106A86C389C2 /* NSRunningApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2E1D011156B9FFF828F2E9 /* NSRunningApplication.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		023F66384918C89558995EC6 /* HotKeysManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HotKeysManager.swift; sourceTree = "<group>"; };
 		16999A052D3D97770006EA91 /* FlashSpace.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlashSpace.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		5470797B291F900C78C8126D /* Global.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Global.swift; sourceTree = "<group>"; };
 		5F8D90F8EE33FFC0DB1A2DC7 /* Shortcut.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Shortcut.swift; sourceTree = "<group>"; };
 		70138FD5AE794EE94F006CC1 /* MainViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
 		8808B0E6B40949F55A001A63 /* CGRect.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CGRect.swift; sourceTree = "<group>"; };
+		97BED2C7A17B2EF8E64279EA /* HotKeyControl.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HotKeyControl.swift; sourceTree = "<group>"; };
 		99435101C2716BDC6A29E276 /* WorkspaceManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WorkspaceManager.swift; sourceTree = "<group>"; };
+		B9DED2837DB55CC0C1B7F5BA /* HotKeysMonitor.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HotKeysMonitor.swift; sourceTree = "<group>"; };
 		C57751E3F8DD122D98ED8D06 /* Workspace.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Workspace.swift; sourceTree = "<group>"; };
 		CE2E1D011156B9FFF828F2E9 /* NSRunningApplication.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NSRunningApplication.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -29,6 +37,8 @@
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		16999A072D3D97770006EA91 /* FlashSpace */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = FlashSpace;
 			sourceTree = "<group>";
 		};
@@ -82,12 +92,34 @@
 			path = Core;
 			sourceTree = "<group>";
 		};
+		CBCDE0143450792BABF27B6D /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				97BED2C7A17B2EF8E64279EA /* HotKeyControl.swift */,
+			);
+			name = Components;
+			path = Components;
+			sourceTree = "<group>";
+		};
+		E6341F230CBEF01667454D82 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				B9DED2837DB55CC0C1B7F5BA /* HotKeysMonitor.swift */,
+				023F66384918C89558995EC6 /* HotKeysManager.swift */,
+				5470797B291F900C78C8126D /* Global.swift */,
+			);
+			name = Utils;
+			path = Utils;
+			sourceTree = "<group>";
+		};
 		F28C601DC1BA19FB5E1C6170 /* FlashSpace */ = {
 			isa = PBXGroup;
 			children = (
 				9E33511F751690653F748F15 /* Core */,
 				7EB1F594BBFF6E61CC9CE973 /* Extensions */,
 				70138FD5AE794EE94F006CC1 /* MainViewModel.swift */,
+				CBCDE0143450792BABF27B6D /* Components */,
+				E6341F230CBEF01667454D82 /* Utils */,
 			);
 			path = FlashSpace;
 			sourceTree = "<group>";
@@ -176,6 +208,10 @@
 				BE02D61152666F82BA9C68D1 /* CGRect.swift in Sources */,
 				736FB1E0859ACC9321BD2863 /* MainViewModel.swift in Sources */,
 				A56B6FA68C5C688C5BAD2682 /* Shortcut.swift in Sources */,
+				25750D5FABBBF407779F2274 /* HotKeyControl.swift in Sources */,
+				81CADED6E04777ADA49C2257 /* HotKeysMonitor.swift in Sources */,
+				452BEC518A2B8A22B6FB7EA7 /* HotKeysManager.swift in Sources */,
+				62C845AEFBDC302E33368014 /* Global.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

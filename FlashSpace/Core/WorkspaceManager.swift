@@ -8,6 +8,11 @@
 import AppKit
 
 final class WorkspaceManager {
+    init() {
+        let options: NSDictionary = [kAXTrustedCheckOptionPrompt.takeRetainedValue() as NSString: true]
+        _ = AXIsProcessTrustedWithOptions(options)
+    }
+
     func showWorkspace(_ workspace: Workspace) {
         print("\n\nWORKSPACE: \(workspace.name)")
         print("----")

@@ -7,10 +7,12 @@
 
 import Foundation
 
+typealias WorkspaceID = UUID
+
 struct Workspace: Identifiable, Codable, Hashable {
-    let id: UUID
+    let id: WorkspaceID
     let name: String
     let display: String
-    let shortcut: String
+    let shortcut: HotKeyShortcut
     let apps: [String]
 }
