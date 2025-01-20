@@ -158,9 +158,13 @@ extension MainViewModel {
 
         guard let appUrl else { return }
 
+        let appName = appUrl.lastPathComponent.replacingOccurrences(of: ".app", with: "")
+
+        guard !selectedWorkspace.apps.contains(appName) else { return }
+
         workspaceRepository.addApp(
             to: selectedWorkspace.id,
-            app: appUrl.lastPathComponent.replacingOccurrences(of: ".app", with: "")
+            app: appName
         )
 
         workspaces = workspaceRepository.workspaces
