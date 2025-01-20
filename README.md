@@ -13,6 +13,13 @@ between them using hotkeys.
 
 https://github.com/user-attachments/assets/af5951ce-8386-48d5-918e-914474d2c2b8
 
+## ✨ Features
+
+- [x] Blazingly fast workspace switching
+- [x] Multiple displays support
+- [x] Global hotkeys
+- [x] Focusing an assigned app triggers workspace activation
+
 ## ⚙️ Installation
 
 It's not yet ready for distribution, but you can try it out if you're feeling adventurous!
@@ -21,11 +28,11 @@ You need to run the app from Xcode.
 
 ## 👉 How it works
 
-FlashSpace allows you to define virtual workspaces and assign apps to them. Each workspace is
+FlashSpace allows to define virtual workspaces and assign apps to them. Each workspace is
 also assigned to a specific display. When you switch to a workspace, the assigned apps are
 automatically presented and all other apps from the assigned display are hidden.
 
-The app allows to switch workspaces on each display independently.
+The app allows switching workspaces on each display independently.
 
 ## 💬 How to use
 
@@ -35,7 +42,7 @@ The app allows to switch workspaces on each display independently.
 1. Define a hotkey to switch to the workspace.
 1. Save the workspace.
 
-Now you can switch to the workspace using the hotkey you defined.
+Now you can switch to the workspace using the configured hotkey.
 
 ## 📝 Notes
 
