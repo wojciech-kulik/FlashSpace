@@ -30,6 +30,26 @@ The app allows to switch workspaces on each display independently.
 
 Now you can switch to the workspace using the hotkey you defined.
 
+## Notes
+
+### Workspaces
+
+FlashSpace doesn't manage windows, so if you switch to a workspace and call
+another app that is not assigned to the workspace, it will be shown on top of
+the workspace apps.
+
+I consider this as a desired behavior, because it allows you quickly access other
+apps without glitches or switching between workspaces.
+
+This is a common issue with tiling window managers that they often cause glitches
+when a small pop-up window is shown or some unexpected app is opened.
+
+If you want to hide the new app, you can simply use the hotkey again.
+
+### Focus
+
+The last app on the list will be focused when switching to the workspace.
+
 ## Limitations
 
 The app is still in early development and has some limitations:
