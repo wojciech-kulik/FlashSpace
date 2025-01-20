@@ -26,7 +26,9 @@ final class MainViewModel: ObservableObject {
         didSet {
             guard selectedWorkspace?.id != oldValue?.id else { return }
 
+            updatingWorkspace = true
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                self.updatingWorkspace = false
                 self.updateSelectedWorkspace()
             }
         }
@@ -56,7 +58,7 @@ final class MainViewModel: ObservableObject {
     }
 
     var isSaveButtonDisabled: Bool {
-        guard let selectedWorkspace else { return true }
+        guard let selectedWorkspace, !updatingWorkspace else { return true }
         guard !workspaceName.isEmpty, !workspaceDisplay.isEmpty else { return true }
 
         return selectedWorkspace.name == workspaceName &&
@@ -65,6 +67,7 @@ final class MainViewModel: ObservableObject {
     }
 
     private var cancellables: Set<AnyCancellable> = []
+    private var updatingWorkspace = false
 
     private let workspaceManager = AppDependencies.shared.workspaceManager
     private let workspaceRepository = AppDependencies.shared.workspaceRepository
@@ -93,8 +96,9 @@ final class MainViewModel: ObservableObject {
     private func updateSelectedWorkspace() {
         workspaceName = selectedWorkspace?.name ?? ""
         workspaceShortcut = selectedWorkspace?.shortcut
-        workspaceDisplay = selectedWorkspace?.display ?? ""
+        workspaceDisplay = selectedWorkspace?.display ?? NSScreen.main?.localizedName ?? ""
         workspaceApps = selectedWorkspace?.apps
+        selectedApp = nil
     }
 }
 
@@ -175,9 +179,4 @@ extension MainViewModel {
         self.selectedApp = nil
         self.selectedWorkspace = workspaces.first { $0.id == selectedWorkspace.id }
     }
-}
-
-extension String {
-    static let builtInDisplay = "Built-in Retina Display"
-    static let dellDisplay = "DELL U2723QE"
 }
