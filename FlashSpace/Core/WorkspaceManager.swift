@@ -34,9 +34,10 @@ final class WorkspaceManager {
 
         for app in appsToShow {
             app.unhide()
-            focusApp(app)
             print("SHOW: \(app.localizedName ?? "")")
         }
+
+        appsToShow.first.flatMap(focusApp)
     }
 
     private func focusApp(_ app: NSRunningApplication) {

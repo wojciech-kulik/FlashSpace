@@ -11,6 +11,9 @@ import ShortcutRecorder
 import SwiftUI
 
 final class MainViewModel: ObservableObject {
+    @Environment(\.openWindow) private var openWindow
+    @Environment(\.dismissWindow) var dismissWindow
+
     @Published var workspaces: [Workspace] = []
     @Published var workspaceApps: [String]?
 
@@ -74,6 +77,17 @@ final class MainViewModel: ObservableObject {
 
         hotKeysManager.register(workspaces: workspaces)
         hotKeysManager.enableAll()
+
+        if UserDefaults.standard.object(forKey: "afterFirstLaunch") == nil {
+            UserDefaults.standard.set(true, forKey: "afterFirstLaunch")
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                NSApp.activate(ignoringOtherApps: true)
+            }
+        } else {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                self.dismissWindow(id: "main")
+            }
+        }
     }
 
     private func updateSelectedWorkspace() {
