@@ -58,7 +58,7 @@ final class WorkspaceManager {
             return
         }
 
-        guard let windows = windowList as? [AXUIElement], let mainWindow = windows.first else {
+        guard let windows = windowList as? [AXUIElement], let mainWindow = windows.last else {
             print("No windows found for the application.")
             return
         }
