@@ -6,13 +6,13 @@ FlashSpace is a blazingly fast virtual workspace manager for macOS.
 
 🚧 This project is still under development 🚧
 
-## Installation
+## ⚙️ Installation
 
 It's not yet ready for distribution, but you can try it out if you're feeling adventurous!
 
 You need to run the app from Xcode.
 
-## How it works
+## 👉 How it works
 
 FlashSpace allows you to define virtual workspaces and assign apps to them. Each workspace is
 also assigned to a specific display. When you switch to a workspace, the assigned apps are
@@ -20,7 +20,7 @@ automatically presented and all other apps from the assigned display are hidden.
 
 The app allows to switch workspaces on each display independently.
 
-## How to use
+## 💬 How to use
 
 1. Create a workspace.
 1. Assign apps to the workspace.
@@ -30,7 +30,7 @@ The app allows to switch workspaces on each display independently.
 
 Now you can switch to the workspace using the hotkey you defined.
 
-## Notes
+## 📝 Notes
 
 ### Workspaces
 
@@ -50,7 +50,7 @@ If you want to hide the new app, you can simply use the hotkey again.
 
 The last app on the list will be focused when switching to the workspace.
 
-## Limitations
+## 🚧 Limitations
 
 The app is still in early development and has some limitations:
 
