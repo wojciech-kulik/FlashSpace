@@ -6,25 +6,38 @@
 //
 
 import AppKit
+import Combine
 
 final class WorkspaceManager {
+    private var cancellables = Set<AnyCancellable>()
+    private let hideAgainSubject = PassthroughSubject<Workspace, Never>()
+
     init() {
+        // Ask for accessibility permissions
         let options: NSDictionary = [kAXTrustedCheckOptionPrompt.takeRetainedValue() as NSString: true]
         _ = AXIsProcessTrustedWithOptions(options)
+
+        hideAgainSubject
+            .debounce(for: 0.2, scheduler: RunLoop.main)
+            .sink { [weak self] in self?.hideApps(in: $0) }
+            .store(in: &cancellables)
     }
 
     func activateWorkspace(_ workspace: Workspace) {
         print("\n\nWORKSPACE: \(workspace.name)")
         print("----")
 
+        showApps(in: workspace)
+        hideApps(in: workspace)
+
+        // Some apps may not hide properly,
+        // so we hide apps in the workspace after a short delay
+        hideAgainSubject.send(workspace)
+    }
+
+    private func showApps(in workspace: Workspace) {
         let regularApps = NSWorkspace.shared.runningApplications
             .filter { $0.activationPolicy == .regular }
-
-        let hasMoreScreens = NSScreen.screens.count > 1
-        let appsToHide = regularApps
-            .filter { !workspace.apps.contains($0.localizedName ?? "") && !$0.isHidden }
-            .filter { !hasMoreScreens || $0.getFrame()?.getDisplay() == workspace.display }
-
         let appsToShow = regularApps
             .filter { workspace.apps.contains($0.localizedName ?? "") }
 
@@ -36,6 +49,15 @@ final class WorkspaceManager {
         appsToShow
             .first { $0.localizedName == workspace.apps.last }
             .flatMap(focusApp)
+    }
+
+    private func hideApps(in workspace: Workspace) {
+        let regularApps = NSWorkspace.shared.runningApplications
+            .filter { $0.activationPolicy == .regular }
+        let hasMoreScreens = NSScreen.screens.count > 1
+        let appsToHide = regularApps
+            .filter { !workspace.apps.contains($0.localizedName ?? "") && !$0.isHidden }
+            .filter { !hasMoreScreens || $0.getFrame()?.getDisplay() == workspace.display }
 
         for app in appsToHide {
             print("HIDE: \(app.localizedName ?? "")")
@@ -44,27 +66,29 @@ final class WorkspaceManager {
     }
 
     private func focusApp(_ app: NSRunningApplication) {
-        let appElement = AXUIElementCreateApplication(app.processIdentifier)
+        defer { _ = app.activate(options: .activateIgnoringOtherApps) }
 
         var windowList: CFTypeRef?
-        let result = AXUIElementCopyAttributeValue(
-            appElement,
-            NSAccessibility.Attribute.windows as CFString,
-            &windowList
-        )
+        let appElement = AXUIElementCreateApplication(app.processIdentifier)
+        AXUIElementCopyAttributeValue(appElement, NSAccessibility.Attribute.windows as CFString, &windowList)
 
-        if result != .success {
-            print("Failed to get the windows of the application.")
-            return
+        guard let windows = windowList as? [AXUIElement] else {
+            return print("No windows found for the application.")
         }
 
-        guard let windows = windowList as? [AXUIElement], let mainWindow = windows.last else {
-            print("No windows found for the application.")
-            return
+        let mainWindow = windows
+            .first {
+                var isMain: CFTypeRef?
+                AXUIElementCopyAttributeValue($0, NSAccessibility.Attribute.main as CFString, &isMain)
+                return isMain as? Bool == true
+            }
+
+        guard let mainWindow else {
+            return print("No main window found for the application.")
         }
 
-        AXUIElementSetAttributeValue(mainWindow, NSAccessibility.Attribute.main as CFString, kCFBooleanTrue)
         AXUIElementPerformAction(mainWindow, NSAccessibility.Action.raise as CFString)
-        app.activate(options: [.activateIgnoringOtherApps])
+        AXUIElementSetAttributeValue(appElement, NSAccessibility.Attribute.frontmost as CFString, kCFBooleanTrue)
+        AXUIElementSetAttributeValue(mainWindow, NSAccessibility.Attribute.main as CFString, kCFBooleanTrue)
     }
 }
