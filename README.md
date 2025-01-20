@@ -22,9 +22,9 @@ https://github.com/user-attachments/assets/af5951ce-8386-48d5-918e-914474d2c2b8
 
 ## ⚙️ Installation
 
-It's not yet ready for distribution, but you can try it out if you're feeling adventurous!
+**Requirements:** macOS 14.0 or later.
 
-You need to run the app from Xcode.
+Download the app from the [releases page](https://github.com/wojciech-kulik/FlashSpace/releases).
 
 ## 👉 How it works
 
