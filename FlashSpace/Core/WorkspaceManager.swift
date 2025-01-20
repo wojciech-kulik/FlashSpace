@@ -27,6 +27,14 @@ final class WorkspaceManager {
         print("\n\nWORKSPACE: \(workspace.name)")
         print("----")
 
+        let focusedWindowTracker = AppDependencies.shared.focusedWindowTracker
+        focusedWindowTracker.stopTracking()
+        defer {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                focusedWindowTracker.startTracking()
+            }
+        }
+
         showApps(in: workspace)
         hideApps(in: workspace)
 
@@ -73,7 +81,7 @@ final class WorkspaceManager {
         AXUIElementCopyAttributeValue(appElement, NSAccessibility.Attribute.windows as CFString, &windowList)
 
         guard let windows = windowList as? [AXUIElement] else {
-            return print("No windows found for the application.")
+            return print("No windows found for: \(app.localizedName ?? "")")
         }
 
         let mainWindow = windows
@@ -84,7 +92,7 @@ final class WorkspaceManager {
             }
 
         guard let mainWindow else {
-            return print("No main window found for the application.")
+            return print("No main window found for: \(app.localizedName ?? "")")
         }
 
         AXUIElementPerformAction(mainWindow, NSAccessibility.Action.raise as CFString)

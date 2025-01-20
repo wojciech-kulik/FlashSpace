@@ -29,7 +29,7 @@ extension NSRunningApplication {
         }
 
         guard let windows = windowList as? [AXUIElement], let mainWindow = windows.first else {
-            print("No windows found for the application.")
+            print("No windows found (2) for: \(localizedName ?? "")")
             return nil
         }
 

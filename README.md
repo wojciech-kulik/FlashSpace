@@ -8,7 +8,8 @@ FlashSpace is a blazingly fast virtual workspace manager for macOS.
 
 ## 🎥 Demo
 
-The video shows a sample configuration where I use 3 workspaces and switch between them using hotkeys.
+The video shows a sample configuration where I use 3 workspaces and switch
+between them using hotkeys.
 
 https://github.com/user-attachments/assets/af5951ce-8386-48d5-918e-914474d2c2b8
 

@@ -17,6 +17,9 @@ struct AppDependencies {
     let hotKeysManager = HotKeysManager(hotKeysMonitor: GlobalShortcutMonitor.shared)
 
     let autostartService = AutostartService()
+    let focusedWindowTracker = FocusedWindowTracker()
 
-    private init() {}
+    private init() {
+        focusedWindowTracker.startTracking()
+    }
 }
