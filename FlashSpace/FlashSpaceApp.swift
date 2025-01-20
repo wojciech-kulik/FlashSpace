@@ -23,6 +23,14 @@ struct FlashSpaceApp: App {
                 NSApp.activate(ignoringOtherApps: true)
             }
 
+            Divider()
+
+            Button("Donate") {
+                if let url = URL(string: "https://github.com/sponsors/wojciech-kulik") {
+                    NSWorkspace.shared.open(url)
+                }
+            }
+
             Button("Project Website") {
                 if let url = URL(string: "https://github.com/wojciech-kulik/FlashSpace") {
                     NSWorkspace.shared.open(url)
