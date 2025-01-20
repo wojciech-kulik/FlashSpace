@@ -24,7 +24,7 @@ final class MainViewModel: ObservableObject {
     @Published var selectedApp: String?
     @Published var selectedWorkspace: Workspace? {
         didSet {
-            guard selectedWorkspace?.id != oldValue?.id else { return }
+            guard selectedWorkspace != oldValue else { return }
 
             updatingWorkspace = true
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
