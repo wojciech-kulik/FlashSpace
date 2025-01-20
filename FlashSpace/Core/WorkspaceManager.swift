@@ -20,9 +20,10 @@ final class WorkspaceManager {
         let regularApps = NSWorkspace.shared.runningApplications
             .filter { $0.activationPolicy == .regular }
 
+        let hasMoreScreens = NSScreen.screens.count > 1
         let appsToHide = regularApps
             .filter { !workspace.apps.contains($0.localizedName ?? "") && !$0.isHidden }
-            .filter { $0.getFrame()?.getDisplay() == workspace.display }
+            .filter { !hasMoreScreens || $0.getFrame()?.getDisplay() == workspace.display }
 
         let appsToShow = regularApps
             .filter { workspace.apps.contains($0.localizedName ?? "") }
