@@ -11,13 +11,23 @@ import SwiftUI
 struct FlashSpaceApp: App {
     @Environment(\.openWindow) private var openWindow
 
+    var version: String {
+        guard let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String else {
+            return "Unknown"
+        }
+
+        return version
+    }
+
     var body: some Scene {
-        Window("FlashSpace", id: "main") {
+        Window("⚡ FlashSpace v\(version)", id: "main") {
             MainView()
         }
         .windowResizability(.contentSize)
 
         MenuBarExtra("FlashSpace", systemImage: "bolt.fill") {
+            Text("FlashSpace v\(version)")
+
             Button("Open") {
                 openWindow(id: "main")
                 NSApp.activate(ignoringOtherApps: true)
@@ -33,6 +43,12 @@ struct FlashSpaceApp: App {
 
             Button("Project Website") {
                 if let url = URL(string: "https://github.com/wojciech-kulik/FlashSpace") {
+                    NSWorkspace.shared.open(url)
+                }
+            }
+
+            Button("Check for Updates") {
+                if let url = URL(string: "https://github.com/wojciech-kulik/FlashSpace/releases") {
                     NSWorkspace.shared.open(url)
                 }
             }

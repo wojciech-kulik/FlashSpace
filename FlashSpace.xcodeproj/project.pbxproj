@@ -49,8 +49,6 @@
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		16999A072D3D97770006EA91 /* FlashSpace */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
 			path = FlashSpace;
 			sourceTree = "<group>";
 		};
