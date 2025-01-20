@@ -28,11 +28,6 @@ final class WorkspaceManager {
         let appsToShow = regularApps
             .filter { workspace.apps.contains($0.localizedName ?? "") }
 
-        for app in appsToHide {
-            print("HIDE: \(app.localizedName ?? "")")
-            app.hide()
-        }
-
         for app in appsToShow {
             print("SHOW: \(app.localizedName ?? "")")
             app.unhide()
@@ -41,6 +36,11 @@ final class WorkspaceManager {
         appsToShow
             .first { $0.localizedName == workspace.apps.last }
             .flatMap(focusApp)
+
+        for app in appsToHide {
+            print("HIDE: \(app.localizedName ?? "")")
+            app.hide()
+        }
     }
 
     private func focusApp(_ app: NSRunningApplication) {
