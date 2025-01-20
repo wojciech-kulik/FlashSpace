@@ -16,7 +16,11 @@ struct FlashSpaceApp: App {
             return "Unknown"
         }
 
+        #if DEBUG
+        return version + " (debug)"
+        #else
         return version
+        #endif
     }
 
     var body: some Scene {

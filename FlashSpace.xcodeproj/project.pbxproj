@@ -28,7 +28,7 @@
 
 /* Begin PBXFileReference section */
 		023F66384918C89558995EC6 /* HotKeysManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HotKeysManager.swift; sourceTree = "<group>"; };
-		16999A052D3D97770006EA91 /* FlashSpace.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlashSpace.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		16999A052D3D97770006EA91 /* FlashSpace-Dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "FlashSpace-Dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		16999AE32D3DC77A0006EA91 /* ServiceManagement.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ServiceManagement.framework; path = System/Library/Frameworks/ServiceManagement.framework; sourceTree = SDKROOT; };
 		36E4723ECEA5C6DD2BDA559F /* FileChooser.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FileChooser.swift; sourceTree = "<group>"; };
 		5AB52E58777D6FCD2FD77ADD /* AutostartService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AutostartService.swift; sourceTree = "<group>"; };
@@ -79,7 +79,7 @@
 		16999A062D3D97770006EA91 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				16999A052D3D97770006EA91 /* FlashSpace.app */,
+				16999A052D3D97770006EA91 /* FlashSpace-Dev.app */,
 				F28C601DC1BA19FB5E1C6170 /* FlashSpace */,
 			);
 			name = Products;
@@ -170,7 +170,7 @@
 				16999A182D3D978E0006EA91 /* ShortcutRecorder */,
 			);
 			productName = FlashSpace;
-			productReference = 16999A052D3D97770006EA91 /* FlashSpace.app */;
+			productReference = 16999A052D3D97770006EA91 /* FlashSpace-Dev.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -379,7 +379,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = "Flash Space";
+				INFOPLIST_KEY_CFBundleDisplayName = "FlashSpace DEV";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
@@ -389,8 +389,8 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 0.1.1;
-				PRODUCT_BUNDLE_IDENTIFIER = pl.wojciechkulik.FlashSpace;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = pl.wojciechkulik.FlashSpace.dev;
+				PRODUCT_NAME = "$(TARGET_NAME)-Dev";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 			};
@@ -411,7 +411,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = "Flash Space";
+				INFOPLIST_KEY_CFBundleDisplayName = FlashSpace;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";

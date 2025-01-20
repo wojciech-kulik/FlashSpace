@@ -10,10 +10,10 @@ import Foundation
 
 final class WorkspaceRepository {
     private(set) var workspaces: [Workspace] = []
-    private let dataUrl = FileManager.default.urls(
-        for: .libraryDirectory,
-        in: .userDomainMask
-    )[0].appendingPathComponent("Containers/pl.wojciechkulik.FlashSpace/Data/workspaces.json")
+
+    private let dataUrl = FileManager.default
+        .homeDirectoryForCurrentUser
+        .appendingPathComponent(".config/flashspace/workspaces.json")
 
     private let encoder = JSONEncoder()
     private let decoder = JSONDecoder()
@@ -64,6 +64,10 @@ final class WorkspaceRepository {
 
     private func saveToDisk() {
         guard let data = try? encoder.encode(workspaces) else { return }
+
+        let directoryPath = dataUrl.deletingLastPathComponent()
+        try? FileManager.default
+            .createDirectory(at: directoryPath, withIntermediateDirectories: true)
 
         try? data.write(to: dataUrl)
     }
