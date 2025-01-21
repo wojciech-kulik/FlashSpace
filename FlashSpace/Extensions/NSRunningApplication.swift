@@ -17,19 +17,30 @@ extension NSRunningApplication {
 
         // Get all windows of the application
         var windowList: CFTypeRef?
-        let result = AXUIElementCopyAttributeValue(
+
+        guard AXUIElementCopyAttributeValue(
             appElement,
             NSAccessibility.Attribute.windows as CFString,
             &windowList
-        )
-
-        if result != .success {
+        ) == .success else {
             print("Failed to get the windows of the application.")
             return nil
         }
 
-        guard let windows = windowList as? [AXUIElement], let mainWindow = windows.first else {
+        guard let windows = windowList as? [AXUIElement] else {
             print("No windows found (2) for: \(localizedName ?? "")")
+            return nil
+        }
+
+        let mainWindow = windows
+            .first {
+                var isMain: CFTypeRef?
+                AXUIElementCopyAttributeValue($0, NSAccessibility.Attribute.main as CFString, &isMain)
+                return isMain as? Bool == true
+            } ?? windows.first
+
+        guard let mainWindow else {
+            print("No main window found for: \(localizedName ?? "")")
             return nil
         }
 
