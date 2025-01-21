@@ -16,6 +16,7 @@ final class WorkspaceManager {
 
     init() {
         // Ask for accessibility permissions
+        // Required to hide apps
         let options: NSDictionary = [kAXTrustedCheckOptionPrompt.takeRetainedValue() as NSString: true]
         _ = AXIsProcessTrustedWithOptions(options)
 
@@ -30,14 +31,6 @@ final class WorkspaceManager {
         print("----")
 
         activeWorkspace = workspace
-
-        let focusedWindowTracker = AppDependencies.shared.focusedWindowTracker
-        focusedWindowTracker.stopTracking()
-        defer {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                focusedWindowTracker.startTracking()
-            }
-        }
 
         showApps(in: workspace)
         hideApps(in: workspace)
