@@ -32,6 +32,10 @@ final class FocusedWindowTracker {
 
         print("Found workspace for app: \(workspace.name)")
 
-        AppDependencies.shared.workspaceManager.activateWorkspace(workspace)
+        let workspaceManager = AppDependencies.shared.workspaceManager
+
+        if workspaceManager.activeWorkspace?.id != workspace.id {
+            workspaceManager.activateWorkspace(workspace)
+        }
     }
 }

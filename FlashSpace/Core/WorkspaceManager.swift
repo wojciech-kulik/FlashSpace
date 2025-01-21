@@ -9,6 +9,8 @@ import AppKit
 import Combine
 
 final class WorkspaceManager {
+    private(set) var activeWorkspace: Workspace?
+
     private var cancellables = Set<AnyCancellable>()
     private let hideAgainSubject = PassthroughSubject<Workspace, Never>()
 
@@ -26,6 +28,8 @@ final class WorkspaceManager {
     func activateWorkspace(_ workspace: Workspace) {
         print("\n\nWORKSPACE: \(workspace.name)")
         print("----")
+
+        activeWorkspace = workspace
 
         let focusedWindowTracker = AppDependencies.shared.focusedWindowTracker
         focusedWindowTracker.stopTracking()
