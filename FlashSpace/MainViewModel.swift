@@ -19,6 +19,7 @@ final class MainViewModel: ObservableObject {
 
     @Published var workspaceName = ""
     @Published var workspaceShortcut: HotKeyShortcut?
+    @Published var workspaceAssignShortcut: HotKeyShortcut?
     @Published var workspaceDisplay = ""
 
     @Published var selectedApp: String?
@@ -63,7 +64,8 @@ final class MainViewModel: ObservableObject {
 
         return selectedWorkspace.name == workspaceName &&
             selectedWorkspace.display == workspaceDisplay &&
-            selectedWorkspace.shortcut == workspaceShortcut
+            selectedWorkspace.activateShortcut == workspaceShortcut &&
+            selectedWorkspace.assignAppShortcut == workspaceAssignShortcut
     }
 
     private var cancellables: Set<AnyCancellable> = []
@@ -77,10 +79,14 @@ final class MainViewModel: ObservableObject {
     init() {
         self.workspaces = workspaceRepository.workspaces
         self.isAutostartEnabled = autostartService.isLaunchAtLoginEnabled
+        self.workspaceDisplay = NSScreen.main?.localizedName ?? ""
 
-        hotKeysManager.register(workspaces: workspaces)
         hotKeysManager.enableAll()
+        dismissIfNotFirstTime()
+        observe()
+    }
 
+    private func dismissIfNotFirstTime() {
         if UserDefaults.standard.object(forKey: "afterFirstLaunch") == nil {
             UserDefaults.standard.set(true, forKey: "afterFirstLaunch")
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
@@ -93,12 +99,25 @@ final class MainViewModel: ObservableObject {
         }
     }
 
+    private func observe() {
+        NotificationCenter.default
+            .publisher(for: .newAppAssigned)
+            .sink { [weak self] _ in self?.reloadWorkspaces() }
+            .store(in: &cancellables)
+    }
+
     private func updateSelectedWorkspace() {
         workspaceName = selectedWorkspace?.name ?? ""
-        workspaceShortcut = selectedWorkspace?.shortcut
+        workspaceShortcut = selectedWorkspace?.activateShortcut
+        workspaceAssignShortcut = selectedWorkspace?.assignAppShortcut
         workspaceDisplay = selectedWorkspace?.display ?? NSScreen.main?.localizedName ?? ""
         workspaceApps = selectedWorkspace?.apps
         selectedApp = nil
+    }
+
+    private func reloadWorkspaces() {
+        workspaces = workspaceRepository.workspaces
+        selectedWorkspace = workspaces.first { $0.id == selectedWorkspace?.id }
     }
 }
 
@@ -134,15 +153,13 @@ extension MainViewModel {
             id: selectedWorkspace.id,
             name: workspaceName,
             display: workspaceDisplay,
-            shortcut: workspaceShortcut,
+            activateShortcut: workspaceShortcut,
+            assignAppShortcut: workspaceAssignShortcut,
             apps: selectedWorkspace.apps
         )
 
-        if let workspaceShortcut {
-            hotKeysManager.update(workspaceId: selectedWorkspace.id, shortcut: workspaceShortcut)
-        }
-
         workspaceRepository.updateWorkspace(updatedWorkspace)
+        hotKeysManager.refresh()
         workspaces = workspaceRepository.workspaces
         self.selectedWorkspace = workspaces.first { $0.id == selectedWorkspace.id }
     }

@@ -18,7 +18,8 @@ https://github.com/user-attachments/assets/af5951ce-8386-48d5-918e-914474d2c2b8
 - [x] Blazingly fast workspace switching
 - [x] Multiple displays support
 - [x] Global hotkeys
-- [x] Focusing an assigned app triggers workspace activation
+- [x] Activate workspace on app focus
+- [x] Move apps between workspaces with a hotkey
 
 ## ⚙️ Installation
 

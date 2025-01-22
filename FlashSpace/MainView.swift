@@ -85,11 +85,13 @@ struct MainView: View {
                     ForEach(viewModel.screens, id: \.self) {
                         Text($0).tag($0)
                     }
-                }
-                .padding(.bottom)
+                }.padding(.bottom)
 
-                Text("Shortcut:")
+                Text("Activate Shortcut:")
                 HotKeyControl(shortcut: $viewModel.workspaceShortcut).padding(.bottom)
+
+                Text("Assign App Shortcut:")
+                HotKeyControl(shortcut: $viewModel.workspaceAssignShortcut).padding(.bottom)
 
                 Button("Save", action: viewModel.updateWorkspace)
                     .disabled(viewModel.isSaveButtonDisabled)

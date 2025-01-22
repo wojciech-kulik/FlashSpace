@@ -8,8 +8,10 @@
 import AppKit
 import Combine
 
+typealias DisplayName = String
+
 final class WorkspaceManager {
-    private(set) var activeWorkspace: Workspace?
+    private(set) var activeWorkspace: [DisplayName: Workspace] = [:]
 
     private var cancellables = Set<AnyCancellable>()
     private let hideAgainSubject = PassthroughSubject<Workspace, Never>()
@@ -30,8 +32,7 @@ final class WorkspaceManager {
         print("\n\nWORKSPACE: \(workspace.name)")
         print("----")
 
-        activeWorkspace = workspace
-
+        activeWorkspace[workspace.display] = workspace
         showApps(in: workspace)
         hideApps(in: workspace)
 
@@ -52,8 +53,8 @@ final class WorkspaceManager {
         }
 
         appsToShow
-            .first { $0.localizedName == workspace.apps.last }
-            .flatMap(focusApp)
+            .first { $0.localizedName == workspace.apps.last }?
+            .focus()
     }
 
     private func hideApps(in workspace: Workspace) {
@@ -68,32 +69,5 @@ final class WorkspaceManager {
             print("HIDE: \(app.localizedName ?? "")")
             app.hide()
         }
-    }
-
-    private func focusApp(_ app: NSRunningApplication) {
-        defer { _ = app.activate(options: .activateIgnoringOtherApps) }
-
-        var windowList: CFTypeRef?
-        let appElement = AXUIElementCreateApplication(app.processIdentifier)
-        AXUIElementCopyAttributeValue(appElement, NSAccessibility.Attribute.windows as CFString, &windowList)
-
-        guard let windows = windowList as? [AXUIElement] else {
-            return print("No windows found for: \(app.localizedName ?? "")")
-        }
-
-        let mainWindow = windows
-            .first {
-                var isMain: CFTypeRef?
-                AXUIElementCopyAttributeValue($0, NSAccessibility.Attribute.main as CFString, &isMain)
-                return isMain as? Bool == true
-            }
-
-        guard let mainWindow else {
-            return print("No main window found for: \(app.localizedName ?? "")")
-        }
-
-        AXUIElementPerformAction(mainWindow, NSAccessibility.Action.raise as CFString)
-        AXUIElementSetAttributeValue(appElement, NSAccessibility.Attribute.frontmost as CFString, kCFBooleanTrue)
-        AXUIElementSetAttributeValue(mainWindow, NSAccessibility.Attribute.main as CFString, kCFBooleanTrue)
     }
 }

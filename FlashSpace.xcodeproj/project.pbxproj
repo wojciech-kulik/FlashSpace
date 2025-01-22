@@ -11,8 +11,9 @@
 		16999A192D3D978E0006EA91 /* ShortcutRecorder in Frameworks */ = {isa = PBXBuildFile; productRef = 16999A182D3D978E0006EA91 /* ShortcutRecorder */; };
 		16999AE42D3DC77A0006EA91 /* ServiceManagement.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16999AE32D3DC77A0006EA91 /* ServiceManagement.framework */; };
 		25750D5FABBBF407779F2274 /* HotKeyControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97BED2C7A17B2EF8E64279EA /* HotKeyControl.swift */; };
-		3ACB59EE25A1239F4348AE27 /* Workspace.swift in Sources */ = {isa = PBXBuildFile; fileRef = C57751E3F8DD122D98ED8D06 /* Workspace.swift */; };
+		36C97E6C7C582D36ADA2CA9C /* NotificationName.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA065A8C8B0E063D8C60A76 /* NotificationName.swift */; };
 		452BEC518A2B8A22B6FB7EA7 /* HotKeysManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 023F66384918C89558995EC6 /* HotKeysManager.swift */; };
+		48091E66AC5AD177744588F9 /* Workspace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E8A910D9316B99AA168783A /* Workspace.swift */; };
 		4D19E30B5D2B6CACF42FE5E7 /* WorkspaceRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F937D2CBFA74640A70D5236 /* WorkspaceRepository.swift */; };
 		736FB1E0859ACC9321BD2863 /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70138FD5AE794EE94F006CC1 /* MainViewModel.swift */; };
 		81CADED6E04777ADA49C2257 /* HotKeysMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9DED2837DB55CC0C1B7F5BA /* HotKeysMonitor.swift */; };
@@ -30,6 +31,7 @@
 		023F66384918C89558995EC6 /* HotKeysManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HotKeysManager.swift; sourceTree = "<group>"; };
 		16999A052D3D97770006EA91 /* FlashSpace-Dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "FlashSpace-Dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		16999AE32D3DC77A0006EA91 /* ServiceManagement.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ServiceManagement.framework; path = System/Library/Frameworks/ServiceManagement.framework; sourceTree = SDKROOT; };
+		2E8A910D9316B99AA168783A /* Workspace.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Workspace.swift; sourceTree = "<group>"; };
 		36E4723ECEA5C6DD2BDA559F /* FileChooser.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FileChooser.swift; sourceTree = "<group>"; };
 		5AB52E58777D6FCD2FD77ADD /* AutostartService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AutostartService.swift; sourceTree = "<group>"; };
 		5F8D90F8EE33FFC0DB1A2DC7 /* Shortcut.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Shortcut.swift; sourceTree = "<group>"; };
@@ -40,8 +42,8 @@
 		9F937D2CBFA74640A70D5236 /* WorkspaceRepository.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WorkspaceRepository.swift; sourceTree = "<group>"; };
 		A4CF60E34F5BA43C2CC57B16 /* FocusedWindowTracker.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FocusedWindowTracker.swift; sourceTree = "<group>"; };
 		A62AD825241B91E4BB74C647 /* InputDialog.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = InputDialog.swift; sourceTree = "<group>"; };
+		AFA065A8C8B0E063D8C60A76 /* NotificationName.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NotificationName.swift; sourceTree = "<group>"; };
 		B9DED2837DB55CC0C1B7F5BA /* HotKeysMonitor.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HotKeysMonitor.swift; sourceTree = "<group>"; };
-		C57751E3F8DD122D98ED8D06 /* Workspace.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Workspace.swift; sourceTree = "<group>"; };
 		CE2E1D011156B9FFF828F2E9 /* NSRunningApplication.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NSRunningApplication.swift; sourceTree = "<group>"; };
 		D205781B65E6E204C80528A6 /* AppDependencies.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppDependencies.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -49,6 +51,8 @@
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		16999A072D3D97770006EA91 /* FlashSpace */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = FlashSpace;
 			sourceTree = "<group>";
 		};
@@ -93,12 +97,22 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		2ED8961E1ED2FC057CEC216E /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				2E8A910D9316B99AA168783A /* Workspace.swift */,
+			);
+			name = Models;
+			path = Models;
+			sourceTree = "<group>";
+		};
 		7EB1F594BBFF6E61CC9CE973 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
 				CE2E1D011156B9FFF828F2E9 /* NSRunningApplication.swift */,
 				8808B0E6B40949F55A001A63 /* CGRect.swift */,
 				5F8D90F8EE33FFC0DB1A2DC7 /* Shortcut.swift */,
+				AFA065A8C8B0E063D8C60A76 /* NotificationName.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -106,7 +120,6 @@
 		9E33511F751690653F748F15 /* Core */ = {
 			isa = PBXGroup;
 			children = (
-				C57751E3F8DD122D98ED8D06 /* Workspace.swift */,
 				99435101C2716BDC6A29E276 /* WorkspaceManager.swift */,
 				9F937D2CBFA74640A70D5236 /* WorkspaceRepository.swift */,
 				D205781B65E6E204C80528A6 /* AppDependencies.swift */,
@@ -143,6 +156,7 @@
 				70138FD5AE794EE94F006CC1 /* MainViewModel.swift */,
 				CBCDE0143450792BABF27B6D /* Components */,
 				E6341F230CBEF01667454D82 /* Utils */,
+				2ED8961E1ED2FC057CEC216E /* Models */,
 			);
 			path = FlashSpace;
 			sourceTree = "<group>";
@@ -225,7 +239,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3ACB59EE25A1239F4348AE27 /* Workspace.swift in Sources */,
 				08406D87E8AE70A10C694762 /* WorkspaceManager.swift in Sources */,
 				CA65DED962CD106A86C389C2 /* NSRunningApplication.swift in Sources */,
 				BE02D61152666F82BA9C68D1 /* CGRect.swift in Sources */,
@@ -240,6 +253,8 @@
 				A8510A6BE9F3F8C2787A5996 /* InputDialog.swift in Sources */,
 				C2361FA2E6BD841E62ED81A3 /* AutostartService.swift in Sources */,
 				F5A37086001DD9C0101A0FAD /* FocusedWindowTracker.swift in Sources */,
+				48091E66AC5AD177744588F9 /* Workspace.swift in Sources */,
+				36C97E6C7C582D36ADA2CA9C /* NotificationName.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

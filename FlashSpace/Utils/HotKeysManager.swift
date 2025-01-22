@@ -14,51 +14,78 @@ struct HotKeyShortcut: Codable, Hashable {
 }
 
 final class HotKeysManager {
-    private var registeredHotKeys: [WorkspaceID: HotKeyShortcut] = [:]
-
     private let hotKeysMonitor: HotKeysMonitorProtocol
+    private let workspaceRepository: WorkspaceRepository
+    private let workspaceManager: WorkspaceManager
 
-    init(hotKeysMonitor: HotKeysMonitorProtocol) {
+    init(
+        hotKeysMonitor: HotKeysMonitorProtocol,
+        workspaceRepository: WorkspaceRepository,
+        workspaceManager: WorkspaceManager
+    ) {
         self.hotKeysMonitor = hotKeysMonitor
+        self.workspaceRepository = workspaceRepository
+        self.workspaceManager = workspaceManager
     }
 
-    func register(workspaces: [Workspace]) {
-        for workspace in workspaces {
-            registeredHotKeys[workspace.id] = workspace.shortcut
-        }
-    }
-
-    func update(workspaceId: WorkspaceID, shortcut: HotKeyShortcut) {
-        registeredHotKeys[workspaceId] = shortcut
+    func refresh() {
         disableAll()
         enableAll()
-        print("Updated shortcut for workspace: \(workspaceId)")
     }
 
     func enableAll() {
-        for (workspaceID, hotKey) in registeredHotKeys {
-            guard let shortcut = shortcut(for: hotKey) else {
-                print("Could not create shortcut for workspace: \(workspaceID)")
-                continue
-            }
-
-            let action = ShortcutAction(shortcut: shortcut) { _ in
-                let workspaces = AppDependencies.shared.workspaceRepository.workspaces
-                guard let workspace = workspaces.first(where: { $0.id == workspaceID }) else { return false }
-
-                AppDependencies.shared.workspaceManager.activateWorkspace(workspace)
-                return true
-            }
-
-            hotKeysMonitor.addAction(action, forKeyEvent: .down)
+        for workspace in workspaceRepository.workspaces {
+            setActivateShortcut(for: workspace)
+            setAssignShortcut(for: workspace)
         }
-
         print("Enabled all shortcuts")
     }
 
     func disableAll() {
         hotKeysMonitor.removeAllActions()
         print("Disabled all shortcuts")
+    }
+
+    private func setActivateShortcut(for workspace: Workspace) {
+        guard let activateShortcut = workspace.activateShortcut else { return }
+        guard let shortcut = shortcut(for: activateShortcut) else {
+            return print("Could not create activate shortcut for workspace: \(workspace.id)")
+        }
+
+        let action = ShortcutAction(shortcut: shortcut) { [weak self] _ in
+            guard let updatedWorkspace = self?.workspaceRepository.workspaces
+                .first(where: { $0.id == workspace.id }) else { return true }
+
+            self?.workspaceManager.activateWorkspace(updatedWorkspace)
+            return true
+        }
+
+        hotKeysMonitor.addAction(action, forKeyEvent: .down)
+    }
+
+    private func setAssignShortcut(for workspace: Workspace) {
+        guard let assignShortcut = workspace.assignAppShortcut else { return }
+        guard let shortcut = shortcut(for: assignShortcut) else {
+            return print("Could not create assign app shortcut for workspace: \(workspace.id)")
+        }
+
+        let action = ShortcutAction(shortcut: shortcut) { [weak self] _ in
+            guard let activeApp = NSWorkspace.shared.frontmostApplication,
+                  let activeAppName = activeApp.localizedName else { return true }
+
+            activeApp.centerApp(display: workspace.display)
+            self?.workspaceRepository.deleteAppFromAllWorkspaces(app: activeAppName)
+            self?.workspaceRepository.addApp(to: workspace.id, app: activeAppName)
+
+            guard let updatedWorkspace = self?.workspaceRepository.workspaces
+                .first(where: { $0.id == workspace.id }) else { return true }
+
+            self?.workspaceManager.activateWorkspace(updatedWorkspace)
+            NotificationCenter.default.post(name: .newAppAssigned, object: nil)
+            return true
+        }
+
+        hotKeysMonitor.addAction(action, forKeyEvent: .down)
     }
 
     private func shortcut(for hotKey: HotKeyShortcut) -> Shortcut? {

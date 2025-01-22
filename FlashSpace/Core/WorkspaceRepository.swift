@@ -29,7 +29,8 @@ final class WorkspaceRepository {
             id: .init(),
             name: name,
             display: NSScreen.main?.localizedName ?? "",
-            shortcut: nil,
+            activateShortcut: nil,
+            assignAppShortcut: nil,
             apps: []
         )
         workspaces.append(workspace)
@@ -50,6 +51,7 @@ final class WorkspaceRepository {
 
     func addApp(to workspaceId: WorkspaceID, app: String) {
         guard let workspaceIndex = workspaces.firstIndex(where: { $0.id == workspaceId }) else { return }
+        guard !workspaces[workspaceIndex].apps.contains(app) else { return }
 
         workspaces[workspaceIndex].apps.append(app)
         saveToDisk()
@@ -59,6 +61,14 @@ final class WorkspaceRepository {
         guard let workspaceIndex = workspaces.firstIndex(where: { $0.id == workspaceId }) else { return }
 
         workspaces[workspaceIndex].apps.removeAll { $0 == app }
+        saveToDisk()
+    }
+
+    func deleteAppFromAllWorkspaces(app: String) {
+        for (index, var workspace) in workspaces.enumerated() {
+            workspace.apps.removeAll { $0 == app }
+            workspaces[index] = workspace
+        }
         saveToDisk()
     }
 

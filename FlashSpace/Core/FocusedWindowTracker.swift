@@ -11,6 +11,17 @@ import Combine
 final class FocusedWindowTracker {
     private var cancellables = Set<AnyCancellable>()
 
+    private let workspaceRepository: WorkspaceRepository
+    private let workspaceManager: WorkspaceManager
+
+    init(
+        workspaceRepository: WorkspaceRepository,
+        workspaceManager: WorkspaceManager
+    ) {
+        self.workspaceRepository = workspaceRepository
+        self.workspaceManager = workspaceManager
+    }
+
     func startTracking() {
         NSWorkspace.shared.notificationCenter
             .publisher(for: NSWorkspace.didActivateApplicationNotification)
@@ -25,15 +36,17 @@ final class FocusedWindowTracker {
     }
 
     private func activeApplicationChanged(_ app: NSRunningApplication) {
-        let workspaces = AppDependencies.shared.workspaceRepository.workspaces
-        let workspace = workspaces.first { $0.apps.contains(app.localizedName ?? "") }
+        // Skip if the app exists in any active workspace
+        guard !workspaceManager.activeWorkspace.values
+            .contains(where: { $0.apps.contains(app.localizedName ?? "") }) else { return }
 
-        guard let workspace else { return }
+        // Find the workspace that contains the app
+        guard let workspace = workspaceRepository.workspaces
+            .first(where: { $0.apps.contains(app.localizedName ?? "") }) else { return }
 
-        let workspaceManager = AppDependencies.shared.workspaceManager
-
-        if workspaceManager.activeWorkspace?.id != workspace.id {
-            print("Found workspace for app: \(workspace.name)")
+        // Activate the workspace if it's not already active
+        if workspaceManager.activeWorkspace[workspace.display]?.id != workspace.id {
+            print("\n\nFound workspace for app: \(workspace.name)")
             workspaceManager.activateWorkspace(workspace)
         }
     }
