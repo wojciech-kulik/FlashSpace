@@ -4,7 +4,7 @@ FlashSpace is a blazingly fast virtual workspace manager for macOS.
 
 🚧 This project is still under development 🚧
 
-<img width="781" alt="FlashSpace" src="https://github.com/user-attachments/assets/67a97170-b9c0-462b-a5dd-ca13a8aa8a84" />
+<img width="781" alt="FlashSpace" src="https://github.com/user-attachments/assets/6f0a78e6-a13f-44aa-bb11-a493b5ac3594" />
 
 ## 🎥 Demo
 
