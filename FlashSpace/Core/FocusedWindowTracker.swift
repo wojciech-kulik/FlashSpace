@@ -27,7 +27,6 @@ final class FocusedWindowTracker {
             .publisher(for: NSWorkspace.didActivateApplicationNotification)
             .compactMap { $0.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication }
             .removeDuplicates()
-            .throttle(for: .seconds(0.2), scheduler: RunLoop.main, latest: true)
             .sink { [weak self] app in self?.activeApplicationChanged(app) }
             .store(in: &cancellables)
     }
@@ -37,6 +36,8 @@ final class FocusedWindowTracker {
     }
 
     private func activeApplicationChanged(_ app: NSRunningApplication) {
+        guard Date().timeIntervalSince(workspaceManager.lastWorkspaceActivation) > 0.2 else { return }
+
         // Skip if the app exists in any active workspace
         guard !workspaceManager.activeWorkspace.values
             .contains(where: { $0.apps.contains(app.localizedName ?? "") }) else { return }

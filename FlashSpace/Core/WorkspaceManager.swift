@@ -12,6 +12,7 @@ typealias DisplayName = String
 
 final class WorkspaceManager {
     private(set) var activeWorkspace: [DisplayName: Workspace] = [:]
+    private(set) var lastWorkspaceActivation = Date.distantPast
 
     private var cancellables = Set<AnyCancellable>()
     private let hideAgainSubject = PassthroughSubject<Workspace, Never>()
@@ -32,6 +33,7 @@ final class WorkspaceManager {
         print("\n\nWORKSPACE: \(workspace.name)")
         print("----")
 
+        lastWorkspaceActivation = Date()
         activeWorkspace[workspace.display] = workspace
         showApps(in: workspace)
         hideApps(in: workspace)
