@@ -13,4 +13,25 @@ extension CGRect {
             .first { $0.frame.contains(.init(x: self.midX, y: self.midY)) }?
             .localizedName
     }
+
+    func verticalIntersects(with rect: CGRect) -> Bool {
+        var rect = rect
+        rect.origin.x = origin.x
+
+        return intersects(rect)
+    }
+
+    func horizontalIntersects(with rect: CGRect) -> Bool {
+        var rect = rect
+        rect.origin.y = origin.y
+
+        return intersects(rect)
+    }
+
+    func distance(to rect: CGRect) -> CGFloat {
+        let x = midX - rect.midX
+        let y = midY - rect.midY
+
+        return sqrt(x * x + y * y)
+    }
 }

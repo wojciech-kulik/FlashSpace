@@ -11,19 +11,30 @@ struct AppDependencies {
     static let shared = AppDependencies()
 
     let workspaceRepository = WorkspaceRepository()
-    let workspaceManager = WorkspaceManager()
+    let workspaceManager: WorkspaceManager
 
     let hotKeysMonitor: HotKeysMonitorProtocol = GlobalShortcutMonitor.shared
     let hotKeysManager: HotKeysManager
 
     let autostartService = AutostartService()
     let focusedWindowTracker: FocusedWindowTracker
+    let focusManager: FocusManager
+
+    let settingsRepository = SettingsRepository()
 
     private init() {
+        self.workspaceManager = WorkspaceManager(
+            workspaceRepository: workspaceRepository
+        )
+        self.focusManager = FocusManager(
+            workspaceRepository: workspaceRepository,
+            workspaceManager: workspaceManager,
+            settingsRepository: settingsRepository
+        )
         self.hotKeysManager = HotKeysManager(
             hotKeysMonitor: GlobalShortcutMonitor.shared,
-            workspaceRepository: workspaceRepository,
-            workspaceManager: workspaceManager
+            workspaceManager: workspaceManager,
+            focusManager: focusManager
         )
         self.focusedWindowTracker = FocusedWindowTracker(
             workspaceRepository: workspaceRepository,

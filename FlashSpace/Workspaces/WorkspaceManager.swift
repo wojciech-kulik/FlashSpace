@@ -7,6 +7,7 @@
 
 import AppKit
 import Combine
+import ShortcutRecorder
 
 typealias DisplayName = String
 
@@ -17,7 +18,11 @@ final class WorkspaceManager {
     private var cancellables = Set<AnyCancellable>()
     private let hideAgainSubject = PassthroughSubject<Workspace, Never>()
 
-    init() {
+    private let workspaceRepository: WorkspaceRepository
+
+    init(workspaceRepository: WorkspaceRepository) {
+        self.workspaceRepository = workspaceRepository
+
         // Ask for accessibility permissions
         // Required to hide apps
         let options: NSDictionary = [kAXTrustedCheckOptionPrompt.takeRetainedValue() as NSString: true]
@@ -27,6 +32,12 @@ final class WorkspaceManager {
             .debounce(for: 0.2, scheduler: RunLoop.main)
             .sink { [weak self] in self?.hideApps(in: $0) }
             .store(in: &cancellables)
+    }
+
+    func getHotKeys() -> [(Shortcut, () -> ())] {
+        workspaceRepository.workspaces
+            .flatMap { [getActivateShortcut(for: $0), getAssignShortcut(for: $0)] }
+            .compactMap { $0 }
     }
 
     func activateWorkspace(_ workspace: Workspace, setFocus: Bool) {
@@ -41,6 +52,17 @@ final class WorkspaceManager {
         // Some apps may not hide properly,
         // so we hide apps in the workspace after a short delay
         hideAgainSubject.send(workspace)
+    }
+
+    func assignApp(_ app: String, to workspace: Workspace) {
+        workspaceRepository.deleteAppFromAllWorkspaces(app: app)
+        workspaceRepository.addApp(to: workspace.id, app: app)
+
+        guard let updatedWorkspace = workspaceRepository.workspaces
+            .first(where: { $0.id == workspace.id }) else { return }
+
+        activateWorkspace(updatedWorkspace, setFocus: false)
+        NotificationCenter.default.post(name: .newAppAssigned, object: nil)
     }
 
     private func showApps(in workspace: Workspace, setFocus: Bool) {
@@ -73,5 +95,36 @@ final class WorkspaceManager {
             print("HIDE: \(app.localizedName ?? "")")
             app.hide()
         }
+    }
+}
+
+extension WorkspaceManager {
+    private func getActivateShortcut(for workspace: Workspace) -> (Shortcut, () -> ())? {
+        guard let shortcut = workspace.activateShortcut?.toShortcut() else { return nil }
+
+        let action = { [weak self] in
+            guard let updatedWorkspace = self?.workspaceRepository.workspaces
+                .first(where: { $0.id == workspace.id }) else { return }
+
+            self?.activateWorkspace(updatedWorkspace, setFocus: true)
+        }
+
+        return (shortcut, action)
+    }
+
+    private func getAssignShortcut(for workspace: Workspace) -> (Shortcut, () -> ())? {
+        guard let shortcut = workspace.assignAppShortcut?.toShortcut() else { return nil }
+
+        let action = { [weak self] in
+            guard let activeApp = NSWorkspace.shared.frontmostApplication else { return }
+            guard let appName = activeApp.localizedName else { return }
+            guard let updatedWorkspace = self?.workspaceRepository.workspaces
+                .first(where: { $0.id == workspace.id }) else { return }
+
+            activeApp.centerApp(display: updatedWorkspace.display)
+            self?.assignApp(appName, to: updatedWorkspace)
+        }
+
+        return (shortcut, action)
     }
 }

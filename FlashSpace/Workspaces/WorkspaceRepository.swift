@@ -42,6 +42,7 @@ final class WorkspaceRepository {
 
         workspaces[workspaceIndex] = workspace
         saveToDisk()
+        AppDependencies.shared.hotKeysManager.refresh()
     }
 
     func deleteWorkspace(id: WorkspaceID) {

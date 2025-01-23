@@ -1,0 +1,19 @@
+disabled_rules:
+  - void_return
+  - trailing_whitespace
+  - nesting
+  - void_function_in_ternary
+
+included:
+  - FlashSpace
+
+line_length: 160
+
+identifier_name:
+  min_length: 1
+
+file_length:
+  warning: 550
+  error: 1000
+
+reporter: "xcode"

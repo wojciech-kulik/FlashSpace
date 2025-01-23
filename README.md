@@ -20,6 +20,7 @@ https://github.com/user-attachments/assets/af5951ce-8386-48d5-918e-914474d2c2b8
 - [x] Global hotkeys
 - [x] Activate workspace on app focus
 - [x] Move apps between workspaces with a hotkey
+- [x] Focus management - set hotkeys to quickly switch between apps
 
 ## ⚙️ Installation
 

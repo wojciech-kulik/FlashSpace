@@ -9,6 +9,8 @@ import AppKit
 import SwiftUI
 
 struct MainView: View {
+    @Environment(\.openWindow) var openWindow
+
     @StateObject var viewModel = MainViewModel()
 
     var body: some View {
@@ -97,10 +99,17 @@ struct MainView: View {
                     .disabled(viewModel.isSaveButtonDisabled)
             }
             .disabled(viewModel.selectedWorkspace == nil)
+
             Spacer()
 
-            Toggle("Launch at startup", isOn: $viewModel.isAutostartEnabled)
-                .frame(maxWidth: .infinity, alignment: .trailing)
+            Button(action: {
+                openWindow(id: "settings")
+            }, label: {
+                Image(systemName: "gearshape")
+                    .foregroundColor(.primary)
+            })
+            .keyboardShortcut(",")
+            .frame(maxWidth: .infinity, alignment: .trailing)
         }
     }
 }
