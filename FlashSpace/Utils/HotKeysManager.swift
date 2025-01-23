@@ -56,7 +56,7 @@ final class HotKeysManager {
             guard let updatedWorkspace = self?.workspaceRepository.workspaces
                 .first(where: { $0.id == workspace.id }) else { return true }
 
-            self?.workspaceManager.activateWorkspace(updatedWorkspace)
+            self?.workspaceManager.activateWorkspace(updatedWorkspace, setFocus: true)
             return true
         }
 
@@ -80,7 +80,7 @@ final class HotKeysManager {
             guard let updatedWorkspace = self?.workspaceRepository.workspaces
                 .first(where: { $0.id == workspace.id }) else { return true }
 
-            self?.workspaceManager.activateWorkspace(updatedWorkspace)
+            self?.workspaceManager.activateWorkspace(updatedWorkspace, setFocus: false)
             NotificationCenter.default.post(name: .newAppAssigned, object: nil)
             return true
         }

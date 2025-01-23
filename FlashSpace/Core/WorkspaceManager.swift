@@ -29,13 +29,13 @@ final class WorkspaceManager {
             .store(in: &cancellables)
     }
 
-    func activateWorkspace(_ workspace: Workspace) {
+    func activateWorkspace(_ workspace: Workspace, setFocus: Bool) {
         print("\n\nWORKSPACE: \(workspace.name)")
         print("----")
 
         lastWorkspaceActivation = Date()
         activeWorkspace[workspace.display] = workspace
-        showApps(in: workspace)
+        showApps(in: workspace, setFocus: setFocus)
         hideApps(in: workspace)
 
         // Some apps may not hide properly,
@@ -43,7 +43,7 @@ final class WorkspaceManager {
         hideAgainSubject.send(workspace)
     }
 
-    private func showApps(in workspace: Workspace) {
+    private func showApps(in workspace: Workspace, setFocus: Bool) {
         let regularApps = NSWorkspace.shared.runningApplications
             .filter { $0.activationPolicy == .regular }
         let appsToShow = regularApps
@@ -54,9 +54,11 @@ final class WorkspaceManager {
             app.unhide()
         }
 
-        appsToShow
-            .first { $0.localizedName == workspace.apps.last }?
-            .focus()
+        if setFocus {
+            appsToShow
+                .first { $0.localizedName == workspace.apps.last }?
+                .focus()
+        }
     }
 
     private func hideApps(in workspace: Workspace) {
