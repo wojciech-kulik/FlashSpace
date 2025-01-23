@@ -7,51 +7,56 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		08406D87E8AE70A10C694762 /* WorkspaceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99435101C2716BDC6A29E276 /* WorkspaceManager.swift */; };
 		16999A192D3D978E0006EA91 /* ShortcutRecorder in Frameworks */ = {isa = PBXBuildFile; productRef = 16999A182D3D978E0006EA91 /* ShortcutRecorder */; };
 		16999AE42D3DC77A0006EA91 /* ServiceManagement.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16999AE32D3DC77A0006EA91 /* ServiceManagement.framework */; };
-		25750D5FABBBF407779F2274 /* HotKeyControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97BED2C7A17B2EF8E64279EA /* HotKeyControl.swift */; };
-		36C97E6C7C582D36ADA2CA9C /* NotificationName.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA065A8C8B0E063D8C60A76 /* NotificationName.swift */; };
-		452BEC518A2B8A22B6FB7EA7 /* HotKeysManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 023F66384918C89558995EC6 /* HotKeysManager.swift */; };
-		48091E66AC5AD177744588F9 /* Workspace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E8A910D9316B99AA168783A /* Workspace.swift */; };
-		4D19E30B5D2B6CACF42FE5E7 /* WorkspaceRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F937D2CBFA74640A70D5236 /* WorkspaceRepository.swift */; };
-		736FB1E0859ACC9321BD2863 /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70138FD5AE794EE94F006CC1 /* MainViewModel.swift */; };
-		81CADED6E04777ADA49C2257 /* HotKeysMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9DED2837DB55CC0C1B7F5BA /* HotKeysMonitor.swift */; };
-		A56B6FA68C5C688C5BAD2682 /* Shortcut.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F8D90F8EE33FFC0DB1A2DC7 /* Shortcut.swift */; };
-		A8510A6BE9F3F8C2787A5996 /* InputDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A62AD825241B91E4BB74C647 /* InputDialog.swift */; };
-		BE02D61152666F82BA9C68D1 /* CGRect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8808B0E6B40949F55A001A63 /* CGRect.swift */; };
-		C2361FA2E6BD841E62ED81A3 /* AutostartService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AB52E58777D6FCD2FD77ADD /* AutostartService.swift */; };
+		2C5A21F7CFA65934F22ECA93 /* AXUIElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14242986FC549EA6F2EE11B8 /* AXUIElement.swift */; };
 		CA65DED962CD106A86C389C2 /* NSRunningApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2E1D011156B9FFF828F2E9 /* NSRunningApplication.swift */; };
-		D34527E759926A9F18A2FAB9 /* AppDependencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = D205781B65E6E204C80528A6 /* AppDependencies.swift */; };
-		F5A37086001DD9C0101A0FAD /* FocusedWindowTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4CF60E34F5BA43C2CC57B16 /* FocusedWindowTracker.swift */; };
-		F5B4F8D82EBC8712EE792F81 /* FileChooser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E4723ECEA5C6DD2BDA559F /* FileChooser.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		023F66384918C89558995EC6 /* HotKeysManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HotKeysManager.swift; sourceTree = "<group>"; };
+		07AA7A031B97E585161DBEFC /* FocusManagementView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FocusManagementView.swift; sourceTree = "<group>"; };
+		0F6030DE3CF8A0BBDBFC3E29 /* SettingsRepository.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SettingsRepository.swift; sourceTree = "<group>"; };
+		14242986FC549EA6F2EE11B8 /* AXUIElement.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AXUIElement.swift; sourceTree = "<group>"; };
 		16999A052D3D97770006EA91 /* FlashSpace-Dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "FlashSpace-Dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		16999AE32D3DC77A0006EA91 /* ServiceManagement.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ServiceManagement.framework; path = System/Library/Frameworks/ServiceManagement.framework; sourceTree = SDKROOT; };
-		2E8A910D9316B99AA168783A /* Workspace.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Workspace.swift; sourceTree = "<group>"; };
+		2D36CCD07BD78C895996F48F /* AppConstants.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppConstants.swift; sourceTree = "<group>"; };
+		36A517C2599D59AA134BD2CC /* Workspace.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Workspace.swift; sourceTree = "<group>"; };
 		36E4723ECEA5C6DD2BDA559F /* FileChooser.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FileChooser.swift; sourceTree = "<group>"; };
 		5AB52E58777D6FCD2FD77ADD /* AutostartService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AutostartService.swift; sourceTree = "<group>"; };
+		5CCD64800D95D6202345C05D /* FocusedWindowTracker.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FocusedWindowTracker.swift; sourceTree = "<group>"; };
 		5F8D90F8EE33FFC0DB1A2DC7 /* Shortcut.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Shortcut.swift; sourceTree = "<group>"; };
+		63DF18022A80379143494936 /* WorkspaceRepository.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WorkspaceRepository.swift; sourceTree = "<group>"; };
 		70138FD5AE794EE94F006CC1 /* MainViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
+		80E4AE72952E40C7111CC7CE /* HotKeysManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HotKeysManager.swift; sourceTree = "<group>"; };
 		8808B0E6B40949F55A001A63 /* CGRect.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CGRect.swift; sourceTree = "<group>"; };
+		950E5B9658FA8C2765F334E7 /* HotKeyShortcut.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HotKeyShortcut.swift; sourceTree = "<group>"; };
 		97BED2C7A17B2EF8E64279EA /* HotKeyControl.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HotKeyControl.swift; sourceTree = "<group>"; };
-		99435101C2716BDC6A29E276 /* WorkspaceManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WorkspaceManager.swift; sourceTree = "<group>"; };
-		9F937D2CBFA74640A70D5236 /* WorkspaceRepository.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WorkspaceRepository.swift; sourceTree = "<group>"; };
-		A4CF60E34F5BA43C2CC57B16 /* FocusedWindowTracker.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FocusedWindowTracker.swift; sourceTree = "<group>"; };
 		A62AD825241B91E4BB74C647 /* InputDialog.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = InputDialog.swift; sourceTree = "<group>"; };
+		A6A0526ACA637050524E22C6 /* WorkspaceManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WorkspaceManager.swift; sourceTree = "<group>"; };
 		AFA065A8C8B0E063D8C60A76 /* NotificationName.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NotificationName.swift; sourceTree = "<group>"; };
-		B9DED2837DB55CC0C1B7F5BA /* HotKeysMonitor.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HotKeysMonitor.swift; sourceTree = "<group>"; };
+		B44F2DBC6749954D39EDFF45 /* FocusManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FocusManager.swift; sourceTree = "<group>"; };
+		CDF522B8B2538D4D42526AAA /* SettingsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		CE2E1D011156B9FFF828F2E9 /* NSRunningApplication.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NSRunningApplication.swift; sourceTree = "<group>"; };
+		CE48B9CB7CAE419712CAE0AE /* HotKeysMonitor.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HotKeysMonitor.swift; sourceTree = "<group>"; };
 		D205781B65E6E204C80528A6 /* AppDependencies.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppDependencies.swift; sourceTree = "<group>"; };
+		FE5885AA7A5B96DC59D8290B /* GeneralSettingsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = GeneralSettingsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		165856412D43023500544CC2 /* Exceptions for "FlashSpace" folder in "FlashSpace" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Extensions/NSRunningApplication.swift,
+			);
+			target = 16999A042D3D97770006EA91 /* FlashSpace */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		16999A072D3D97770006EA91 /* FlashSpace */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
+				165856412D43023500544CC2 /* Exceptions for "FlashSpace" folder in "FlashSpace" target */,
 			);
 			path = FlashSpace;
 			sourceTree = "<group>";
@@ -71,6 +76,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0F8AD5930F47F31D023913EF /* Workspaces */ = {
+			isa = PBXGroup;
+			children = (
+				A6A0526ACA637050524E22C6 /* WorkspaceManager.swift */,
+				63DF18022A80379143494936 /* WorkspaceRepository.swift */,
+				36A517C2599D59AA134BD2CC /* Workspace.swift */,
+			);
+			path = Workspaces;
+			sourceTree = "<group>";
+		};
 		169999FC2D3D97770006EA91 = {
 			isa = PBXGroup;
 			children = (
@@ -97,13 +112,22 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		2ED8961E1ED2FC057CEC216E /* Models */ = {
+		28B90D3D9D9C1248DB34FEDB /* Focus */ = {
 			isa = PBXGroup;
 			children = (
-				2E8A910D9316B99AA168783A /* Workspace.swift */,
+				5CCD64800D95D6202345C05D /* FocusedWindowTracker.swift */,
+				B44F2DBC6749954D39EDFF45 /* FocusManager.swift */,
 			);
-			name = Models;
-			path = Models;
+			path = Focus;
+			sourceTree = "<group>";
+		};
+		742D6D26ECBDEC09F5113EF1 /* HotKeys */ = {
+			isa = PBXGroup;
+			children = (
+				80E4AE72952E40C7111CC7CE /* HotKeysManager.swift */,
+				CE48B9CB7CAE419712CAE0AE /* HotKeysMonitor.swift */,
+			);
+			path = HotKeys;
 			sourceTree = "<group>";
 		};
 		7EB1F594BBFF6E61CC9CE973 /* Extensions */ = {
@@ -113,6 +137,8 @@
 				8808B0E6B40949F55A001A63 /* CGRect.swift */,
 				5F8D90F8EE33FFC0DB1A2DC7 /* Shortcut.swift */,
 				AFA065A8C8B0E063D8C60A76 /* NotificationName.swift */,
+				950E5B9658FA8C2765F334E7 /* HotKeyShortcut.swift */,
+				14242986FC549EA6F2EE11B8 /* AXUIElement.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -120,10 +146,8 @@
 		9E33511F751690653F748F15 /* Core */ = {
 			isa = PBXGroup;
 			children = (
-				99435101C2716BDC6A29E276 /* WorkspaceManager.swift */,
-				9F937D2CBFA74640A70D5236 /* WorkspaceRepository.swift */,
 				D205781B65E6E204C80528A6 /* AppDependencies.swift */,
-				A4CF60E34F5BA43C2CC57B16 /* FocusedWindowTracker.swift */,
+				2D36CCD07BD78C895996F48F /* AppConstants.swift */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -137,11 +161,20 @@
 			path = Components;
 			sourceTree = "<group>";
 		};
+		CD62F1610AAB83ADE0888F76 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				CDF522B8B2538D4D42526AAA /* SettingsView.swift */,
+				FE5885AA7A5B96DC59D8290B /* GeneralSettingsView.swift */,
+				07AA7A031B97E585161DBEFC /* FocusManagementView.swift */,
+				0F6030DE3CF8A0BBDBFC3E29 /* SettingsRepository.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
 		E6341F230CBEF01667454D82 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				B9DED2837DB55CC0C1B7F5BA /* HotKeysMonitor.swift */,
-				023F66384918C89558995EC6 /* HotKeysManager.swift */,
 				36E4723ECEA5C6DD2BDA559F /* FileChooser.swift */,
 				5AB52E58777D6FCD2FD77ADD /* AutostartService.swift */,
 			);
@@ -156,7 +189,10 @@
 				70138FD5AE794EE94F006CC1 /* MainViewModel.swift */,
 				CBCDE0143450792BABF27B6D /* Components */,
 				E6341F230CBEF01667454D82 /* Utils */,
-				2ED8961E1ED2FC057CEC216E /* Models */,
+				CD62F1610AAB83ADE0888F76 /* Settings */,
+				0F8AD5930F47F31D023913EF /* Workspaces */,
+				28B90D3D9D9C1248DB34FEDB /* Focus */,
+				742D6D26ECBDEC09F5113EF1 /* HotKeys */,
 			);
 			path = FlashSpace;
 			sourceTree = "<group>";
@@ -239,22 +275,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				08406D87E8AE70A10C694762 /* WorkspaceManager.swift in Sources */,
 				CA65DED962CD106A86C389C2 /* NSRunningApplication.swift in Sources */,
-				BE02D61152666F82BA9C68D1 /* CGRect.swift in Sources */,
-				736FB1E0859ACC9321BD2863 /* MainViewModel.swift in Sources */,
-				A56B6FA68C5C688C5BAD2682 /* Shortcut.swift in Sources */,
-				25750D5FABBBF407779F2274 /* HotKeyControl.swift in Sources */,
-				81CADED6E04777ADA49C2257 /* HotKeysMonitor.swift in Sources */,
-				452BEC518A2B8A22B6FB7EA7 /* HotKeysManager.swift in Sources */,
-				4D19E30B5D2B6CACF42FE5E7 /* WorkspaceRepository.swift in Sources */,
-				D34527E759926A9F18A2FAB9 /* AppDependencies.swift in Sources */,
-				F5B4F8D82EBC8712EE792F81 /* FileChooser.swift in Sources */,
-				A8510A6BE9F3F8C2787A5996 /* InputDialog.swift in Sources */,
-				C2361FA2E6BD841E62ED81A3 /* AutostartService.swift in Sources */,
-				F5A37086001DD9C0101A0FAD /* FocusedWindowTracker.swift in Sources */,
-				48091E66AC5AD177744588F9 /* Workspace.swift in Sources */,
-				36C97E6C7C582D36ADA2CA9C /* NotificationName.swift in Sources */,
+				2C5A21F7CFA65934F22ECA93 /* AXUIElement.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -388,8 +410,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 3;
-				DEVELOPMENT_ASSET_PATHS = "\"FlashSpace/Preview Content\"";
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = ZL6756Q8Q2;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -397,13 +418,13 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "FlashSpace DEV";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_LSUIElement = YES;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "© 2025 Wojciech Kulik. All rights reserved.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 0.2.3;
+				MARKETING_VERSION = 0.3.4;
 				PRODUCT_BUNDLE_IDENTIFIER = pl.wojciechkulik.FlashSpace.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)-Dev";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -420,8 +441,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 3;
-				DEVELOPMENT_ASSET_PATHS = "\"FlashSpace/Preview Content\"";
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = ZL6756Q8Q2;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -429,13 +449,13 @@
 				INFOPLIST_KEY_CFBundleDisplayName = FlashSpace;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_LSUIElement = YES;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "© 2025 Wojciech Kulik. All rights reserved.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 0.2.3;
+				MARKETING_VERSION = 0.3.4;
 				PRODUCT_BUNDLE_IDENTIFIER = pl.wojciechkulik.FlashSpace;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

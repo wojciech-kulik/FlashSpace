@@ -11,31 +11,31 @@ import SwiftUI
 struct FlashSpaceApp: App {
     @Environment(\.openWindow) private var openWindow
 
-    var version: String {
-        guard let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String else {
-            return "Unknown"
-        }
-
-        #if DEBUG
-        return version + " (debug)"
-        #else
-        return version
-        #endif
-    }
-
     var body: some Scene {
-        Window("⚡ FlashSpace v\(version)", id: "main") {
+        Window("⚡ FlashSpace v\(AppConstants.version)", id: "main") {
             MainView()
         }
         .windowResizability(.contentSize)
 
+        Window("Settings", id: "settings") {
+            SettingsView()
+        }
+        .windowResizability(.contentSize)
+
         MenuBarExtra("FlashSpace", systemImage: "bolt.fill") {
-            Text("FlashSpace v\(version)")
+            Text("FlashSpace v\(AppConstants.version)")
 
             Button("Open") {
                 openWindow(id: "main")
                 NSApp.activate(ignoringOtherApps: true)
             }
+
+            Divider()
+
+            Button("Settings") {
+                openWindow(id: "settings")
+                NSApp.activate(ignoringOtherApps: true)
+            }.keyboardShortcut(",")
 
             Divider()
 

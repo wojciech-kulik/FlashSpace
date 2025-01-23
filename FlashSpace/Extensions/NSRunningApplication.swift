@@ -9,35 +9,7 @@ import AppKit
 
 extension NSRunningApplication {
     func getFrame() -> CGRect? {
-        guard let mainWindow = mainWindow() else { return nil }
-
-        var windowBounds: CGRect = .zero
-        var positionValue: CFTypeRef?
-        var sizeValue: CFTypeRef?
-
-        // swiftlint:disable force_cast
-        guard AXUIElementCopyAttributeValue(
-            mainWindow,
-            NSAccessibility.Attribute.position as CFString,
-            &positionValue
-        ) == .success else { return nil }
-
-        if let position = positionValue, AXValueGetType(position as! AXValue) == .cgPoint {
-            AXValueGetValue(position as! AXValue, .cgPoint, &windowBounds.origin)
-        }
-
-        guard AXUIElementCopyAttributeValue(
-            mainWindow,
-            NSAccessibility.Attribute.size as CFString,
-            &sizeValue
-        ) == .success else { return nil }
-
-        if let size = sizeValue, AXValueGetType(size as! AXValue) == .cgSize {
-            AXValueGetValue(size as! AXValue, .cgSize, &windowBounds.size)
-        }
-        // swiftlint:enable force_cast
-
-        return windowBounds.isEmpty ? nil : windowBounds
+        mainWindow()?.getFrame()
     }
 
     func focus() {
@@ -102,5 +74,21 @@ extension NSRunningApplication {
         }
 
         return mainWindow
+    }
+
+    func allWindows() -> [(window: AXUIElement, frame: CGRect)] {
+        var windowList: CFTypeRef?
+        let appElement = AXUIElementCreateApplication(processIdentifier)
+        AXUIElementCopyAttributeValue(
+            appElement,
+            NSAccessibility.Attribute.windows as CFString,
+            &windowList
+        )
+
+        let windows = (windowList as? [AXUIElement]) ?? []
+
+        return windows.compactMap { window in
+            window.getFrame().flatMap { (window, $0) }
+        }
     }
 }

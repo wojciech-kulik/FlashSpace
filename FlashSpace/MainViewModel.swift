@@ -35,18 +35,6 @@ final class MainViewModel: ObservableObject {
         }
     }
 
-    @Published var isAutostartEnabled: Bool {
-        didSet {
-            guard isAutostartEnabled != oldValue else { return }
-
-            if isAutostartEnabled {
-                autostartService.enableLaunchAtLogin()
-            } else {
-                autostartService.disableLaunchAtLogin()
-            }
-        }
-    }
-
     @Published var isInputDialogPresented = false
     @Published var userInput = ""
 
@@ -74,11 +62,9 @@ final class MainViewModel: ObservableObject {
     private let workspaceManager = AppDependencies.shared.workspaceManager
     private let workspaceRepository = AppDependencies.shared.workspaceRepository
     private let hotKeysManager = AppDependencies.shared.hotKeysManager
-    private let autostartService = AppDependencies.shared.autostartService
 
     init() {
         self.workspaces = workspaceRepository.workspaces
-        self.isAutostartEnabled = autostartService.isLaunchAtLoginEnabled
         self.workspaceDisplay = NSScreen.main?.localizedName ?? ""
 
         hotKeysManager.enableAll()
@@ -159,7 +145,6 @@ extension MainViewModel {
         )
 
         workspaceRepository.updateWorkspace(updatedWorkspace)
-        hotKeysManager.refresh()
         workspaces = workspaceRepository.workspaces
         self.selectedWorkspace = workspaces.first { $0.id == selectedWorkspace.id }
     }
