@@ -4,7 +4,7 @@ FlashSpace is a blazingly fast virtual workspace manager for macOS.
 
 🚧 This project is still under development 🚧
 
-<img width="781" alt="FlashSpace" src="https://github.com/user-attachments/assets/6f0a78e6-a13f-44aa-bb11-a493b5ac3594" />
+<img width="781" alt="FlashSpace" src="https://github.com/user-attachments/assets/e85f3b06-76a1-4c7e-873a-7fcb59b7c544" />
 
 ## 🎥 Demo
 
@@ -20,7 +20,7 @@ https://github.com/user-attachments/assets/af5951ce-8386-48d5-918e-914474d2c2b8
 - [x] Global hotkeys
 - [x] Activate workspace on app focus
 - [x] Move apps between workspaces with a hotkey
-- [x] Focus management - set hotkeys to quickly switch between apps
+- [x] Focus management - set hotkeys to switch between apps quickly
 
 ## ⚙️ Installation
 
@@ -45,6 +45,12 @@ The app allows switching workspaces on each display independently.
 1. Save the workspace.
 
 Now you can switch to the workspace using the configured hotkey.
+
+## 🪟 Focus Management
+
+FlashSpace allows you to quickly switch focus between windows.
+
+<img width="892" alt="FlashSpace-Focus" src="https://github.com/user-attachments/assets/89fdab1a-ac05-4e63-a78a-cfab5977e30f" />
 
 ## 📝 Notes
 
