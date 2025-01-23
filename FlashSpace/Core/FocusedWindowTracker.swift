@@ -49,7 +49,8 @@ final class FocusedWindowTracker {
         // Activate the workspace if it's not already active
         if workspaceManager.activeWorkspace[workspace.display]?.id != workspace.id {
             print("\n\nFound workspace for app: \(workspace.name)")
-            workspaceManager.activateWorkspace(workspace)
+            workspaceManager.activateWorkspace(workspace, setFocus: false)
+            app.focus()
         }
     }
 }
