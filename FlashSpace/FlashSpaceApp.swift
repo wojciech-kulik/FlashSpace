@@ -9,6 +9,9 @@ import SwiftUI
 
 @main
 struct FlashSpaceApp: App {
+    @StateObject
+    private var workspaceManager = AppDependencies.shared.workspaceManager
+
     @Environment(\.openWindow) private var openWindow
 
     var body: some Scene {
@@ -22,7 +25,7 @@ struct FlashSpaceApp: App {
         }
         .windowResizability(.contentSize)
 
-        MenuBarExtra("FlashSpace", systemImage: "bolt.fill") {
+        MenuBarExtra("FlashSpace", systemImage: workspaceManager.activeWorkspaceSymbolIconName ?? "bolt.fill") {
             Text("FlashSpace v\(AppConstants.version)")
 
             Button("Open") {

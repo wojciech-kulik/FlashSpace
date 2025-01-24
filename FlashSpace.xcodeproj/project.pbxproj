@@ -11,6 +11,7 @@
 		16999AE42D3DC77A0006EA91 /* ServiceManagement.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16999AE32D3DC77A0006EA91 /* ServiceManagement.framework */; };
 		2C5A21F7CFA65934F22ECA93 /* AXUIElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14242986FC549EA6F2EE11B8 /* AXUIElement.swift */; };
 		5C8832A1764AC1F6505BB8E4 /* Integrations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01904D0D8EB8017AEF4CD453 /* Integrations.swift */; };
+		62A2C20E2D44463D00D8A19F /* SymbolPicker in Frameworks */ = {isa = PBXBuildFile; productRef = 62A2C20D2D44463D00D8A19F /* SymbolPicker */; };
 		CA65DED962CD106A86C389C2 /* NSRunningApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2E1D011156B9FFF828F2E9 /* NSRunningApplication.swift */; };
 		DD48ACCA45929209284841E9 /* IntegrationsSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF62C0D4D9928BC04344735A /* IntegrationsSettingsView.swift */; };
 /* End PBXBuildFile section */
@@ -80,6 +81,7 @@
 			files = (
 				16999A192D3D978E0006EA91 /* ShortcutRecorder in Frameworks */,
 				16999AE42D3DC77A0006EA91 /* ServiceManagement.framework in Frameworks */,
+				62A2C20E2D44463D00D8A19F /* SymbolPicker in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -233,6 +235,7 @@
 			name = FlashSpace;
 			packageProductDependencies = (
 				16999A182D3D978E0006EA91 /* ShortcutRecorder */,
+				62A2C20D2D44463D00D8A19F /* SymbolPicker */,
 			);
 			productName = FlashSpace;
 			productReference = 16999A052D3D97770006EA91 /* FlashSpace-Dev.app */;
@@ -264,6 +267,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				16999A172D3D978E0006EA91 /* XCRemoteSwiftPackageReference "ShortcutRecorder" */,
+				62A2C20C2D44463D00D8A19F /* XCRemoteSwiftPackageReference "SymbolPicker" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 16999A062D3D97770006EA91 /* Products */;
@@ -512,6 +516,14 @@
 				minimumVersion = 3.4.0;
 			};
 		};
+		62A2C20C2D44463D00D8A19F /* XCRemoteSwiftPackageReference "SymbolPicker" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/xnth97/SymbolPicker";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.6.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -519,6 +531,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 16999A172D3D978E0006EA91 /* XCRemoteSwiftPackageReference "ShortcutRecorder" */;
 			productName = ShortcutRecorder;
+		};
+		62A2C20D2D44463D00D8A19F /* SymbolPicker */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 62A2C20C2D44463D00D8A19F /* XCRemoteSwiftPackageReference "SymbolPicker" */;
+			productName = SymbolPicker;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

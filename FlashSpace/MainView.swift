@@ -7,6 +7,7 @@
 
 import AppKit
 import SwiftUI
+import SymbolPicker
 
 struct MainView: View {
     @Environment(\.openWindow) var openWindow
@@ -36,6 +37,9 @@ struct MainView: View {
                 userInput: $viewModel.userInput,
                 isPresented: $viewModel.isInputDialogPresented
             )
+        }
+        .sheet(isPresented: $viewModel.isSymbolPickerPresented) {
+            SymbolPicker(symbol: $viewModel.workspaceSymbolIconName)
         }
     }
 
@@ -109,6 +113,18 @@ struct MainView: View {
 
                 Text("Assign App Shortcut:")
                 HotKeyControl(shortcut: $viewModel.workspaceAssignShortcut).padding(.bottom)
+
+                Text("Menu Bar Icon:")
+                HStack {
+                    Button {
+                        viewModel.isSymbolPickerPresented = true
+                    } label: {
+                        Image(systemName: viewModel.workspaceSymbolIconName ?? "bolt.fill")
+                            .frame(maxWidth: .infinity)
+                    }
+                    Button("Reset", action: viewModel.resetWorkspaceSymbolIcon)
+                }
+                .padding(.bottom)
 
                 Button("Save", action: viewModel.updateWorkspace)
                     .disabled(viewModel.isSaveButtonDisabled)

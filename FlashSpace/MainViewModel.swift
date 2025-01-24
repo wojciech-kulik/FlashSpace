@@ -21,7 +21,9 @@ final class MainViewModel: ObservableObject {
     @Published var workspaceAssignShortcut: HotKeyShortcut?
     @Published var workspaceDisplay = ""
     @Published var workspaceAppToFocus: String?
+    @Published var workspaceSymbolIconName: String?
 
+    @Published var isSymbolPickerPresented = false
     @Published var isInputDialogPresented = false
     @Published var userInput = ""
     @Published var dismissOnLaunch = false
@@ -69,7 +71,8 @@ final class MainViewModel: ObservableObject {
             (
                 selectedWorkspace.appToFocus == workspaceAppToFocus ||
                     selectedWorkspace.appToFocus == nil && workspaceAppToFocus == workspaceApps?.last
-            )
+            ) &&
+            selectedWorkspace.symbolIconName == workspaceSymbolIconName
     }
 
     private var cancellables: Set<AnyCancellable> = []
@@ -113,6 +116,7 @@ final class MainViewModel: ObservableObject {
         workspaceDisplay = selectedWorkspace?.display ?? NSScreen.main?.localizedName ?? ""
         workspaceApps = selectedWorkspace?.apps
         workspaceAppToFocus = selectedWorkspace?.appToFocus ?? workspaceApps?.last
+        workspaceSymbolIconName = selectedWorkspace?.symbolIconName
         selectedApp = nil
     }
 
@@ -157,7 +161,8 @@ extension MainViewModel {
             activateShortcut: workspaceShortcut,
             assignAppShortcut: workspaceAssignShortcut,
             apps: selectedWorkspace.apps,
-            appToFocus: workspaceAppToFocus
+            appToFocus: workspaceAppToFocus,
+            symbolIconName: workspaceSymbolIconName
         )
 
         workspaceRepository.updateWorkspace(updatedWorkspace)
@@ -200,5 +205,9 @@ extension MainViewModel {
         workspaces = workspaceRepository.workspaces
         self.selectedApp = nil
         self.selectedWorkspace = workspaces.first { $0.id == selectedWorkspace.id }
+    }
+
+    func resetWorkspaceSymbolIcon() {
+        workspaceSymbolIconName = nil
     }
 }
