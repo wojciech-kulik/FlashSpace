@@ -23,9 +23,9 @@ struct MainView: View {
         .padding()
         .fixedSize()
         .onAppear {
-            if viewModel.dismiss {
-                viewModel.dismiss = false
-                DispatchQueue.main.async { dismissWindow() }
+            if viewModel.dismissOnLaunch {
+                viewModel.dismissOnLaunch = false
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { dismissWindow() }
             }
         }
         .sheet(isPresented: $viewModel.isInputDialogPresented) {

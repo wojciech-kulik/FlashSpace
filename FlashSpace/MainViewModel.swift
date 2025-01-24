@@ -11,7 +11,6 @@ import ShortcutRecorder
 import SwiftUI
 
 final class MainViewModel: ObservableObject {
-    @Environment(\.openWindow) private var openWindow
     @AppStorage("afterFirstLaunch") var afterFirstLaunch = false
 
     @Published var workspaces: [Workspace] = []
@@ -23,22 +22,33 @@ final class MainViewModel: ObservableObject {
     @Published var workspaceDisplay = ""
     @Published var workspaceAppToFocus: String?
 
-    @Published var selectedApp: String?
-    @Published var selectedWorkspace: Workspace? {
+    @Published var isInputDialogPresented = false
+    @Published var userInput = ""
+    @Published var dismissOnLaunch = false
+
+    var selectedApp: String? {
+        didSet {
+            guard selectedApp != oldValue else { return }
+
+            // To avoid warnings
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                self.objectWillChange.send()
+            }
+        }
+    }
+
+    var selectedWorkspace: Workspace? {
         didSet {
             guard selectedWorkspace != oldValue else { return }
 
+            // To avoid warnings
             updatingWorkspace = true
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
                 self.updatingWorkspace = false
                 self.updateSelectedWorkspace()
             }
         }
     }
-
-    @Published var isInputDialogPresented = false
-    @Published var userInput = ""
-    @Published var dismiss = false
 
     var screens: [String] {
         let set = Set<String>(NSScreen.screens.compactMap(\.localizedName))
@@ -80,7 +90,7 @@ final class MainViewModel: ObservableObject {
 
     private func checkIfFirstLaunch() {
         if afterFirstLaunch {
-            dismiss = true
+            dismissOnLaunch = true
         } else {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                 NSApp.activate(ignoringOtherApps: true)
