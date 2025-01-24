@@ -44,6 +44,8 @@ final class WorkspaceManager {
         print("\n\nWORKSPACE: \(workspace.name)")
         print("----")
 
+        Integrations.runIfNeeded(workspace: workspace)
+
         lastWorkspaceActivation = Date()
         activeWorkspace[workspace.display] = workspace
         showApps(in: workspace, setFocus: setFocus)
