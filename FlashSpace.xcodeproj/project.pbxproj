@@ -46,6 +46,7 @@
 		165856412D43023500544CC2 /* Exceptions for "FlashSpace" folder in "FlashSpace" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Extensions/AXUIElement.swift,
 				Extensions/NSRunningApplication.swift,
 			);
 			target = 16999A042D3D97770006EA91 /* FlashSpace */;

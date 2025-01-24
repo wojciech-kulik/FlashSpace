@@ -12,7 +12,7 @@ import SwiftUI
 
 final class MainViewModel: ObservableObject {
     @Environment(\.openWindow) private var openWindow
-    @Environment(\.dismissWindow) var dismissWindow
+    @AppStorage("afterFirstLaunch") var afterFirstLaunch = false
 
     @Published var workspaces: [Workspace] = []
     @Published var workspaceApps: [String]?
@@ -38,6 +38,7 @@ final class MainViewModel: ObservableObject {
 
     @Published var isInputDialogPresented = false
     @Published var userInput = ""
+    @Published var dismiss = false
 
     var screens: [String] {
         let set = Set<String>(NSScreen.screens.compactMap(\.localizedName))
@@ -73,21 +74,19 @@ final class MainViewModel: ObservableObject {
         self.workspaceDisplay = NSScreen.main?.localizedName ?? ""
 
         hotKeysManager.enableAll()
-        dismissIfNotFirstTime()
         observe()
+        checkIfFirstLaunch()
     }
 
-    private func dismissIfNotFirstTime() {
-        if UserDefaults.standard.object(forKey: "afterFirstLaunch") == nil {
-            UserDefaults.standard.set(true, forKey: "afterFirstLaunch")
+    private func checkIfFirstLaunch() {
+        if afterFirstLaunch {
+            dismiss = true
+        } else {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                 NSApp.activate(ignoringOtherApps: true)
             }
-        } else {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                self.dismissWindow(id: "main")
-            }
         }
+        afterFirstLaunch = true
     }
 
     private func observe() {

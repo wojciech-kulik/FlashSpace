@@ -10,6 +10,7 @@ import SwiftUI
 
 struct MainView: View {
     @Environment(\.openWindow) var openWindow
+    @Environment(\.dismissWindow) var dismissWindow
 
     @StateObject var viewModel = MainViewModel()
 
@@ -21,6 +22,12 @@ struct MainView: View {
         }
         .padding()
         .fixedSize()
+        .onAppear {
+            if viewModel.dismiss {
+                viewModel.dismiss = false
+                DispatchQueue.main.async { dismissWindow() }
+            }
+        }
         .sheet(isPresented: $viewModel.isInputDialogPresented) {
             InputDialog(
                 title: "Enter workspace name:",
