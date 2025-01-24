@@ -4,7 +4,7 @@ FlashSpace is a blazingly fast virtual workspace manager for macOS.
 
 🚧 This project is still under development 🚧
 
-<img width="781" alt="FlashSpace" src="https://github.com/user-attachments/assets/e85f3b06-76a1-4c7e-873a-7fcb59b7c544" />
+<img width="781" alt="FlashSpace" src="https://github.com/user-attachments/assets/08d27e07-1132-4389-93ed-d6d607af71f2" />
 
 ## 🎥 Demo
 
@@ -34,7 +34,7 @@ FlashSpace allows to define virtual workspaces and assign apps to them. Each wor
 also assigned to a specific display. When you switch to a workspace, the assigned apps are
 automatically presented and all other apps from the assigned display are hidden.
 
-The app allows switching workspaces on each display independently.
+The app allows workspaces to be switched independently on each display.
 
 ## 💬 How to use
 
@@ -48,9 +48,9 @@ Now you can switch to the workspace using the configured hotkey.
 
 ## 🪟 Focus Management
 
-FlashSpace allows you to quickly switch focus between windows.
+FlashSpace allows you to switch focus between windows quickly.
 
-<img width="892" alt="FlashSpace-Focus" src="https://github.com/user-attachments/assets/89fdab1a-ac05-4e63-a78a-cfab5977e30f" />
+<img width="892" alt="FlashSpace-Focus" src="https://github.com/user-attachments/assets/bce3d431-22c3-43d1-8078-af62ffbb5f90" />
 
 ## 📝 Notes
 
@@ -60,7 +60,7 @@ FlashSpace doesn't manage windows, so if you switch to a workspace and call
 another app that is not assigned to the workspace, it will be shown on top of
 the workspace apps.
 
-I consider this as a desired behavior, because it allows you quickly access other
+I consider this as a desired behavior because it allows you to quickly access other
 apps without glitches or switching between workspaces.
 
 This is a common issue with tiling window managers that they often cause glitches
