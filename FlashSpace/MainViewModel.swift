@@ -21,6 +21,7 @@ final class MainViewModel: ObservableObject {
     @Published var workspaceShortcut: HotKeyShortcut?
     @Published var workspaceAssignShortcut: HotKeyShortcut?
     @Published var workspaceDisplay = ""
+    @Published var workspaceAppToFocus: String?
 
     @Published var selectedApp: String?
     @Published var selectedWorkspace: Workspace? {
@@ -53,7 +54,11 @@ final class MainViewModel: ObservableObject {
         return selectedWorkspace.name == workspaceName &&
             selectedWorkspace.display == workspaceDisplay &&
             selectedWorkspace.activateShortcut == workspaceShortcut &&
-            selectedWorkspace.assignAppShortcut == workspaceAssignShortcut
+            selectedWorkspace.assignAppShortcut == workspaceAssignShortcut &&
+            (
+                selectedWorkspace.appToFocus == workspaceAppToFocus ||
+                    selectedWorkspace.appToFocus == nil && workspaceAppToFocus == workspaceApps?.last
+            )
     }
 
     private var cancellables: Set<AnyCancellable> = []
@@ -98,6 +103,7 @@ final class MainViewModel: ObservableObject {
         workspaceAssignShortcut = selectedWorkspace?.assignAppShortcut
         workspaceDisplay = selectedWorkspace?.display ?? NSScreen.main?.localizedName ?? ""
         workspaceApps = selectedWorkspace?.apps
+        workspaceAppToFocus = selectedWorkspace?.appToFocus ?? workspaceApps?.last
         selectedApp = nil
     }
 
@@ -141,7 +147,8 @@ extension MainViewModel {
             display: workspaceDisplay,
             activateShortcut: workspaceShortcut,
             assignAppShortcut: workspaceAssignShortcut,
-            apps: selectedWorkspace.apps
+            apps: selectedWorkspace.apps,
+            appToFocus: workspaceAppToFocus
         )
 
         workspaceRepository.updateWorkspace(updatedWorkspace)

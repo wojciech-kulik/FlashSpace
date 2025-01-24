@@ -68,10 +68,6 @@ when a small pop-up window is shown or some unexpected app is opened.
 
 If you want to hide the new app, you can simply use the hotkey again.
 
-### Focus
-
-The last app on the list will be focused when switching to the workspace.
-
 ## 🚧 Limitations
 
 The app is still in early development and has some limitations:

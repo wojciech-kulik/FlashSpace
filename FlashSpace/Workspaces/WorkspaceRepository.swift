@@ -61,6 +61,10 @@ final class WorkspaceRepository {
     func deleteApp(from workspaceId: WorkspaceID, app: String) {
         guard let workspaceIndex = workspaces.firstIndex(where: { $0.id == workspaceId }) else { return }
 
+        if workspaces[workspaceIndex].appToFocus == app {
+            workspaces[workspaceIndex].appToFocus = nil
+        }
+
         workspaces[workspaceIndex].apps.removeAll { $0 == app }
         saveToDisk()
     }
@@ -68,6 +72,10 @@ final class WorkspaceRepository {
     func deleteAppFromAllWorkspaces(app: String) {
         for (index, var workspace) in workspaces.enumerated() {
             workspace.apps.removeAll { $0 == app }
+            if workspace.appToFocus == app {
+                workspace.appToFocus = nil
+            }
+
             workspaces[index] = workspace
         }
         saveToDisk()

@@ -77,9 +77,9 @@ final class WorkspaceManager {
         }
 
         if setFocus {
-            appsToShow
-                .first { $0.localizedName == workspace.apps.last }?
-                .focus()
+            let appToFocus = appsToShow.first { $0.localizedName == workspace.appToFocus }
+            let lastApp = appsToShow.first { $0.localizedName == workspace.apps.last }
+            (appToFocus ?? lastApp)?.focus()
         }
     }
 

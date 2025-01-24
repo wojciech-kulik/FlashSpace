@@ -89,6 +89,12 @@ struct MainView: View {
                     }
                 }.padding(.bottom)
 
+                Picker("Focus App:", selection: $viewModel.workspaceAppToFocus) {
+                    ForEach(viewModel.workspaceApps ?? [], id: \.self) {
+                        Text($0).tag($0)
+                    }
+                }.padding(.bottom)
+
                 Text("Activate Shortcut:")
                 HotKeyControl(shortcut: $viewModel.workspaceShortcut).padding(.bottom)
 
