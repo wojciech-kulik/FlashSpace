@@ -28,8 +28,10 @@ struct SettingsView: View {
             List(selection: $selectedTab) {
                 Label("General", systemImage: "gearshape")
                     .tag("General")
-                Label("Focus Management", systemImage: "macwindow.on.rectangle")
+                Label("Focus Manager", systemImage: "macwindow.on.rectangle")
                     .tag("Focus")
+                Label("Workspaces", systemImage: "square.stack.3d.up")
+                    .tag("Workspaces")
                 Label("Integrations", systemImage: "link")
                     .tag("Integrations")
             }
@@ -50,7 +52,9 @@ struct SettingsView: View {
         case "General":
             GeneralSettingsView()
         case "Focus":
-            FocusManagementView()
+            FocusSettingsView()
+        case "Workspaces":
+            WorkspacesSettingsView()
         case "Integrations":
             IntegrationsSettingsView()
         default:

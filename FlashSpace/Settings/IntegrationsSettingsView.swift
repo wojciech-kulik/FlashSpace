@@ -13,7 +13,7 @@ struct IntegrationsSettingsView: View {
     var body: some View {
         Form {
             Section {
-                Toggle("Enable integrations", isOn: $settings.enableIntegrations)
+                Toggle("Enable Integrations", isOn: $settings.enableIntegrations)
             }
 
             Section(

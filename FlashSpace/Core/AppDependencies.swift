@@ -24,7 +24,8 @@ struct AppDependencies {
 
     private init() {
         self.workspaceManager = WorkspaceManager(
-            workspaceRepository: workspaceRepository
+            workspaceRepository: workspaceRepository,
+            settingsRepository: settingsRepository
         )
         self.focusManager = FocusManager(
             workspaceRepository: workspaceRepository,

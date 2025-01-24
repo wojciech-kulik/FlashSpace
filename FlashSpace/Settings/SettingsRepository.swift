@@ -17,12 +17,18 @@ struct AppSettings: Codable {
     var focusNextWorkspaceApp: HotKeyShortcut?
     var focusPreviousWorkspaceApp: HotKeyShortcut?
 
+    var switchToPreviousWorkspace: HotKeyShortcut?
+    var switchToNextWorkspace: HotKeyShortcut?
+    var unassignFocusedApp: HotKeyShortcut?
+
     var enableIntegrations: Bool?
     var runScriptOnWorkspaceChange: String?
 }
 
 final class SettingsRepository: ObservableObject {
     static let defaultScript = "sketchybar --trigger flashspace_workspace_change WORKSPACE=\"$WORKSPACE\" DISPLAY=\"$DISPLAY\""
+
+    // MARK: - Focus Manager
 
     @Published var enableFocusManagement: Bool = true {
         didSet { updateSettings() }
@@ -51,6 +57,22 @@ final class SettingsRepository: ObservableObject {
     @Published var focusPreviousWorkspaceApp: HotKeyShortcut? {
         didSet { updateSettings() }
     }
+
+    // MARK: - Workspaces
+
+    @Published var switchToPreviousWorkspace: HotKeyShortcut? {
+        didSet { updateSettings() }
+    }
+
+    @Published var switchToNextWorkspace: HotKeyShortcut? {
+        didSet { updateSettings() }
+    }
+
+    @Published var unassignFocusedApp: HotKeyShortcut? {
+        didSet { updateSettings() }
+    }
+
+    // MARK: - Integrations
 
     @Published var enableIntegrations: Bool = false {
         didSet { updateSettings() }
@@ -92,6 +114,9 @@ final class SettingsRepository: ObservableObject {
             focusDown: focusDown,
             focusNextWorkspaceApp: focusNextWorkspaceApp,
             focusPreviousWorkspaceApp: focusPreviousWorkspaceApp,
+            switchToPreviousWorkspace: switchToPreviousWorkspace,
+            switchToNextWorkspace: switchToNextWorkspace,
+            unassignFocusedApp: unassignFocusedApp,
             enableIntegrations: enableIntegrations,
             runScriptOnWorkspaceChange: runScriptOnWorkspaceChange
         )
@@ -121,6 +146,10 @@ final class SettingsRepository: ObservableObject {
         focusDown = settings.focusDown
         focusNextWorkspaceApp = settings.focusNextWorkspaceApp
         focusPreviousWorkspaceApp = settings.focusPreviousWorkspaceApp
+
+        switchToPreviousWorkspace = settings.switchToPreviousWorkspace
+        switchToNextWorkspace = settings.switchToNextWorkspace
+        unassignFocusedApp = settings.unassignFocusedApp
 
         enableIntegrations = settings.enableIntegrations ?? false
         runScriptOnWorkspaceChange = settings.runScriptOnWorkspaceChange ?? Self.defaultScript

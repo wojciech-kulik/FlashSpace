@@ -17,14 +17,15 @@
 
 /* Begin PBXFileReference section */
 		01904D0D8EB8017AEF4CD453 /* Integrations.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Integrations.swift; sourceTree = "<group>"; };
-		07AA7A031B97E585161DBEFC /* FocusManagementView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FocusManagementView.swift; sourceTree = "<group>"; };
 		0F6030DE3CF8A0BBDBFC3E29 /* SettingsRepository.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SettingsRepository.swift; sourceTree = "<group>"; };
 		14242986FC549EA6F2EE11B8 /* AXUIElement.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AXUIElement.swift; sourceTree = "<group>"; };
 		16999A052D3D97770006EA91 /* FlashSpace-Dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "FlashSpace-Dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		16999AE32D3DC77A0006EA91 /* ServiceManagement.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ServiceManagement.framework; path = System/Library/Frameworks/ServiceManagement.framework; sourceTree = SDKROOT; };
+		1C8586E09F30781F4653F207 /* FocusSettingsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FocusSettingsView.swift; sourceTree = "<group>"; };
 		2D36CCD07BD78C895996F48F /* AppConstants.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppConstants.swift; sourceTree = "<group>"; };
 		36A517C2599D59AA134BD2CC /* Workspace.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Workspace.swift; sourceTree = "<group>"; };
 		36E4723ECEA5C6DD2BDA559F /* FileChooser.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FileChooser.swift; sourceTree = "<group>"; };
+		41B1F3B6EC78F2A4AB956787 /* WorkspacesSettingsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WorkspacesSettingsView.swift; sourceTree = "<group>"; };
 		5AB52E58777D6FCD2FD77ADD /* AutostartService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AutostartService.swift; sourceTree = "<group>"; };
 		5CCD64800D95D6202345C05D /* FocusedWindowTracker.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FocusedWindowTracker.swift; sourceTree = "<group>"; };
 		5F8D90F8EE33FFC0DB1A2DC7 /* Shortcut.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Shortcut.swift; sourceTree = "<group>"; };
@@ -173,9 +174,10 @@
 			children = (
 				CDF522B8B2538D4D42526AAA /* SettingsView.swift */,
 				FE5885AA7A5B96DC59D8290B /* GeneralSettingsView.swift */,
-				07AA7A031B97E585161DBEFC /* FocusManagementView.swift */,
 				0F6030DE3CF8A0BBDBFC3E29 /* SettingsRepository.swift */,
 				BF62C0D4D9928BC04344735A /* IntegrationsSettingsView.swift */,
+				1C8586E09F30781F4653F207 /* FocusSettingsView.swift */,
+				41B1F3B6EC78F2A4AB956787 /* WorkspacesSettingsView.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
