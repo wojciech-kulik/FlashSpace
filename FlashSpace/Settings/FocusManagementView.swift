@@ -24,8 +24,8 @@ struct FocusManagementView: View {
             }
 
             Section {
-                hotkey("Focus Next Workspace App", for: $settings.focusNextWorkspaceApp)
-                hotkey("Focus Previous Workspace App", for: $settings.focusPreviousWorkspaceApp)
+                hotkey("Focus Next App", for: $settings.focusNextWorkspaceApp)
+                hotkey("Focus Previous App", for: $settings.focusPreviousWorkspaceApp)
             }
         }
         .formStyle(.grouped)
