@@ -69,28 +69,28 @@ final class FocusManager {
 
     func focusRight() {
         focus { focusedAppFrame, other in
-            other.midX > focusedAppFrame.maxX &&
+            other.maxX > focusedAppFrame.maxX &&
                 other.verticalIntersects(with: focusedAppFrame)
         }
     }
 
     func focusLeft() {
         focus { focusedAppFrame, other in
-            other.midX < focusedAppFrame.minX &&
+            other.minX < focusedAppFrame.minX &&
                 other.verticalIntersects(with: focusedAppFrame)
         }
     }
 
     func focusDown() {
         focus { focusedAppFrame, other in
-            other.midY > focusedAppFrame.maxY &&
+            other.maxY > focusedAppFrame.maxY &&
                 other.horizontalIntersects(with: focusedAppFrame)
         }
     }
 
     func focusUp() {
         focus { focusedAppFrame, other in
-            other.midY < focusedAppFrame.minY &&
+            other.minY < focusedAppFrame.minY &&
                 other.horizontalIntersects(with: focusedAppFrame)
         }
     }
