@@ -19,6 +19,7 @@ struct AppSettings: Codable {
 
     var enableIntegrations: Bool?
     var runScriptOnWorkspaceChange: String?
+    var runScriptOnLaunch: String?
 }
 
 final class SettingsRepository: ObservableObject {
@@ -60,6 +61,10 @@ final class SettingsRepository: ObservableObject {
         didSet { debouncedUpdateSettings.send(()) }
     }
 
+    @Published var runScriptOnLaunch: String = "" {
+        didSet { debouncedUpdateSettings.send(()) }
+    }
+
     private var currentSettings = AppSettings()
     private var shouldUpdate = false
     private var cancellables = Set<AnyCancellable>()
@@ -79,6 +84,10 @@ final class SettingsRepository: ObservableObject {
             .debounce(for: .seconds(1), scheduler: DispatchQueue.main)
             .sink { [weak self] in self?.updateSettings() }
             .store(in: &cancellables)
+
+        DispatchQueue.main.async {
+            Integrations.runOnAppLaunchIfNeeded()
+        }
     }
 
     private func updateSettings() {
@@ -93,7 +102,8 @@ final class SettingsRepository: ObservableObject {
             focusNextWorkspaceApp: focusNextWorkspaceApp,
             focusPreviousWorkspaceApp: focusPreviousWorkspaceApp,
             enableIntegrations: enableIntegrations,
-            runScriptOnWorkspaceChange: runScriptOnWorkspaceChange
+            runScriptOnWorkspaceChange: runScriptOnWorkspaceChange,
+            runScriptOnLaunch: runScriptOnLaunch
         )
         saveToDisk()
         AppDependencies.shared.hotKeysManager.refresh()
@@ -124,5 +134,6 @@ final class SettingsRepository: ObservableObject {
 
         enableIntegrations = settings.enableIntegrations ?? false
         runScriptOnWorkspaceChange = settings.runScriptOnWorkspaceChange ?? Self.defaultScript
+        runScriptOnLaunch = settings.runScriptOnLaunch ?? ""
     }
 }

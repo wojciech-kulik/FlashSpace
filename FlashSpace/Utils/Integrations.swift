@@ -10,7 +10,7 @@ import Foundation
 enum Integrations {
     private static let settings = AppDependencies.shared.settingsRepository
 
-    static func runIfNeeded(workspace: Workspace) {
+    static func runOnActivateIfNeeded(workspace: Workspace) {
         let script = settings.runScriptOnWorkspaceChange.trimmingCharacters(in: .whitespaces)
 
         guard settings.enableIntegrations, !script.isEmpty else { return }
@@ -22,6 +22,17 @@ enum Integrations {
         let task = Process()
         task.launchPath = "/bin/bash"
         task.arguments = ["-c", scriptWithReplacements]
+        task.launch()
+    }
+
+    static func runOnAppLaunchIfNeeded() {
+        let script = settings.runScriptOnLaunch.trimmingCharacters(in: .whitespaces)
+      
+        guard settings.enableIntegrations, !script.isEmpty else { return }
+
+        let task = Process()
+        task.launchPath = "/bin/sh"
+        task.arguments = ["-c", script]
         task.launch()
     }
 }
