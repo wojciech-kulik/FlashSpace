@@ -30,6 +30,8 @@ struct SettingsView: View {
                     .tag("General")
                 Label("Focus Management", systemImage: "macwindow.on.rectangle")
                     .tag("Focus")
+                Label("Integrations", systemImage: "link")
+                    .tag("Integrations")
             }
             .toolbar(removing: .sidebarToggle)
             .listStyle(.sidebar)
@@ -49,6 +51,8 @@ struct SettingsView: View {
             GeneralSettingsView()
         case "Focus":
             FocusManagementView()
+        case "Integrations":
+            IntegrationsSettingsView()
         default:
             EmptyView()
         }

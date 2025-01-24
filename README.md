@@ -17,10 +17,10 @@ https://github.com/user-attachments/assets/af5951ce-8386-48d5-918e-914474d2c2b8
 
 - [x] Blazingly fast workspace switching
 - [x] Multiple displays support
-- [x] Global hotkeys
 - [x] Activate workspace on app focus
 - [x] Move apps between workspaces with a hotkey
 - [x] Focus management - set hotkeys to switch between apps quickly
+- [x] [SketchyBar] integration
 
 ## ⚙️ Installation
 
@@ -48,13 +48,13 @@ Now you can switch to the workspace using the configured hotkey.
 
 ## 🪟 Focus Management
 
-FlashSpace allows you to switch focus between windows quickly.
+FlashSpace enables fast switching of focus between windows. Use hotkeys to
+shift focus in any desired direction. It also allows you to jump between
+displays.
 
 <img width="892" alt="FlashSpace-Focus" src="https://github.com/user-attachments/assets/bce3d431-22c3-43d1-8078-af62ffbb5f90" />
 
 ## 📝 Notes
-
-### Workspaces
 
 FlashSpace doesn't manage windows, so if you switch to a workspace and call
 another app that is not assigned to the workspace, it will be shown on top of
@@ -68,8 +68,79 @@ when a small pop-up window is shown or some unexpected app is opened.
 
 If you want to hide the new app, you can simply use the hotkey again.
 
+## 🖥️ SketchyBar Integration
+
+FlashSpace can be integrated with [SketchyBar] and other tools. The app runs a
+configurable script when the workspace is changed.
+
+You can enable the integration in the app settings.
+
+### Only Active Workspace
+
+##### `sketchybarrc`
+
+```bash
+sketchybar --add item flashspace left \
+  --set flashspace \
+  background.color=0x22ffffff \
+  background.corner_radius=5 \
+  label.padding_left=5 \
+  label.padding_right=5 \
+  script="$CONFIG_DIR/plugins/flashspace.sh" \
+  --add event flashspace_workspace_change \
+  --subscribe flashspace flashspace_workspace_change
+```
+
+##### `plugins/flashspace.sh`
+
+```bash
+#!/bin/bash
+
+sketchybar --set $NAME label="$WORKSPACE - $DISPLAY"
+```
+
+### All Workspaces
+
+##### `sketchybarrc`
+
+```bash
+sketchybar --add event flashspace_workspace_change
+
+SID=1
+WORKSPACES=$(cat ~/.config/flashspace/workspaces.json | jq -r ".[].name")
+
+for workspace in $WORKSPACES; do
+  sketchybar --add item flashspace.$SID left \
+    --subscribe flashspace.$SID flashspace_workspace_change \
+    --set flashspace.$SID \
+    background.color=0x22ffffff \
+    background.corner_radius=5 \
+    background.padding_left=5 \
+    label.padding_left=5 \
+    label.padding_right=5 \
+    label="$workspace" \
+    script="$CONFIG_DIR/plugins/flashspace.sh $workspace"
+
+  SID=$((SID + 1))
+done
+```
+
+##### `plugins/flashspace.sh`
+
+```bash
+#!/bin/bash
+
+if [ "$1" = "$WORKSPACE" ]; then
+  sketchybar --set $NAME label.color=0xffff0000
+else
+  sketchybar --set $NAME label.color=0xffffffff
+fi
+```
+
 ## 🚧 Limitations
 
 The app is still in early development and has some limitations:
 
 - It doesn't support individual app windows yet.
+
+[SketchyBar]: https://github.com/FelixKratz/SketchyBar

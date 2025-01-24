@@ -5,6 +5,7 @@
 //  Copyright © 2025 Wojciech Kulik. All rights reserved.
 //
 
+import Combine
 import Foundation
 
 struct AppSettings: Codable {
@@ -15,9 +16,14 @@ struct AppSettings: Codable {
     var focusDown: HotKeyShortcut?
     var focusNextWorkspaceApp: HotKeyShortcut?
     var focusPreviousWorkspaceApp: HotKeyShortcut?
+
+    var enableIntegrations: Bool?
+    var runScriptOnWorkspaceChange: String?
 }
 
 final class SettingsRepository: ObservableObject {
+    static let defaultScript = "sketchybar --trigger flashspace_workspace_change WORKSPACE=\"$WORKSPACE\" DISPLAY=\"$DISPLAY\""
+
     @Published var enableFocusManagement: Bool = true {
         didSet { updateSettings() }
     }
@@ -46,9 +52,19 @@ final class SettingsRepository: ObservableObject {
         didSet { updateSettings() }
     }
 
+    @Published var enableIntegrations: Bool = false {
+        didSet { updateSettings() }
+    }
+
+    @Published var runScriptOnWorkspaceChange: String = "" {
+        didSet { debouncedUpdateSettings.send(()) }
+    }
+
     private var currentSettings = AppSettings()
     private var shouldUpdate = false
+    private var cancellables = Set<AnyCancellable>()
 
+    private let debouncedUpdateSettings = PassthroughSubject<(), Never>()
     private let encoder = JSONEncoder()
     private let decoder = JSONDecoder()
     private let dataUrl = FileManager.default
@@ -56,7 +72,13 @@ final class SettingsRepository: ObservableObject {
         .appendingPathComponent(".config/flashspace/settings.json")
 
     init() {
+        encoder.outputFormatting = .prettyPrinted
         loadFromDisk()
+
+        debouncedUpdateSettings
+            .debounce(for: .seconds(1), scheduler: DispatchQueue.main)
+            .sink { [weak self] in self?.updateSettings() }
+            .store(in: &cancellables)
     }
 
     private func updateSettings() {
@@ -69,7 +91,9 @@ final class SettingsRepository: ObservableObject {
             focusUp: focusUp,
             focusDown: focusDown,
             focusNextWorkspaceApp: focusNextWorkspaceApp,
-            focusPreviousWorkspaceApp: focusPreviousWorkspaceApp
+            focusPreviousWorkspaceApp: focusPreviousWorkspaceApp,
+            enableIntegrations: enableIntegrations,
+            runScriptOnWorkspaceChange: runScriptOnWorkspaceChange
         )
         saveToDisk()
         AppDependencies.shared.hotKeysManager.refresh()
@@ -97,5 +121,8 @@ final class SettingsRepository: ObservableObject {
         focusDown = settings.focusDown
         focusNextWorkspaceApp = settings.focusNextWorkspaceApp
         focusPreviousWorkspaceApp = settings.focusPreviousWorkspaceApp
+
+        enableIntegrations = settings.enableIntegrations ?? false
+        runScriptOnWorkspaceChange = settings.runScriptOnWorkspaceChange ?? Self.defaultScript
     }
 }

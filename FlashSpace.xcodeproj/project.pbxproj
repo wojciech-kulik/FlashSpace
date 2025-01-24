@@ -10,10 +10,13 @@
 		16999A192D3D978E0006EA91 /* ShortcutRecorder in Frameworks */ = {isa = PBXBuildFile; productRef = 16999A182D3D978E0006EA91 /* ShortcutRecorder */; };
 		16999AE42D3DC77A0006EA91 /* ServiceManagement.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16999AE32D3DC77A0006EA91 /* ServiceManagement.framework */; };
 		2C5A21F7CFA65934F22ECA93 /* AXUIElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14242986FC549EA6F2EE11B8 /* AXUIElement.swift */; };
+		5C8832A1764AC1F6505BB8E4 /* Integrations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01904D0D8EB8017AEF4CD453 /* Integrations.swift */; };
 		CA65DED962CD106A86C389C2 /* NSRunningApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2E1D011156B9FFF828F2E9 /* NSRunningApplication.swift */; };
+		DD48ACCA45929209284841E9 /* IntegrationsSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF62C0D4D9928BC04344735A /* IntegrationsSettingsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		01904D0D8EB8017AEF4CD453 /* Integrations.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Integrations.swift; sourceTree = "<group>"; };
 		07AA7A031B97E585161DBEFC /* FocusManagementView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FocusManagementView.swift; sourceTree = "<group>"; };
 		0F6030DE3CF8A0BBDBFC3E29 /* SettingsRepository.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SettingsRepository.swift; sourceTree = "<group>"; };
 		14242986FC549EA6F2EE11B8 /* AXUIElement.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AXUIElement.swift; sourceTree = "<group>"; };
@@ -35,6 +38,7 @@
 		A6A0526ACA637050524E22C6 /* WorkspaceManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WorkspaceManager.swift; sourceTree = "<group>"; };
 		AFA065A8C8B0E063D8C60A76 /* NotificationName.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NotificationName.swift; sourceTree = "<group>"; };
 		B44F2DBC6749954D39EDFF45 /* FocusManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FocusManager.swift; sourceTree = "<group>"; };
+		BF62C0D4D9928BC04344735A /* IntegrationsSettingsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = IntegrationsSettingsView.swift; sourceTree = "<group>"; };
 		CDF522B8B2538D4D42526AAA /* SettingsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		CE2E1D011156B9FFF828F2E9 /* NSRunningApplication.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NSRunningApplication.swift; sourceTree = "<group>"; };
 		CE48B9CB7CAE419712CAE0AE /* HotKeysMonitor.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HotKeysMonitor.swift; sourceTree = "<group>"; };
@@ -48,6 +52,8 @@
 			membershipExceptions = (
 				Extensions/AXUIElement.swift,
 				Extensions/NSRunningApplication.swift,
+				Settings/IntegrationsSettingsView.swift,
+				Utils/Integrations.swift,
 			);
 			target = 16999A042D3D97770006EA91 /* FlashSpace */;
 		};
@@ -169,6 +175,7 @@
 				FE5885AA7A5B96DC59D8290B /* GeneralSettingsView.swift */,
 				07AA7A031B97E585161DBEFC /* FocusManagementView.swift */,
 				0F6030DE3CF8A0BBDBFC3E29 /* SettingsRepository.swift */,
+				BF62C0D4D9928BC04344735A /* IntegrationsSettingsView.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -178,6 +185,7 @@
 			children = (
 				36E4723ECEA5C6DD2BDA559F /* FileChooser.swift */,
 				5AB52E58777D6FCD2FD77ADD /* AutostartService.swift */,
+				01904D0D8EB8017AEF4CD453 /* Integrations.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -278,6 +286,8 @@
 			files = (
 				CA65DED962CD106A86C389C2 /* NSRunningApplication.swift in Sources */,
 				2C5A21F7CFA65934F22ECA93 /* AXUIElement.swift in Sources */,
+				DD48ACCA45929209284841E9 /* IntegrationsSettingsView.swift in Sources */,
+				5C8832A1764AC1F6505BB8E4 /* Integrations.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -411,7 +421,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = ZL6756Q8Q2;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -425,7 +435,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 0.3.4;
+				MARKETING_VERSION = 0.4.5;
 				PRODUCT_BUNDLE_IDENTIFIER = pl.wojciechkulik.FlashSpace.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)-Dev";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -442,8 +452,8 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 4;
-				DEVELOPMENT_TEAM = ZL6756Q8Q2;
+				CURRENT_PROJECT_VERSION = 5;
+				DEVELOPMENT_TEAM = JT56B63DU5;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -456,7 +466,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 0.3.4;
+				MARKETING_VERSION = 0.4.5;
 				PRODUCT_BUNDLE_IDENTIFIER = pl.wojciechkulik.FlashSpace;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
