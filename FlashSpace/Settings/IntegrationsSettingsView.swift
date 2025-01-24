@@ -17,6 +17,12 @@ struct IntegrationsSettingsView: View {
             }
 
             Section(
+                header: Text("Run script on app launch:")
+            ) {
+                TextField("", text: $settings.runScriptOnLaunch)
+            }
+
+            Section(
                 header: Text("Run script on workspace change:"),
                 footer: Text(
                     """

@@ -55,7 +55,7 @@ final class WorkspaceManager {
         print("\n\nWORKSPACE: \(workspace.name)")
         print("----")
 
-        Integrations.runIfNeeded(workspace: workspace)
+        Integrations.runOnActivateIfNeeded(workspace: workspace)
 
         lastWorkspaceActivation = Date()
         activeWorkspace[workspace.display] = workspace
