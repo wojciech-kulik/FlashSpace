@@ -20,6 +20,7 @@ https://github.com/user-attachments/assets/af5951ce-8386-48d5-918e-914474d2c2b8
 - [x] Activate workspace on app focus
 - [x] Move apps between workspaces with a hotkey
 - [x] Focus manager - set hotkeys to switch between apps quickly
+- [x] Cursor manager
 - [x] [SketchyBar] integration
 
 ## ⚙️ Installation
@@ -52,7 +53,7 @@ FlashSpace enables fast switching of focus between windows. Use hotkeys to
 shift focus in any desired direction. It also allows you to jump between
 displays.
 
-<img width="892" alt="FlashSpace-Focus" src="https://github.com/user-attachments/assets/bce3d431-22c3-43d1-8078-af62ffbb5f90" />
+<img width="892" alt="FlashSpace-Focus" src="https://github.com/user-attachments/assets/34e89138-0896-44c3-b125-dd00da5783ab" />
 
 ## 📝 Notes
 
