@@ -10,6 +10,7 @@ import Foundation
 
 struct AppSettings: Codable {
     var enableFocusManagement: Bool?
+    var centerCursorOnFocusChange: Bool?
     var focusLeft: HotKeyShortcut?
     var focusRight: HotKeyShortcut?
     var focusUp: HotKeyShortcut?
@@ -17,6 +18,7 @@ struct AppSettings: Codable {
     var focusNextWorkspaceApp: HotKeyShortcut?
     var focusPreviousWorkspaceApp: HotKeyShortcut?
 
+    var centerCursorOnWorkspaceChange: Bool?
     var switchToPreviousWorkspace: HotKeyShortcut?
     var switchToNextWorkspace: HotKeyShortcut?
     var unassignFocusedApp: HotKeyShortcut?
@@ -30,7 +32,11 @@ final class SettingsRepository: ObservableObject {
 
     // MARK: - Focus Manager
 
-    @Published var enableFocusManagement: Bool = true {
+    @Published var enableFocusManagement: Bool = false {
+        didSet { updateSettings() }
+    }
+
+    @Published var centerCursorOnFocusChange: Bool = false {
         didSet { updateSettings() }
     }
 
@@ -59,6 +65,10 @@ final class SettingsRepository: ObservableObject {
     }
 
     // MARK: - Workspaces
+
+    @Published var centerCursorOnWorkspaceChange: Bool = false {
+        didSet { updateSettings() }
+    }
 
     @Published var switchToPreviousWorkspace: HotKeyShortcut? {
         didSet { updateSettings() }
@@ -108,15 +118,19 @@ final class SettingsRepository: ObservableObject {
 
         currentSettings = AppSettings(
             enableFocusManagement: enableFocusManagement,
+            centerCursorOnFocusChange: centerCursorOnFocusChange,
             focusLeft: focusLeft,
             focusRight: focusRight,
             focusUp: focusUp,
             focusDown: focusDown,
             focusNextWorkspaceApp: focusNextWorkspaceApp,
             focusPreviousWorkspaceApp: focusPreviousWorkspaceApp,
+
+            centerCursorOnWorkspaceChange: centerCursorOnWorkspaceChange,
             switchToPreviousWorkspace: switchToPreviousWorkspace,
             switchToNextWorkspace: switchToNextWorkspace,
             unassignFocusedApp: unassignFocusedApp,
+
             enableIntegrations: enableIntegrations,
             runScriptOnWorkspaceChange: runScriptOnWorkspaceChange
         )
@@ -139,7 +153,8 @@ final class SettingsRepository: ObservableObject {
 
         currentSettings = settings
 
-        enableFocusManagement = settings.enableFocusManagement ?? true
+        enableFocusManagement = settings.enableFocusManagement ?? false
+        centerCursorOnFocusChange = settings.centerCursorOnFocusChange ?? false
         focusLeft = settings.focusLeft
         focusRight = settings.focusRight
         focusUp = settings.focusUp
@@ -147,6 +162,7 @@ final class SettingsRepository: ObservableObject {
         focusNextWorkspaceApp = settings.focusNextWorkspaceApp
         focusPreviousWorkspaceApp = settings.focusPreviousWorkspaceApp
 
+        centerCursorOnWorkspaceChange = settings.centerCursorOnWorkspaceChange ?? false
         switchToPreviousWorkspace = settings.switchToPreviousWorkspace
         switchToNextWorkspace = settings.switchToNextWorkspace
         unassignFocusedApp = settings.unassignFocusedApp

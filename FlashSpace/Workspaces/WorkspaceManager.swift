@@ -92,7 +92,9 @@ final class WorkspaceManager {
         if setFocus {
             let appToFocus = appsToShow.first { $0.localizedName == workspace.appToFocus }
             let lastApp = appsToShow.first { $0.localizedName == workspace.apps.last }
-            (appToFocus ?? lastApp)?.focus()
+            let toFocus = appToFocus ?? lastApp
+            toFocus?.focus()
+            centerCursorIfNeeded(in: toFocus?.getFrame())
         }
     }
 
@@ -108,6 +110,12 @@ final class WorkspaceManager {
             print("HIDE: \(app.localizedName ?? "")")
             app.hide()
         }
+    }
+
+    private func centerCursorIfNeeded(in frame: CGRect?) {
+        guard settingsRepository.centerCursorOnWorkspaceChange, let frame else { return }
+
+        CGWarpMouseCursorPosition(CGPoint(x: frame.midX, y: frame.midY))
     }
 }
 

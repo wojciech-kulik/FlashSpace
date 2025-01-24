@@ -110,6 +110,13 @@ final class FocusManager {
         toFocus?.window.focus()
         toFocus?.app.activate()
         toFocus?.window.focus()
+        centerCursorIfNeeded(in: toFocus?.frame)
+    }
+
+    private func centerCursorIfNeeded(in frame: CGRect?) {
+        guard settingsRepository.centerCursorOnFocusChange, let frame else { return }
+
+        CGWarpMouseCursorPosition(CGPoint(x: frame.midX, y: frame.midY))
     }
 
     private func getFocusedAppIndex() -> (Int, [String])? {
