@@ -8,5 +8,5 @@
 import Foundation
 
 extension Notification.Name {
-    static let newAppAssigned = Notification.Name("newAppAssigned")
+    static let appsListChanged = Notification.Name("appsListChanged")
 }

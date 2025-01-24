@@ -19,9 +19,14 @@ final class WorkspaceManager {
     private let hideAgainSubject = PassthroughSubject<Workspace, Never>()
 
     private let workspaceRepository: WorkspaceRepository
+    private let settingsRepository: SettingsRepository
 
-    init(workspaceRepository: WorkspaceRepository) {
+    init(
+        workspaceRepository: WorkspaceRepository,
+        settingsRepository: SettingsRepository
+    ) {
         self.workspaceRepository = workspaceRepository
+        self.settingsRepository = settingsRepository
 
         // Ask for accessibility permissions
         // Required to hide apps
@@ -35,9 +40,15 @@ final class WorkspaceManager {
     }
 
     func getHotKeys() -> [(Shortcut, () -> ())] {
-        workspaceRepository.workspaces
-            .flatMap { [getActivateShortcut(for: $0), getAssignShortcut(for: $0)] }
-            .compactMap { $0 }
+        let shortcuts = [
+            getUnassignAppShortcut(),
+            getCycleWorkspacesShortcut(next: false),
+            getCycleWorkspacesShortcut(next: true)
+        ] +
+            workspaceRepository.workspaces
+            .flatMap { [getActivateShortcut(for: $0), getAssignAppShortcut(for: $0)] }
+
+        return shortcuts.compactMap(\.self)
     }
 
     func activateWorkspace(_ workspace: Workspace, setFocus: Bool) {
@@ -64,7 +75,7 @@ final class WorkspaceManager {
             .first(where: { $0.id == workspace.id }) else { return }
 
         activateWorkspace(updatedWorkspace, setFocus: false)
-        NotificationCenter.default.post(name: .newAppAssigned, object: nil)
+        NotificationCenter.default.post(name: .appsListChanged, object: nil)
     }
 
     private func showApps(in workspace: Workspace, setFocus: Bool) {
@@ -114,7 +125,7 @@ extension WorkspaceManager {
         return (shortcut, action)
     }
 
-    private func getAssignShortcut(for workspace: Workspace) -> (Shortcut, () -> ())? {
+    private func getAssignAppShortcut(for workspace: Workspace) -> (Shortcut, () -> ())? {
         guard let shortcut = workspace.assignAppShortcut?.toShortcut() else { return nil }
 
         let action = { [weak self] in
@@ -128,5 +139,60 @@ extension WorkspaceManager {
         }
 
         return (shortcut, action)
+    }
+
+    private func getUnassignAppShortcut() -> (Shortcut, () -> ())? {
+        guard let shortcut = settingsRepository.unassignFocusedApp?.toShortcut() else { return nil }
+
+        let action = { [weak self] in
+            guard let activeApp = NSWorkspace.shared.frontmostApplication else { return }
+            guard let appName = activeApp.localizedName else { return }
+
+            self?.workspaceRepository.deleteAppFromAllWorkspaces(app: appName)
+            activeApp.hide()
+            NotificationCenter.default.post(name: .appsListChanged, object: nil)
+        }
+
+        return (shortcut, action)
+    }
+
+    private func getCycleWorkspacesShortcut(next: Bool) -> (Shortcut, () -> ())? {
+        guard let shortcut =
+            next
+                ? settingsRepository.switchToNextWorkspace?.toShortcut()
+                : settingsRepository.switchToPreviousWorkspace?.toShortcut()
+        else { return nil }
+
+        let action = { [weak self] in
+            guard let self, let screen = getCursorScreen() else { return }
+
+            let hasMoreScreens = NSScreen.screens.count > 1
+            var screenWorkspaces = workspaceRepository.workspaces
+                .filter { !hasMoreScreens || $0.display == screen }
+
+            if !next {
+                screenWorkspaces = screenWorkspaces.reversed()
+            }
+
+            guard let activeWorkspace = activeWorkspace[screen] ?? screenWorkspaces.first else { return }
+
+            guard let workspace = screenWorkspaces
+                .drop(while: { $0.id != activeWorkspace.id })
+                .dropFirst()
+                .first ?? screenWorkspaces.first
+            else { return }
+
+            activateWorkspace(workspace, setFocus: true)
+        }
+
+        return (shortcut, action)
+    }
+
+    private func getCursorScreen() -> DisplayName? {
+        let cursorLocation = NSEvent.mouseLocation
+
+        return NSScreen.screens
+            .first { NSMouseInRect(cursorLocation, $0.frame, false) }?
+            .localizedName
     }
 }

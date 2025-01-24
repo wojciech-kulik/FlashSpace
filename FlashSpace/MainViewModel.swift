@@ -101,7 +101,7 @@ final class MainViewModel: ObservableObject {
 
     private func observe() {
         NotificationCenter.default
-            .publisher(for: .newAppAssigned)
+            .publisher(for: .appsListChanged)
             .sink { [weak self] _ in self?.reloadWorkspaces() }
             .store(in: &cancellables)
     }

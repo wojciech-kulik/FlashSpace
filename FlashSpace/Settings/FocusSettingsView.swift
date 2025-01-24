@@ -1,5 +1,5 @@
 //
-//  FocusManagementView.swift
+//  FocusSettingsView.swift
 //
 //  Created by Wojciech Kulik on 23/01/2025.
 //  Copyright © 2025 Wojciech Kulik. All rights reserved.
@@ -7,13 +7,13 @@
 
 import SwiftUI
 
-struct FocusManagementView: View {
+struct FocusSettingsView: View {
     @StateObject private var settings = AppDependencies.shared.settingsRepository
 
     var body: some View {
         Form {
             Section {
-                Toggle("Enable Focus Management", isOn: $settings.enableFocusManagement)
+                Toggle("Enable Focus Manager", isOn: $settings.enableFocusManagement)
             }
 
             Section {
@@ -29,7 +29,7 @@ struct FocusManagementView: View {
             }
         }
         .formStyle(.grouped)
-        .navigationTitle("Focus Management")
+        .navigationTitle("Focus Manager")
     }
 
     private func hotkey(_ title: String, for hotKey: Binding<HotKeyShortcut?>) -> some View {
