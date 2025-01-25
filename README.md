@@ -1,10 +1,19 @@
 # ⚡ FlashSpace
 
-FlashSpace is a blazingly fast virtual workspace manager for macOS.
+FlashSpace is a blazingly-fast virtual workspace manager for macOS, designed to
+enhance and replace native macOS Spaces. No more waiting for macOS animations.
 
-🚧 This project is still under development 🚧
+🚧 This project is still in early development. 🚧
 
 <img width="797" alt="FlashSpace" src="https://github.com/user-attachments/assets/9d5818de-80a4-414b-9926-6670e414e744" />
+
+## ⚙️ Installation
+
+**Requirements:** macOS 14.0 or later.
+
+Download the app from the [releases page].
+
+Alternatively, you can [build the app from source](#%EF%B8%8F-build-from-source).
 
 ## 🎥 Demo
 
@@ -12,6 +21,14 @@ The video shows a sample configuration where I use 3 workspaces and switch
 between them using hotkeys.
 
 https://github.com/user-attachments/assets/af5951ce-8386-48d5-918e-914474d2c2b8
+
+## 👉 How it works
+
+FlashSpace allows to define virtual workspaces and assign apps to them. Each workspace is
+also assigned to a specific display. When you switch to a workspace, the assigned apps are
+automatically presented and all other apps from the assigned display are hidden.
+
+The app allows workspaces to be switched independently on each display.
 
 ## ✨ Features
 
@@ -24,19 +41,13 @@ https://github.com/user-attachments/assets/af5951ce-8386-48d5-918e-914474d2c2b8
 - [x] Configurable Menu Bar icon (per workspace)
 - [x] [SketchyBar] integration
 
-## ⚙️ Installation
+## ⚖️ Project Values
 
-**Requirements:** macOS 14.0 or later.
-
-Download the app from the [releases page](https://github.com/wojciech-kulik/FlashSpace/releases).
-
-## 👉 How it works
-
-FlashSpace allows to define virtual workspaces and assign apps to them. Each workspace is
-also assigned to a specific display. When you switch to a workspace, the assigned apps are
-automatically presented and all other apps from the assigned display are hidden.
-
-The app allows workspaces to be switched independently on each display.
+- **Performance** - The app should be as fast as possible.
+- **Simplicity** - The app should be easy to use and configure.
+- **Reliability** - The app should work without glitches and unexpected behavior.
+- **Invisible** - The app should help, not disturb.
+- **UNIX Philosophy** - The app should do one thing and do it well - manage workspaces.
 
 ## 💬 How to use
 
@@ -145,4 +156,30 @@ The app is still in early development and has some limitations:
 
 - It doesn't support individual app windows yet.
 
+## 🛠️ Build From Source
+
+FlashSpace uses [XcodeGen] to generate the Xcode project from the `project.yml`
+file.
+
+1. Clone the repository.
+1. Navigate to the project directory.
+1. Run `brew bundle` to install dependencies.
+1. Run `xcodegen generate`.
+1. Open `FlashSpace.xcodeproj` in Xcode.
+1. Click on the `FlashSpace` target, click on the `Signing & Capabilities` tab,
+   and select your team.
+1. Build & run the app.
+
+Remember to run `xcodegen generate` every time you change branch or pull changes.
+
+If you want to generate the project with configured signing, you can run:
+
+```bash
+XCODE_DEVELOPMENT_TEAM=YOUR_TEAM_ID xcodegen generate
+```
+
+You can also set this variable globally in your shell.
+
 [SketchyBar]: https://github.com/FelixKratz/SketchyBar
+[XcodeGen]: https://github.com/yonaskolb/XcodeGen
+[releases page]: https://github.com/wojciech-kulik/FlashSpace/releases

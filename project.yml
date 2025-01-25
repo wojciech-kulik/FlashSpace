@@ -1,0 +1,57 @@
+---
+name: FlashSpace
+
+options:
+  createIntermediateGroups: true
+  indentWidth: 4
+  tabWidth: 4
+  groupSortPosition: top
+  bundleIdPrefix: pl.wojciechkulik
+
+packages:
+  ShortcutRecorder:
+    github: Kentzo/ShortcutRecorder
+    from: 3.4.0
+  SymbolPicker:
+    github: xnth97/SymbolPicker
+    from: 1.6.0
+
+targets:
+  FlashSpace:
+    type: application
+    platform: macOS
+    deploymentTarget: "14.0"
+    sources: [FlashSpace]
+    settings:
+      base:
+        MARKETING_VERSION: 0.6.7
+        CURRENT_PROJECT_VERSION: 7
+        CODE_SIGN_ENTITLEMENTS: FlashSpace/FlashSpace.entitlements
+        DEVELOPMENT_TEAM: "${XCODE_DEVELOPMENT_TEAM}"
+        GENERATE_INFOPLIST_FILE: true
+        INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.productivity
+        INFOPLIST_KEY_LSUIElement: true
+        INFOPLIST_KEY_CFBundleDisplayName: FlashSpace
+        INFOPLIST_KEY_NSHumanReadableCopyright: © 2025 Wojciech Kulik. All rights reserved.
+      configs:
+        debug:
+          INFOPLIST_KEY_CFBundleDisplayName: FlashSpace Dev
+          PRODUCT_NAME: FlashSpace-Dev
+          PRODUCT_BUNDLE_IDENTIFIER: pl.wojciechkulik.FlashSpace.dev
+
+    dependencies:
+      - sdk: ServiceManagement.framework
+      - package: ShortcutRecorder
+      - package: SymbolPicker
+
+    preBuildScripts:
+      - name: Run SwiftLint
+        script: |
+          /opt/homebrew/bin/swiftlint --use-alternative-excluding
+        basedOnDependencyAnalysis: false
+        showEnvVars: false
+      - name: Run SwiftFormat
+        script: |
+          /opt/homebrew/bin/swiftformat --lint ${SRCROOT} --config .swiftformat || exit 0
+        basedOnDependencyAnalysis: false
+        showEnvVars: false

@@ -27,7 +27,7 @@ enum Integrations {
 
     static func runOnAppLaunchIfNeeded() {
         let script = settings.runScriptOnLaunch.trimmingCharacters(in: .whitespaces)
-      
+
         guard settings.enableIntegrations, !script.isEmpty else { return }
 
         let task = Process()
