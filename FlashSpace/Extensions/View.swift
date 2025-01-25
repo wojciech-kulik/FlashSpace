@@ -15,4 +15,13 @@ extension View {
             HotKeyControl(shortcut: hotKey).fixedSize()
         }
     }
+
+    @ViewBuilder
+    func hidden(_ isHidden: Bool) -> some View {
+        if isHidden {
+            hidden()
+        } else {
+            self
+        }
+    }
 }

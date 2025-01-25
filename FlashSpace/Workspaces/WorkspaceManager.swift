@@ -12,8 +12,7 @@ import ShortcutRecorder
 typealias DisplayName = String
 
 final class WorkspaceManager: ObservableObject {
-    @Published
-    private(set) var activeWorkspaceSymbolIconName: String?
+    @Published private(set) var activeWorkspaceSymbolIconName: String?
 
     private(set) var activeWorkspace: [DisplayName: Workspace] = [:]
     private(set) var lastWorkspaceActivation = Date.distantPast
@@ -31,55 +30,12 @@ final class WorkspaceManager: ObservableObject {
         self.workspaceRepository = workspaceRepository
         self.settingsRepository = settingsRepository
 
-        // Ask for accessibility permissions
-        // Required to hide apps
-        let options: NSDictionary = [kAXTrustedCheckOptionPrompt.takeRetainedValue() as NSString: true]
-        _ = AXIsProcessTrustedWithOptions(options)
+        PermissionsManager.shared.askForAccessibilityPermissions()
 
         hideAgainSubject
             .debounce(for: 0.2, scheduler: RunLoop.main)
             .sink { [weak self] in self?.hideApps(in: $0) }
             .store(in: &cancellables)
-    }
-
-    func getHotKeys() -> [(Shortcut, () -> ())] {
-        let shortcuts = [
-            getUnassignAppShortcut(),
-            getCycleWorkspacesShortcut(next: false),
-            getCycleWorkspacesShortcut(next: true)
-        ] +
-            workspaceRepository.workspaces
-            .flatMap { [getActivateShortcut(for: $0), getAssignAppShortcut(for: $0)] }
-
-        return shortcuts.compactMap(\.self)
-    }
-
-    func activateWorkspace(_ workspace: Workspace, setFocus: Bool) {
-        print("\n\nWORKSPACE: \(workspace.name)")
-        print("----")
-
-        Integrations.runOnActivateIfNeeded(workspace: workspace)
-
-        lastWorkspaceActivation = Date()
-        activeWorkspace[workspace.display] = workspace
-        activeWorkspaceSymbolIconName = workspace.symbolIconName
-        showApps(in: workspace, setFocus: setFocus)
-        hideApps(in: workspace)
-
-        // Some apps may not hide properly,
-        // so we hide apps in the workspace after a short delay
-        hideAgainSubject.send(workspace)
-    }
-
-    func assignApp(_ app: String, to workspace: Workspace) {
-        workspaceRepository.deleteAppFromAllWorkspaces(app: app)
-        workspaceRepository.addApp(to: workspace.id, app: app)
-
-        guard let updatedWorkspace = workspaceRepository.workspaces
-            .first(where: { $0.id == workspace.id }) else { return }
-
-        activateWorkspace(updatedWorkspace, setFocus: false)
-        NotificationCenter.default.post(name: .appsListChanged, object: nil)
     }
 
     private func showApps(in workspace: Workspace, setFocus: Bool) {
@@ -124,6 +80,49 @@ final class WorkspaceManager: ObservableObject {
 }
 
 extension WorkspaceManager {
+    func activateWorkspace(_ workspace: Workspace, setFocus: Bool) {
+        print("\n\nWORKSPACE: \(workspace.name)")
+        print("----")
+
+        Integrations.runOnActivateIfNeeded(workspace: workspace)
+
+        lastWorkspaceActivation = Date()
+        activeWorkspace[workspace.display] = workspace
+        activeWorkspaceSymbolIconName = workspace.symbolIconName
+        showApps(in: workspace, setFocus: setFocus)
+        hideApps(in: workspace)
+
+        // Some apps may not hide properly,
+        // so we hide apps in the workspace after a short delay
+        hideAgainSubject.send(workspace)
+    }
+
+    func assignApp(_ app: String, to workspace: Workspace) {
+        workspaceRepository.deleteAppFromAllWorkspaces(app: app)
+        workspaceRepository.addApp(to: workspace.id, app: app)
+
+        guard let updatedWorkspace = workspaceRepository.workspaces
+            .first(where: { $0.id == workspace.id }) else { return }
+
+        activateWorkspace(updatedWorkspace, setFocus: false)
+        NotificationCenter.default.post(name: .appsListChanged, object: nil)
+    }
+}
+
+// MARK: - Shortcuts
+extension WorkspaceManager {
+    func getHotKeys() -> [(Shortcut, () -> ())] {
+        let shortcuts = [
+            getUnassignAppShortcut(),
+            getCycleWorkspacesShortcut(next: false),
+            getCycleWorkspacesShortcut(next: true)
+        ] +
+            workspaceRepository.workspaces
+            .flatMap { [getActivateShortcut(for: $0), getAssignAppShortcut(for: $0)] }
+
+        return shortcuts.compactMap(\.self)
+    }
+
     private func getActivateShortcut(for workspace: Workspace) -> (Shortcut, () -> ())? {
         guard let shortcut = workspace.activateShortcut?.toShortcut() else { return nil }
 

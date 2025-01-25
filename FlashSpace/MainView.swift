@@ -16,7 +16,7 @@ struct MainView: View {
     @StateObject var viewModel = MainViewModel()
 
     var body: some View {
-        HStack {
+        HStack(spacing: 16.0) {
             workspaces
             assignedApps
             workspaceSettings
@@ -57,9 +57,23 @@ struct MainView: View {
             .frame(width: 200, height: 400)
 
             HStack {
-                Button("Add", action: viewModel.addWorkspace)
-                Button("Delete", action: viewModel.deleteWorkspace)
-                    .disabled(viewModel.selectedWorkspace == nil)
+                Button(action: viewModel.addWorkspace) {
+                    Image(systemName: "plus")
+                }
+
+                Button(action: viewModel.deleteWorkspace) {
+                    Image(systemName: "trash")
+                }.disabled(viewModel.selectedWorkspace == nil)
+
+                Spacer()
+
+                Button { viewModel.moveWorkspace(up: true) } label: {
+                    Image(systemName: "arrow.up")
+                }.disabled(viewModel.selectedWorkspace == nil)
+
+                Button { viewModel.moveWorkspace(up: false) } label: {
+                    Image(systemName: "arrow.down")
+                }.disabled(viewModel.selectedWorkspace == nil)
             }
         }
     }
@@ -78,10 +92,13 @@ struct MainView: View {
             .frame(width: 200, height: 400)
 
             HStack {
-                Button("Add", action: viewModel.addApp)
-                    .disabled(viewModel.selectedWorkspace == nil)
-                Button("Delete", action: viewModel.deleteApp)
-                    .disabled(viewModel.selectedApp == nil)
+                Button(action: viewModel.addApp) {
+                    Image(systemName: "plus")
+                }.disabled(viewModel.selectedWorkspace == nil)
+
+                Button(action: viewModel.deleteApp) {
+                    Image(systemName: "trash")
+                }.disabled(viewModel.selectedApp == nil)
             }
         }
     }
@@ -94,7 +111,9 @@ struct MainView: View {
                     .fixedSize()
 
                 Text("Name:")
-                TextField("Name", text: $viewModel.workspaceName).padding(.bottom)
+                TextField("Name", text: $viewModel.workspaceName)
+                    .onSubmit(viewModel.saveWorkspace)
+                    .padding(.bottom)
 
                 Picker("Display:", selection: $viewModel.workspaceDisplay) {
                     ForEach(viewModel.screens, id: \.self) {
@@ -125,9 +144,6 @@ struct MainView: View {
                     Button("Reset", action: viewModel.resetWorkspaceSymbolIcon)
                 }
                 .padding(.bottom)
-
-                Button("Save", action: viewModel.updateWorkspace)
-                    .disabled(viewModel.isSaveButtonDisabled)
             }
             .disabled(viewModel.selectedWorkspace == nil)
 
