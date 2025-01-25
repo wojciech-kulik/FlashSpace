@@ -16,8 +16,11 @@ struct FocusSettingsView: View {
                 Toggle("Enable Focus Manager", isOn: $settings.enableFocusManagement)
             }
 
-            Section(header: Text("Trigger when focus is changed using shortcuts")) {
+            Section {
                 Toggle("Center Cursor In Focused App", isOn: $settings.centerCursorOnFocusChange)
+                Text("Triggered when focus is changed using shortcuts.")
+                    .foregroundStyle(.secondary)
+                    .font(.callout)
             }
 
             Section(header: Text("Shortcuts")) {

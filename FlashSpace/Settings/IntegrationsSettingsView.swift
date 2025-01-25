@@ -16,23 +16,27 @@ struct IntegrationsSettingsView: View {
                 Toggle("Enable Integrations", isOn: $settings.enableIntegrations)
             }
 
-            Section(
-                header: Text("Run script on app launch")
-            ) {
-                TextField("", text: $settings.runScriptOnLaunch)
-            }
+            Section(header: Text("Scripts To Run")) {
+                HStack {
+                    Text("On App Launch")
+                    TextField("", text: $settings.runScriptOnLaunch)
+                        .foregroundColor(.secondary)
+                }
 
-            Section(
-                header: Text("Run script on workspace change"),
-                footer: Text(
+                HStack {
+                    Text("On Workspace Change")
+                    TextField("", text: $settings.runScriptOnWorkspaceChange)
+                        .foregroundColor(.secondary)
+                }
+
+                Text(
                     """
                     $WORKSPACE will be replaced with the active workspace name
                     $DISPLAY will be replaced with the corresponding display name
                     """
                 )
                 .foregroundStyle(.secondary)
-            ) {
-                TextField("", text: $settings.runScriptOnWorkspaceChange)
+                .font(.callout)
             }
         }
         .formStyle(.grouped)

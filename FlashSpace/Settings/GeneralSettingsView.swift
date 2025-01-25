@@ -44,6 +44,7 @@ struct GeneralSettingsView: View {
                 }
                 Text("FlashSpace requires accessibility access to manage applications.")
                     .foregroundColor(.secondary)
+                    .font(.callout)
             }
 
             Section(header: Text("Shortcuts")) {
