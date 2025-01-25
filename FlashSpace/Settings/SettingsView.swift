@@ -20,7 +20,7 @@ struct SettingsView: View {
                 .frame(maxHeight: .infinity, alignment: .top)
                 .navigationSplitViewColumnWidth(min: 440, ideal: 440)
         })
-        .frame(width: 780, height: 460)
+        .frame(width: 780, height: 490)
     }
 
     private var sideMenu: some View {

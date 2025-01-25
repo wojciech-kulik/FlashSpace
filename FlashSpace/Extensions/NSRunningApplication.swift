@@ -13,7 +13,7 @@ extension NSRunningApplication {
     }
 
     func focus() {
-        defer { _ = activate(options: .activateIgnoringOtherApps) }
+        defer { _ = activate() }
 
         guard let mainWindow = mainWindow() else { return }
 

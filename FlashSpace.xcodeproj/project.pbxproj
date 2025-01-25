@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		012B12F27D743731EBFB91CC /* View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48478E438232B0E19E90F836 /* View.swift */; };
 		16999A192D3D978E0006EA91 /* ShortcutRecorder in Frameworks */ = {isa = PBXBuildFile; productRef = 16999A182D3D978E0006EA91 /* ShortcutRecorder */; };
 		16999AE42D3DC77A0006EA91 /* ServiceManagement.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16999AE32D3DC77A0006EA91 /* ServiceManagement.framework */; };
 		2C5A21F7CFA65934F22ECA93 /* AXUIElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14242986FC549EA6F2EE11B8 /* AXUIElement.swift */; };
@@ -27,6 +28,7 @@
 		36A517C2599D59AA134BD2CC /* Workspace.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Workspace.swift; sourceTree = "<group>"; };
 		36E4723ECEA5C6DD2BDA559F /* FileChooser.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FileChooser.swift; sourceTree = "<group>"; };
 		41B1F3B6EC78F2A4AB956787 /* WorkspacesSettingsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WorkspacesSettingsView.swift; sourceTree = "<group>"; };
+		48478E438232B0E19E90F836 /* View.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = View.swift; sourceTree = "<group>"; };
 		5AB52E58777D6FCD2FD77ADD /* AutostartService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AutostartService.swift; sourceTree = "<group>"; };
 		5CCD64800D95D6202345C05D /* FocusedWindowTracker.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FocusedWindowTracker.swift; sourceTree = "<group>"; };
 		5F8D90F8EE33FFC0DB1A2DC7 /* Shortcut.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Shortcut.swift; sourceTree = "<group>"; };
@@ -149,6 +151,7 @@
 				AFA065A8C8B0E063D8C60A76 /* NotificationName.swift */,
 				950E5B9658FA8C2765F334E7 /* HotKeyShortcut.swift */,
 				14242986FC549EA6F2EE11B8 /* AXUIElement.swift */,
+				48478E438232B0E19E90F836 /* View.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -294,6 +297,7 @@
 				2C5A21F7CFA65934F22ECA93 /* AXUIElement.swift in Sources */,
 				DD48ACCA45929209284841E9 /* IntegrationsSettingsView.swift in Sources */,
 				5C8832A1764AC1F6505BB8E4 /* Integrations.swift in Sources */,
+				012B12F27D743731EBFB91CC /* View.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

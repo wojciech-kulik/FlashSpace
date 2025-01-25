@@ -17,13 +17,13 @@ struct IntegrationsSettingsView: View {
             }
 
             Section(
-                header: Text("Run script on app launch:")
+                header: Text("Run script on app launch")
             ) {
                 TextField("", text: $settings.runScriptOnLaunch)
             }
 
             Section(
-                header: Text("Run script on workspace change:"),
+                header: Text("Run script on workspace change"),
                 footer: Text(
                     """
                     $WORKSPACE will be replaced with the active workspace name

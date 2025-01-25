@@ -16,11 +16,11 @@ struct FocusSettingsView: View {
                 Toggle("Enable Focus Manager", isOn: $settings.enableFocusManagement)
             }
 
-            Section {
+            Section(header: Text("Trigger when focus is changed using shortcuts")) {
                 Toggle("Center Cursor In Focused App", isOn: $settings.centerCursorOnFocusChange)
             }
 
-            Section {
+            Section(header: Text("Shortcuts")) {
                 hotkey("Focus Left", for: $settings.focusLeft)
                 hotkey("Focus Right", for: $settings.focusRight)
                 hotkey("Focus Up", for: $settings.focusUp)
@@ -34,13 +34,5 @@ struct FocusSettingsView: View {
         }
         .formStyle(.grouped)
         .navigationTitle("Focus Manager")
-    }
-
-    private func hotkey(_ title: String, for hotKey: Binding<HotKeyShortcut?>) -> some View {
-        HStack {
-            Text(title)
-            Spacer()
-            HotKeyControl(shortcut: hotKey).fixedSize()
-        }
     }
 }

@@ -12,11 +12,12 @@ struct WorkspacesSettingsView: View {
 
     var body: some View {
         Form {
-            Section(
-                footer: Text("This feature is triggered when the workspace is changed using hotkeys.")
-                    .foregroundStyle(.secondary)
-            ) {
+            Section(header: Text("Trigger when workspace is changed using shortcuts")) {
                 Toggle("Center Cursor In Focused App", isOn: $settings.centerCursorOnWorkspaceChange)
+            }
+
+            Section(header: Text("Shortcuts")) {
+                hotkey("Unassign Focused App", for: $settings.unassignFocusedApp)
             }
 
             Section(
@@ -26,20 +27,8 @@ struct WorkspacesSettingsView: View {
                 hotkey("Previous Workspace", for: $settings.switchToPreviousWorkspace)
                 hotkey("Next Workspace", for: $settings.switchToNextWorkspace)
             }
-
-            Section {
-                hotkey("Unassign Focused App", for: $settings.unassignFocusedApp)
-            }
         }
         .formStyle(.grouped)
         .navigationTitle("Workspaces")
-    }
-
-    private func hotkey(_ title: String, for hotKey: Binding<HotKeyShortcut?>) -> some View {
-        HStack {
-            Text(title)
-            Spacer()
-            HotKeyControl(shortcut: hotKey).fixedSize()
-        }
     }
 }
