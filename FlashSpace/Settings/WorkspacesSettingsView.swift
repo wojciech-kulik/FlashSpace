@@ -21,6 +21,7 @@ struct WorkspacesSettingsView: View {
             }
 
             Section {
+                hotkey("Recent Workspace", for: $settings.switchToRecentWorkspace)
                 hotkey("Previous Workspace", for: $settings.switchToPreviousWorkspace)
                 hotkey("Next Workspace", for: $settings.switchToNextWorkspace)
                 Text(
