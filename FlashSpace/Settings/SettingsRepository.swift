@@ -24,6 +24,7 @@ struct AppSettings: Codable {
     var centerCursorOnWorkspaceChange: Bool?
     var switchToPreviousWorkspace: HotKeyShortcut?
     var switchToNextWorkspace: HotKeyShortcut?
+    var switchToRecentWorkspace: HotKeyShortcut?
     var unassignFocusedApp: HotKeyShortcut?
 
     var enableIntegrations: Bool?
@@ -92,6 +93,10 @@ final class SettingsRepository: ObservableObject {
         didSet { updateSettings() }
     }
 
+    @Published var switchToRecentWorkspace: HotKeyShortcut? {
+        didSet { updateSettings() }
+    }
+
     @Published var unassignFocusedApp: HotKeyShortcut? {
         didSet { updateSettings() }
     }
@@ -154,6 +159,7 @@ final class SettingsRepository: ObservableObject {
             centerCursorOnWorkspaceChange: centerCursorOnWorkspaceChange,
             switchToPreviousWorkspace: switchToPreviousWorkspace,
             switchToNextWorkspace: switchToNextWorkspace,
+            switchToRecentWorkspace: switchToRecentWorkspace,
             unassignFocusedApp: unassignFocusedApp,
 
             enableIntegrations: enableIntegrations,
@@ -194,6 +200,7 @@ final class SettingsRepository: ObservableObject {
         centerCursorOnWorkspaceChange = settings.centerCursorOnWorkspaceChange ?? false
         switchToPreviousWorkspace = settings.switchToPreviousWorkspace
         switchToNextWorkspace = settings.switchToNextWorkspace
+        switchToRecentWorkspace = settings.switchToRecentWorkspace
         unassignFocusedApp = settings.unassignFocusedApp
 
         enableIntegrations = settings.enableIntegrations ?? false

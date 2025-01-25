@@ -16,6 +16,7 @@ final class WorkspaceManager: ObservableObject {
 
     private(set) var activeWorkspace: [DisplayName: Workspace] = [:]
     private(set) var lastWorkspaceActivation = Date.distantPast
+    private(set) var mostRecentWorkspace: [DisplayName: Workspace] = [:]
 
     private var cancellables = Set<AnyCancellable>()
     private let hideAgainSubject = PassthroughSubject<Workspace, Never>()
@@ -87,6 +88,12 @@ extension WorkspaceManager {
         Integrations.runOnActivateIfNeeded(workspace: workspace)
 
         lastWorkspaceActivation = Date()
+
+        // Save the most recent workspace if it's not the current one
+        if activeWorkspace[workspace.display]?.id != workspace.id {
+            mostRecentWorkspace[workspace.display] = activeWorkspace[workspace.display]
+        }
+
         activeWorkspace[workspace.display] = workspace
         activeWorkspaceSymbolIconName = workspace.symbolIconName
         showApps(in: workspace, setFocus: setFocus)
@@ -114,6 +121,7 @@ extension WorkspaceManager {
     func getHotKeys() -> [(Shortcut, () -> ())] {
         let shortcuts = [
             getUnassignAppShortcut(),
+            getRecentWorkspaceShortcut(),
             getCycleWorkspacesShortcut(next: false),
             getCycleWorkspacesShortcut(next: true)
         ] +
@@ -194,6 +202,20 @@ extension WorkspaceManager {
             else { return }
 
             activateWorkspace(workspace, setFocus: true)
+        }
+
+        return (shortcut, action)
+    }
+
+    private func getRecentWorkspaceShortcut() -> (Shortcut, () -> ())? {
+        guard let shortcut = settingsRepository.switchToRecentWorkspace?.toShortcut() else { return nil }
+        let action = { [weak self] in
+            guard let self,
+                  let screen = getCursorScreen(),
+                  let mostRecentWorkspace = mostRecentWorkspace[screen]
+            else { return }
+
+            activateWorkspace(mostRecentWorkspace, setFocus: true)
         }
 
         return (shortcut, action)
