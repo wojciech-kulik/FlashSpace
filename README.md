@@ -11,9 +11,19 @@ enhance and replace native macOS Spaces. No more waiting for macOS animations.
 
 **Requirements:** macOS 14.0 or later.
 
-Download the app from the [releases page].
+### Homebrew
 
-Alternatively, you can [build the app from source](#%EF%B8%8F-build-from-source).
+```bash
+brew install --cask wojciech-kulik/tap/flashspace
+```
+
+### Download Binary
+
+See: [Releases Page].
+
+### From Source
+
+See: [Build From Source](#%EF%B8%8F-build-from-source).
 
 ## 🎥 Demo
 
@@ -182,4 +192,4 @@ You can also set this variable globally in your shell.
 
 [SketchyBar]: https://github.com/FelixKratz/SketchyBar
 [XcodeGen]: https://github.com/yonaskolb/XcodeGen
-[releases page]: https://github.com/wojciech-kulik/FlashSpace/releases
+[Releases Page]: https://github.com/wojciech-kulik/FlashSpace/releases
