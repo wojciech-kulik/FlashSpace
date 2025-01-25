@@ -7,7 +7,6 @@
 
 import AppKit
 import ShortcutRecorder
-import SwiftUI
 
 struct HotKeyShortcut: Codable, Hashable {
     let keyCode: UInt16
@@ -15,8 +14,6 @@ struct HotKeyShortcut: Codable, Hashable {
 }
 
 final class HotKeysManager {
-    @Environment(\.openWindow) var openWindow
-
     private let hotKeysMonitor: HotKeysMonitorProtocol
     private let workspaceManager: WorkspaceManager
     private let focusManager: FocusManager
@@ -57,8 +54,8 @@ final class HotKeysManager {
         }
 
         if let showHotKey = settingsRepository.showFlashSpace?.toShortcut() {
-            let action = ShortcutAction(shortcut: showHotKey) { [weak self] _ in
-                self?.openWindow(id: "main")
+            let action = ShortcutAction(shortcut: showHotKey) { _ in
+                NotificationCenter.default.post(name: .openMainWindow, object: nil)
                 return true
             }
             hotKeysMonitor.addAction(action, forKeyEvent: .down)

@@ -17,11 +17,25 @@ final class MainViewModel: ObservableObject {
     @Published var workspaceApps: [String]?
 
     @Published var workspaceName = ""
-    @Published var workspaceShortcut: HotKeyShortcut?
-    @Published var workspaceAssignShortcut: HotKeyShortcut?
-    @Published var workspaceDisplay = ""
-    @Published var workspaceAppToFocus: String?
-    @Published var workspaceSymbolIconName: String?
+    @Published var workspaceShortcut: HotKeyShortcut? {
+        didSet { saveWorkspace() }
+    }
+
+    @Published var workspaceAssignShortcut: HotKeyShortcut? {
+        didSet { saveWorkspace() }
+    }
+
+    @Published var workspaceDisplay = "" {
+        didSet { saveWorkspace() }
+    }
+
+    @Published var workspaceAppToFocus: String? {
+        didSet { saveWorkspace() }
+    }
+
+    @Published var workspaceSymbolIconName: String? {
+        didSet { saveWorkspace() }
+    }
 
     @Published var isSymbolPickerPresented = false
     @Published var isInputDialogPresented = false
@@ -44,9 +58,7 @@ final class MainViewModel: ObservableObject {
             guard selectedWorkspace != oldValue else { return }
 
             // To avoid warnings
-            updatingWorkspace = true
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-                self.updatingWorkspace = false
                 self.updateSelectedWorkspace()
             }
         }
@@ -60,23 +72,8 @@ final class MainViewModel: ObservableObject {
             .sorted()
     }
 
-    var isSaveButtonDisabled: Bool {
-        guard let selectedWorkspace, !updatingWorkspace else { return true }
-        guard !workspaceName.isEmpty, !workspaceDisplay.isEmpty else { return true }
-
-        return selectedWorkspace.name == workspaceName &&
-            selectedWorkspace.display == workspaceDisplay &&
-            selectedWorkspace.activateShortcut == workspaceShortcut &&
-            selectedWorkspace.assignAppShortcut == workspaceAssignShortcut &&
-            (
-                selectedWorkspace.appToFocus == workspaceAppToFocus ||
-                    selectedWorkspace.appToFocus == nil && workspaceAppToFocus == workspaceApps?.last
-            ) &&
-            selectedWorkspace.symbolIconName == workspaceSymbolIconName
-    }
-
     private var cancellables: Set<AnyCancellable> = []
-    private var updatingWorkspace = false
+    private var loadingWorkspace = false
 
     private let workspaceManager = AppDependencies.shared.workspaceManager
     private let workspaceRepository = AppDependencies.shared.workspaceRepository
@@ -95,7 +92,7 @@ final class MainViewModel: ObservableObject {
         if afterFirstLaunch {
             dismissOnLaunch = true
         } else {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 NSApp.activate(ignoringOtherApps: true)
             }
         }
@@ -110,6 +107,9 @@ final class MainViewModel: ObservableObject {
     }
 
     private func updateSelectedWorkspace() {
+        loadingWorkspace = true
+        defer { loadingWorkspace = false }
+
         workspaceName = selectedWorkspace?.name ?? ""
         workspaceShortcut = selectedWorkspace?.activateShortcut
         workspaceAssignShortcut = selectedWorkspace?.assignAppShortcut
@@ -127,6 +127,29 @@ final class MainViewModel: ObservableObject {
 }
 
 extension MainViewModel {
+    func saveWorkspace() {
+        guard let selectedWorkspace, !loadingWorkspace else { return }
+
+        if workspaceName.trimmingCharacters(in: .whitespaces).isEmpty {
+            workspaceName = "(empty)"
+        }
+
+        let updatedWorkspace = Workspace(
+            id: selectedWorkspace.id,
+            name: workspaceName,
+            display: workspaceDisplay,
+            activateShortcut: workspaceShortcut,
+            assignAppShortcut: workspaceAssignShortcut,
+            apps: selectedWorkspace.apps,
+            appToFocus: workspaceAppToFocus,
+            symbolIconName: workspaceSymbolIconName
+        )
+
+        workspaceRepository.updateWorkspace(updatedWorkspace)
+        workspaces = workspaceRepository.workspaces
+        self.selectedWorkspace = workspaces.first { $0.id == selectedWorkspace.id }
+    }
+
     func addWorkspace() {
         userInput = ""
         isInputDialogPresented = true
@@ -149,25 +172,6 @@ extension MainViewModel {
         workspaceRepository.deleteWorkspace(id: selectedWorkspace.id)
         workspaces = workspaceRepository.workspaces
         self.selectedWorkspace = nil
-    }
-
-    func updateWorkspace() {
-        guard let selectedWorkspace else { return }
-
-        let updatedWorkspace = Workspace(
-            id: selectedWorkspace.id,
-            name: workspaceName,
-            display: workspaceDisplay,
-            activateShortcut: workspaceShortcut,
-            assignAppShortcut: workspaceAssignShortcut,
-            apps: selectedWorkspace.apps,
-            appToFocus: workspaceAppToFocus,
-            symbolIconName: workspaceSymbolIconName
-        )
-
-        workspaceRepository.updateWorkspace(updatedWorkspace)
-        workspaces = workspaceRepository.workspaces
-        self.selectedWorkspace = workspaces.first { $0.id == selectedWorkspace.id }
     }
 
     func addApp() {
@@ -209,5 +213,18 @@ extension MainViewModel {
 
     func resetWorkspaceSymbolIcon() {
         workspaceSymbolIconName = nil
+        saveWorkspace()
+    }
+
+    func moveWorkspace(up: Bool) {
+        guard let selectedWorkspace else { return }
+
+        if up {
+            workspaceRepository.moveUp(workspaceId: selectedWorkspace.id)
+        } else {
+            workspaceRepository.moveDown(workspaceId: selectedWorkspace.id)
+        }
+
+        workspaces = workspaceRepository.workspaces
     }
 }

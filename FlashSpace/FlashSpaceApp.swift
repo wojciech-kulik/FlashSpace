@@ -17,6 +17,10 @@ struct FlashSpaceApp: App {
     var body: some Scene {
         Window("⚡ FlashSpace v\(AppConstants.version)", id: "main") {
             MainView()
+                .onReceive(NotificationCenter.default.publisher(for: .openMainWindow)) { _ in
+                    openWindow(id: "main")
+                    NSApp.activate(ignoringOtherApps: true)
+                }
         }
         .windowResizability(.contentSize)
 

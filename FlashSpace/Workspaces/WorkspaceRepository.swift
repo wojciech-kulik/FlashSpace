@@ -81,6 +81,26 @@ final class WorkspaceRepository {
         saveToDisk()
     }
 
+    func moveUp(workspaceId: WorkspaceID) {
+        guard let index = workspaces.firstIndex(where: { $0.id == workspaceId }) else { return }
+        guard index > 0 else { return }
+
+        let tmp = workspaces[index - 1]
+        workspaces[index - 1] = workspaces[index]
+        workspaces[index] = tmp
+        saveToDisk()
+    }
+
+    func moveDown(workspaceId: WorkspaceID) {
+        guard let index = workspaces.firstIndex(where: { $0.id == workspaceId }) else { return }
+        guard index < workspaces.count - 1 else { return }
+
+        let tmp = workspaces[index + 1]
+        workspaces[index + 1] = workspaces[index]
+        workspaces[index] = tmp
+        saveToDisk()
+    }
+
     private func saveToDisk() {
         guard let data = try? encoder.encode(workspaces) else { return }
 
