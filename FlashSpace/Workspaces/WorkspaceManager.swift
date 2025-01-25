@@ -11,7 +11,10 @@ import ShortcutRecorder
 
 typealias DisplayName = String
 
-final class WorkspaceManager {
+final class WorkspaceManager: ObservableObject {
+    @Published
+    private(set) var activeWorkspaceSymbolIconName: String?
+
     private(set) var activeWorkspace: [DisplayName: Workspace] = [:]
     private(set) var lastWorkspaceActivation = Date.distantPast
 
@@ -59,6 +62,7 @@ final class WorkspaceManager {
 
         lastWorkspaceActivation = Date()
         activeWorkspace[workspace.display] = workspace
+        activeWorkspaceSymbolIconName = workspace.symbolIconName
         showApps(in: workspace, setFocus: setFocus)
         hideApps(in: workspace)
 

@@ -18,6 +18,7 @@ struct Workspace: Identifiable, Codable, Hashable {
         case assignAppShortcut
         case apps
         case appToFocus
+        case symbolIconName
     }
 
     let id: WorkspaceID
@@ -27,4 +28,5 @@ struct Workspace: Identifiable, Codable, Hashable {
     var assignAppShortcut: HotKeyShortcut?
     var apps: [String]
     var appToFocus: String?
+    var symbolIconName: String?
 }
