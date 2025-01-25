@@ -12,15 +12,13 @@ extension NSRunningApplication {
         mainWindow()?.getFrame()
     }
 
-    func focus() {
-        defer { _ = activate() }
+    func raise() {
+        guard let mainWindow = mainWindow() else {
+            unhide()
+            return
+        }
 
-        guard let mainWindow = mainWindow() else { return }
-
-        let appElement = AXUIElementCreateApplication(processIdentifier)
         AXUIElementPerformAction(mainWindow, NSAccessibility.Action.raise as CFString)
-        AXUIElementSetAttributeValue(appElement, NSAccessibility.Attribute.frontmost as CFString, kCFBooleanTrue)
-        AXUIElementSetAttributeValue(mainWindow, NSAccessibility.Attribute.main as CFString, kCFBooleanTrue)
     }
 
     func setOrigin(_ position: CGPoint) {
