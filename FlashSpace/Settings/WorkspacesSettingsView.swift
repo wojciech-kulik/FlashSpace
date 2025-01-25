@@ -12,20 +12,25 @@ struct WorkspacesSettingsView: View {
 
     var body: some View {
         Form {
-            Section(header: Text("Trigger when workspace is changed using shortcuts")) {
+            Section {
                 Toggle("Center Cursor In Focused App", isOn: $settings.centerCursorOnWorkspaceChange)
+                Text("Triggered when workspace is changed using shortcuts.")
+                    .foregroundStyle(.secondary)
+                    .font(.callout)
             }
 
             Section(header: Text("Shortcuts")) {
                 hotkey("Unassign Focused App", for: $settings.unassignFocusedApp)
             }
 
-            Section(
-                footer: Text("These shortcuts cycle through workspaces on the display with the cursor.")
-                    .foregroundStyle(.secondary)
-            ) {
+            Section {
                 hotkey("Previous Workspace", for: $settings.switchToPreviousWorkspace)
                 hotkey("Next Workspace", for: $settings.switchToNextWorkspace)
+                Text(
+                    "These shortcuts allow you to cycle through workspaces on the display where the cursor is currently located."
+                )
+                .foregroundStyle(.secondary)
+                .font(.callout)
             }
         }
         .formStyle(.grouped)
