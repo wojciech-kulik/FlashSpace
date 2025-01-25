@@ -27,6 +27,8 @@ struct MainView: View {
                 viewModel.dismissOnLaunch = false
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { dismissWindow() }
             }
+
+            Task { await UpdatesManager.shared.autoCheckForUpdates() }
         }
         .sheet(isPresented: $viewModel.isInputDialogPresented) {
             InputDialog(

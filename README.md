@@ -20,7 +20,7 @@ https://github.com/user-attachments/assets/af5951ce-8386-48d5-918e-914474d2c2b8
 - [x] Activate workspace on app focus
 - [x] Move apps between workspaces with a hotkey
 - [x] Focus manager - set hotkeys to switch between apps quickly
-- [x] Cursor manager
+- [x] Cursor manager - auto-center the cursor in the active window
 - [x] [SketchyBar] integration
 
 ## ⚙️ Installation

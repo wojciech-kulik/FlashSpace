@@ -52,9 +52,7 @@ struct FlashSpaceApp: App {
             }
 
             Button("Check for Updates") {
-                if let url = URL(string: "https://github.com/wojciech-kulik/FlashSpace/releases") {
-                    NSWorkspace.shared.open(url)
-                }
+                Task { await UpdatesManager.shared.showIfNewReleaseAvailable() }
             }
 
             Divider()

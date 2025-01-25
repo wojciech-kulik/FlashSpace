@@ -19,6 +19,7 @@
 		01904D0D8EB8017AEF4CD453 /* Integrations.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Integrations.swift; sourceTree = "<group>"; };
 		0F6030DE3CF8A0BBDBFC3E29 /* SettingsRepository.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SettingsRepository.swift; sourceTree = "<group>"; };
 		14242986FC549EA6F2EE11B8 /* AXUIElement.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AXUIElement.swift; sourceTree = "<group>"; };
+		150FE2650484BE092345C0C5 /* UpdatesManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = UpdatesManager.swift; sourceTree = "<group>"; };
 		16999A052D3D97770006EA91 /* FlashSpace-Dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "FlashSpace-Dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		16999AE32D3DC77A0006EA91 /* ServiceManagement.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ServiceManagement.framework; path = System/Library/Frameworks/ServiceManagement.framework; sourceTree = SDKROOT; };
 		1C8586E09F30781F4653F207 /* FocusSettingsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FocusSettingsView.swift; sourceTree = "<group>"; };
@@ -35,6 +36,7 @@
 		8808B0E6B40949F55A001A63 /* CGRect.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CGRect.swift; sourceTree = "<group>"; };
 		950E5B9658FA8C2765F334E7 /* HotKeyShortcut.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HotKeyShortcut.swift; sourceTree = "<group>"; };
 		97BED2C7A17B2EF8E64279EA /* HotKeyControl.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HotKeyControl.swift; sourceTree = "<group>"; };
+		9BE30476FB4957C28D7E6125 /* Alerts.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Alerts.swift; sourceTree = "<group>"; };
 		A62AD825241B91E4BB74C647 /* InputDialog.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = InputDialog.swift; sourceTree = "<group>"; };
 		A6A0526ACA637050524E22C6 /* WorkspaceManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WorkspaceManager.swift; sourceTree = "<group>"; };
 		AFA065A8C8B0E063D8C60A76 /* NotificationName.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NotificationName.swift; sourceTree = "<group>"; };
@@ -188,6 +190,8 @@
 				36E4723ECEA5C6DD2BDA559F /* FileChooser.swift */,
 				5AB52E58777D6FCD2FD77ADD /* AutostartService.swift */,
 				01904D0D8EB8017AEF4CD453 /* Integrations.swift */,
+				150FE2650484BE092345C0C5 /* UpdatesManager.swift */,
+				9BE30476FB4957C28D7E6125 /* Alerts.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";

@@ -8,12 +8,17 @@
 import SwiftUI
 
 struct GeneralSettingsView: View {
+    @StateObject var settings = AppDependencies.shared.settingsRepository
     @State var isAutostartEnabled = false
 
     var body: some View {
         Form {
             Section {
                 Toggle("Launch at startup", isOn: $isAutostartEnabled)
+            }
+
+            Section {
+                Toggle("Check for updates automatically", isOn: $settings.checkForUpdatesAutomatically)
             }
         }
         .onAppear {

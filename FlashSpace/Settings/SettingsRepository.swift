@@ -9,6 +9,8 @@ import Combine
 import Foundation
 
 struct AppSettings: Codable {
+    var checkForUpdatesAutomatically: Bool?
+
     var enableFocusManagement: Bool?
     var centerCursorOnFocusChange: Bool?
     var focusLeft: HotKeyShortcut?
@@ -30,6 +32,12 @@ struct AppSettings: Codable {
 
 final class SettingsRepository: ObservableObject {
     static let defaultScript = "sketchybar --trigger flashspace_workspace_change WORKSPACE=\"$WORKSPACE\" DISPLAY=\"$DISPLAY\""
+
+    // MARK: - General
+
+    @Published var checkForUpdatesAutomatically: Bool = false {
+        didSet { updateSettings() }
+    }
 
     // MARK: - Focus Manager
 
@@ -126,6 +134,8 @@ final class SettingsRepository: ObservableObject {
         guard shouldUpdate else { return }
 
         currentSettings = AppSettings(
+            checkForUpdatesAutomatically: checkForUpdatesAutomatically,
+
             enableFocusManagement: enableFocusManagement,
             centerCursorOnFocusChange: centerCursorOnFocusChange,
             focusLeft: focusLeft,
@@ -162,6 +172,8 @@ final class SettingsRepository: ObservableObject {
         guard let settings = try? decoder.decode(AppSettings.self, from: data) else { return }
 
         currentSettings = settings
+
+        checkForUpdatesAutomatically = settings.checkForUpdatesAutomatically ?? false
 
         enableFocusManagement = settings.enableFocusManagement ?? false
         centerCursorOnFocusChange = settings.centerCursorOnFocusChange ?? false
