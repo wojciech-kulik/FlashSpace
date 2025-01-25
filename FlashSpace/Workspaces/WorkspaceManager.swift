@@ -88,7 +88,12 @@ extension WorkspaceManager {
         Integrations.runOnActivateIfNeeded(workspace: workspace)
 
         lastWorkspaceActivation = Date()
-        mostRecentWorkspace[workspace.display] = activeWorkspace[workspace.display]
+
+        // Save the most recent workspace if it's not the current one
+        if activeWorkspace[workspace.display]?.id != workspace.id {
+            mostRecentWorkspace[workspace.display] = activeWorkspace[workspace.display]
+        }
+
         activeWorkspace[workspace.display] = workspace
         activeWorkspaceSymbolIconName = workspace.symbolIconName
         showApps(in: workspace, setFocus: setFocus)
