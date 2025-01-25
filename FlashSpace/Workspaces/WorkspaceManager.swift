@@ -46,14 +46,14 @@ final class WorkspaceManager: ObservableObject {
 
         for app in appsToShow {
             print("SHOW: \(app.localizedName ?? "")")
-            app.unhide()
+            app.raise()
         }
 
         if setFocus {
             let appToFocus = appsToShow.first { $0.localizedName == workspace.appToFocus }
             let lastApp = appsToShow.first { $0.localizedName == workspace.apps.last }
             let toFocus = appToFocus ?? lastApp
-            toFocus?.focus()
+            toFocus?.activate()
             centerCursorIfNeeded(in: toFocus?.getFrame())
         }
     }
