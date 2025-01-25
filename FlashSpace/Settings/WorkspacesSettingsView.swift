@@ -12,11 +12,8 @@ struct WorkspacesSettingsView: View {
 
     var body: some View {
         Form {
-            Section {
+            Section(header: Text("Trigger when workspace is changed using shortcuts")) {
                 Toggle("Center Cursor In Focused App", isOn: $settings.centerCursorOnWorkspaceChange)
-                Text("Triggered when workspace is changed using shortcuts.")
-                    .foregroundStyle(.secondary)
-                    .font(.callout)
             }
 
             Section(header: Text("Shortcuts")) {
