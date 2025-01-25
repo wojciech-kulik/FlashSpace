@@ -20,6 +20,10 @@ struct GeneralSettingsView: View {
             Section {
                 Toggle("Check for updates automatically", isOn: $settings.checkForUpdatesAutomatically)
             }
+
+            Section(header: Text("Shortcuts")) {
+                hotkey("Show FlashSpace", for: $settings.showFlashSpace)
+            }
         }
         .onAppear {
             isAutostartEnabled = AppDependencies.shared.autostartService.isLaunchAtLoginEnabled
