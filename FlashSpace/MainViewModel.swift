@@ -185,7 +185,7 @@ extension MainViewModel {
 
         guard let appUrl else { return }
 
-        let appName = appUrl.lastPathComponent.replacingOccurrences(of: ".app", with: "")
+        let appName = appUrl.getLocalizedAppName()
 
         guard !selectedWorkspace.apps.contains(appName) else { return }
 
