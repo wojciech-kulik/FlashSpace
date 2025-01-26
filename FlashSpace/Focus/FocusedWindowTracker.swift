@@ -13,13 +13,16 @@ final class FocusedWindowTracker {
 
     private let workspaceRepository: WorkspaceRepository
     private let workspaceManager: WorkspaceManager
+    private let settingsRepository: SettingsRepository
 
     init(
         workspaceRepository: WorkspaceRepository,
-        workspaceManager: WorkspaceManager
+        workspaceManager: WorkspaceManager,
+        settingsRepository: SettingsRepository
     ) {
         self.workspaceRepository = workspaceRepository
         self.workspaceManager = workspaceManager
+        self.settingsRepository = settingsRepository
     }
 
     func startTracking() {
@@ -37,6 +40,9 @@ final class FocusedWindowTracker {
 
     private func activeApplicationChanged(_ app: NSRunningApplication) {
         guard Date().timeIntervalSince(workspaceManager.lastWorkspaceActivation) > 0.2 else { return }
+
+        // Skip if the app is floating
+        guard settingsRepository.floatingApps?.contains(app.localizedName ?? "") != true else { return }
 
         // Skip if the app exists in any active workspace
         guard !workspaceManager.activeWorkspace.values

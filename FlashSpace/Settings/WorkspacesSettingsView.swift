@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct WorkspacesSettingsView: View {
+    @StateObject var viewModel = WorkspacesSettingsViewModel()
     @StateObject var settings = AppDependencies.shared.settingsRepository
 
     var body: some View {
@@ -29,6 +30,38 @@ struct WorkspacesSettingsView: View {
                 )
                 .foregroundStyle(.secondary)
                 .font(.callout)
+            }
+
+            Section(
+                header:
+                HStack {
+                    Text("Floating Apps")
+                    Spacer()
+                    Button(action: viewModel.addFloatingApp) {
+                        Image(systemName: "plus")
+                    }
+                }
+            ) {
+                VStack(alignment: .leading) {
+                    ForEach(
+                        settings.floatingApps ?? [],
+                        id: \.self
+                    ) { app in
+                        HStack {
+                            Button {
+                                viewModel.deleteFloatingApp(app: app)
+                            } label: {
+                                Image(systemName: "x.circle.fill").opacity(0.8)
+                            }.buttonStyle(.borderless)
+                            Text(app)
+                        }
+                    }
+                }
+                hotkey("Float The Focused App", for: $settings.floatTheFocusedApp)
+                hotkey("Unfloat The Focused App", for: $settings.unfloatTheFocusedApp)
+                Text("Floating applications remain visible across all workspaces.")
+                    .foregroundStyle(.secondary)
+                    .font(.callout)
             }
         }
         .formStyle(.grouped)
