@@ -8,14 +8,6 @@
 import Foundation
 
 extension URL {
-    func getLocalizedAppName() -> String {
-        let appUrl = self
-        let fileName = appUrl.lastPathComponent.replacingOccurrences(of: ".app", with: "")
-
-        guard let bundle = Bundle(url: appUrl) else { return fileName }
-
-        return bundle.localizedInfoDictionary?["CFBundleDisplayName"] as? String
-            ?? bundle.infoDictionary?["CFBundleDisplayName"] as? String
-            ?? fileName
-    }
+    var bundle: Bundle? { Bundle(url: self) }
+    var fileName: String { lastPathComponent.replacingOccurrences(of: ".app", with: "") }
 }

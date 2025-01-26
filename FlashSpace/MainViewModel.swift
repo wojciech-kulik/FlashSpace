@@ -185,7 +185,15 @@ extension MainViewModel {
 
         guard let appUrl else { return }
 
-        let appName = appUrl.getLocalizedAppName()
+        let appName = appUrl.bundle?.localizedAppName ?? appUrl.fileName
+
+        guard appUrl.bundle?.isAgent != true else {
+            showOkAlert(
+                title: appName,
+                message: "This application is an agent (runs in background) and cannot be managed by FlashSpace."
+            )
+            return
+        }
 
         guard !selectedWorkspace.apps.contains(appName) else { return }
 
