@@ -16,7 +16,7 @@ final class FocusManager {
     }
 
     var focusedApp: NSRunningApplication? { NSWorkspace.shared.frontmostApplication }
-    var focusedAppFrame: CGRect? { focusedApp?.getFrame() }
+    var focusedAppFrame: CGRect? { focusedApp?.frame }
 
     private let workspaceRepository: WorkspaceRepository
     private let workspaceManager: WorkspaceManager
@@ -70,28 +70,28 @@ final class FocusManager {
     func focusRight() {
         focus { focusedAppFrame, other in
             other.maxX > focusedAppFrame.maxX &&
-                other.verticalIntersects(with: focusedAppFrame)
+                other.verticalIntersect(with: focusedAppFrame)
         }
     }
 
     func focusLeft() {
         focus { focusedAppFrame, other in
             other.minX < focusedAppFrame.minX &&
-                other.verticalIntersects(with: focusedAppFrame)
+                other.verticalIntersect(with: focusedAppFrame)
         }
     }
 
     func focusDown() {
         focus { focusedAppFrame, other in
             other.maxY > focusedAppFrame.maxY &&
-                other.horizontalIntersects(with: focusedAppFrame)
+                other.horizontalIntersect(with: focusedAppFrame)
         }
     }
 
     func focusUp() {
         focus { focusedAppFrame, other in
             other.minY < focusedAppFrame.minY &&
-                other.horizontalIntersects(with: focusedAppFrame)
+                other.horizontalIntersect(with: focusedAppFrame)
         }
     }
 
@@ -100,7 +100,7 @@ final class FocusManager {
 
         let toFocus = visibleApps
             .flatMap { app in
-                app.allWindows().map {
+                app.allWindows.map {
                     (app: app, window: $0.window, frame: $0.frame)
                 }
             }
@@ -109,7 +109,6 @@ final class FocusManager {
 
         toFocus?.window.focus()
         toFocus?.app.activate()
-        toFocus?.window.focus()
         centerCursorIfNeeded(in: toFocus?.frame)
     }
 

@@ -46,6 +46,7 @@ The app allows workspaces to be switched independently on each display.
 - [x] Multiple displays support
 - [x] Activate workspace on app focus
 - [x] Move apps between workspaces with a hotkey
+- [x] Floating apps visible across all workspaces
 - [x] Focus manager - set hotkeys to switch between apps quickly
 - [x] Cursor manager - auto-center the cursor in the active window
 - [x] Configurable Menu Bar icon (per workspace)

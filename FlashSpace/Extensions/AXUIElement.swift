@@ -8,12 +8,7 @@
 import AppKit
 
 extension AXUIElement {
-    func focus() {
-        AXUIElementPerformAction(self, NSAccessibility.Action.raise as CFString)
-        AXUIElementSetAttributeValue(self, NSAccessibility.Attribute.main as CFString, kCFBooleanTrue)
-    }
-
-    func getFrame() -> CGRect? {
+    var frame: CGRect? {
         var positionValue: CFTypeRef?
         var sizeValue: CFTypeRef?
 
@@ -42,5 +37,9 @@ extension AXUIElement {
         // swiftlint:enable force_cast
 
         return windowBounds.isEmpty ? nil : windowBounds
+    }
+
+    func focus() {
+        AXUIElementPerformAction(self, NSAccessibility.Action.raise as CFString)
     }
 }

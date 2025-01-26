@@ -12,9 +12,8 @@ final class WorkspacesSettingsViewModel: ObservableObject {
         )
 
         guard let appUrl else { return }
-        let appName = appUrl.bundle?.localizedAppName ?? appUrl.fileName
 
-        settingsRepository.addFloatingAppIfNeeded(app: appName)
+        settingsRepository.addFloatingAppIfNeeded(app: appUrl.appName)
     }
 
     func deleteFloatingApp(app: String) {

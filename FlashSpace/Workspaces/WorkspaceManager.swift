@@ -59,18 +59,17 @@ final class WorkspaceManager: ObservableObject {
             let lastApp = appsToShow.first { $0.localizedName == workspace.apps.last }
             let toFocus = appToFocus ?? lastApp
             toFocus?.activate()
-            centerCursorIfNeeded(in: toFocus?.getFrame())
+            centerCursorIfNeeded(in: toFocus?.frame)
         }
     }
 
     private func hideApps(in workspace: Workspace) {
         let regularApps = NSWorkspace.shared.runningApplications
             .filter { $0.activationPolicy == .regular }
-        let hasMoreScreens = NSScreen.screens.count > 1
         let workspaceApps = Set(workspace.apps + (settingsRepository.floatingApps ?? []))
         let appsToHide = regularApps
             .filter { !workspaceApps.contains($0.localizedName ?? "") && !$0.isHidden }
-            .filter { !hasMoreScreens || $0.getFrame()?.getDisplay() == workspace.display }
+            .filter { $0.isOnTheSameScreen(as: workspace) }
 
         for app in appsToHide {
             print("HIDE: \(app.localizedName ?? "")")
@@ -253,9 +252,10 @@ extension WorkspaceManager {
                   let activeApp = NSWorkspace.shared.frontmostApplication,
                   let appName = activeApp.localizedName else { return }
 
-            self.settingsRepository.deleteFloatingApp(app: appName)
+            settingsRepository.deleteFloatingApp(app: appName)
 
-            guard let screen = activeApp.getFrame()?.getDisplay() else { return }
+            guard let screen = activeApp.display else { return }
+
             if activeWorkspace[screen]?.apps.contains(appName) != true {
                 activeApp.hide()
             }

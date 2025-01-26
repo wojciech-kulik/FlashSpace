@@ -14,14 +14,14 @@ extension CGRect {
             .localizedName
     }
 
-    func verticalIntersects(with rect: CGRect) -> Bool {
+    func verticalIntersect(with rect: CGRect) -> Bool {
         var rect = rect
         rect.origin.x = origin.x
 
         return intersects(rect)
     }
 
-    func horizontalIntersects(with rect: CGRect) -> Bool {
+    func horizontalIntersect(with rect: CGRect) -> Bool {
         var rect = rect
         rect.origin.y = origin.y
 

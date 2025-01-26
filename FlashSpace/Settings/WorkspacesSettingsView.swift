@@ -43,10 +43,7 @@ struct WorkspacesSettingsView: View {
                 }
             ) {
                 VStack(alignment: .leading) {
-                    ForEach(
-                        settings.floatingApps ?? [],
-                        id: \.self
-                    ) { app in
+                    ForEach(settings.floatingApps ?? [], id: \.self) { app in
                         HStack {
                             Button {
                                 viewModel.deleteFloatingApp(app: app)

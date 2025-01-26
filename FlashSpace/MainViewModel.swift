@@ -185,7 +185,7 @@ extension MainViewModel {
 
         guard let appUrl else { return }
 
-        let appName = appUrl.bundle?.localizedAppName ?? appUrl.fileName
+        let appName = appUrl.appName
 
         guard appUrl.bundle?.isAgent != true else {
             showOkAlert(
