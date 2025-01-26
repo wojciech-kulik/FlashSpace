@@ -42,9 +42,12 @@ final class WorkspaceManager: ObservableObject {
     private func showApps(in workspace: Workspace, setFocus: Bool) {
         let regularApps = NSWorkspace.shared.runningApplications
             .filter { $0.activationPolicy == .regular }
-        let workspaceApps = Set(workspace.apps + (settingsRepository.floatingApps ?? []))
+        let floatingApps = (settingsRepository.floatingApps ?? [])
         let appsToShow = regularApps
-            .filter { workspaceApps.contains($0.localizedName ?? "") }
+            .filter {
+                workspace.apps.contains($0.localizedName ?? "") ||
+                    floatingApps.contains($0.localizedName ?? "") && $0.isOnTheSameScreen(as: workspace)
+            }
 
         for app in appsToShow {
             print("SHOW: \(app.localizedName ?? "")")
@@ -126,7 +129,7 @@ extension WorkspaceManager {
             getRecentWorkspaceShortcut(),
             getCycleWorkspacesShortcut(next: false),
             getCycleWorkspacesShortcut(next: true),
-            getFlootTheFocusedAppShortcut(),
+            getFloatTheFocusedAppShortcut(),
             getUnfloatTheFocusedAppShortcut()
         ] +
             workspaceRepository.workspaces
@@ -231,7 +234,7 @@ extension WorkspaceManager {
         return (shortcut, action)
     }
 
-    private func getFlootTheFocusedAppShortcut() -> (Shortcut, () -> ())? {
+    private func getFloatTheFocusedAppShortcut() -> (Shortcut, () -> ())? {
         guard let shortcut = settingsRepository.floatTheFocusedApp?.toShortcut() else { return nil }
         let action = { [weak self] in
             guard let self,
@@ -252,7 +255,7 @@ extension WorkspaceManager {
 
             self.settingsRepository.deleteFloatingApp(app: appName)
 
-            guard let screen = getCursorScreen() else { return }
+            guard let screen = activeApp.getFrame()?.getDisplay() else { return }
             if activeWorkspace[screen]?.apps.contains(appName) != true {
                 activeApp.hide()
             }

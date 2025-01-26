@@ -89,4 +89,9 @@ extension NSRunningApplication {
             window.getFrame().flatMap { (window, $0) }
         }
     }
+
+    func isOnTheSameScreen(as workspace: Workspace) -> Bool {
+        let hasMoreScreens = NSScreen.screens.count > 1
+        return !hasMoreScreens || getFrame()?.getDisplay() == workspace.display
+    }
 }
