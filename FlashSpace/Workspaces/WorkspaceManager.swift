@@ -195,11 +195,9 @@ extension WorkspaceManager {
         else { return nil }
 
         let action = { [weak self] in
-            guard let self else { return }
+            guard let self, let screen = getCursorScreen() else { return }
 
-            let cursorScreenWorkspaces = cursorScreenWorkspaces
-            guard let screen = cursorScreenWorkspaces.screen else { return }
-            var screenWorkspaces = cursorScreenWorkspaces.workspaces
+            var screenWorkspaces = workspaces(in: screen)
 
             if !next {
                 screenWorkspaces = screenWorkspaces.reversed()
@@ -254,8 +252,7 @@ extension WorkspaceManager {
 
             self.settingsRepository.deleteFloatingApp(app: appName)
 
-            let cursorScreenWorkspaces = cursorScreenWorkspaces
-            guard let screen = cursorScreenWorkspaces.screen else { return }
+            guard let screen = getCursorScreen() else { return }
             if activeWorkspace[screen]?.apps.contains(appName) != true {
                 activeApp.hide()
             }
@@ -271,13 +268,9 @@ extension WorkspaceManager {
             .localizedName
     }
 
-    private var cursorScreenWorkspaces: (screen: DisplayName?, workspaces: [Workspace]) {
-        let screen = getCursorScreen()
+    private func workspaces(in screen: DisplayName) -> [Workspace] {
         let hasMoreScreens = NSScreen.screens.count > 1
-        return (
-            screen,
-            workspaceRepository.workspaces
-                .filter { !hasMoreScreens || $0.display == screen }
-        )
+        return workspaceRepository.workspaces
+            .filter { !hasMoreScreens || $0.display == screen }
     }
 }
