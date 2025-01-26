@@ -1,0 +1,20 @@
+lane :release do
+  sh("[ -n \"$XCODE_DEVELOPMENT_TEAM\" ] || (echo 'Missing environment variable XCODE_DEVELOPMENT_TEAM' && exit 1)")
+
+  build_mac_app
+
+  notarize(
+    package: ".build/FlashSpace.app",
+    api_key_path: "../appstore.json",
+    print_log: true
+  )
+
+  zip(
+    path: ".build/FlashSpace.app",
+    output_path: ".build/FlashSpace.app.zip",
+    verbose: false
+  )
+
+  sh("spctl", "-a", "-vvv", "-t", "install", "../.build/FlashSpace.app")
+  sh("./bump-homebrew.sh")
+end

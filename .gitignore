@@ -16,3 +16,5 @@ playground.xcworkspace
 .build/
 *.xcodeproj/*
 .vscode
+fastlane/report.xml
+fastlane/README.md

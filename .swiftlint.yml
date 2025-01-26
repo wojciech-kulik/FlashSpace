@@ -7,6 +7,9 @@ disabled_rules:
 included:
   - FlashSpace
 
+excluded:
+  - FlashSpace/Utils/Licenses.swift
+
 line_length: 160
 
 identifier_name:
