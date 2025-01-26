@@ -66,7 +66,7 @@ struct FlashSpaceApp: App {
 
             Button("Quit") {
                 NSApp.terminate(nil)
-            }.keyboardShortcut("q", modifiers: [.command])
+            }.keyboardShortcut("q")
         }
     }
 }

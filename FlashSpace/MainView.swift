@@ -98,7 +98,9 @@ struct MainView: View {
 
                 Button(action: viewModel.deleteApp) {
                     Image(systemName: "trash")
-                }.disabled(viewModel.selectedApp == nil)
+                }
+                .disabled(viewModel.selectedApp == nil)
+                .keyboardShortcut(.delete)
             }
         }
     }
