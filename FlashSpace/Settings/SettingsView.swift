@@ -34,6 +34,8 @@ struct SettingsView: View {
                     .tag("Workspaces")
                 Label("Integrations", systemImage: "link")
                     .tag("Integrations")
+                Label("Acknowledgements", systemImage: "info.circle")
+                    .tag("Acknowledgements")
             }
             .toolbar(removing: .sidebarToggle)
             .listStyle(.sidebar)
@@ -57,6 +59,8 @@ struct SettingsView: View {
             WorkspacesSettingsView()
         case "Integrations":
             IntegrationsSettingsView()
+        case "Acknowledgements":
+            AcknowledgementsSettingsView()
         default:
             EmptyView()
         }
