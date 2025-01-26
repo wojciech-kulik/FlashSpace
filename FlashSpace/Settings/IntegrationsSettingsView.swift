@@ -38,6 +38,8 @@ struct IntegrationsSettingsView: View {
                 .foregroundStyle(.secondary)
                 .font(.callout)
             }
+            .disabled(!settings.enableIntegrations)
+            .opacity(settings.enableIntegrations ? 1 : 0.5)
         }
         .formStyle(.grouped)
         .navigationTitle("Integrations")
