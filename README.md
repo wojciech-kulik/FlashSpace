@@ -98,6 +98,9 @@ configurable script when the workspace is changed.
 
 You can enable the integration in the app settings.
 
+<details>
+  <summary>Configuration Example</summary>
+
 ### Only Active Workspace
 
 ##### `sketchybarrc`
@@ -159,6 +162,8 @@ else
   sketchybar --set $NAME label.color=0xffffffff
 fi
 ```
+
+</details>
 
 ## 🚧 Limitations
 
