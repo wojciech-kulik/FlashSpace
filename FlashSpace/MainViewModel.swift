@@ -117,7 +117,7 @@ final class MainViewModel: ObservableObject {
         workspaceApps = selectedWorkspace?.apps
         workspaceAppToFocus = selectedWorkspace?.appToFocus ?? workspaceApps?.last
         workspaceSymbolIconName = selectedWorkspace?.symbolIconName
-        selectedApp = nil
+        selectedApp = workspaceApps?.first { $0 == selectedApp }
     }
 
     private func reloadWorkspaces() {
@@ -169,9 +169,11 @@ extension MainViewModel {
     func deleteWorkspace() {
         guard let selectedWorkspace else { return }
 
+        let newIndex = min(workspaces.firstIndex { $0.id == selectedWorkspace.id } ?? 0, workspaces.count - 2)
+
         workspaceRepository.deleteWorkspace(id: selectedWorkspace.id)
         workspaces = workspaceRepository.workspaces
-        self.selectedWorkspace = nil
+        self.selectedWorkspace = workspaces[safe: newIndex]
     }
 
     func addApp() {
@@ -209,14 +211,17 @@ extension MainViewModel {
     func deleteApp() {
         guard let selectedWorkspace, let selectedApp else { return }
 
+        let newAppIndex = min(workspaceApps?.firstIndex(of: selectedApp) ?? 0, (workspaceApps?.count ?? 1) - 2)
+
         workspaceRepository.deleteApp(
             from: selectedWorkspace.id,
             app: selectedApp
         )
 
         workspaces = workspaceRepository.workspaces
-        self.selectedApp = nil
         self.selectedWorkspace = workspaces.first { $0.id == selectedWorkspace.id }
+        workspaceApps = self.selectedWorkspace?.apps
+        self.selectedApp = workspaceApps?[safe: newAppIndex]
     }
 
     func resetWorkspaceSymbolIcon() {
