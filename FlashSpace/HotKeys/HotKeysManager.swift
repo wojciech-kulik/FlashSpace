@@ -61,17 +61,6 @@ final class HotKeysManager {
             hotKeysMonitor.addAction(action, forKeyEvent: .down)
         }
 
-        if let floatTheFocusedApp = settingsRepository.floatTheFocusedApp?.toShortcut() {
-            let action = ShortcutAction(shortcut: floatTheFocusedApp) { [weak self] _ in
-                guard let activeApp = NSWorkspace.shared.frontmostApplication,
-                      let appName = activeApp.localizedName else { return true }
-
-                self?.settingsRepository.addFloatingAppIfNeeded(app: appName)
-                return true
-            }
-            hotKeysMonitor.addAction(action, forKeyEvent: .down)
-        }
-
         print("Enabled all shortcuts")
     }
 

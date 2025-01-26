@@ -165,7 +165,7 @@ final class SettingsRepository: ObservableObject {
     }
 
     func deleteFloatingApp(app: String) {
-        floatingApps?.removeAll(where: { $0 == app })
+        floatingApps?.removeAll { $0 == app }
         saveToDisk()
     }
 

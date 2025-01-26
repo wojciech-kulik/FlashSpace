@@ -40,19 +40,26 @@ struct WorkspacesSettingsView: View {
                     Button(action: viewModel.addFloatingApp) {
                         Image(systemName: "plus")
                     }
-
-                    Button(action: viewModel.deleteFloatingApp) {
-                        Image(systemName: "trash")
-                    }.disabled(viewModel.selectedFloatingApp == nil)
-                }
+                },
+                footer:
+                Text("Floating applications remain visible across all workspaces.")
+                    .foregroundStyle(.secondary)
+                    .font(.callout)
             ) {
                 VStack(alignment: .leading) {
                     List(
                         settings.floatingApps ?? [],
-                        id: \.self,
-                        selection: $viewModel.selectedFloatingApp
-                    ) {
-                        Text($0)
+                        id: \.self
+                    ) { app in
+                        HStack {
+                            Text(app)
+                            Spacer()
+                            Button {
+                                viewModel.deleteFloatingApp(app: app)
+                            } label: {
+                                Image(systemName: "x.circle.fill")
+                            }
+                        }
                     }
                 }
                 hotkey("Float The Focused App", for: $settings.floatTheFocusedApp)

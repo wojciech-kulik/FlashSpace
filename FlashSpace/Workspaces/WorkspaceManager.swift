@@ -42,9 +42,9 @@ final class WorkspaceManager: ObservableObject {
     private func showApps(in workspace: Workspace, setFocus: Bool) {
         let regularApps = NSWorkspace.shared.runningApplications
             .filter { $0.activationPolicy == .regular }
-        let appsNeedToBeShown = workspace.apps + (settingsRepository.floatingApps ?? [])
+        let workspaceApps = Set(workspace.apps + (settingsRepository.floatingApps ?? []))
         let appsToShow = regularApps
-            .filter { appsNeedToBeShown.contains($0.localizedName ?? "") }
+            .filter { workspaceApps.contains($0.localizedName ?? "") }
 
         for app in appsToShow {
             print("SHOW: \(app.localizedName ?? "")")
@@ -64,9 +64,9 @@ final class WorkspaceManager: ObservableObject {
         let regularApps = NSWorkspace.shared.runningApplications
             .filter { $0.activationPolicy == .regular }
         let hasMoreScreens = NSScreen.screens.count > 1
-        let appsNeedToBeShown = workspace.apps + (settingsRepository.floatingApps ?? [])
+        let workspaceApps = Set(workspace.apps + (settingsRepository.floatingApps ?? []))
         let appsToHide = regularApps
-            .filter { !appsNeedToBeShown.contains($0.localizedName ?? "") && !$0.isHidden }
+            .filter { !workspaceApps.contains($0.localizedName ?? "") && !$0.isHidden }
             .filter { !hasMoreScreens || $0.getFrame()?.getDisplay() == workspace.display }
 
         for app in appsToHide {
@@ -126,6 +126,7 @@ extension WorkspaceManager {
             getRecentWorkspaceShortcut(),
             getCycleWorkspacesShortcut(next: false),
             getCycleWorkspacesShortcut(next: true),
+            getFlootTheFocusedAppShortcut(),
             getUnfloatTheFocusedAppShortcut()
         ] +
             workspaceRepository.workspaces
@@ -194,11 +195,11 @@ extension WorkspaceManager {
         else { return nil }
 
         let action = { [weak self] in
-            guard let self, let screen = getCursorScreen() else { return }
+            guard let self else { return }
 
-            let hasMoreScreens = NSScreen.screens.count > 1
-            var screenWorkspaces = workspaceRepository.workspaces
-                .filter { !hasMoreScreens || $0.display == screen }
+            let cursorScreenWorkspaces = cursorScreenWorkspaces
+            guard let screen = cursorScreenWorkspaces.screen else { return }
+            var screenWorkspaces = cursorScreenWorkspaces.workspaces
 
             if !next {
                 screenWorkspaces = screenWorkspaces.reversed()
@@ -232,6 +233,18 @@ extension WorkspaceManager {
         return (shortcut, action)
     }
 
+    private func getFlootTheFocusedAppShortcut() -> (Shortcut, () -> ())? {
+        guard let shortcut = settingsRepository.floatTheFocusedApp?.toShortcut() else { return nil }
+        let action = { [weak self] in
+            guard let self,
+                  let activeApp = NSWorkspace.shared.frontmostApplication,
+                  let appName = activeApp.localizedName else { return }
+
+            self.settingsRepository.addFloatingAppIfNeeded(app: appName)
+        }
+        return (shortcut, action)
+    }
+
     private func getUnfloatTheFocusedAppShortcut() -> (Shortcut, () -> ())? {
         guard let shortcut = settingsRepository.unfloatTheFocusedApp?.toShortcut() else { return nil }
         let action = { [weak self] in
@@ -241,11 +254,10 @@ extension WorkspaceManager {
 
             self.settingsRepository.deleteFloatingApp(app: appName)
 
-            guard let screen = getCursorScreen(),
-                  let workspace = workspaceRepository.workspaces.first(where: { $0.display == screen }),
-                  workspace.apps.contains(appName) else {
+            let cursorScreenWorkspaces = cursorScreenWorkspaces
+            guard let screen = cursorScreenWorkspaces.screen else { return }
+            if activeWorkspace[screen]?.apps.contains(appName) != true {
                 activeApp.hide()
-                return
             }
         }
         return (shortcut, action)
@@ -257,5 +269,15 @@ extension WorkspaceManager {
         return NSScreen.screens
             .first { NSMouseInRect(cursorLocation, $0.frame, false) }?
             .localizedName
+    }
+
+    private var cursorScreenWorkspaces: (screen: DisplayName?, workspaces: [Workspace]) {
+        let screen = getCursorScreen()
+        let hasMoreScreens = NSScreen.screens.count > 1
+        return (
+            screen,
+            workspaceRepository.workspaces
+                .filter { !hasMoreScreens || $0.display == screen }
+        )
     }
 }
