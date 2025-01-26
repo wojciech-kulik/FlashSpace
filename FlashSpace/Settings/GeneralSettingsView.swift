@@ -17,9 +17,6 @@ struct GeneralSettingsView: View {
         Form {
             Section {
                 Toggle("Launch at startup", isOn: $isAutostartEnabled)
-            }
-
-            Section {
                 Toggle("Check for updates automatically", isOn: $settings.checkForUpdatesAutomatically)
             }
 

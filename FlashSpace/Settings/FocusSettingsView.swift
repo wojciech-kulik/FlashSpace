@@ -16,21 +16,25 @@ struct FocusSettingsView: View {
                 Toggle("Enable Focus Manager", isOn: $settings.enableFocusManagement)
             }
 
-            Section(header: Text("Trigger when focus is changed using shortcuts")) {
-                Toggle("Center Cursor In Focused App", isOn: $settings.centerCursorOnFocusChange)
-            }
+            Group {
+                Section(header: Text("Trigger when focus is changed using shortcuts")) {
+                    Toggle("Center Cursor In Focused App", isOn: $settings.centerCursorOnFocusChange)
+                }
 
-            Section(header: Text("Shortcuts")) {
-                hotkey("Focus Left", for: $settings.focusLeft)
-                hotkey("Focus Right", for: $settings.focusRight)
-                hotkey("Focus Up", for: $settings.focusUp)
-                hotkey("Focus Down", for: $settings.focusDown)
-            }
+                Section(header: Text("Shortcuts")) {
+                    hotkey("Focus Left", for: $settings.focusLeft)
+                    hotkey("Focus Right", for: $settings.focusRight)
+                    hotkey("Focus Up", for: $settings.focusUp)
+                    hotkey("Focus Down", for: $settings.focusDown)
+                }
 
-            Section {
-                hotkey("Focus Next App", for: $settings.focusNextWorkspaceApp)
-                hotkey("Focus Previous App", for: $settings.focusPreviousWorkspaceApp)
+                Section {
+                    hotkey("Focus Next App", for: $settings.focusNextWorkspaceApp)
+                    hotkey("Focus Previous App", for: $settings.focusPreviousWorkspaceApp)
+                }
             }
+            .disabled(!settings.enableFocusManagement)
+            .opacity(settings.enableFocusManagement ? 1 : 0.5)
         }
         .formStyle(.grouped)
         .navigationTitle("Focus Manager")
