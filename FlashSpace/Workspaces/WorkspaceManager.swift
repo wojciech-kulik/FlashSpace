@@ -42,8 +42,9 @@ final class WorkspaceManager: ObservableObject {
     private func showApps(in workspace: Workspace, setFocus: Bool) {
         let regularApps = NSWorkspace.shared.runningApplications
             .filter { $0.activationPolicy == .regular }
+        let appsNeedToBeShown = workspace.apps + (settingsRepository.floatingApps ?? [])
         let appsToShow = regularApps
-            .filter { workspace.apps.contains($0.localizedName ?? "") }
+            .filter { appsNeedToBeShown.contains($0.localizedName ?? "") }
 
         for app in appsToShow {
             print("SHOW: \(app.localizedName ?? "")")
@@ -63,8 +64,9 @@ final class WorkspaceManager: ObservableObject {
         let regularApps = NSWorkspace.shared.runningApplications
             .filter { $0.activationPolicy == .regular }
         let hasMoreScreens = NSScreen.screens.count > 1
+        let appsNeedToBeShown = workspace.apps + (settingsRepository.floatingApps ?? [])
         let appsToHide = regularApps
-            .filter { !workspace.apps.contains($0.localizedName ?? "") && !$0.isHidden }
+            .filter { !appsNeedToBeShown.contains($0.localizedName ?? "") && !$0.isHidden }
             .filter { !hasMoreScreens || $0.getFrame()?.getDisplay() == workspace.display }
 
         for app in appsToHide {
@@ -123,7 +125,8 @@ extension WorkspaceManager {
             getUnassignAppShortcut(),
             getRecentWorkspaceShortcut(),
             getCycleWorkspacesShortcut(next: false),
-            getCycleWorkspacesShortcut(next: true)
+            getCycleWorkspacesShortcut(next: true),
+            getUnfloatTheFocusedAppShortcut()
         ] +
             workspaceRepository.workspaces
             .flatMap { [getActivateShortcut(for: $0), getAssignAppShortcut(for: $0)] }
@@ -226,6 +229,25 @@ extension WorkspaceManager {
             activateWorkspace(mostRecentWorkspace, setFocus: true)
         }
 
+        return (shortcut, action)
+    }
+
+    private func getUnfloatTheFocusedAppShortcut() -> (Shortcut, () -> ())? {
+        guard let shortcut = settingsRepository.unfloatTheFocusedApp?.toShortcut() else { return nil }
+        let action = { [weak self] in
+            guard let self,
+                  let activeApp = NSWorkspace.shared.frontmostApplication,
+                  let appName = activeApp.localizedName else { return }
+
+            self.settingsRepository.deleteFloatingApp(app: appName)
+
+            guard let screen = getCursorScreen(),
+                  let workspace = workspaceRepository.workspaces.first(where: { $0.display == screen }),
+                  workspace.apps.contains(appName) else {
+                activeApp.hide()
+                return
+            }
+        }
         return (shortcut, action)
     }
 

@@ -40,7 +40,8 @@ struct AppDependencies {
         )
         self.focusedWindowTracker = FocusedWindowTracker(
             workspaceRepository: workspaceRepository,
-            workspaceManager: workspaceManager
+            workspaceManager: workspaceManager,
+            settingsRepository: settingsRepository
         )
 
         focusedWindowTracker.startTracking()

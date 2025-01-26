@@ -27,6 +27,10 @@ struct AppSettings: Codable {
     var switchToRecentWorkspace: HotKeyShortcut?
     var unassignFocusedApp: HotKeyShortcut?
 
+    var floatingApps: [String]?
+    var floatTheFocusedApp: HotKeyShortcut?
+    var unfloatTheFocusedApp: HotKeyShortcut?
+
     var enableIntegrations: Bool?
     var runScriptOnWorkspaceChange: String?
     var runScriptOnLaunch: String?
@@ -101,6 +105,18 @@ final class SettingsRepository: ObservableObject {
         didSet { updateSettings() }
     }
 
+    @Published var floatingApps: [String]? {
+        didSet { updateSettings() }
+    }
+
+    @Published var floatTheFocusedApp: HotKeyShortcut? {
+        didSet { updateSettings() }
+    }
+
+    @Published var unfloatTheFocusedApp: HotKeyShortcut? {
+        didSet { updateSettings() }
+    }
+
     // MARK: - Integrations
 
     @Published var enableIntegrations: Bool = false {
@@ -140,6 +156,19 @@ final class SettingsRepository: ObservableObject {
         }
     }
 
+    func addFloatingAppIfNeeded(app: String) {
+        var unwrappedFloatingApps = floatingApps ?? []
+        guard !unwrappedFloatingApps.contains(app) else { return }
+        unwrappedFloatingApps.append(app)
+        floatingApps = unwrappedFloatingApps
+        saveToDisk()
+    }
+
+    func deleteFloatingApp(app: String) {
+        floatingApps?.removeAll(where: { $0 == app })
+        saveToDisk()
+    }
+
     private func updateSettings() {
         guard shouldUpdate else { return }
 
@@ -161,6 +190,10 @@ final class SettingsRepository: ObservableObject {
             switchToNextWorkspace: switchToNextWorkspace,
             switchToRecentWorkspace: switchToRecentWorkspace,
             unassignFocusedApp: unassignFocusedApp,
+
+            floatingApps: floatingApps,
+            floatTheFocusedApp: floatTheFocusedApp,
+            unfloatTheFocusedApp: unfloatTheFocusedApp,
 
             enableIntegrations: enableIntegrations,
             runScriptOnWorkspaceChange: runScriptOnWorkspaceChange,
@@ -202,6 +235,10 @@ final class SettingsRepository: ObservableObject {
         switchToNextWorkspace = settings.switchToNextWorkspace
         switchToRecentWorkspace = settings.switchToRecentWorkspace
         unassignFocusedApp = settings.unassignFocusedApp
+
+        floatingApps = settings.floatingApps
+        floatTheFocusedApp = settings.floatTheFocusedApp
+        unfloatTheFocusedApp = settings.unfloatTheFocusedApp
 
         enableIntegrations = settings.enableIntegrations ?? false
         runScriptOnWorkspaceChange = settings.runScriptOnWorkspaceChange ?? Self.defaultScript
