@@ -5,7 +5,7 @@ enhance and replace native macOS Spaces. No more waiting for macOS animations.
 
 🚧 This project is still in early development. 🚧
 
-<img width="797" alt="FlashSpace" src="https://github.com/user-attachments/assets/9d5818de-80a4-414b-9926-6670e414e744" />
+<img width="797" alt="FlashSpace" src="https://github.com/user-attachments/assets/18d5b84e-77a8-4950-ac4f-ccf4117401db" />
 
 ## ⚙️ Installation
 
@@ -21,7 +21,7 @@ brew install --cask wojciech-kulik/tap/flashspace
 
 See: [Releases Page].
 
-### From Source
+### Build From Source
 
 See: [Build From Source](#%EF%B8%8F-build-from-source).
 
@@ -49,6 +49,7 @@ The app allows workspaces to be switched independently on each display.
 - [x] Floating apps visible across all workspaces
 - [x] Focus manager - set hotkeys to switch between apps quickly
 - [x] Cursor manager - auto-center the cursor in the active window
+- [x] Profiles - quickly switch between different configurations
 - [x] Configurable Menu Bar icon (per workspace)
 - [x] [SketchyBar] integration
 
