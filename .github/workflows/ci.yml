@@ -25,3 +25,4 @@ jobs:
       - run: swiftlint --reporter github-actions-logging --strict
       - run: xcodegen generate
       - run: ls -Fla FlashSpace.xcodeproj
+      - run: cat FlashSpace.xcodeproj/project.pbxproj
