@@ -30,5 +30,5 @@
 
 --disable wrapMultilineStatementBraces, blankLinesAroundMark
 
---exclude Pods, Scripts, Generated
+--exclude Dangerfile.swift
 
