@@ -23,6 +23,6 @@ jobs:
       - run: swiftformat .
       - run: brew bundle
       - run: swiftlint --reporter github-actions-logging --strict
-      - run: brew install xcodegen
       - run: xcodegen generate
-      - run: cat FlashSpace/FlashSpace.xcodeproj
+      - run: ls -Fla
+      - run: cat FlashSpace.xcodeproj
