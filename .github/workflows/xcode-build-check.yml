@@ -27,4 +27,4 @@ jobs:
             -project FlashSpace.xcodeproj \
             -scheme FlashSpace \
             -destination 'generic/platform=macOS' \
-            -configuration Release | xcbeautify --disable-logging
+            -configuration Release | xcbeautify --disable-logging --renderer github-actions
