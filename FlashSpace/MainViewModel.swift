@@ -11,8 +11,6 @@ import ShortcutRecorder
 import SwiftUI
 
 final class MainViewModel: ObservableObject {
-    @AppStorage("afterFirstLaunch") var afterFirstLaunch = false
-
     @Published var workspaces: [Workspace] = []
     @Published var workspaceApps: [String]?
 
@@ -40,7 +38,6 @@ final class MainViewModel: ObservableObject {
     @Published var isSymbolPickerPresented = false
     @Published var isInputDialogPresented = false
     @Published var userInput = ""
-    @Published var dismissOnLaunch = false
 
     var focusAppOptions: [String] {
         [AppConstants.lastFocusedOption] + (workspaceApps ?? [])
@@ -81,26 +78,12 @@ final class MainViewModel: ObservableObject {
 
     private let workspaceManager = AppDependencies.shared.workspaceManager
     private let workspaceRepository = AppDependencies.shared.workspaceRepository
-    private let hotKeysManager = AppDependencies.shared.hotKeysManager
 
     init() {
         self.workspaces = workspaceRepository.workspaces
         self.workspaceDisplay = NSScreen.main?.localizedName ?? ""
 
-        hotKeysManager.enableAll()
         observe()
-        checkIfFirstLaunch()
-    }
-
-    private func checkIfFirstLaunch() {
-        if afterFirstLaunch {
-            dismissOnLaunch = true
-        } else {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                NSApp.activate(ignoringOtherApps: true)
-            }
-        }
-        afterFirstLaunch = true
     }
 
     private func observe() {

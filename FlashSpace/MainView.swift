@@ -11,7 +11,6 @@ import SymbolPicker
 
 struct MainView: View {
     @Environment(\.openWindow) var openWindow
-    @Environment(\.dismissWindow) var dismissWindow
 
     @StateObject var viewModel = MainViewModel()
     @StateObject var profilesRepository = AppDependencies.shared.profilesRepository
@@ -25,11 +24,6 @@ struct MainView: View {
         .padding()
         .fixedSize()
         .onAppear {
-            if viewModel.dismissOnLaunch {
-                viewModel.dismissOnLaunch = false
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { dismissWindow() }
-            }
-
             Task { await UpdatesManager.shared.autoCheckForUpdates() }
         }
         .sheet(isPresented: $viewModel.isInputDialogPresented) {

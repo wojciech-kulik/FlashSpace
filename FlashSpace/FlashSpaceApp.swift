@@ -5,22 +5,37 @@
 //  Created by Wojciech Kulik on 19/01/2025.
 //
 
+import Combine
 import SwiftUI
+
+final class AppDelegate: NSObject, NSApplicationDelegate {
+    @Environment(\.openWindow) private var openWindow
+
+    private var cancellables = Set<AnyCancellable>()
+
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        AppDependencies.shared.hotKeysManager.enableAll()
+
+        NotificationCenter.default
+            .publisher(for: .openMainWindow)
+            .sink { [weak self] _ in
+                self?.openWindow(id: "main")
+                NSApp.activate(ignoringOtherApps: true)
+            }
+            .store(in: &cancellables)
+    }
+}
 
 @main
 struct FlashSpaceApp: App {
-    @StateObject
-    private var workspaceManager = AppDependencies.shared.workspaceManager
-
+    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @Environment(\.openWindow) private var openWindow
+
+    @StateObject private var workspaceManager = AppDependencies.shared.workspaceManager
 
     var body: some Scene {
         Window("⚡ FlashSpace v\(AppConstants.version)", id: "main") {
             MainView()
-                .onReceive(NotificationCenter.default.publisher(for: .openMainWindow)) { _ in
-                    openWindow(id: "main")
-                    NSApp.activate(ignoringOtherApps: true)
-                }
         }
         .windowResizability(.contentSize)
 
