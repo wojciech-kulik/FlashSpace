@@ -19,7 +19,9 @@ jobs:
           swift-version: ${{ matrix.swift }}
       - run: sw_vers && swift --version
       - uses: actions/checkout@v4
-      - name: Build
-        run: swift build || true  # No Package.swift file.
-      - name: Run tests
-        run: swift test
+      - run: swift run swiftlint --reporter github-actions-logging --strict
+      - run: |
+          brew install swiftformat
+          swiftformat .
+      - run: swift build || true  # No Package.swift file.
+      - run: swift test || true  # No Package.swift file.
