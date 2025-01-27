@@ -104,6 +104,11 @@ final class MainViewModel: ObservableObject {
             .publisher(for: .appsListChanged)
             .sink { [weak self] _ in self?.reloadWorkspaces() }
             .store(in: &cancellables)
+
+        NotificationCenter.default
+            .publisher(for: .profileChanged)
+            .sink { [weak self] _ in self?.reloadWorkspaces() }
+            .store(in: &cancellables)
     }
 
     private func updateSelectedWorkspace() {

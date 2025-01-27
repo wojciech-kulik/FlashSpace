@@ -6,6 +6,7 @@
 //
 
 import AppKit
+import Combine
 import ShortcutRecorder
 
 struct HotKeyShortcut: Codable, Hashable {
@@ -14,6 +15,8 @@ struct HotKeyShortcut: Codable, Hashable {
 }
 
 final class HotKeysManager {
+    private var cancellables = Set<AnyCancellable>()
+
     private let hotKeysMonitor: HotKeysMonitorProtocol
     private let workspaceManager: WorkspaceManager
     private let focusManager: FocusManager
@@ -29,6 +32,8 @@ final class HotKeysManager {
         self.workspaceManager = workspaceManager
         self.focusManager = focusManager
         self.settingsRepository = settingsRepository
+
+        observe()
     }
 
     func refresh() {
@@ -67,5 +72,12 @@ final class HotKeysManager {
     func disableAll() {
         hotKeysMonitor.removeAllActions()
         print("Disabled all shortcuts")
+    }
+
+    private func observe() {
+        NotificationCenter.default
+            .publisher(for: .profileChanged)
+            .sink { [weak self] _ in self?.refresh() }
+            .store(in: &cancellables)
     }
 }

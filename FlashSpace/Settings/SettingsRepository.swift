@@ -34,10 +34,12 @@ struct AppSettings: Codable {
     var enableIntegrations: Bool?
     var runScriptOnWorkspaceChange: String?
     var runScriptOnLaunch: String?
+    var runScriptOnProfileChange: String?
 }
 
 final class SettingsRepository: ObservableObject {
     static let defaultScript = "sketchybar --trigger flashspace_workspace_change WORKSPACE=\"$WORKSPACE\" DISPLAY=\"$DISPLAY\""
+    static let defaultProfileChangeScript = "sketchybar --reload"
 
     // MARK: - General
 
@@ -131,6 +133,10 @@ final class SettingsRepository: ObservableObject {
         didSet { debouncedUpdateSettings.send(()) }
     }
 
+    @Published var runScriptOnProfileChange: String = "" {
+        didSet { debouncedUpdateSettings.send(()) }
+    }
+
     private var currentSettings = AppSettings()
     private var shouldUpdate = false
     private var cancellables = Set<AnyCancellable>()
@@ -197,7 +203,8 @@ final class SettingsRepository: ObservableObject {
 
             enableIntegrations: enableIntegrations,
             runScriptOnWorkspaceChange: runScriptOnWorkspaceChange,
-            runScriptOnLaunch: runScriptOnLaunch
+            runScriptOnLaunch: runScriptOnLaunch,
+            runScriptOnProfileChange: runScriptOnProfileChange
         )
         saveToDisk()
         AppDependencies.shared.hotKeysManager.refresh()
@@ -205,6 +212,8 @@ final class SettingsRepository: ObservableObject {
 
     private func saveToDisk() {
         guard let data = try? encoder.encode(currentSettings) else { return }
+
+        try? dataUrl.createIntermediateDirectories()
         try? data.write(to: dataUrl)
     }
 
@@ -243,5 +252,6 @@ final class SettingsRepository: ObservableObject {
         enableIntegrations = settings.enableIntegrations ?? false
         runScriptOnWorkspaceChange = settings.runScriptOnWorkspaceChange ?? Self.defaultScript
         runScriptOnLaunch = settings.runScriptOnLaunch ?? ""
+        runScriptOnProfileChange = settings.runScriptOnProfileChange ?? Self.defaultProfileChangeScript
     }
 }

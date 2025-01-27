@@ -29,10 +29,17 @@ struct IntegrationsSettingsView: View {
                         .foregroundColor(.secondary)
                 }
 
+                HStack {
+                    Text("On Profile Change")
+                    TextField("", text: $settings.runScriptOnProfileChange)
+                        .foregroundColor(.secondary)
+                }
+
                 Text(
                     """
                     $WORKSPACE will be replaced with the active workspace name
                     $DISPLAY will be replaced with the corresponding display name
+                    $PROFILE will be replaced with the active profile name
                     """
                 )
                 .foregroundStyle(.secondary)

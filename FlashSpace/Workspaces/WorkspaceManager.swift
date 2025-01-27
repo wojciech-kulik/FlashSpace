@@ -84,6 +84,7 @@ final class WorkspaceManager: ObservableObject {
     }
 }
 
+// MARK: - Workspace Actions
 extension WorkspaceManager {
     func activateWorkspace(_ workspace: Workspace, setFocus: Bool) {
         print("\n\nWORKSPACE: \(workspace.name)")

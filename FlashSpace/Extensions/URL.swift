@@ -11,4 +11,11 @@ extension URL {
     var bundle: Bundle? { Bundle(url: self) }
     var fileName: String { lastPathComponent.replacingOccurrences(of: ".app", with: "") }
     var appName: String { bundle?.localizedAppName ?? fileName }
+
+    func createIntermediateDirectories() throws {
+        try FileManager.default.createDirectory(
+            at: deletingLastPathComponent(),
+            withIntermediateDirectories: true
+        )
+    }
 }

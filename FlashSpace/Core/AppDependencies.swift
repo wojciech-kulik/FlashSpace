@@ -21,8 +21,12 @@ struct AppDependencies {
     let focusManager: FocusManager
 
     let settingsRepository = SettingsRepository()
+    let profilesRepository: ProfilesRepository
 
     private init() {
+        self.profilesRepository = ProfilesRepository(
+            workspaceRepository: workspaceRepository
+        )
         self.workspaceManager = WorkspaceManager(
             workspaceRepository: workspaceRepository,
             settingsRepository: settingsRepository
