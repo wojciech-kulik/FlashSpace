@@ -1,0 +1,24 @@
+name: Quality Check
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  quality-check:
+    name: SwiftLint & SwiftFormat
+    runs-on: macos-15
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Install Dependencies
+        run: brew bundle
+
+      - name: Run SwiftLint
+        uses: cirruslabs/swiftlint-action@v1
+        with:
+          version: latest
+
+      - name: Run SwiftFormat
+        run: swiftformat --lint --config .swiftformat --reporter github-actions-log FlashSpace

@@ -51,11 +51,15 @@ targets:
     preBuildScripts:
       - name: Run SwiftLint
         script: |
-          /opt/homebrew/bin/swiftlint --use-alternative-excluding
+          if [ "$GITHUB_ACTIONS" != "true" ]; then
+            /opt/homebrew/bin/swiftlint --use-alternative-excluding
+          fi
         basedOnDependencyAnalysis: false
         showEnvVars: false
       - name: Run SwiftFormat
         script: |
-          /opt/homebrew/bin/swiftformat --lint ${SRCROOT} --config .swiftformat || exit 0
+          if [ "$GITHUB_ACTIONS" != "true" ]; then
+            /opt/homebrew/bin/swiftformat --lint ${SRCROOT} --config .swiftformat || exit 0
+          fi
         basedOnDependencyAnalysis: false
         showEnvVars: false
