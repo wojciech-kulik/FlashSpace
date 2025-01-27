@@ -20,7 +20,6 @@ jobs:
           swift-version: ${{ matrix.swift }}
       - run: sw_vers && swift --version
       - uses: actions/checkout@v4
-      - run: swift run swiftlint --reporter github-actions-logging --strict || true  # No Package.swift file.
       - run: swiftformat .
-      - run: swift build || true  # No Package.swift file.
-      - run: swift test || true  # No Package.swift file.
+      - run: brew bundle
+      - run: xcodegen generate
