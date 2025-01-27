@@ -16,5 +16,4 @@ lane :release do
   )
 
   sh("spctl", "-a", "-vvv", "-t", "install", "../.build/FlashSpace.app")
-  sh("./bump-homebrew.sh")
 end
