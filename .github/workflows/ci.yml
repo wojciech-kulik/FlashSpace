@@ -1,0 +1,25 @@
+# https://docs.github.com/en/actions/use-cases-and-examples/building-and-testing/building-and-testing-swift
+# https://github.com/swift-actions/setup-swift
+
+name: ci
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    name: Swift ${{ matrix.swift }} on ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest]
+        swift: ["5.10", "6.0"]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: swift-actions/setup-swift@v2
+        with:
+          swift-version: ${{ matrix.swift }}
+      - run: sw_vers && swift --version
+      - uses: actions/checkout@v4
+      - name: Build
+        run: swift build
+      - name: Run tests
+        run: swift test
