@@ -29,7 +29,7 @@ final class MainViewModel: ObservableObject {
         didSet { saveWorkspace() }
     }
 
-    @Published var workspaceAppToFocus: String? {
+    @Published var workspaceAppToFocus: String? = AppConstants.lastFocusedOption {
         didSet { saveWorkspace() }
     }
 
@@ -41,6 +41,10 @@ final class MainViewModel: ObservableObject {
     @Published var isInputDialogPresented = false
     @Published var userInput = ""
     @Published var dismissOnLaunch = false
+
+    var focusAppOptions: [String] {
+        [AppConstants.lastFocusedOption] + (workspaceApps ?? [])
+    }
 
     var selectedApp: String? {
         didSet {
@@ -120,7 +124,7 @@ final class MainViewModel: ObservableObject {
         workspaceAssignShortcut = selectedWorkspace?.assignAppShortcut
         workspaceDisplay = selectedWorkspace?.display ?? NSScreen.main?.localizedName ?? ""
         workspaceApps = selectedWorkspace?.apps
-        workspaceAppToFocus = selectedWorkspace?.appToFocus ?? workspaceApps?.last
+        workspaceAppToFocus = selectedWorkspace?.appToFocus ?? AppConstants.lastFocusedOption
         workspaceSymbolIconName = selectedWorkspace?.symbolIconName
         selectedApp = workspaceApps?.first { $0 == selectedApp }
     }
@@ -146,7 +150,7 @@ extension MainViewModel {
             activateShortcut: workspaceShortcut,
             assignAppShortcut: workspaceAssignShortcut,
             apps: selectedWorkspace.apps,
-            appToFocus: workspaceAppToFocus,
+            appToFocus: workspaceAppToFocus == AppConstants.lastFocusedOption ? nil : workspaceAppToFocus,
             symbolIconName: workspaceSymbolIconName
         )
 

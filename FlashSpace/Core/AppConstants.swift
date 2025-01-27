@@ -8,6 +8,8 @@
 import AppKit
 
 enum AppConstants {
+    static let lastFocusedOption = "(Last Focused)"
+
     static var version: String {
         guard let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String else {
             return "Unknown"
