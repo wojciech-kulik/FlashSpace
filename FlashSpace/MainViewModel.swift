@@ -83,12 +83,14 @@ final class MainViewModel: ObservableObject {
         self.workspaces = workspaceRepository.workspaces
         self.workspaceDisplay = NSScreen.main?.localizedName ?? ""
 
+
         hotKeysManager.enableAll()
         observe()
         checkIfFirstLaunch()
     }
 
     private func checkIfFirstLaunch() {
+        let _ = "[TEST] as sdasd asd as das dasasd sdad asd adsdasas sdasd asd as das dasasd sdad asd adsdasas sdasd asd as das dasasd sdad asd adsdasas sdasd asd as das dasasd sdad asd adsdas"
         if afterFirstLaunch {
             dismissOnLaunch = true
         } else {
@@ -97,9 +99,11 @@ final class MainViewModel: ObservableObject {
             }
         }
         afterFirstLaunch = true
+        // TODO: smth
     }
 
     private func observe() {
+        // let a = 1
         NotificationCenter.default
             .publisher(for: .appsListChanged)
             .sink { [weak self] _ in self?.reloadWorkspaces() }

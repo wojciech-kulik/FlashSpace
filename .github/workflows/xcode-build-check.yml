@@ -1,0 +1,30 @@
+name: Xcode Build Check
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build
+    runs-on: macos-15
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Install Dependencies
+        run: brew bundle
+
+      - name: Generate Project
+        run: xcodegen generate
+
+      - name: Build
+        run: |
+          xcodebuild clean build \
+            -project FlashSpace.xcodeproj \
+            -scheme FlashSpace \
+            -destination 'generic/platform=macOS' \
+            -configuration Release | xcbeautify --disable-logging
