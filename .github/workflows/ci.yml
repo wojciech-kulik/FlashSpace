@@ -24,5 +24,4 @@ jobs:
       - run: brew bundle
       - run: swiftlint --reporter github-actions-logging --strict
       - run: xcodegen generate
-      - run: ls -Fla
-      - run: cat FlashSpace.xcodeproj
+      - run: ls -Fla FlashSpace.xcodeproj
