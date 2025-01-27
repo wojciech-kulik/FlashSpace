@@ -14,8 +14,19 @@ enhance and replace native macOS Spaces. No more waiting for macOS animations.
 ### Homebrew
 
 ```bash
-brew install --cask wojciech-kulik/tap/flashspace
+brew install flashspace
 ```
+
+> [!NOTE]
+> The app is now available in the main Homebrew repository.
+> If you previously installed it from `wojciech-kulik/tap/flashspace`,
+> you should switch to the main repository by following these steps:
+>
+> ```bash
+> brew uninstall flashspace
+> brew untap wojciech-kulik/tap
+> brew install flashspace
+> ```
 
 ### Download Binary
 
