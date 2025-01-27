@@ -21,7 +21,7 @@ struct Workspace: Identifiable, Codable, Hashable {
         case symbolIconName
     }
 
-    let id: WorkspaceID
+    var id: WorkspaceID
     var name: String
     var display: DisplayName
     var activateShortcut: HotKeyShortcut?

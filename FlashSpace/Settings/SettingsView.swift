@@ -34,6 +34,8 @@ struct SettingsView: View {
                     .tag("Workspaces")
                 Label("Integrations", systemImage: "link")
                     .tag("Integrations")
+                Label("Profiles", systemImage: "person.2")
+                    .tag("Profiles")
                 Label("Acknowledgements", systemImage: "info.circle")
                     .tag("Acknowledgements")
             }
@@ -59,6 +61,8 @@ struct SettingsView: View {
             WorkspacesSettingsView()
         case "Integrations":
             IntegrationsSettingsView()
+        case "Profiles":
+            ProfilesSettingsView()
         case "Acknowledgements":
             AcknowledgementsSettingsView()
         default:

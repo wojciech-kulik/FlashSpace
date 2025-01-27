@@ -6,15 +6,21 @@
 //
 
 import AppKit
+import Combine
 import Foundation
 
 final class WorkspaceRepository {
+    var workspacesUpdatePublisher: AnyPublisher<[Workspace], Never> {
+        workspacesUpdateSubject.eraseToAnyPublisher()
+    }
+
     private(set) var workspaces: [Workspace] = []
 
     private let dataUrl = FileManager.default
         .homeDirectoryForCurrentUser
         .appendingPathComponent(".config/flashspace/workspaces.json")
 
+    private let workspacesUpdateSubject = PassthroughSubject<[Workspace], Never>()
     private let encoder = JSONEncoder()
     private let decoder = JSONDecoder()
 
@@ -22,6 +28,11 @@ final class WorkspaceRepository {
         encoder.outputFormatting = .prettyPrinted
         loadFromDisk()
         print(dataUrl)
+    }
+
+    func replaceWorkspaces(with workspaces: [Workspace]) {
+        self.workspaces = workspaces
+        saveToDisk()
     }
 
     func addWorkspace(name: String) {
@@ -104,11 +115,10 @@ final class WorkspaceRepository {
     private func saveToDisk() {
         guard let data = try? encoder.encode(workspaces) else { return }
 
-        let directoryPath = dataUrl.deletingLastPathComponent()
-        try? FileManager.default
-            .createDirectory(at: directoryPath, withIntermediateDirectories: true)
-
+        try? dataUrl.createIntermediateDirectories()
         try? data.write(to: dataUrl)
+
+        workspacesUpdateSubject.send(workspaces)
     }
 
     private func loadFromDisk() {

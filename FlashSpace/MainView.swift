@@ -14,12 +14,13 @@ struct MainView: View {
     @Environment(\.dismissWindow) var dismissWindow
 
     @StateObject var viewModel = MainViewModel()
+    @StateObject var profilesRepository = AppDependencies.shared.profilesRepository
 
     var body: some View {
         HStack(spacing: 16.0) {
             workspaces
             assignedApps
-            workspaceSettings
+            workspaceSettings.frame(maxWidth: 230)
         }
         .padding()
         .fixedSize()
@@ -151,14 +152,20 @@ struct MainView: View {
 
             Spacer()
 
-            Button(action: {
-                openWindow(id: "settings")
-            }, label: {
-                Image(systemName: "gearshape")
-                    .foregroundColor(.primary)
-            })
-            .keyboardShortcut(",")
-            .frame(maxWidth: .infinity, alignment: .trailing)
+            HStack {
+                Picker("Profile:", selection: $profilesRepository.selectedProfile) {
+                    ForEach(profilesRepository.profiles) {
+                        Text($0.name).tag($0)
+                    }
+                }
+
+                Button(action: {
+                    openWindow(id: "settings")
+                }, label: {
+                    Image(systemName: "gearshape")
+                        .foregroundColor(.primary)
+                }).keyboardShortcut(",")
+            }.frame(maxWidth: .infinity, alignment: .trailing)
         }
     }
 }

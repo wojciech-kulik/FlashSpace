@@ -34,5 +34,10 @@ struct InputDialog: View {
         }
         .padding()
         .frame(width: 300, height: 110)
+        .onKeyPress(.escape) {
+            userInput = ""
+            isPresented = false
+            return .handled
+        }
     }
 }

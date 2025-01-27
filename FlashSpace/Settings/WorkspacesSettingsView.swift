@@ -50,6 +50,7 @@ struct WorkspacesSettingsView: View {
                             } label: {
                                 Image(systemName: "x.circle.fill").opacity(0.8)
                             }.buttonStyle(.borderless)
+
                             Text(app)
                         }
                     }
