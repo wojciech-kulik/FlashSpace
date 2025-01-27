@@ -14,11 +14,13 @@ typealias DisplayName = String
 final class WorkspaceManager: ObservableObject {
     @Published private(set) var activeWorkspaceSymbolIconName: String?
 
+    private(set) var lastFocusedApp: [WorkspaceID: String] = [:]
     private(set) var activeWorkspace: [DisplayName: Workspace] = [:]
-    private(set) var lastWorkspaceActivation = Date.distantPast
     private(set) var mostRecentWorkspace: [DisplayName: Workspace] = [:]
+    private(set) var lastWorkspaceActivation = Date.distantPast
 
     private var cancellables = Set<AnyCancellable>()
+    private var observeFocusCancellable: AnyCancellable?
     private let hideAgainSubject = PassthroughSubject<Workspace, Never>()
 
     private let workspaceRepository: WorkspaceRepository
@@ -32,11 +34,39 @@ final class WorkspaceManager: ObservableObject {
         self.settingsRepository = settingsRepository
 
         PermissionsManager.shared.askForAccessibilityPermissions()
+        observe()
+    }
 
+    private func observe() {
         hideAgainSubject
             .debounce(for: 0.2, scheduler: RunLoop.main)
             .sink { [weak self] in self?.hideApps(in: $0) }
             .store(in: &cancellables)
+
+        NotificationCenter.default
+            .publisher(for: .profileChanged)
+            .sink { [weak self] _ in
+                self?.lastFocusedApp = [:]
+                self?.activeWorkspace = [:]
+                self?.mostRecentWorkspace = [:]
+            }
+            .store(in: &cancellables)
+
+        observeFocus()
+    }
+
+    private func observeFocus() {
+        observeFocusCancellable = NSWorkspace.shared.notificationCenter
+            .publisher(for: NSWorkspace.didActivateApplicationNotification)
+            .compactMap { $0.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication }
+            .sink { [weak self] application in
+                guard let self else { return }
+
+                if let activeWorkspace = activeWorkspace[application.display ?? ""],
+                   activeWorkspace.apps.contains(application.localizedName ?? "") {
+                    lastFocusedApp[activeWorkspace.id] = application.localizedName
+                }
+            }
     }
 
     private func showApps(in workspace: Workspace, setFocus: Bool) {
@@ -49,15 +79,17 @@ final class WorkspaceManager: ObservableObject {
                     floatingApps.contains($0.localizedName ?? "") && $0.isOnTheSameScreen(as: workspace)
             }
 
+        observeFocusCancellable = nil
+        defer { observeFocus() }
+
         for app in appsToShow {
             print("SHOW: \(app.localizedName ?? "")")
             app.raise()
         }
 
         if setFocus {
-            let appToFocus = appsToShow.first { $0.localizedName == workspace.appToFocus }
-            let lastApp = appsToShow.first { $0.localizedName == workspace.apps.last }
-            let toFocus = appToFocus ?? lastApp
+            let toFocus = findAppToFocus(in: workspace, apps: appsToShow)
+            print("FOCUS: \(toFocus?.localizedName ?? "")")
             toFocus?.activate()
             centerCursorIfNeeded(in: toFocus?.frame)
         }
@@ -75,6 +107,23 @@ final class WorkspaceManager: ObservableObject {
             print("HIDE: \(app.localizedName ?? "")")
             app.hide()
         }
+    }
+
+    private func findAppToFocus(
+        in workspace: Workspace,
+        apps: [NSRunningApplication]
+    ) -> NSRunningApplication? {
+        var appToFocus: NSRunningApplication?
+
+        if workspace.appToFocus == nil {
+            appToFocus = apps.first { $0.localizedName == lastFocusedApp[workspace.id] }
+        } else {
+            appToFocus = apps.first { $0.localizedName == workspace.appToFocus }
+        }
+
+        let fallbackToLastApp = apps.first { $0.localizedName == workspace.apps.last }
+
+        return appToFocus ?? fallbackToLastApp
     }
 
     private func centerCursorIfNeeded(in frame: CGRect?) {

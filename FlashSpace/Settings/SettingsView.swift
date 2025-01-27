@@ -32,10 +32,10 @@ struct SettingsView: View {
                     .tag("Focus")
                 Label("Workspaces", systemImage: "square.stack.3d.up")
                     .tag("Workspaces")
-                Label("Integrations", systemImage: "link")
-                    .tag("Integrations")
                 Label("Profiles", systemImage: "person.2")
                     .tag("Profiles")
+                Label("Integrations", systemImage: "link")
+                    .tag("Integrations")
                 Label("Acknowledgements", systemImage: "info.circle")
                     .tag("Acknowledgements")
             }
