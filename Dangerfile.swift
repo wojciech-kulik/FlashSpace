@@ -7,8 +7,7 @@ let danger = Danger()
 
 SwiftLint.lint(
     .modifiedAndCreatedFiles(directory: "FlashSpace"),
-    configFile: ".swiftlint.yml",
-    swiftlintPath: .bin("/opt/homebrew/bin/swiftlint")
+    configFile: ".swiftlint.yml"
 )
 
 // -------- SwiftFormat
@@ -21,7 +20,7 @@ struct SwiftFormatEntry: Decodable {
 }
 
 _ = ShellExecutor.execute(
-    "/opt/homebrew/bin/swiftformat --lint --config .swiftformat --reporter json --report swiftformat-result.json FlashSpace"
+    "swiftformat --lint --config .swiftformat --reporter json --report swiftformat-result.json FlashSpace"
 )
 
 let decoder = JSONDecoder()

@@ -11,9 +11,6 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Install Dependencies
-        run: brew bundle
-
       - name: Install Danger
         run: brew install danger/tap/danger-swift
 

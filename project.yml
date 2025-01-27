@@ -51,11 +51,13 @@ targets:
     preBuildScripts:
       - name: Run SwiftLint
         script: |
-          /opt/homebrew/bin/swiftlint --use-alternative-excluding
+          export PATH=/opt/homebrew/bin:$PATH
+          swiftlint --use-alternative-excluding
         basedOnDependencyAnalysis: false
         showEnvVars: false
       - name: Run SwiftFormat
         script: |
-          /opt/homebrew/bin/swiftformat --lint ${SRCROOT} --config .swiftformat || exit 0
+          export PATH=/opt/homebrew/bin:$PATH
+          swiftformat --lint ${SRCROOT} --config .swiftformat || exit 0
         basedOnDependencyAnalysis: false
         showEnvVars: false

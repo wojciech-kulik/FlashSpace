@@ -16,10 +16,13 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install Dependencies
-        run: brew bundle
+        run: brew install xcodegen
 
       - name: Generate Project
         run: xcodegen generate
+
+      - name: Check Tools
+        run: which swiftlint && which swiftformat
 
       - name: Build
         run: |
