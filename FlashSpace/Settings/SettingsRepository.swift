@@ -26,6 +26,7 @@ struct AppSettings: Codable {
     var switchToNextWorkspace: HotKeyShortcut?
     var switchToRecentWorkspace: HotKeyShortcut?
     var unassignFocusedApp: HotKeyShortcut?
+    var showFloatingNotifications: Bool?
 
     var floatingApps: [String]?
     var floatTheFocusedApp: HotKeyShortcut?
@@ -119,6 +120,10 @@ final class SettingsRepository: ObservableObject {
         didSet { updateSettings() }
     }
 
+    @Published var showFloatingNotifications: Bool = true {
+        didSet { updateSettings() }
+    }
+
     // MARK: - Integrations
 
     @Published var enableIntegrations: Bool = false {
@@ -196,6 +201,7 @@ final class SettingsRepository: ObservableObject {
             switchToNextWorkspace: switchToNextWorkspace,
             switchToRecentWorkspace: switchToRecentWorkspace,
             unassignFocusedApp: unassignFocusedApp,
+            showFloatingNotifications: showFloatingNotifications,
 
             floatingApps: floatingApps,
             floatTheFocusedApp: floatTheFocusedApp,
@@ -244,6 +250,7 @@ final class SettingsRepository: ObservableObject {
         switchToNextWorkspace = settings.switchToNextWorkspace
         switchToRecentWorkspace = settings.switchToRecentWorkspace
         unassignFocusedApp = settings.unassignFocusedApp
+        showFloatingNotifications = settings.showFloatingNotifications ?? true
 
         floatingApps = settings.floatingApps
         floatTheFocusedApp = settings.floatTheFocusedApp

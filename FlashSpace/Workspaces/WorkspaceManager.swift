@@ -219,6 +219,7 @@ extension WorkspaceManager {
 
             activeApp.centerApp(display: updatedWorkspace.display)
             self?.assignApp(appName, to: updatedWorkspace)
+            showFloatingToast(icon: "square.stack.3d.up", message: "App Assigned To \(workspace.name)")
         }
 
         return (shortcut, action)
@@ -230,6 +231,10 @@ extension WorkspaceManager {
         let action = { [weak self] in
             guard let activeApp = NSWorkspace.shared.frontmostApplication else { return }
             guard let appName = activeApp.localizedName else { return }
+
+            if self?.workspaceRepository.workspaces.flatMap(\.apps).contains(appName) == true {
+                showFloatingToast(icon: "square.stack.3d.up.slash", message: "App Removed From Workspaces")
+            }
 
             self?.workspaceRepository.deleteAppFromAllWorkspaces(app: appName)
             activeApp.hide()
@@ -291,6 +296,7 @@ extension WorkspaceManager {
                   let appName = activeApp.localizedName else { return }
 
             self.settingsRepository.addFloatingAppIfNeeded(app: appName)
+            showFloatingToast(icon: "macwindow.on.rectangle", message: "Added Floating App")
         }
         return (shortcut, action)
     }
@@ -301,6 +307,10 @@ extension WorkspaceManager {
             guard let self,
                   let activeApp = NSWorkspace.shared.frontmostApplication,
                   let appName = activeApp.localizedName else { return }
+
+            if settingsRepository.floatingApps?.contains(appName) == true {
+                showFloatingToast(icon: "macwindow", message: "Removed Floating App")
+            }
 
             settingsRepository.deleteFloatingApp(app: appName)
 
