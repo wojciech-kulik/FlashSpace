@@ -11,7 +11,7 @@ enhance and replace native macOS Spaces. No more waiting for macOS animations.
 
 🚧 This project is still in early development. 🚧
 
-<img width="797" alt="FlashSpace" src="https://github.com/user-attachments/assets/18d5b84e-77a8-4950-ac4f-ccf4117401db" />
+<img width="797" alt="FlashSpace" src="https://github.com/user-attachments/assets/42e271d5-3f4f-45f8-8d6b-5dee464f2c17" />
 
 ## ⚙️ Installation
 
