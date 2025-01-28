@@ -61,6 +61,13 @@ struct WorkspacesSettingsView: View {
                     .foregroundStyle(.secondary)
                     .font(.callout)
             }
+
+            Section("Notifications") {
+                Toggle("Enable Notifications", isOn: $settings.showFloatingNotifications)
+                Text("Some shortcuts will show a temporary notification.")
+                    .foregroundStyle(.secondary)
+                    .font(.callout)
+            }
         }
         .formStyle(.grouped)
         .navigationTitle("Workspaces")
