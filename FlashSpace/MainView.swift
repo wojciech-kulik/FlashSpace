@@ -49,7 +49,7 @@ struct MainView: View {
             ) { workspace in
                 Text(workspace.name)
             }
-            .frame(width: 200, height: 400)
+            .frame(width: 200, height: 350)
 
             HStack {
                 Button(action: viewModel.addWorkspace) {
@@ -84,7 +84,7 @@ struct MainView: View {
             ) { app in
                 Text(app)
             }
-            .frame(width: 200, height: 400)
+            .frame(width: 200, height: 350)
 
             HStack {
                 Button(action: viewModel.addApp) {
@@ -124,23 +124,21 @@ struct MainView: View {
                     }
                 }.padding(.bottom)
 
-                Text("Activate Shortcut:")
-                HotKeyControl(shortcut: $viewModel.workspaceShortcut).padding(.bottom)
-
-                Text("Assign App Shortcut:")
-                HotKeyControl(shortcut: $viewModel.workspaceAssignShortcut).padding(.bottom)
-
-                Text("Menu Bar Icon:")
                 HStack {
+                    Text("Menu Bar Icon:")
                     Button {
                         viewModel.isSymbolPickerPresented = true
                     } label: {
                         Image(systemName: viewModel.workspaceSymbolIconName ?? "bolt.fill")
                             .frame(maxWidth: .infinity)
                     }
-                    Button("Reset", action: viewModel.resetWorkspaceSymbolIcon)
-                }
-                .padding(.bottom)
+                }.padding(.bottom)
+
+                Text("Activate Shortcut:")
+                HotKeyControl(shortcut: $viewModel.workspaceShortcut).padding(.bottom)
+
+                Text("Assign App Shortcut:")
+                HotKeyControl(shortcut: $viewModel.workspaceAssignShortcut).padding(.bottom)
             }
             .disabled(viewModel.selectedWorkspace == nil)
 
