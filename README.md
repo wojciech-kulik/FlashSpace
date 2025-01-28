@@ -1,8 +1,8 @@
-![GitHub Release](https://img.shields.io/github/v/release/wojciech-kulik/FlashSpace?color=8A2BE2)
-![Homebrew Cask Version](https://img.shields.io/homebrew/cask/v/flashspace)
-![min macOS](https://img.shields.io/badge/macOS-14.0+-silver)
-![CI Status](https://img.shields.io/github/actions/workflow/status/wojciech-kulik/FlashSpace/xcode-build-check.yml)
-![Supported Xcode](https://img.shields.io/badge/xcode-16.2-blue)
+[![GitHub Release](https://img.shields.io/github/v/release/wojciech-kulik/FlashSpace?color=8A2BE2)](https://github.com/wojciech-kulik/FlashSpace/releases)
+[![Homebrew Cask Version](https://img.shields.io/homebrew/cask/v/flashspace)](https://formulae.brew.sh/cask/flashspace)
+[![min macOS](https://img.shields.io/badge/macOS-14.0+-silver)](#)
+[![CI Status](https://img.shields.io/github/actions/workflow/status/wojciech-kulik/FlashSpace/xcode-build-check.yml)](https://github.com/wojciech-kulik/FlashSpace/actions/workflows/xcode-build-check.yml)
+[![Supported Xcode](https://img.shields.io/badge/xcode-16.2-blue)](#)
 
 # ⚡ FlashSpace
 
