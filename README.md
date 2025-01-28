@@ -1,4 +1,4 @@
-![App Version](https://img.shields.io/badge/version-v0.9.11-8A2BE2)
+![GitHub Release](https://img.shields.io/github/v/release/wojciech-kulik/FlashSpace?color=8A2BE2)
 ![Homebrew Cask Version](https://img.shields.io/homebrew/cask/v/flashspace)
 ![min macOS](https://img.shields.io/badge/macOS-14.0+-silver)
 ![CI Status](https://img.shields.io/github/actions/workflow/status/wojciech-kulik/FlashSpace/xcode-build-check.yml)
