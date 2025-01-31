@@ -76,7 +76,8 @@ final class WorkspaceManager: ObservableObject {
         let appsToShow = regularApps
             .filter {
                 workspace.apps.contains($0.localizedName ?? "") ||
-                    floatingApps.contains($0.localizedName ?? "") && $0.isOnTheSameScreen(as: workspace)
+                    floatingApps.contains($0.localizedName ?? "") &&
+                    $0.isOnTheSameScreen(as: workspace)
             }
 
         observeFocusCancellable = nil
@@ -144,11 +145,12 @@ extension WorkspaceManager {
         lastWorkspaceActivation = Date()
 
         // Save the most recent workspace if it's not the current one
-        if activeWorkspace[workspace.display]?.id != workspace.id {
-            mostRecentWorkspace[workspace.display] = activeWorkspace[workspace.display]
+        let display = workspace.displayWithFallback
+        if activeWorkspace[display]?.id != workspace.id {
+            mostRecentWorkspace[display] = activeWorkspace[display]
         }
 
-        activeWorkspace[workspace.display] = workspace
+        activeWorkspace[display] = workspace
         activeWorkspaceSymbolIconName = workspace.symbolIconName
         showApps(in: workspace, setFocus: setFocus)
         hideApps(in: workspace)
@@ -254,7 +256,8 @@ extension WorkspaceManager {
         let action = { [weak self] in
             guard let self, let screen = getCursorScreen() else { return }
 
-            var screenWorkspaces = workspaces(in: screen)
+            var screenWorkspaces = workspaceRepository.workspaces
+                .filter { $0.displayWithFallback == screen }
 
             if !next {
                 screenWorkspaces = screenWorkspaces.reversed()
@@ -329,11 +332,5 @@ extension WorkspaceManager {
         return NSScreen.screens
             .first { NSMouseInRect(cursorLocation, $0.frame, false) }?
             .localizedName
-    }
-
-    private func workspaces(in screen: DisplayName) -> [Workspace] {
-        let hasMoreScreens = NSScreen.screens.count > 1
-        return workspaceRepository.workspaces
-            .filter { !hasMoreScreens || $0.display == screen }
     }
 }
