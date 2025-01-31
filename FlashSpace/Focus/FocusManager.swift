@@ -50,20 +50,26 @@ final class FocusManager {
     func nextWorkspaceApp() {
         guard let (index, apps) = getFocusedAppIndex() else { return }
 
-        let nextIndex = (index + 1) % apps.count
+        let appsQueue = apps.dropFirst(index + 1) + apps.prefix(index)
+        let runningApps = Set(NSWorkspace.shared.runningApplications.map(\.localizedName))
+        let nextApp = appsQueue.first(where: runningApps.contains)
 
         NSWorkspace.shared.runningApplications
-            .first { $0.localizedName == apps[nextIndex] }?
+            .first { $0.localizedName == nextApp }?
             .activate()
     }
 
     func previousWorkspaceApp() {
         guard let (index, apps) = getFocusedAppIndex() else { return }
 
-        let previousIndex = (index - 1 + apps.count) % apps.count
+        let runningApps = Set(NSWorkspace.shared.runningApplications.map(\.localizedName))
+        let prefixApps = apps.prefix(index).reversed()
+        let suffixApps = apps.suffix(apps.count - index - 1).reversed()
+        let appsQueue = prefixApps + Array(suffixApps)
+        let previousApp = appsQueue.first(where: runningApps.contains)
 
         NSWorkspace.shared.runningApplications
-            .first { $0.localizedName == apps[previousIndex] }?
+            .first { $0.localizedName == previousApp }?
             .activate()
     }
 
@@ -121,9 +127,8 @@ final class FocusManager {
     private func getFocusedAppIndex() -> (Int, [String])? {
         guard let focusedApp = focusedApp?.localizedName else { return nil }
 
-        let workspace = workspaceRepository.workspaces.first {
-            $0.apps.contains(focusedApp)
-        } ?? workspaceManager.activeWorkspace[NSScreen.main?.localizedName ?? ""]
+        let workspace = workspaceManager.activeWorkspace[NSScreen.main?.localizedName ?? ""]
+            ?? workspaceRepository.workspaces.first { $0.apps.contains(focusedApp) }
 
         guard let apps = workspace?.apps else { return nil }
 
