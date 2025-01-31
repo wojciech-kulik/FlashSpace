@@ -28,6 +28,8 @@ struct SettingsView: View {
             List(selection: $selectedTab) {
                 Label("General", systemImage: "gearshape")
                     .tag("General")
+                Label("Menu Bar", systemImage: "contextualmenu.and.cursorarrow")
+                    .tag("MenuBar")
                 Label("Focus Manager", systemImage: "macwindow.on.rectangle")
                     .tag("Focus")
                 Label("Workspaces", systemImage: "square.stack.3d.up")
@@ -55,6 +57,8 @@ struct SettingsView: View {
         switch selectedTab {
         case "General":
             GeneralSettingsView()
+        case "MenuBar":
+            MenuBarSettingsView()
         case "Focus":
             FocusSettingsView()
         case "Workspaces":
