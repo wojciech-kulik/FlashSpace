@@ -214,6 +214,17 @@ XCODE_DEVELOPMENT_TEAM=YOUR_TEAM_ID xcodegen generate
 
 You can also set this variable globally in your shell.
 
+## 💛  Sponsors
+
+Big thanks to all the sponsors who support this project 🍻!
+
+### Monthly Sponsors
+
+<a href="https://github.com/bjrmatos"><img src="https://avatars.githubusercontent.com/u/4262050" width="40" height="40" alt="@bjrmatos" title="bjrmatos"></a>
+<a href="https://github.com/notlus"><img src="https://avatars.githubusercontent.com/u/828989" width="40" height="40" alt="@notlus" title="notlus"></a>
+
+&nbsp;
+
 [SketchyBar]: https://github.com/FelixKratz/SketchyBar
 [XcodeGen]: https://github.com/yonaskolb/XcodeGen
 [Releases Page]: https://github.com/wojciech-kulik/FlashSpace/releases
