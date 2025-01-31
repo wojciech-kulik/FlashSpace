@@ -109,8 +109,12 @@ final class WorkspaceManager: ObservableObject {
         let regularApps = NSWorkspace.shared.runningApplications
             .filter { $0.activationPolicy == .regular }
         let workspaceApps = Set(workspace.apps + (settingsRepository.floatingApps ?? []))
+        let isAnyWorkspaceAppRunning = regularApps
+            .contains { workspaceApps.contains($0.localizedName ?? "") }
+
         let appsToHide = regularApps
             .filter { !workspaceApps.contains($0.localizedName ?? "") && !$0.isHidden }
+            .filter { isAnyWorkspaceAppRunning || $0.bundleURL?.fileName != "Finder" }
             .filter { $0.isOnTheSameScreen(as: workspace) }
 
         for app in appsToHide {
@@ -132,8 +136,9 @@ final class WorkspaceManager: ObservableObject {
         }
 
         let fallbackToLastApp = apps.first { $0.localizedName == workspace.apps.last }
+        let fallbackToFinder = NSWorkspace.shared.runningApplications.first { $0.bundleURL?.fileName == "Finder" }
 
-        return appToFocus ?? fallbackToLastApp
+        return appToFocus ?? fallbackToLastApp ?? fallbackToFinder
     }
 
     private func centerCursorIfNeeded(in frame: CGRect?) {
