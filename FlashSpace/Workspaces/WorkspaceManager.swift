@@ -52,6 +52,15 @@ final class WorkspaceManager: ObservableObject {
             }
             .store(in: &cancellables)
 
+        NotificationCenter.default
+            .publisher(for: NSApplication.didChangeScreenParametersNotification)
+            .print()
+            .sink { [weak self] _ in
+                self?.activeWorkspace = [:]
+                self?.mostRecentWorkspace = [:]
+            }
+            .store(in: &cancellables)
+
         observeFocus()
     }
 
