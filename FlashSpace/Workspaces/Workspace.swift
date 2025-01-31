@@ -5,6 +5,7 @@
 //  Copyright © 2025 Wojciech Kulik. All rights reserved.
 //
 
+import AppKit
 import Foundation
 
 typealias WorkspaceID = UUID
@@ -29,4 +30,13 @@ struct Workspace: Identifiable, Codable, Hashable {
     var apps: [String]
     var appToFocus: String?
     var symbolIconName: String?
+}
+
+extension Workspace {
+    /// If only one display is connected, fallbacks to the main display
+    var displayWithFallback: DisplayName {
+        NSScreen.screens.count > 1
+            ? display
+            : NSScreen.main?.localizedName ?? ""
+    }
 }

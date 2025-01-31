@@ -53,7 +53,7 @@ final class FocusedWindowTracker {
             .first(where: { $0.apps.contains(app.localizedName ?? "") }) else { return }
 
         // Activate the workspace if it's not already active
-        if workspaceManager.activeWorkspace[workspace.display]?.id != workspace.id {
+        if workspaceManager.activeWorkspace[workspace.displayWithFallback]?.id != workspace.id {
             print("\n\nFound workspace for app: \(workspace.name)")
             workspaceManager.activateWorkspace(workspace, setFocus: false)
             app.activate()

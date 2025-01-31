@@ -90,7 +90,6 @@ extension NSRunningApplication {
     }
 
     func isOnTheSameScreen(as workspace: Workspace) -> Bool {
-        let hasMoreScreens = NSScreen.screens.count > 1
-        return !hasMoreScreens || display == workspace.display
+        display == workspace.displayWithFallback
     }
 }
