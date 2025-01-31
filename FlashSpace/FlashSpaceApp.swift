@@ -44,7 +44,7 @@ struct FlashSpaceApp: App {
         }
         .windowResizability(.contentSize)
 
-        MenuBarExtra("FlashSpace", systemImage: workspaceManager.activeWorkspaceSymbolIconName ?? "bolt.fill") {
+        MenuBarExtra {
             Text("FlashSpace v\(AppConstants.version)")
 
             Button("Open") {
@@ -82,6 +82,11 @@ struct FlashSpaceApp: App {
             Button("Quit") {
                 NSApp.terminate(nil)
             }.keyboardShortcut("q")
+        } label: {
+            HStack {
+                Image(systemName: workspaceManager.activeWorkspaceDetails?.symbolIconName ?? "bolt.fill")
+                if let title = MenuBarTitle.get() { Text(title) }
+            }
         }
     }
 }

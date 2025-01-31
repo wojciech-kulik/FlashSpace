@@ -11,6 +11,8 @@ import Foundation
 struct AppSettings: Codable {
     var checkForUpdatesAutomatically: Bool?
     var showFlashSpace: HotKeyShortcut?
+    var showMenuBarTitle: Bool?
+    var menuBarTitleTemplate: String?
 
     var enableFocusManagement: Bool?
     var centerCursorOnFocusChange: Bool?
@@ -41,6 +43,7 @@ struct AppSettings: Codable {
 final class SettingsRepository: ObservableObject {
     static let defaultScript = "sketchybar --trigger flashspace_workspace_change WORKSPACE=\"$WORKSPACE\" DISPLAY=\"$DISPLAY\""
     static let defaultProfileChangeScript = "sketchybar --reload"
+    static let defaultMenuBarTitleTemplate = "$WORKSPACE"
 
     // MARK: - General
 
@@ -50,6 +53,14 @@ final class SettingsRepository: ObservableObject {
 
     @Published var checkForUpdatesAutomatically: Bool = false {
         didSet { updateSettings() }
+    }
+
+    @Published var showMenuBarTitle: Bool = true {
+        didSet { updateSettings() }
+    }
+
+    @Published var menuBarTitleTemplate: String = SettingsRepository.defaultMenuBarTitleTemplate {
+        didSet { debouncedUpdateSettings.send(()) }
     }
 
     // MARK: - Focus Manager
@@ -186,6 +197,8 @@ final class SettingsRepository: ObservableObject {
         currentSettings = AppSettings(
             checkForUpdatesAutomatically: checkForUpdatesAutomatically,
             showFlashSpace: showFlashSpace,
+            showMenuBarTitle: showMenuBarTitle,
+            menuBarTitleTemplate: menuBarTitleTemplate,
 
             enableFocusManagement: enableFocusManagement,
             centerCursorOnFocusChange: centerCursorOnFocusChange,
@@ -235,6 +248,8 @@ final class SettingsRepository: ObservableObject {
 
         checkForUpdatesAutomatically = settings.checkForUpdatesAutomatically ?? false
         showFlashSpace = settings.showFlashSpace
+        showMenuBarTitle = settings.showMenuBarTitle ?? true
+        menuBarTitleTemplate = settings.menuBarTitleTemplate ?? Self.defaultMenuBarTitleTemplate
 
         enableFocusManagement = settings.enableFocusManagement ?? false
         centerCursorOnFocusChange = settings.centerCursorOnFocusChange ?? false

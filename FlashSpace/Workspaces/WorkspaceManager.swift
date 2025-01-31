@@ -11,8 +11,15 @@ import ShortcutRecorder
 
 typealias DisplayName = String
 
+struct ActiveWorkspace {
+    let name: String
+    let number: String?
+    let symbolIconName: String?
+    let display: DisplayName
+}
+
 final class WorkspaceManager: ObservableObject {
-    @Published private(set) var activeWorkspaceSymbolIconName: String?
+    @Published private(set) var activeWorkspaceDetails: ActiveWorkspace?
 
     private(set) var lastFocusedApp: [WorkspaceID: String] = [:]
     private(set) var activeWorkspace: [DisplayName: Workspace] = [:]
@@ -49,6 +56,7 @@ final class WorkspaceManager: ObservableObject {
                 self?.lastFocusedApp = [:]
                 self?.activeWorkspace = [:]
                 self?.mostRecentWorkspace = [:]
+                self?.activeWorkspaceDetails = nil
             }
             .store(in: &cancellables)
 
@@ -58,6 +66,7 @@ final class WorkspaceManager: ObservableObject {
             .sink { [weak self] _ in
                 self?.activeWorkspace = [:]
                 self?.mostRecentWorkspace = [:]
+                self?.activeWorkspaceDetails = nil
             }
             .store(in: &cancellables)
 
@@ -146,16 +155,8 @@ final class WorkspaceManager: ObservableObject {
 
         CGWarpMouseCursorPosition(CGPoint(x: frame.midX, y: frame.midY))
     }
-}
 
-// MARK: - Workspace Actions
-extension WorkspaceManager {
-    func activateWorkspace(_ workspace: Workspace, setFocus: Bool) {
-        print("\n\nWORKSPACE: \(workspace.name)")
-        print("----")
-
-        Integrations.runOnActivateIfNeeded(workspace: workspace)
-
+    private func updateActiveWorkspace(_ workspace: Workspace) {
         lastWorkspaceActivation = Date()
 
         // Save the most recent workspace if it's not the current one
@@ -165,7 +166,27 @@ extension WorkspaceManager {
         }
 
         activeWorkspace[display] = workspace
-        activeWorkspaceSymbolIconName = workspace.symbolIconName
+
+        activeWorkspaceDetails = .init(
+            name: workspace.name,
+            number: workspaceRepository.workspaces
+                .firstIndex { $0.id == workspace.id }
+                .map { "\($0 + 1)" },
+            symbolIconName: workspace.symbolIconName,
+            display: display
+        )
+
+        Integrations.runOnActivateIfNeeded(workspace: activeWorkspaceDetails!)
+    }
+}
+
+// MARK: - Workspace Actions
+extension WorkspaceManager {
+    func activateWorkspace(_ workspace: Workspace, setFocus: Bool) {
+        print("\n\nWORKSPACE: \(workspace.name)")
+        print("----")
+
+        updateActiveWorkspace(workspace)
         showApps(in: workspace, setFocus: setFocus)
         hideApps(in: workspace)
 
