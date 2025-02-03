@@ -52,6 +52,15 @@ extension NSRunningApplication {
         }
     }
 
+    var isMinimized: Bool {
+        guard let mainWindow else { return false }
+
+        var minimized: CFTypeRef?
+        AXUIElementCopyAttributeValue(mainWindow, NSAccessibility.Attribute.minimized as CFString, &minimized)
+
+        return minimized as? Bool == true
+    }
+
     func raise() {
         guard let mainWindow else {
             unhide()
