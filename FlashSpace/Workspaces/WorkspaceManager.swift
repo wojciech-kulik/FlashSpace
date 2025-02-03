@@ -219,6 +219,10 @@ extension WorkspaceManager {
         activateWorkspace(updatedWorkspace, setFocus: false)
         NotificationCenter.default.post(name: .appsListChanged, object: nil)
     }
+
+    func updateLastFocusedApp(_ app: String, in workspace: Workspace) {
+        lastFocusedApp[workspace.id] = app
+    }
 }
 
 // MARK: - Shortcuts

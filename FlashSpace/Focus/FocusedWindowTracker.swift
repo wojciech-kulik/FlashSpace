@@ -41,20 +41,23 @@ final class FocusedWindowTracker {
     private func activeApplicationChanged(_ app: NSRunningApplication) {
         guard Date().timeIntervalSince(workspaceManager.lastWorkspaceActivation) > 0.2 else { return }
 
+        guard let appName = app.localizedName else { return }
+
         // Skip if the app is floating
-        guard settingsRepository.floatingApps?.contains(app.localizedName ?? "") != true else { return }
+        guard settingsRepository.floatingApps?.contains(appName) != true else { return }
 
         // Skip if the app exists in any active workspace
         guard !workspaceManager.activeWorkspace.values
-            .contains(where: { $0.apps.contains(app.localizedName ?? "") }) else { return }
+            .contains(where: { $0.apps.contains(appName) }) else { return }
 
         // Find the workspace that contains the app
         guard let workspace = workspaceRepository.workspaces
-            .first(where: { $0.apps.contains(app.localizedName ?? "") }) else { return }
+            .first(where: { $0.apps.contains(appName) }) else { return }
 
         // Activate the workspace if it's not already active
         if workspaceManager.activeWorkspace[workspace.displayWithFallback]?.id != workspace.id {
             print("\n\nFound workspace for app: \(workspace.name)")
+            workspaceManager.updateLastFocusedApp(appName, in: workspace)
             workspaceManager.activateWorkspace(workspace, setFocus: false)
             app.activate()
         }
