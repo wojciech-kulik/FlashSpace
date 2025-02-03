@@ -62,7 +62,6 @@ final class WorkspaceManager: ObservableObject {
 
         NotificationCenter.default
             .publisher(for: NSApplication.didChangeScreenParametersNotification)
-            .print()
             .sink { [weak self] _ in
                 self?.activeWorkspace = [:]
                 self?.mostRecentWorkspace = [:]
@@ -91,7 +90,7 @@ final class WorkspaceManager: ObservableObject {
         let regularApps = NSWorkspace.shared.runningApplications
             .filter { $0.activationPolicy == .regular }
         let floatingApps = (settingsRepository.floatingApps ?? [])
-        let appsToShow = regularApps
+        var appsToShow = regularApps
             .filter {
                 workspace.apps.contains($0.localizedName ?? "") ||
                     floatingApps.contains($0.localizedName ?? "") &&
@@ -101,16 +100,31 @@ final class WorkspaceManager: ObservableObject {
         observeFocusCancellable = nil
         defer { observeFocus() }
 
-        for app in appsToShow {
-            print("SHOW: \(app.localizedName ?? "")")
-            app.raise()
-        }
-
         if setFocus {
             let toFocus = findAppToFocus(in: workspace, apps: appsToShow)
+
+            // Make sure to raise the app that should be focused
+            // as the last one
+            if let toFocus {
+                appsToShow.removeAll { $0 == toFocus }
+                appsToShow.append(toFocus)
+            }
+
+            for app in appsToShow {
+                print("SHOW: \(app.localizedName ?? "")")
+                if app == toFocus || app.isHidden || app.isMinimized {
+                    app.raise()
+                }
+            }
+
             print("FOCUS: \(toFocus?.localizedName ?? "")")
             toFocus?.activate()
             centerCursorIfNeeded(in: toFocus?.frame)
+        } else {
+            for app in appsToShow {
+                print("SHOW: \(app.localizedName ?? "")")
+                app.raise()
+            }
         }
     }
 

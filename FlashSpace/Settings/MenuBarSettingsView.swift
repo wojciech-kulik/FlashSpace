@@ -12,7 +12,7 @@ struct MenuBarSettingsView: View {
 
     var body: some View {
         Form {
-            Section(header: Text("Menu Bar")) {
+            Section {
                 Toggle("Show Title", isOn: $settings.showMenuBarTitle)
 
                 HStack {
