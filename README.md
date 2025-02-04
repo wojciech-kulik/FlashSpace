@@ -67,7 +67,7 @@ The app allows workspaces to be switched independently on each display.
 - [x] Focus manager - set hotkeys to switch between apps quickly
 - [x] Cursor manager - auto-center the cursor in the active window
 - [x] Profiles - quickly switch between different configurations
-- [x] Configurable Menu Bar icon (per workspace)
+- [x] Configurable Menu Bar icon & text (per workspace)
 - [x] [SketchyBar] integration
 
 ## ⚖️ Project Values
