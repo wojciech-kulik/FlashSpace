@@ -213,10 +213,23 @@ extension WorkspaceManager {
         workspaceRepository.deleteAppFromAllWorkspaces(app: app)
         workspaceRepository.addApp(to: workspace.id, app: app)
 
-        guard let updatedWorkspace = workspaceRepository.workspaces
+        guard let targetWorkspace = workspaceRepository.workspaces
             .first(where: { $0.id == workspace.id }) else { return }
 
-        activateWorkspace(updatedWorkspace, setFocus: false)
+        let isTargetWorkspaceActive = activeWorkspace.values
+            .contains(where: { $0.id == workspace.id })
+
+        updateLastFocusedApp(app, in: targetWorkspace)
+
+        if settingsRepository.changeWorkspaceOnAppAssign {
+            activateWorkspace(targetWorkspace, setFocus: true)
+        } else if !isTargetWorkspaceActive {
+            NSWorkspace.shared.runningApplications
+                .first { $0.localizedName == app }?
+                .hide()
+            AppDependencies.shared.focusManager.nextWorkspaceApp()
+        }
+
         NotificationCenter.default.post(name: .appsListChanged, object: nil)
     }
 
