@@ -261,7 +261,7 @@ extension WorkspaceManager {
         let action = { [weak self] in
             guard let activeApp = NSWorkspace.shared.frontmostApplication else { return }
             guard let appName = activeApp.localizedName else { return }
-            guard activeApp.bundleURL?.bundle?.isAgent != true else {
+            guard activeApp.activationPolicy == .regular else {
                 showOkAlert(
                     title: appName,
                     message: "This application is an agent (runs in background) and cannot be managed by FlashSpace."
