@@ -47,9 +47,11 @@ extension NSRunningApplication {
 
         let windows = (windowList as? [AXUIElement]) ?? []
 
-        return windows.compactMap { window in
-            window.frame.flatMap { (window, $0) }
-        }
+        return windows
+            .filter { $0.role == "AXWindow" }
+            .compactMap { window in
+                window.frame.flatMap { (window, $0) }
+            }
     }
 
     var isMinimized: Bool {

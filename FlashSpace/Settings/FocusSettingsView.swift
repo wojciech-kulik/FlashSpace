@@ -32,6 +32,11 @@ struct FocusSettingsView: View {
                     hotkey("Focus Next App", for: $settings.focusNextWorkspaceApp)
                     hotkey("Focus Previous App", for: $settings.focusPreviousWorkspaceApp)
                 }
+
+                Section {
+                    hotkey("Focus Next Window", for: $settings.focusNextWorkspaceWindow)
+                    hotkey("Focus Previous Window", for: $settings.focusPreviousWorkspaceWindow)
+                }
             }
             .disabled(!settings.enableFocusManagement)
             .opacity(settings.enableFocusManagement ? 1 : 0.5)

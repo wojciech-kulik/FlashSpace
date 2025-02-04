@@ -8,6 +8,11 @@
 import AppKit
 
 extension AXUIElement {
+    var id: String? { getAttribute(.identifier) }
+    var title: String? { getAttribute(.title) }
+    var isMain: Bool { getAttribute(.main) == true }
+    var role: String? { getAttribute(.role) }
+
     var frame: CGRect? {
         var positionValue: CFTypeRef?
         var sizeValue: CFTypeRef?
@@ -39,7 +44,12 @@ extension AXUIElement {
         return windowBounds.isEmpty ? nil : windowBounds
     }
 
-    func focus() {
-        AXUIElementPerformAction(self, NSAccessibility.Action.raise as CFString)
+    func focus() { AXUIElementPerformAction(self, NSAccessibility.Action.raise as CFString) }
+
+    func getAttribute<T>(_ attribute: NSAccessibility.Attribute) -> T? {
+        var value: CFTypeRef?
+        AXUIElementCopyAttributeValue(self, attribute as CFString, &value)
+
+        return value as? T
     }
 }
