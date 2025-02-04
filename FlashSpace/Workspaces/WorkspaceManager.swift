@@ -274,7 +274,11 @@ extension WorkspaceManager {
 
             activeApp.centerApp(display: updatedWorkspace.display)
             self?.assignApp(appName, to: updatedWorkspace)
-            showFloatingToast(icon: "square.stack.3d.up", message: "App Assigned To \(workspace.name)")
+            showFloatingToast(
+                icon: "square.stack.3d.up",
+                message: "\(appName) - Assigned To \(workspace.name)",
+                textColor: .positive
+            )
         }
 
         return (shortcut, action)
@@ -288,7 +292,11 @@ extension WorkspaceManager {
             guard let appName = activeApp.localizedName else { return }
 
             if self?.workspaceRepository.workspaces.flatMap(\.apps).contains(appName) == true {
-                showFloatingToast(icon: "square.stack.3d.up.slash", message: "App Removed From Workspaces")
+                showFloatingToast(
+                    icon: "square.stack.3d.up.slash",
+                    message: "\(appName) - Removed From Workspaces",
+                    textColor: .negative
+                )
             }
 
             self?.workspaceRepository.deleteAppFromAllWorkspaces(app: appName)
@@ -352,7 +360,11 @@ extension WorkspaceManager {
                   let appName = activeApp.localizedName else { return }
 
             self.settingsRepository.addFloatingAppIfNeeded(app: appName)
-            showFloatingToast(icon: "macwindow.on.rectangle", message: "Added Floating App")
+            showFloatingToast(
+                icon: "macwindow.on.rectangle",
+                message: "\(appName) - Added To Floating Apps",
+                textColor: .positive
+            )
         }
         return (shortcut, action)
     }
@@ -365,7 +377,11 @@ extension WorkspaceManager {
                   let appName = activeApp.localizedName else { return }
 
             if settingsRepository.floatingApps?.contains(appName) == true {
-                showFloatingToast(icon: "macwindow", message: "Removed Floating App")
+                showFloatingToast(
+                    icon: "macwindow",
+                    message: "\(appName) - Removed From Floating Apps",
+                    textColor: .negative
+                )
             }
 
             settingsRepository.deleteFloatingApp(app: appName)

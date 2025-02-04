@@ -11,7 +11,7 @@ import SwiftUI
 weak var floatingToastWindow: NSWindow?
 
 // swiftlint:disable:next function_body_length
-func showFloatingToast(icon: String, message: String) {
+func showFloatingToast(icon: String, message: String, textColor: Color) {
     guard AppDependencies.shared.settingsRepository.showFloatingNotifications else { return }
 
     if let window = floatingToastWindow {
@@ -20,7 +20,11 @@ func showFloatingToast(icon: String, message: String) {
     }
 
     let contentView = NSHostingView(
-        rootView: FloatingPanelView(icon: icon, message: message)
+        rootView: FloatingPanelView(
+            icon: icon,
+            message: message,
+            textColor: textColor
+        )
     )
     let size = contentView.fittingSize
 
@@ -76,6 +80,7 @@ func showFloatingToast(icon: String, message: String) {
 struct FloatingPanelView: View {
     let icon: String
     let message: String
+    let textColor: Color
 
     var body: some View {
         HStack {
@@ -91,6 +96,6 @@ struct FloatingPanelView: View {
         .padding()
         .padding(.horizontal)
         .fontWeight(.semibold)
-        .foregroundStyle(.primary)
+        .foregroundStyle(textColor)
     }
 }
