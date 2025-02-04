@@ -180,8 +180,10 @@ extension MainViewModel {
         guard let appUrl else { return }
 
         let appName = appUrl.appName
+        let runningApp = NSWorkspace.shared.runningApplications.first { $0.localizedName == appName }
+        let isAgent = appUrl.bundle?.isAgent == true && (runningApp == nil || runningApp?.activationPolicy != .regular)
 
-        guard appUrl.bundle?.isAgent != true else {
+        guard !isAgent else {
             showOkAlert(
                 title: appName,
                 message: "This application is an agent (runs in background) and cannot be managed by FlashSpace."
