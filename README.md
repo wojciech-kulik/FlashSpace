@@ -223,6 +223,10 @@ Big thanks to all the sponsors who support this project 🍻!
 <a href="https://github.com/bjrmatos"><img src="https://avatars.githubusercontent.com/u/4262050" width="40" height="40" alt="@bjrmatos" title="bjrmatos"></a>
 <a href="https://github.com/notlus"><img src="https://avatars.githubusercontent.com/u/828989" width="40" height="40" alt="@notlus" title="notlus"></a>
 
+### One Time Sponsors
+
+<a href="https://github.com/danscheer"><img src="https://avatars.githubusercontent.com/u/56642865" width="40" height="40" alt="@danscheer" title="danscheer"></a>
+
 &nbsp;
 
 [SketchyBar]: https://github.com/FelixKratz/SketchyBar
