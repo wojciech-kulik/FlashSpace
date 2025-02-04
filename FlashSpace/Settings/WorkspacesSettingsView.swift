@@ -17,6 +17,10 @@ struct WorkspacesSettingsView: View {
                 Toggle("Center Cursor In Focused App", isOn: $settings.centerCursorOnWorkspaceChange)
             }
 
+            Section(header: Text("Behaviors")) {
+                Toggle("Change Workspace On App Assign", isOn: $settings.changeWorkspaceOnAppAssign)
+            }
+
             Section(header: Text("Shortcuts")) {
                 hotkey("Unassign Focused App", for: $settings.unassignFocusedApp)
             }
