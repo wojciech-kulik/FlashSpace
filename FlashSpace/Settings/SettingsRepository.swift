@@ -22,6 +22,8 @@ struct AppSettings: Codable {
     var focusDown: HotKeyShortcut?
     var focusNextWorkspaceApp: HotKeyShortcut?
     var focusPreviousWorkspaceApp: HotKeyShortcut?
+    var focusNextWorkspaceWindow: HotKeyShortcut?
+    var focusPreviousWorkspaceWindow: HotKeyShortcut?
 
     var centerCursorOnWorkspaceChange: Bool?
     var switchToPreviousWorkspace: HotKeyShortcut?
@@ -94,6 +96,14 @@ final class SettingsRepository: ObservableObject {
     }
 
     @Published var focusPreviousWorkspaceApp: HotKeyShortcut? {
+        didSet { updateSettings() }
+    }
+
+    @Published var focusNextWorkspaceWindow: HotKeyShortcut? {
+        didSet { updateSettings() }
+    }
+
+    @Published var focusPreviousWorkspaceWindow: HotKeyShortcut? {
         didSet { updateSettings() }
     }
 
@@ -208,6 +218,8 @@ final class SettingsRepository: ObservableObject {
             focusDown: focusDown,
             focusNextWorkspaceApp: focusNextWorkspaceApp,
             focusPreviousWorkspaceApp: focusPreviousWorkspaceApp,
+            focusNextWorkspaceWindow: focusNextWorkspaceWindow,
+            focusPreviousWorkspaceWindow: focusPreviousWorkspaceWindow,
 
             centerCursorOnWorkspaceChange: centerCursorOnWorkspaceChange,
             switchToPreviousWorkspace: switchToPreviousWorkspace,
@@ -259,6 +271,8 @@ final class SettingsRepository: ObservableObject {
         focusDown = settings.focusDown
         focusNextWorkspaceApp = settings.focusNextWorkspaceApp
         focusPreviousWorkspaceApp = settings.focusPreviousWorkspaceApp
+        focusNextWorkspaceWindow = settings.focusNextWorkspaceWindow
+        focusPreviousWorkspaceWindow = settings.focusPreviousWorkspaceWindow
 
         centerCursorOnWorkspaceChange = settings.centerCursorOnWorkspaceChange ?? false
         switchToPreviousWorkspace = settings.switchToPreviousWorkspace

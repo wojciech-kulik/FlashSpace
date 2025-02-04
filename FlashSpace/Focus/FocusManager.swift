@@ -43,8 +43,71 @@ final class FocusManager {
             settings.focusUp?.toShortcut().flatMap { ($0, focusUp) },
             settings.focusDown?.toShortcut().flatMap { ($0, focusDown) },
             settings.focusNextWorkspaceApp?.toShortcut().flatMap { ($0, nextWorkspaceApp) },
-            settings.focusPreviousWorkspaceApp?.toShortcut().flatMap { ($0, previousWorkspaceApp) }
+            settings.focusPreviousWorkspaceApp?.toShortcut().flatMap { ($0, previousWorkspaceApp) },
+            settings.focusNextWorkspaceWindow?.toShortcut().flatMap { ($0, nextWorkspaceWindow) },
+            settings.focusPreviousWorkspaceWindow?.toShortcut().flatMap { ($0, previousWorkspaceWindow) }
         ].compactMap { $0 }
+    }
+
+    func nextWorkspaceWindow() {
+        guard let focusedApp else { return nextWorkspaceApp() }
+        guard let (_, apps) = getFocusedAppIndex() else { return }
+
+        let runningWorkspaceApps = getRunningAppsWithSortedWindows(apps: apps)
+        let focusedAppWindows = runningWorkspaceApps
+            .first { $0.name == focusedApp.localizedName }?
+            .windows ?? []
+        let isLastWindowFocused = focusedAppWindows.last?.axWindow.isMain == true
+
+        if isLastWindowFocused {
+            let nextApps = runningWorkspaceApps.drop(while: { $0.name != focusedApp.localizedName }).dropFirst() +
+                runningWorkspaceApps.prefix(while: { $0.name != focusedApp.localizedName })
+            let nextApp = nextApps.first
+
+            nextApp?.app.activate()
+            nextApp?
+                .windows
+                .first?
+                .axWindow
+                .focus()
+        } else {
+            focusedAppWindows
+                .drop(while: { !$0.axWindow.isMain })
+                .dropFirst()
+                .first?
+                .axWindow
+                .focus()
+        }
+    }
+
+    func previousWorkspaceWindow() {
+        guard let focusedApp else { return previousWorkspaceApp() }
+        guard let (_, apps) = getFocusedAppIndex() else { return }
+
+        let runningWorkspaceApps = getRunningAppsWithSortedWindows(apps: apps)
+        let focusedAppWindows = runningWorkspaceApps
+            .first { $0.name == focusedApp.localizedName }?
+            .windows ?? []
+        let isFirstWindowFocused = focusedAppWindows.first?.axWindow.isMain == true
+
+        if isFirstWindowFocused {
+            let prevApps = runningWorkspaceApps.drop(while: { $0.name != focusedApp.localizedName }).dropFirst() +
+                runningWorkspaceApps.prefix(while: { $0.name != focusedApp.localizedName })
+            let prevApp = prevApps.last
+
+            prevApp?.app.activate()
+            prevApp?
+                .windows
+                .last?
+                .axWindow
+                .focus()
+        } else {
+            focusedAppWindows
+                .prefix(while: { !$0.axWindow.isMain })
+                .last?
+                .axWindow
+                .focus()
+        }
     }
 
     func nextWorkspaceApp() {
@@ -135,5 +198,19 @@ final class FocusManager {
         let index = apps.firstIndex(of: focusedApp) ?? 0
 
         return (index, apps)
+    }
+
+    private func getRunningAppsWithSortedWindows(apps: [String]) -> [RunningApp] {
+        let appsSet = Set(apps)
+        let order = apps
+            .enumerated()
+            .reduce(into: [String: Int]()) {
+                $0[$1.element] = $1.offset
+            }
+
+        return NSWorkspace.shared.runningApplications
+            .filter { !$0.isHidden && appsSet.contains($0.localizedName ?? "") }
+            .map { RunningApp(app: $0) }
+            .sorted { order[$0.name] ?? 0 < order[$1.name] ?? 0 }
     }
 }
