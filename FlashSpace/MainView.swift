@@ -52,7 +52,7 @@ struct MainView: View {
                         .resizable()
                         .scaledToFit()
                         .frame(width: 15, height: 15)
-                        .foregroundStyle(Color(hex: "#f9e2af")!)
+                        .foregroundStyle(Color.workspaceIcon)
                     Text(workspace.name)
                         .foregroundColor(workspace.apps.contains(where: \.bundleIdentifier.isEmpty) ? .errorRed : .primary)
                 }
