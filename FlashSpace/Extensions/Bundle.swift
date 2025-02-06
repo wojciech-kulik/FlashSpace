@@ -19,4 +19,16 @@ extension Bundle {
         infoDictionary?["LSUIElement"] as? String == "1" ||
             infoDictionary?["LSUIElement"] as? Bool == true
     }
+
+    var iconPath: String {
+        let iconFile = infoDictionary?["CFBundleIconFile"] as? String
+            ?? infoDictionary?["CFBundleIconName"] as? String
+            ?? "AppIcon"
+
+        return bundleURL
+            .appendingPathComponent("Contents")
+            .appendingPathComponent("Resources")
+            .appendingPathComponent(iconFile.hasSuffix(".icns") ? iconFile : "\(iconFile).icns")
+            .path(percentEncoded: false)
+    }
 }

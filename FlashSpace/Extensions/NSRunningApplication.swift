@@ -8,8 +8,10 @@
 import AppKit
 
 extension NSRunningApplication {
+    var toMacApp: MacApp { .init(app: self) }
     var display: DisplayName? { frame?.getDisplay() }
     var frame: CGRect? { mainWindow?.frame }
+    var iconPath: String? { bundleURL?.iconPath }
 
     var mainWindow: AXUIElement? {
         var windowList: CFTypeRef?
@@ -102,5 +104,13 @@ extension NSRunningApplication {
 
     func isOnTheSameScreen(as workspace: Workspace) -> Bool {
         display == workspace.displayWithFallback
+    }
+}
+
+extension [NSRunningApplication] {
+    func find(_ app: MacApp?) -> NSRunningApplication? {
+        guard let app else { return nil }
+
+        return first { $0.bundleIdentifier == app.bundleIdentifier }
     }
 }

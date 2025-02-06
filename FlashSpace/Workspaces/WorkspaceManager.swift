@@ -21,7 +21,7 @@ struct ActiveWorkspace {
 final class WorkspaceManager: ObservableObject {
     @Published private(set) var activeWorkspaceDetails: ActiveWorkspace?
 
-    private(set) var lastFocusedApp: [WorkspaceID: String] = [:]
+    private(set) var lastFocusedApp: [WorkspaceID: MacApp] = [:]
     private(set) var activeWorkspace: [DisplayName: Workspace] = [:]
     private(set) var mostRecentWorkspace: [DisplayName: Workspace] = [:]
     private(set) var lastWorkspaceActivation = Date.distantPast
@@ -80,8 +80,8 @@ final class WorkspaceManager: ObservableObject {
                 guard let self else { return }
 
                 if let activeWorkspace = activeWorkspace[application.display ?? ""],
-                   activeWorkspace.apps.contains(application.localizedName ?? "") {
-                    lastFocusedApp[activeWorkspace.id] = application.localizedName
+                   activeWorkspace.apps.containsApp(application) {
+                    lastFocusedApp[activeWorkspace.id] = application.toMacApp
                 }
             }
     }
@@ -92,8 +92,8 @@ final class WorkspaceManager: ObservableObject {
         let floatingApps = (settingsRepository.floatingApps ?? [])
         var appsToShow = regularApps
             .filter {
-                workspace.apps.contains($0.localizedName ?? "") ||
-                    floatingApps.contains($0.localizedName ?? "") &&
+                workspace.apps.containsApp($0) ||
+                    floatingApps.containsApp($0) &&
                     $0.isOnTheSameScreen(as: workspace)
             }
 
@@ -131,12 +131,12 @@ final class WorkspaceManager: ObservableObject {
     private func hideApps(in workspace: Workspace) {
         let regularApps = NSWorkspace.shared.runningApplications
             .filter { $0.activationPolicy == .regular }
-        let workspaceApps = Set(workspace.apps + (settingsRepository.floatingApps ?? []))
+        let workspaceApps = workspace.apps + (settingsRepository.floatingApps ?? [])
         let isAnyWorkspaceAppRunning = regularApps
-            .contains { workspaceApps.contains($0.localizedName ?? "") }
+            .contains { workspaceApps.containsApp($0) }
 
         let appsToHide = regularApps
-            .filter { !workspaceApps.contains($0.localizedName ?? "") && !$0.isHidden }
+            .filter { !$0.isHidden && !workspaceApps.containsApp($0) }
             .filter { isAnyWorkspaceAppRunning || $0.bundleURL?.fileName != "Finder" }
             .filter { $0.isOnTheSameScreen(as: workspace) }
 
@@ -153,13 +153,13 @@ final class WorkspaceManager: ObservableObject {
         var appToFocus: NSRunningApplication?
 
         if workspace.appToFocus == nil {
-            appToFocus = apps.first { $0.localizedName == lastFocusedApp[workspace.id] }
+            appToFocus = apps.find(lastFocusedApp[workspace.id])
         } else {
-            appToFocus = apps.first { $0.localizedName == workspace.appToFocus }
+            appToFocus = apps.find(workspace.appToFocus)
         }
 
-        let fallbackToLastApp = apps.first { $0.localizedName == workspace.apps.last }
-        let fallbackToFinder = NSWorkspace.shared.runningApplications.first { $0.bundleURL?.fileName == "Finder" }
+        let fallbackToLastApp = apps.find(workspace.apps.last)
+        let fallbackToFinder = NSWorkspace.shared.runningApplications.first { $0.bundleIdentifier == "com.apple.finder" }
 
         return appToFocus ?? fallbackToLastApp ?? fallbackToFinder
     }
@@ -209,7 +209,7 @@ extension WorkspaceManager {
         hideAgainSubject.send(workspace)
     }
 
-    func assignApp(_ app: String, to workspace: Workspace) {
+    func assignApp(_ app: MacApp, to workspace: Workspace) {
         workspaceRepository.deleteAppFromAllWorkspaces(app: app)
         workspaceRepository.addApp(to: workspace.id, app: app)
 
@@ -225,7 +225,7 @@ extension WorkspaceManager {
             activateWorkspace(targetWorkspace, setFocus: true)
         } else if !isTargetWorkspaceActive {
             NSWorkspace.shared.runningApplications
-                .first { $0.localizedName == app }?
+                .find(app)?
                 .hide()
             AppDependencies.shared.focusManager.nextWorkspaceApp()
         }
@@ -233,7 +233,7 @@ extension WorkspaceManager {
         NotificationCenter.default.post(name: .appsListChanged, object: nil)
     }
 
-    func updateLastFocusedApp(_ app: String, in workspace: Workspace) {
+    func updateLastFocusedApp(_ app: MacApp, in workspace: Workspace) {
         lastFocusedApp[workspace.id] = app
     }
 }
@@ -286,7 +286,7 @@ extension WorkspaceManager {
                 .first(where: { $0.id == workspace.id }) else { return }
 
             activeApp.centerApp(display: updatedWorkspace.display)
-            self?.assignApp(appName, to: updatedWorkspace)
+            self?.assignApp(activeApp.toMacApp, to: updatedWorkspace)
             showFloatingToast(
                 icon: "square.stack.3d.up",
                 message: "\(appName) - Assigned To \(workspace.name)",
@@ -304,7 +304,7 @@ extension WorkspaceManager {
             guard let activeApp = NSWorkspace.shared.frontmostApplication else { return }
             guard let appName = activeApp.localizedName else { return }
 
-            if self?.workspaceRepository.workspaces.flatMap(\.apps).contains(appName) == true {
+            if self?.workspaceRepository.workspaces.flatMap(\.apps).containsApp(activeApp) == true {
                 showFloatingToast(
                     icon: "square.stack.3d.up.slash",
                     message: "\(appName) - Removed From Workspaces",
@@ -312,7 +312,7 @@ extension WorkspaceManager {
                 )
             }
 
-            self?.workspaceRepository.deleteAppFromAllWorkspaces(app: appName)
+            self?.workspaceRepository.deleteAppFromAllWorkspaces(app: activeApp.toMacApp)
             activeApp.hide()
             NotificationCenter.default.post(name: .appsListChanged, object: nil)
         }
@@ -372,7 +372,7 @@ extension WorkspaceManager {
                   let activeApp = NSWorkspace.shared.frontmostApplication,
                   let appName = activeApp.localizedName else { return }
 
-            self.settingsRepository.addFloatingAppIfNeeded(app: appName)
+            self.settingsRepository.addFloatingAppIfNeeded(app: activeApp.toMacApp)
             showFloatingToast(
                 icon: "macwindow.on.rectangle",
                 message: "\(appName) - Added To Floating Apps",
@@ -389,7 +389,7 @@ extension WorkspaceManager {
                   let activeApp = NSWorkspace.shared.frontmostApplication,
                   let appName = activeApp.localizedName else { return }
 
-            if settingsRepository.floatingApps?.contains(appName) == true {
+            if settingsRepository.floatingApps?.containsApp(activeApp) == true {
                 showFloatingToast(
                     icon: "macwindow",
                     message: "\(appName) - Removed From Floating Apps",
@@ -397,11 +397,11 @@ extension WorkspaceManager {
                 )
             }
 
-            settingsRepository.deleteFloatingApp(app: appName)
+            settingsRepository.deleteFloatingApp(app: activeApp.toMacApp)
 
             guard let screen = activeApp.display else { return }
 
-            if activeWorkspace[screen]?.apps.contains(appName) != true {
+            if activeWorkspace[screen]?.apps.containsApp(activeApp) != true {
                 activeApp.hide()
             }
         }

@@ -12,7 +12,7 @@ import SwiftUI
 
 final class MainViewModel: ObservableObject {
     @Published var workspaces: [Workspace] = []
-    @Published var workspaceApps: [String]?
+    @Published var workspaceApps: [MacApp]?
 
     @Published var workspaceName = ""
     @Published var workspaceShortcut: HotKeyShortcut? {
@@ -27,7 +27,7 @@ final class MainViewModel: ObservableObject {
         didSet { saveWorkspace() }
     }
 
-    @Published var workspaceAppToFocus: String? = AppConstants.lastFocusedOption {
+    @Published var workspaceAppToFocus: MacApp? = AppConstants.lastFocusedOption {
         didSet { saveWorkspace() }
     }
 
@@ -39,11 +39,11 @@ final class MainViewModel: ObservableObject {
     @Published var isInputDialogPresented = false
     @Published var userInput = ""
 
-    var focusAppOptions: [String] {
+    var focusAppOptions: [MacApp] {
         [AppConstants.lastFocusedOption] + (workspaceApps ?? [])
     }
 
-    var selectedApp: String? {
+    var selectedApp: MacApp? {
         didSet {
             guard selectedApp != oldValue else { return }
 
@@ -180,7 +180,8 @@ extension MainViewModel {
         guard let appUrl else { return }
 
         let appName = appUrl.appName
-        let runningApp = NSWorkspace.shared.runningApplications.first { $0.localizedName == appName }
+        let appBundleId = appUrl.bundleIdentifier ?? ""
+        let runningApp = NSWorkspace.shared.runningApplications.first { $0.bundleIdentifier == appBundleId }
         let isAgent = appUrl.bundle?.isAgent == true && (runningApp == nil || runningApp?.activationPolicy != .regular)
 
         guard !isAgent else {
@@ -191,11 +192,15 @@ extension MainViewModel {
             return
         }
 
-        guard !selectedWorkspace.apps.contains(appName) else { return }
+        guard !selectedWorkspace.apps.containsApp(with: appBundleId) else { return }
 
         workspaceRepository.addApp(
             to: selectedWorkspace.id,
-            app: appName
+            app: .init(
+                name: appName,
+                bundleIdentifier: appBundleId,
+                iconPath: appUrl.iconPath
+            )
         )
 
         workspaces = workspaceRepository.workspaces

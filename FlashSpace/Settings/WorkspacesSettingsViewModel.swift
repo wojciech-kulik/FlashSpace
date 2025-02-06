@@ -11,12 +11,18 @@ final class WorkspacesSettingsViewModel: ObservableObject {
             directoryURL: URL(filePath: "/Applications")
         )
 
-        guard let appUrl else { return }
+        guard let bundle = appUrl?.bundle else { return }
 
-        settingsRepository.addFloatingAppIfNeeded(app: appUrl.appName)
+        settingsRepository.addFloatingAppIfNeeded(
+            app: .init(
+                name: bundle.localizedAppName,
+                bundleIdentifier: bundle.bundleIdentifier ?? "",
+                iconPath: bundle.iconPath
+            )
+        )
     }
 
-    func deleteFloatingApp(app: String) {
+    func deleteFloatingApp(app: MacApp) {
         settingsRepository.deleteFloatingApp(app: app)
     }
 }

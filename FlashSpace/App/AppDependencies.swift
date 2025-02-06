@@ -10,7 +10,7 @@ import ShortcutRecorder
 struct AppDependencies {
     static let shared = AppDependencies()
 
-    let workspaceRepository = WorkspaceRepository()
+    let workspaceRepository: WorkspaceRepository
     let workspaceManager: WorkspaceManager
 
     let hotKeysMonitor: HotKeysMonitorProtocol = GlobalShortcutMonitor.shared
@@ -24,8 +24,9 @@ struct AppDependencies {
     let profilesRepository: ProfilesRepository
 
     private init() {
-        self.profilesRepository = ProfilesRepository(
-            workspaceRepository: workspaceRepository
+        self.profilesRepository = ProfilesRepository()
+        self.workspaceRepository = WorkspaceRepository(
+            profilesRepository: profilesRepository
         )
         self.workspaceManager = WorkspaceManager(
             workspaceRepository: workspaceRepository,
@@ -47,6 +48,23 @@ struct AppDependencies {
             workspaceManager: workspaceManager,
             settingsRepository: settingsRepository
         )
+
+        if Migrations.appsMigrated {
+            print("Migrated apps")
+
+            let workspacesJsonUrl = FileManager.default
+                .homeDirectoryForCurrentUser
+                .appendingPathComponent(".config/flashspace/workspaces.json")
+            try? FileManager.default.moveItem(
+                at: workspacesJsonUrl,
+                to: workspacesJsonUrl.deletingLastPathComponent()
+                    .appendingPathComponent("workspaces.json.bak")
+            )
+
+            settingsRepository.saveToDisk()
+            profilesRepository.saveToDisk()
+            Migrations.appsMigrated = false
+        }
 
         focusedWindowTracker.startTracking()
     }
