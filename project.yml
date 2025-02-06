@@ -24,8 +24,8 @@ targets:
     sources: [FlashSpace]
     settings:
       base:
-        MARKETING_VERSION: 0.13.15
-        CURRENT_PROJECT_VERSION: 15
+        MARKETING_VERSION: 1.0.16
+        CURRENT_PROJECT_VERSION: 16
         CODE_SIGN_ENTITLEMENTS: FlashSpace/FlashSpace.entitlements
         DEVELOPMENT_TEAM: "${XCODE_DEVELOPMENT_TEAM}"
         ENABLE_HARDENED_RUNTIME: true
