@@ -5,7 +5,6 @@
 //  Copyright © 2025 Wojciech Kulik. All rights reserved.
 //
 
-import Combine
 import Foundation
 
 typealias ProfileId = UUID
@@ -39,8 +38,9 @@ final class ProfilesRepository: ObservableObject {
         }
     }
 
+    var onProfileChange: ((Profile) -> ())?
+
     private var shouldTrackProfileChange = true
-    private var cancellables = Set<AnyCancellable>()
 
     private let profilesUrl = FileManager.default
         .homeDirectoryForCurrentUser
@@ -48,40 +48,11 @@ final class ProfilesRepository: ObservableObject {
 
     private let encoder = JSONEncoder()
     private let decoder = JSONDecoder()
-    private let workspaceRepository: WorkspaceRepository
 
-    init(workspaceRepository: WorkspaceRepository) {
-        self.workspaceRepository = workspaceRepository
-
+    init() {
         encoder.outputFormatting = .prettyPrinted
         loadFromDisk()
-        observe()
-    }
-
-    private func observe() {
-        workspaceRepository.workspacesUpdatePublisher
-            .sink { [weak self] _ in self?.updateWorkspaces() }
-            .store(in: &cancellables)
-    }
-
-    private func updateWorkspaces() {
-        guard let profileIndex = profiles.firstIndex(where: { $0.id == selectedProfile.id }) else { return }
-
-        profiles[profileIndex].workspaces = workspaceRepository.workspaces
-        selectedProfile = profiles[profileIndex]
-        saveToDisk()
-    }
-
-    private func saveToDisk() {
-        let config = ProfilesConfig(
-            selectedProfileId: selectedProfile.id,
-            profiles: profiles
-        )
-
-        guard let data = try? encoder.encode(config) else { return }
-
-        try? profilesUrl.createIntermediateDirectories()
-        try? data.write(to: profilesUrl)
+        print(profilesUrl)
     }
 
     private func loadFromDisk() {
@@ -102,7 +73,7 @@ final class ProfilesRepository: ObservableObject {
         profiles = [.init(
             id: UUID(),
             name: "Default",
-            workspaces: workspaceRepository.workspaces
+            workspaces: []
         )]
         selectedProfile = profiles[0]
         saveToDisk()
@@ -111,11 +82,9 @@ final class ProfilesRepository: ObservableObject {
     private func setProfile(id: ProfileId) {
         guard let profile = profiles.first(where: { $0.id == id }) else { return }
 
-        cancellables.removeAll()
-        workspaceRepository.replaceWorkspaces(with: profile.workspaces)
-        observe()
         saveToDisk()
 
+        onProfileChange?(profile)
         NotificationCenter.default.post(name: .profileChanged, object: nil)
         Integrations.runOnProfileChangeIfNeeded(profile: profile.name)
     }
@@ -168,5 +137,25 @@ extension ProfilesRepository {
         } else {
             saveToDisk()
         }
+    }
+
+    func updateWorkspaces(_ workspaces: [Workspace]) {
+        guard let profileIndex = profiles.firstIndex(where: { $0.id == selectedProfile.id }) else { return }
+
+        profiles[profileIndex].workspaces = workspaces
+        selectedProfile = profiles[profileIndex]
+        saveToDisk()
+    }
+
+    func saveToDisk() {
+        let config = ProfilesConfig(
+            selectedProfileId: selectedProfile.id,
+            profiles: profiles
+        )
+
+        guard let data = try? encoder.encode(config) else { return }
+
+        try? profilesUrl.createIntermediateDirectories()
+        try? data.write(to: profilesUrl)
     }
 }

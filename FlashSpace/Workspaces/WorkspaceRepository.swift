@@ -6,33 +6,20 @@
 //
 
 import AppKit
-import Combine
 import Foundation
 
 final class WorkspaceRepository {
-    var workspacesUpdatePublisher: AnyPublisher<[Workspace], Never> {
-        workspacesUpdateSubject.eraseToAnyPublisher()
-    }
-
     private(set) var workspaces: [Workspace] = []
 
-    private let dataUrl = FileManager.default
-        .homeDirectoryForCurrentUser
-        .appendingPathComponent(".config/flashspace/workspaces.json")
+    private let profilesRepository: ProfilesRepository
 
-    private let workspacesUpdateSubject = PassthroughSubject<[Workspace], Never>()
-    private let encoder = JSONEncoder()
-    private let decoder = JSONDecoder()
+    init(profilesRepository: ProfilesRepository) {
+        self.profilesRepository = profilesRepository
+        self.workspaces = profilesRepository.selectedProfile.workspaces
 
-    init() {
-        encoder.outputFormatting = .prettyPrinted
-        loadFromDisk()
-        print(dataUrl)
-    }
-
-    func replaceWorkspaces(with workspaces: [Workspace]) {
-        self.workspaces = workspaces
-        saveToDisk()
+        profilesRepository.onProfileChange = { [weak self] profile in
+            self?.workspaces = profile.workspaces
+        }
     }
 
     func addWorkspace(name: String) {
@@ -45,31 +32,31 @@ final class WorkspaceRepository {
             apps: []
         )
         workspaces.append(workspace)
-        saveToDisk()
+        notifyAboutChanges()
     }
 
     func updateWorkspace(_ workspace: Workspace) {
         guard let workspaceIndex = workspaces.firstIndex(where: { $0.id == workspace.id }) else { return }
 
         workspaces[workspaceIndex] = workspace
-        saveToDisk()
+        notifyAboutChanges()
         AppDependencies.shared.hotKeysManager.refresh()
     }
 
     func deleteWorkspace(id: WorkspaceID) {
         workspaces.removeAll { $0.id == id }
-        saveToDisk()
+        notifyAboutChanges()
     }
 
-    func addApp(to workspaceId: WorkspaceID, app: String) {
+    func addApp(to workspaceId: WorkspaceID, app: MacApp) {
         guard let workspaceIndex = workspaces.firstIndex(where: { $0.id == workspaceId }) else { return }
         guard !workspaces[workspaceIndex].apps.contains(app) else { return }
 
         workspaces[workspaceIndex].apps.append(app)
-        saveToDisk()
+        notifyAboutChanges()
     }
 
-    func deleteApp(from workspaceId: WorkspaceID, app: String) {
+    func deleteApp(from workspaceId: WorkspaceID, app: MacApp) {
         guard let workspaceIndex = workspaces.firstIndex(where: { $0.id == workspaceId }) else { return }
 
         if workspaces[workspaceIndex].appToFocus == app {
@@ -77,10 +64,10 @@ final class WorkspaceRepository {
         }
 
         workspaces[workspaceIndex].apps.removeAll { $0 == app }
-        saveToDisk()
+        notifyAboutChanges()
     }
 
-    func deleteAppFromAllWorkspaces(app: String) {
+    func deleteAppFromAllWorkspaces(app: MacApp) {
         for (index, var workspace) in workspaces.enumerated() {
             workspace.apps.removeAll { $0 == app }
             if workspace.appToFocus == app {
@@ -89,7 +76,7 @@ final class WorkspaceRepository {
 
             workspaces[index] = workspace
         }
-        saveToDisk()
+        notifyAboutChanges()
     }
 
     func moveUp(workspaceId: WorkspaceID) {
@@ -99,7 +86,7 @@ final class WorkspaceRepository {
         let tmp = workspaces[index - 1]
         workspaces[index - 1] = workspaces[index]
         workspaces[index] = tmp
-        saveToDisk()
+        notifyAboutChanges()
     }
 
     func moveDown(workspaceId: WorkspaceID) {
@@ -109,22 +96,10 @@ final class WorkspaceRepository {
         let tmp = workspaces[index + 1]
         workspaces[index + 1] = workspaces[index]
         workspaces[index] = tmp
-        saveToDisk()
+        notifyAboutChanges()
     }
 
-    private func saveToDisk() {
-        guard let data = try? encoder.encode(workspaces) else { return }
-
-        try? dataUrl.createIntermediateDirectories()
-        try? data.write(to: dataUrl)
-
-        workspacesUpdateSubject.send(workspaces)
-    }
-
-    private func loadFromDisk() {
-        guard FileManager.default.fileExists(atPath: dataUrl.path) else { return }
-        guard let data = try? Data(contentsOf: dataUrl) else { return }
-
-        workspaces = (try? decoder.decode([Workspace].self, from: data)) ?? []
+    private func notifyAboutChanges() {
+        profilesRepository.updateWorkspaces(workspaces)
     }
 }

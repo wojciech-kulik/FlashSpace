@@ -46,6 +46,12 @@ struct WorkspacesSettingsView: View {
                     }
                 }
             ) {
+                if settings.floatingApps?.contains(where: \.bundleIdentifier.isEmpty) == true {
+                    Text("Could not migrate some apps. Please re-add them to fix the problem.")
+                        .foregroundStyle(.errorRed)
+                        .font(.callout)
+                }
+
                 VStack(alignment: .leading) {
                     ForEach(settings.floatingApps ?? [], id: \.self) { app in
                         HStack {
@@ -55,7 +61,8 @@ struct WorkspacesSettingsView: View {
                                 Image(systemName: "x.circle.fill").opacity(0.8)
                             }.buttonStyle(.borderless)
 
-                            Text(app)
+                            Text(app.name)
+                                .foregroundStyle(app.bundleIdentifier.isEmpty ? .errorRed : .primary)
                         }
                     }
                 }

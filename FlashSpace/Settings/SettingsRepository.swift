@@ -33,7 +33,7 @@ struct AppSettings: Codable {
     var showFloatingNotifications: Bool?
     var changeWorkspaceOnAppAssign: Bool?
 
-    var floatingApps: [String]?
+    var floatingApps: [MacApp]?
     var floatTheFocusedApp: HotKeyShortcut?
     var unfloatTheFocusedApp: HotKeyShortcut?
 
@@ -130,7 +130,7 @@ final class SettingsRepository: ObservableObject {
         didSet { updateSettings() }
     }
 
-    @Published var floatingApps: [String]? {
+    @Published var floatingApps: [MacApp]? {
         didSet { updateSettings() }
     }
 
@@ -193,7 +193,7 @@ final class SettingsRepository: ObservableObject {
         }
     }
 
-    func addFloatingAppIfNeeded(app: String) {
+    func addFloatingAppIfNeeded(app: MacApp) {
         var unwrappedFloatingApps = floatingApps ?? []
         guard !unwrappedFloatingApps.contains(app) else { return }
         unwrappedFloatingApps.append(app)
@@ -201,9 +201,16 @@ final class SettingsRepository: ObservableObject {
         saveToDisk()
     }
 
-    func deleteFloatingApp(app: String) {
+    func deleteFloatingApp(app: MacApp) {
         floatingApps?.removeAll { $0 == app }
         saveToDisk()
+    }
+
+    func saveToDisk() {
+        guard let data = try? encoder.encode(currentSettings) else { return }
+
+        try? dataUrl.createIntermediateDirectories()
+        try? data.write(to: dataUrl)
     }
 
     private func updateSettings() {
@@ -245,13 +252,6 @@ final class SettingsRepository: ObservableObject {
         )
         saveToDisk()
         AppDependencies.shared.hotKeysManager.refresh()
-    }
-
-    private func saveToDisk() {
-        guard let data = try? encoder.encode(currentSettings) else { return }
-
-        try? dataUrl.createIntermediateDirectories()
-        try? data.write(to: dataUrl)
     }
 
     private func loadFromDisk() {

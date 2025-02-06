@@ -8,7 +8,11 @@
 import AppKit
 
 enum AppConstants {
-    static let lastFocusedOption = "(Last Focused)"
+    static let lastFocusedOption = MacApp(
+        name: "(Last Focused)",
+        bundleIdentifier: "flashspace.last-focused",
+        iconPath: nil
+    )
 
     static var version: String {
         guard let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String else {

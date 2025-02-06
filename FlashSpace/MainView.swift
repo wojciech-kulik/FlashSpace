@@ -47,7 +47,15 @@ struct MainView: View {
                 id: \.self,
                 selection: $viewModel.selectedWorkspace
             ) { workspace in
-                Text(workspace.name)
+                HStack {
+                    Image(systemName: workspace.symbolIconName ?? "bolt.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 15, height: 15)
+                        .foregroundStyle(Color(hex: "#f9e2af")!)
+                    Text(workspace.name)
+                        .foregroundColor(workspace.apps.contains(where: \.bundleIdentifier.isEmpty) ? .errorRed : .primary)
+                }
             }
             .frame(width: 200, height: 350)
 
@@ -82,7 +90,16 @@ struct MainView: View {
                 id: \.self,
                 selection: $viewModel.selectedApp
             ) { app in
-                Text(app)
+                HStack {
+                    if let iconPath = app.iconPath, let image = NSImage(byReferencingFile: iconPath) {
+                        Image(nsImage: image)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 20, height: 20)
+                    }
+                    Text(app.name)
+                        .foregroundColor(app.bundleIdentifier.isEmpty ? .errorRed : .primary)
+                }
             }
             .frame(width: 200, height: 350)
 
@@ -120,7 +137,7 @@ struct MainView: View {
 
                 Picker("Focus App:", selection: $viewModel.workspaceAppToFocus) {
                     ForEach(viewModel.focusAppOptions, id: \.self) {
-                        Text($0).tag($0)
+                        Text($0.name).tag($0)
                     }
                 }.padding(.bottom)
 
@@ -141,6 +158,11 @@ struct MainView: View {
                 HotKeyControl(shortcut: $viewModel.workspaceAssignShortcut).padding(.bottom)
             }
             .disabled(viewModel.selectedWorkspace == nil)
+
+            if viewModel.workspaces.contains(where: { $0.apps.contains(where: \.bundleIdentifier.isEmpty) }) {
+                Text("Could not migrate some apps. Please re-add them to fix the problem. Please also check floating apps.")
+                    .foregroundColor(.errorRed)
+            }
 
             Spacer()
 

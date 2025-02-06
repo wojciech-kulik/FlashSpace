@@ -152,7 +152,8 @@ sketchybar --set $NAME label="$WORKSPACE - $DISPLAY"
 sketchybar --add event flashspace_workspace_change
 
 SID=1
-WORKSPACES=$(cat ~/.config/flashspace/workspaces.json | jq -r ".[].name")
+SELECTED_PROFILE_ID=$(cat ~/.config/flashspace/profiles.json | jq -r ".selectedProfileId")
+WORKSPACES=$(cat ~/.config/flashspace/profiles.json | jq -r 'first(.profiles[] | select(.id == $id)) | .workspaces[].name' --arg id "$SELECTED_PROFILE_ID")
 
 for workspace in $WORKSPACES; do
   sketchybar --add item flashspace.$SID left \
