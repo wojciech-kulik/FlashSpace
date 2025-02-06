@@ -9,9 +9,7 @@
 FlashSpace is a blazingly-fast virtual workspace manager for macOS, designed to
 enhance and replace native macOS Spaces. No more waiting for macOS animations.
 
-🚧 This project is still in early development. 🚧
-
-<img width="797" alt="FlashSpace" src="https://github.com/user-attachments/assets/42e271d5-3f4f-45f8-8d6b-5dee464f2c17" />
+<img width="797" alt="FlashSpace" src="https://github.com/user-attachments/assets/36f4933d-3711-4acf-9171-9137073010d7" />
 
 ## ⚙️ Installation
 
@@ -22,17 +20,6 @@ enhance and replace native macOS Spaces. No more waiting for macOS animations.
 ```bash
 brew install flashspace
 ```
-
-> [!NOTE]
-> The app is now available in the main Homebrew repository.
-> If you previously installed it from `wojciech-kulik/tap/flashspace`,
-> you should switch to the main repository by following these steps:
->
-> ```bash
-> brew uninstall flashspace
-> brew untap wojciech-kulik/tap
-> brew install flashspace
-> ```
 
 ### Download Binary
 
@@ -184,12 +171,6 @@ fi
 ```
 
 </details>
-
-## 🚧 Limitations
-
-The app is still in early development and has some limitations:
-
-- It doesn't support individual app windows yet.
 
 ## 🛠️ Build From Source
 
