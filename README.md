@@ -204,6 +204,7 @@ Big thanks to all the sponsors who support this project 🍻!
 
 <a href="https://github.com/bjrmatos"><img src="https://avatars.githubusercontent.com/u/4262050" width="40" height="40" alt="@bjrmatos" title="bjrmatos"></a>
 <a href="https://github.com/notlus"><img src="https://avatars.githubusercontent.com/u/828989" width="40" height="40" alt="@notlus" title="notlus"></a>
+<a href="https://github.com/humblehacker"><img src="https://avatars.githubusercontent.com/u/117582" width="40" height="40" alt="@humblehacker" title="humblehacker"></a>
 
 ### One Time Sponsors
 
