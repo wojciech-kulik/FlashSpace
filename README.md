@@ -34,7 +34,7 @@ See: [Build From Source](#%EF%B8%8F-build-from-source).
 The video shows a sample configuration where I use 3 workspaces and switch
 between them using hotkeys.
 
-https://github.com/user-attachments/assets/53044f38-6d2e-47dd-9159-1858623bd959
+https://github.com/user-attachments/assets/03498386-7c3d-4d9e-8fbd-cd49dea36661
 
 ## 👉 How it works
 
@@ -81,7 +81,7 @@ FlashSpace enables fast switching of focus between windows. Use hotkeys to
 shift focus in any desired direction. It also allows you to jump between
 displays.
 
-https://github.com/user-attachments/assets/de0db253-d3a5-495a-b4b7-2a65e2776254
+https://github.com/user-attachments/assets/9bc22b19-7cd7-48f8-a679-0adf4adc3aef
 
 ## 📝 Notes
 
