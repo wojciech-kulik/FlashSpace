@@ -12,6 +12,7 @@ struct AppDependencies {
 
     let workspaceRepository: WorkspaceRepository
     let workspaceManager: WorkspaceManager
+    let workspaceHotKeys: WorkspaceHotKeys
 
     let hotKeysMonitor: HotKeysMonitorProtocol = GlobalShortcutMonitor.shared
     let hotKeysManager: HotKeysManager
@@ -32,6 +33,11 @@ struct AppDependencies {
             workspaceRepository: workspaceRepository,
             settingsRepository: settingsRepository
         )
+        self.workspaceHotKeys = WorkspaceHotKeys(
+            workspaceManager: workspaceManager,
+            workspaceRepository: workspaceRepository,
+            settingsRepository: settingsRepository
+        )
         self.focusManager = FocusManager(
             workspaceRepository: workspaceRepository,
             workspaceManager: workspaceManager,
@@ -39,7 +45,7 @@ struct AppDependencies {
         )
         self.hotKeysManager = HotKeysManager(
             hotKeysMonitor: GlobalShortcutMonitor.shared,
-            workspaceManager: workspaceManager,
+            workspaceHotKeys: workspaceHotKeys,
             focusManager: focusManager,
             settingsRepository: settingsRepository
         )

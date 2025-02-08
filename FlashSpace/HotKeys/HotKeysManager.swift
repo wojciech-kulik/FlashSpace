@@ -18,18 +18,18 @@ final class HotKeysManager {
     private var cancellables = Set<AnyCancellable>()
 
     private let hotKeysMonitor: HotKeysMonitorProtocol
-    private let workspaceManager: WorkspaceManager
+    private let workspaceHotKeys: WorkspaceHotKeys
     private let focusManager: FocusManager
     private let settingsRepository: SettingsRepository
 
     init(
         hotKeysMonitor: HotKeysMonitorProtocol,
-        workspaceManager: WorkspaceManager,
+        workspaceHotKeys: WorkspaceHotKeys,
         focusManager: FocusManager,
         settingsRepository: SettingsRepository
     ) {
         self.hotKeysMonitor = hotKeysMonitor
-        self.workspaceManager = workspaceManager
+        self.workspaceHotKeys = workspaceHotKeys
         self.focusManager = focusManager
         self.settingsRepository = settingsRepository
 
@@ -42,7 +42,7 @@ final class HotKeysManager {
     }
 
     func enableAll() {
-        for (shortcut, action) in workspaceManager.getHotKeys() {
+        for (shortcut, action) in workspaceHotKeys.getHotKeys() {
             let action = ShortcutAction(shortcut: shortcut) { _ in
                 action()
                 return true

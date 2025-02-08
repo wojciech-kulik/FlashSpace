@@ -200,7 +200,7 @@ final class FocusManager {
         return (index, apps)
     }
 
-    private func getRunningAppsWithSortedWindows(apps: [MacApp]) -> [RunningApp] {
+    private func getRunningAppsWithSortedWindows(apps: [MacApp]) -> [MacAppWithWindows] {
         let order = apps
             .enumerated()
             .reduce(into: [String: Int]()) {
@@ -209,7 +209,7 @@ final class FocusManager {
 
         return NSWorkspace.shared.runningApplications
             .filter { !$0.isHidden && apps.containsApp($0) }
-            .map { RunningApp(app: $0) }
+            .map { MacAppWithWindows(app: $0) }
             .sorted { order[$0.bundleIdentifier] ?? 0 < order[$1.bundleIdentifier] ?? 0 }
     }
 }

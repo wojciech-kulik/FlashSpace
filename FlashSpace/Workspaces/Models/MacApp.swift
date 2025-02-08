@@ -7,10 +7,6 @@
 
 import AppKit
 
-enum Migrations {
-    static var appsMigrated = false
-}
-
 struct MacApp: Codable, Hashable, Equatable {
     var name: String
     var bundleIdentifier: String
