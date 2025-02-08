@@ -21,18 +21,21 @@ struct IntegrationsSettingsView: View {
                     Text("On App Launch")
                     TextField("", text: $settings.runScriptOnLaunch)
                         .foregroundColor(.secondary)
+                        .standardPlaceholder(settings.runScriptOnLaunch.isEmpty)
                 }
 
                 HStack {
                     Text("On Workspace Change")
                     TextField("", text: $settings.runScriptOnWorkspaceChange)
                         .foregroundColor(.secondary)
+                        .standardPlaceholder(settings.runScriptOnWorkspaceChange.isEmpty)
                 }
 
                 HStack {
                     Text("On Profile Change")
                     TextField("", text: $settings.runScriptOnProfileChange)
                         .foregroundColor(.secondary)
+                        .standardPlaceholder(settings.runScriptOnProfileChange.isEmpty)
                 }
 
                 Text(
