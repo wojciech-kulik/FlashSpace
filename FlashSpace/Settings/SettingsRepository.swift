@@ -11,8 +11,10 @@ import Foundation
 struct AppSettings: Codable {
     var checkForUpdatesAutomatically: Bool?
     var showFlashSpace: HotKeyShortcut?
+
     var showMenuBarTitle: Bool?
     var menuBarTitleTemplate: String?
+    var menuBarDisplayAliases: String?
 
     var enableFocusManagement: Bool?
     var centerCursorOnFocusChange: Bool?
@@ -62,7 +64,13 @@ final class SettingsRepository: ObservableObject {
         didSet { updateSettings() }
     }
 
+    // MARK: - Menu Bar
+
     @Published var menuBarTitleTemplate: String = SettingsRepository.defaultMenuBarTitleTemplate {
+        didSet { debouncedUpdateSettings.send(()) }
+    }
+
+    @Published var menuBarDisplayAliases: String = "" {
         didSet { debouncedUpdateSettings.send(()) }
     }
 
@@ -219,8 +227,10 @@ final class SettingsRepository: ObservableObject {
         currentSettings = AppSettings(
             checkForUpdatesAutomatically: checkForUpdatesAutomatically,
             showFlashSpace: showFlashSpace,
+
             showMenuBarTitle: showMenuBarTitle,
             menuBarTitleTemplate: menuBarTitleTemplate,
+            menuBarDisplayAliases: menuBarDisplayAliases,
 
             enableFocusManagement: enableFocusManagement,
             centerCursorOnFocusChange: centerCursorOnFocusChange,
@@ -266,8 +276,10 @@ final class SettingsRepository: ObservableObject {
 
         checkForUpdatesAutomatically = settings.checkForUpdatesAutomatically ?? false
         showFlashSpace = settings.showFlashSpace
+
         showMenuBarTitle = settings.showMenuBarTitle ?? true
         menuBarTitleTemplate = settings.menuBarTitleTemplate ?? Self.defaultMenuBarTitleTemplate
+        menuBarDisplayAliases = settings.menuBarDisplayAliases ?? ""
 
         enableFocusManagement = settings.enableFocusManagement ?? false
         centerCursorOnFocusChange = settings.centerCursorOnFocusChange ?? false

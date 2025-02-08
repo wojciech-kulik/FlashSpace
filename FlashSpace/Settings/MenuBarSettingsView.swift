@@ -19,6 +19,7 @@ struct MenuBarSettingsView: View {
                     Text("Title Template")
                     TextField("", text: $settings.menuBarTitleTemplate)
                         .foregroundColor(.secondary)
+                        .standardPlaceholder(settings.menuBarTitleTemplate.isEmpty)
                 }
                 .disabled(!settings.showMenuBarTitle)
                 .opacity(settings.showMenuBarTitle ? 1 : 0.5)
@@ -34,6 +35,22 @@ struct MenuBarSettingsView: View {
                 .foregroundStyle(.secondary)
                 .font(.callout)
                 .opacity(settings.showMenuBarTitle ? 1 : 0.5)
+            }
+
+            Section {
+                HStack {
+                    Text("Display Aliases")
+                    TextField("", text: $settings.menuBarDisplayAliases)
+                        .foregroundColor(.secondary)
+                        .standardPlaceholder(settings.menuBarDisplayAliases.isEmpty)
+                }
+                .disabled(!settings.showMenuBarTitle)
+                .opacity(settings.showMenuBarTitle ? 1 : 0.5)
+
+                Text("Example: DELL U2723QE=Secondary;Built-in Retina Display=Main")
+                    .foregroundStyle(.secondary)
+                    .font(.callout)
+                    .opacity(settings.showMenuBarTitle ? 1 : 0.5)
             }
         }
         .formStyle(.grouped)

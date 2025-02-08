@@ -19,7 +19,22 @@ enum MenuBarTitle {
         return template
             .replacingOccurrences(of: "$WORKSPACE_NUMBER", with: activeWorkspace.number ?? "")
             .replacingOccurrences(of: "$WORKSPACE", with: activeWorkspace.name)
-            .replacingOccurrences(of: "$DISPLAY", with: activeWorkspace.display)
+            .replacingOccurrences(of: "$DISPLAY", with: getDisplayName())
             .replacingOccurrences(of: "$PROFILE", with: profilesRepository.selectedProfile.name)
+    }
+
+    private static func getDisplayName() -> String {
+        let aliases = settings.menuBarDisplayAliases
+            .split(separator: ";")
+            .map { $0.split(separator: "=") }
+            .reduce(into: [String: String]()) { result, pair in
+                guard pair.count == 2 else { return }
+
+                result[String(pair[0]).lowercased()] = String(pair[1])
+            }
+
+        let display = workspaceManager.activeWorkspaceDetails?.display ?? ""
+
+        return aliases[display.lowercased()] ?? display
     }
 }
