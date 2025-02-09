@@ -32,6 +32,7 @@ struct FlashSpaceApp: App {
     @Environment(\.openWindow) private var openWindow
 
     @StateObject private var workspaceManager = AppDependencies.shared.workspaceManager
+    @State private var menuBarId = UUID()
 
     var body: some Scene {
         Window("⚡ FlashSpace v\(AppConstants.version)", id: "main") {
@@ -87,6 +88,8 @@ struct FlashSpaceApp: App {
                 Image(systemName: workspaceManager.activeWorkspaceDetails?.symbolIconName ?? "bolt.fill")
                 if let title = MenuBarTitle.get() { Text(title) }
             }
+            .id(menuBarId)
+            .onReceive(NotificationCenter.default.publisher(for: .menuBarSettingsChanged)) { _ in menuBarId = UUID() }
         }
     }
 }
