@@ -53,6 +53,15 @@ struct MenuBarSettingsView: View {
                     .opacity(settings.showMenuBarTitle ? 1 : 0.5)
             }
         }
+        .onChange(of: settings.showMenuBarTitle) { _, _ in
+            NotificationCenter.default.post(name: .menuBarSettingsChanged, object: nil)
+        }
+        .onReceive(
+            settings.$menuBarTitleTemplate
+                .debounce(for: 1.0, scheduler: RunLoop.main)
+        ) { _ in
+            NotificationCenter.default.post(name: .menuBarSettingsChanged, object: nil)
+        }
         .formStyle(.grouped)
         .navigationTitle("Menu Bar")
     }
