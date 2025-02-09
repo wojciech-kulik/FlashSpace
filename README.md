@@ -67,13 +67,20 @@ The app allows workspaces to be switched independently on each display.
 
 ## 💬 How to use
 
+1. Move all your apps to a single macOS space. You can keep separate spaces on
+   each display.
 1. Create a workspace.
-1. Assign apps to the workspace.
-1. Assign the workspace to a display.
-1. Define a hotkey to switch to the workspace.
-1. Save the workspace.
+1. Assign apps to it.
+1. Assign a display to the workspace.
+1. Set a hotkey for quick workspace activation.
+1. Follow the same steps for other workspaces.
+1. Switch between configured workspaces using hotkeys.
 
-Now you can switch to the workspace using the configured hotkey.
+### The Same App In Multiple Workspaces
+
+If you want to keep the same app in multiple workspaces, you can use the
+"Floating Apps" feature from the app settings or you can add the app to multiple
+workspaces from the main app window.
 
 ## 🪟 Focus Manager
 
@@ -83,19 +90,36 @@ displays.
 
 https://github.com/user-attachments/assets/9bc22b19-7cd7-48f8-a679-0adf4adc3aef
 
-## 📝 Notes
+## 📝 Design Decisions
 
-FlashSpace doesn't manage windows, so if you switch to a workspace and call
+### Non-disruptive Behavior
+
+FlashSpace doesn't actively manage windows, so if you switch to a workspace and call
 another app that is not assigned to the workspace, it will be shown on top of
 the workspace apps.
 
-I consider this as a desired behavior because it allows you to quickly access other
+It is considered to be a desired behavior as it allows quickly accessing other
 apps without glitches or switching between workspaces.
 
-This is a common issue with tiling window managers that they often cause glitches
-when a small pop-up window is shown or some unexpected app is opened.
+Glitches are common in tiling window managers, often caused by not configured
+pop-ups or dialog windows. FlashSpace prevents these issues by not managing
+windows & apps that are unassigned allowing you to interact with the system in
+a non-disruptive way.
 
-If you want to hide the new app, you can simply use the hotkey again.
+### No Support For Individual App Windows Per Workspace
+
+FlashSpace doesn't support the concept of individual app windows per workspace.
+This is a conscious decision to keep the app simple and fast.
+
+This way, FlashSpace can rely on native show & hide functionality ensuring the
+most efficient way of managing and switching between workspaces. Additionally,
+this hack-free approach is battery-friendly and doesn't break other features in
+the system like Mission Control.
+
+Adding support for individual app windows per workspace would require a lot of
+complexity and would downgrade the performance of the app. However, it is
+planned to further investigate a possibility of adding this feature in the
+future.
 
 ## 🖥️ SketchyBar Integration
 
