@@ -36,6 +36,23 @@ between them using hotkeys.
 
 https://github.com/user-attachments/assets/03498386-7c3d-4d9e-8fbd-cd49dea36661
 
+## 💬 How to use
+
+1. Move all your apps to a single macOS space. You can keep separate spaces on
+   each display.
+1. Create a workspace.
+1. Assign apps to it.
+1. Assign a display to the workspace.
+1. Set a hotkey for quick workspace activation.
+1. Follow the same steps for other workspaces.
+1. Switch between configured workspaces using hotkeys.
+
+### The Same App In Multiple Workspaces
+
+If you want to keep the same app in multiple workspaces, you can use the
+"Floating Apps" feature from the app settings or you can add the app to multiple
+workspaces from the main app window.
+
 ## 👉 How it works
 
 FlashSpace allows to define virtual workspaces and assign apps to them. Each workspace is
@@ -64,23 +81,6 @@ The app allows workspaces to be switched independently on each display.
 - **Reliability** - The app should work without glitches and unexpected behavior.
 - **Invisible** - The app should help, not disturb.
 - **UNIX Philosophy** - The app should do one thing and do it well - manage workspaces.
-
-## 💬 How to use
-
-1. Move all your apps to a single macOS space. You can keep separate spaces on
-   each display.
-1. Create a workspace.
-1. Assign apps to it.
-1. Assign a display to the workspace.
-1. Set a hotkey for quick workspace activation.
-1. Follow the same steps for other workspaces.
-1. Switch between configured workspaces using hotkeys.
-
-### The Same App In Multiple Workspaces
-
-If you want to keep the same app in multiple workspaces, you can use the
-"Floating Apps" feature from the app settings or you can add the app to multiple
-workspaces from the main app window.
 
 ## 🪟 Focus Manager
 
