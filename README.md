@@ -87,7 +87,7 @@ The app allows workspaces to be switched independently on each display.
 
 Space Control allows you to preview all workspaces on a grid and switch between them.
 
-![FlashSpace - Space Control](https://github.com/user-attachments/assets/5f89f759-1bf1-4c51-bc14-24b618f3173f)
+![FlashSpace - Space Control](https://github.com/user-attachments/assets/c5e15bca-59b5-46a0-a19a-f34ae3c0e9c1)
 
 ## 🪟 Focus Manager
 
