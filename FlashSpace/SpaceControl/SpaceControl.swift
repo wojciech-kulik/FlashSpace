@@ -53,7 +53,7 @@ enum SpaceControl {
         )
         window.isOpaque = false
         window.backgroundColor = .clear
-        window.level = .floating
+        window.level = .screenSaver
         window.delegate = window
         Self.window = window
 
@@ -62,7 +62,7 @@ enum SpaceControl {
         window.contentView = contentView.addVisualEffect(material: .fullScreenUI)
         window.alphaValue = animations ? 0 : 1
 
-        NSApp.activate()
+        NSApp.activate(ignoringOtherApps: true)
         window.orderFrontRegardless()
         window.makeKeyAndOrderFront(nil)
 
