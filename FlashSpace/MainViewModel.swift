@@ -37,6 +37,7 @@ final class MainViewModel: ObservableObject {
 
     @Published var isSymbolPickerPresented = false
     @Published var isInputDialogPresented = false
+    @Published var isWhatsNewPresented = false
     @Published var userInput = ""
 
     var focusAppOptions: [MacApp] {
@@ -238,5 +239,19 @@ extension MainViewModel {
         }
 
         workspaces = workspaceRepository.workspaces
+    }
+
+    func showWhatsNewIfNeeded() {
+        @AppStorage("v1.1.17-whats-new") var whatsNewShown = false
+
+        if workspaceRepository.workspaces.isEmpty {
+            whatsNewShown = true
+            return
+        }
+
+        guard !whatsNewShown else { return }
+
+        whatsNewShown = true
+        isWhatsNewPresented = true
     }
 }
