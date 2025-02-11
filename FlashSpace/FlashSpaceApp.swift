@@ -32,7 +32,7 @@ struct FlashSpaceApp: App {
     @Environment(\.openWindow) private var openWindow
 
     @StateObject private var workspaceManager = AppDependencies.shared.workspaceManager
-    @State private var menuBarId = UUID()
+    @StateObject private var settingsRepository = AppDependencies.shared.settingsRepository
 
     var body: some Scene {
         Window("⚡ FlashSpace v\(AppConstants.version)", id: "main") {
@@ -51,6 +51,12 @@ struct FlashSpaceApp: App {
             Button("Open") {
                 openWindow(id: "main")
                 NSApp.activate(ignoringOtherApps: true)
+            }
+
+            if settingsRepository.enableSpaceControl {
+                Button("Space Control") {
+                    SpaceControl.show()
+                }
             }
 
             Divider()
@@ -88,8 +94,7 @@ struct FlashSpaceApp: App {
                 Image(systemName: workspaceManager.activeWorkspaceDetails?.symbolIconName ?? "bolt.fill")
                 if let title = MenuBarTitle.get() { Text(title) }
             }
-            .id(menuBarId)
-            .onReceive(NotificationCenter.default.publisher(for: .menuBarSettingsChanged)) { _ in menuBarId = UUID() }
+            .id(settingsRepository.menuBarTitleTemplate)
         }
     }
 }

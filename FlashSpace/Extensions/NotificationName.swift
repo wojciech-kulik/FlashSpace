@@ -11,6 +11,5 @@ extension Notification.Name {
     static let appsListChanged = Notification.Name("appsListChanged")
     static let openMainWindow = Notification.Name("openMainWindow")
     static let profileChanged = Notification.Name("profileChanged")
-    static let menuBarSettingsChanged = Notification.Name("menuBarSettingsChanged")
     static let workspaceChanged = Notification.Name("workspaceChanged")
 }
