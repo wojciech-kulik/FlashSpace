@@ -30,10 +30,12 @@ struct SettingsView: View {
                     .tag("General")
                 Label("Menu Bar", systemImage: "contextualmenu.and.cursorarrow")
                     .tag("MenuBar")
-                Label("Focus Manager", systemImage: "macwindow.on.rectangle")
-                    .tag("Focus")
                 Label("Workspaces", systemImage: "square.stack.3d.up")
                     .tag("Workspaces")
+                Label("Focus Manager", systemImage: "macwindow.on.rectangle")
+                    .tag("Focus")
+                Label("Space Control", systemImage: "rectangle.split.2x2")
+                    .tag("SpaceControl")
                 Label("Profiles", systemImage: "person.2")
                     .tag("Profiles")
                 Label("Integrations", systemImage: "link")
@@ -63,6 +65,8 @@ struct SettingsView: View {
             FocusSettingsView()
         case "Workspaces":
             WorkspacesSettingsView()
+        case "SpaceControl":
+            SpaceControlSettingsView()
         case "Integrations":
             IntegrationsSettingsView()
         case "Profiles":

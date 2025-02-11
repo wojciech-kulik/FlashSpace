@@ -39,4 +39,8 @@ extension Workspace {
             ? display
             : NSScreen.main?.localizedName ?? ""
     }
+
+    var isOnTheCurrentScreen: Bool {
+        displayWithFallback == NSScreen.main?.localizedName
+    }
 }
