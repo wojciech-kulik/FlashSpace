@@ -44,26 +44,7 @@ func showFloatingToast(icon: String, message: String, textColor: Color) {
     window.level = .floating
     floatingToastWindow = window
 
-    let visualEffectView = NSVisualEffectView()
-    visualEffectView.material = .sidebar
-    visualEffectView.blendingMode = .behindWindow
-    visualEffectView.state = .active
-    visualEffectView.wantsLayer = true
-    visualEffectView.layer?.cornerRadius = 24
-    visualEffectView.layer?.borderWidth = 0.8
-    visualEffectView.layer?.borderColor = NSColor.darkGray.cgColor
-    visualEffectView.layer?.masksToBounds = true
-
-    visualEffectView.addSubview(contentView)
-    contentView.translatesAutoresizingMaskIntoConstraints = false
-
-    NSLayoutConstraint.activate([
-        contentView.leadingAnchor.constraint(equalTo: visualEffectView.leadingAnchor),
-        contentView.trailingAnchor.constraint(equalTo: visualEffectView.trailingAnchor),
-        contentView.topAnchor.constraint(equalTo: visualEffectView.topAnchor),
-        contentView.bottomAnchor.constraint(equalTo: visualEffectView.bottomAnchor)
-    ])
-
+    let visualEffectView = contentView.addVisualEffect(material: .sidebar, border: true)
     window.contentView = visualEffectView
     window.orderFrontRegardless()
 

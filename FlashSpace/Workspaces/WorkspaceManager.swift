@@ -199,6 +199,7 @@ extension WorkspaceManager {
     func activateWorkspace(_ workspace: Workspace, setFocus: Bool) {
         print("\n\nWORKSPACE: \(workspace.name)")
         print("----")
+        SpaceControl.hide()
 
         updateActiveWorkspace(workspace)
         showApps(in: workspace, setFocus: setFocus)
@@ -207,6 +208,8 @@ extension WorkspaceManager {
         // Some apps may not hide properly,
         // so we hide apps in the workspace after a short delay
         hideAgainSubject.send(workspace)
+
+        NotificationCenter.default.post(name: .workspaceChanged, object: workspace)
     }
 
     func assignApp(_ app: MacApp, to workspace: Workspace) {

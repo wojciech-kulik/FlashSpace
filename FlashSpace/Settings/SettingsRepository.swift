@@ -39,6 +39,11 @@ struct AppSettings: Codable {
     var floatTheFocusedApp: HotKeyShortcut?
     var unfloatTheFocusedApp: HotKeyShortcut?
 
+    var enableSpaceControl: Bool?
+    var showSpaceControl: HotKeyShortcut?
+    var enableSpaceControlAnimations: Bool?
+    var spaceControlCurrentDisplayWorkspaces: Bool?
+
     var enableIntegrations: Bool?
     var runScriptOnWorkspaceChange: String?
     var runScriptOnLaunch: String?
@@ -158,6 +163,24 @@ final class SettingsRepository: ObservableObject {
         didSet { updateSettings() }
     }
 
+    // MARK: - SpaceControl
+
+    @Published var enableSpaceControl: Bool = false {
+        didSet { updateSettings() }
+    }
+
+    @Published var showSpaceControl: HotKeyShortcut? {
+        didSet { updateSettings() }
+    }
+
+    @Published var enableSpaceControlAnimations: Bool = true {
+        didSet { updateSettings() }
+    }
+
+    @Published var spaceControlCurrentDisplayWorkspaces: Bool = false {
+        didSet { updateSettings() }
+    }
+
     // MARK: - Integrations
 
     @Published var enableIntegrations: Bool = false {
@@ -255,6 +278,11 @@ final class SettingsRepository: ObservableObject {
             floatTheFocusedApp: floatTheFocusedApp,
             unfloatTheFocusedApp: unfloatTheFocusedApp,
 
+            enableSpaceControl: enableSpaceControl,
+            showSpaceControl: showSpaceControl,
+            enableSpaceControlAnimations: enableSpaceControlAnimations,
+            spaceControlCurrentDisplayWorkspaces: spaceControlCurrentDisplayWorkspaces,
+
             enableIntegrations: enableIntegrations,
             runScriptOnWorkspaceChange: runScriptOnWorkspaceChange,
             runScriptOnLaunch: runScriptOnLaunch,
@@ -303,6 +331,11 @@ final class SettingsRepository: ObservableObject {
         floatingApps = settings.floatingApps
         floatTheFocusedApp = settings.floatTheFocusedApp
         unfloatTheFocusedApp = settings.unfloatTheFocusedApp
+
+        enableSpaceControl = settings.enableSpaceControl ?? false
+        showSpaceControl = settings.showSpaceControl
+        enableSpaceControlAnimations = settings.enableSpaceControlAnimations ?? true
+        spaceControlCurrentDisplayWorkspaces = settings.spaceControlCurrentDisplayWorkspaces ?? false
 
         enableIntegrations = settings.enableIntegrations ?? false
         runScriptOnWorkspaceChange = settings.runScriptOnWorkspaceChange ?? Self.defaultScript

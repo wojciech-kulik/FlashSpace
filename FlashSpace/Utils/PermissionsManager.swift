@@ -20,4 +20,12 @@ final class PermissionsManager {
     func checkForAccessibilityPermissions() -> Bool {
         AXIsProcessTrusted()
     }
+
+    func askForScreenRecordingPermissions() {
+        CGRequestScreenCaptureAccess()
+    }
+
+    func checkForScreenRecordingPermissions() -> Bool {
+        CGPreflightScreenCaptureAccess()
+    }
 }

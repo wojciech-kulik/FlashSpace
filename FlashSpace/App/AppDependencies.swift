@@ -13,6 +13,7 @@ struct AppDependencies {
     let workspaceRepository: WorkspaceRepository
     let workspaceManager: WorkspaceManager
     let workspaceHotKeys: WorkspaceHotKeys
+    let workspaceScreenshotManager = WorkspaceScreenshotManager()
 
     let hotKeysMonitor: HotKeysMonitorProtocol = GlobalShortcutMonitor.shared
     let hotKeysManager: HotKeysManager

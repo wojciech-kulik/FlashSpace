@@ -66,6 +66,14 @@ final class HotKeysManager {
             hotKeysMonitor.addAction(action, forKeyEvent: .down)
         }
 
+        if let (shortcut, action) = SpaceControl.getHotKey() {
+            let action = ShortcutAction(shortcut: shortcut) { _ in
+                action()
+                return true
+            }
+            hotKeysMonitor.addAction(action, forKeyEvent: .down)
+        }
+
         print("Enabled all shortcuts")
     }
 
