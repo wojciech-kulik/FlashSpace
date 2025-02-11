@@ -10,7 +10,6 @@ import SwiftUI
 
 weak var floatingToastWindow: NSWindow?
 
-// swiftlint:disable:next function_body_length
 func showFloatingToast(icon: String, message: String, textColor: Color) {
     guard AppDependencies.shared.settingsRepository.showFloatingNotifications else { return }
 

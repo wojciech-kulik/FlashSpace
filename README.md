@@ -68,6 +68,7 @@ The app allows workspaces to be switched independently on each display.
 - [x] Activate workspace on app focus
 - [x] Move apps between workspaces with a hotkey
 - [x] Floating apps visible across all workspaces
+- [x] Space Control - preview all workspaces and switch between them
 - [x] Focus manager - set hotkeys to switch between apps quickly
 - [x] Cursor manager - auto-center the cursor in the active window
 - [x] Profiles - quickly switch between different configurations
@@ -81,6 +82,12 @@ The app allows workspaces to be switched independently on each display.
 - **Reliability** - The app should work without glitches and unexpected behavior.
 - **Invisible** - The app should help, not disturb.
 - **UNIX Philosophy** - The app should do one thing and do it well - manage workspaces.
+
+## 🔭 Space Control
+
+Space Control allows you to preview all workspaces on a grid and switch between them.
+
+![FlashSpace - Space Control](https://github.com/user-attachments/assets/5f89f759-1bf1-4c51-bc14-24b618f3173f)
 
 ## 🪟 Focus Manager
 
