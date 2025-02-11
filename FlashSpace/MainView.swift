@@ -25,12 +25,22 @@ struct MainView: View {
         .fixedSize()
         .onAppear {
             Task { await UpdatesManager.shared.autoCheckForUpdates() }
+            viewModel.showWhatsNewIfNeeded()
         }
         .sheet(isPresented: $viewModel.isInputDialogPresented) {
             InputDialog(
                 title: "Enter workspace name:",
                 userInput: $viewModel.userInput,
                 isPresented: $viewModel.isInputDialogPresented
+            )
+        }
+        .alert("New Feature!", isPresented: $viewModel.isWhatsNewPresented) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(
+                "FlashSpace introduces a new feature: Space Control.\n\n" +
+                    "It allows you to quickly preview all workspace on a grid.\n\n" +
+                    "Go to settings to enable it."
             )
         }
         .sheet(isPresented: $viewModel.isSymbolPickerPresented) {
