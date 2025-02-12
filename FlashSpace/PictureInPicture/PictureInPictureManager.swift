@@ -17,7 +17,7 @@ final class PictureInPictureManager {
 
     init(settingsRepository: SettingsRepository) {
         self.settingsRepository = settingsRepository
-        setupSignalHandler()
+        setupSignalHandlers()
     }
 
     func restoreAppIfNeeded(app: NSRunningApplication) {
@@ -128,10 +128,12 @@ final class PictureInPictureManager {
         }
     }
 
-    private func setupSignalHandler() {
-        let signals: [Int32] = [SIGTERM, SIGINT]
-        for code in signals {
-            signal(code, handleSignal)
+    private func setupSignalHandlers() {
+        for code in [SIGTERM, SIGINT] {
+            signal(code) {
+                AppDependencies.shared.pictureInPictureManager.restoreAllWindows()
+                exit($0)
+            }
         }
     }
 
@@ -148,9 +150,4 @@ final class PictureInPictureManager {
             .filter { !$0.isPictureInPicture(bundleId: app.bundleIdentifier) }
             .forEach { $0.minimize(true) }
     }
-}
-
-func handleSignal(_ signal: Int32) {
-    AppDependencies.shared.pictureInPictureManager.restoreAllWindows()
-    exit(signal)
 }
