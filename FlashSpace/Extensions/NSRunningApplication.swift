@@ -14,64 +14,26 @@ extension NSRunningApplication {
     var iconPath: String? { bundleURL?.iconPath }
 
     var mainWindow: AXUIElement? {
-        var windowList: CFTypeRef?
         let appElement = AXUIElementCreateApplication(processIdentifier)
-        AXUIElementCopyAttributeValue(appElement, NSAccessibility.Attribute.windows as CFString, &windowList)
+        return appElement.getAttribute(.mainWindow)
+    }
 
-        guard let windows = windowList as? [AXUIElement] else {
-            print("No windows found for: \(localizedName ?? "")")
-            return nil
-        }
-
-        let mainWindow = windows
-            .first {
-                var isMain: CFTypeRef?
-                AXUIElementCopyAttributeValue($0, NSAccessibility.Attribute.main as CFString, &isMain)
-                return isMain as? Bool == true
-            } ?? windows.first
-
-        guard let mainWindow else {
-            print("No main window found for: \(localizedName ?? "")")
-            return nil
-        }
-
-        return mainWindow
+    var focusedWindow: AXUIElement? {
+        let appElement = AXUIElementCreateApplication(processIdentifier)
+        return appElement.getAttribute(.focusedWindow)
     }
 
     var allWindows: [(window: AXUIElement, frame: CGRect)] {
-        var windowList: CFTypeRef?
         let appElement = AXUIElementCreateApplication(processIdentifier)
-        AXUIElementCopyAttributeValue(
-            appElement,
-            NSAccessibility.Attribute.windows as CFString,
-            &windowList
-        )
+        let windows: [AXUIElement]? = appElement.getAttribute(.windows)
 
-        let windows = (windowList as? [AXUIElement]) ?? []
-
-        return windows
+        return windows?
             .filter { $0.role == "AXWindow" }
-            .compactMap { window in
-                window.frame.flatMap { (window, $0) }
-            }
+            .compactMap { window in window.frame.flatMap { (window, $0) } }
+            ?? []
     }
 
-    var isMinimized: Bool {
-        guard let mainWindow else { return false }
-
-        var minimized: CFTypeRef?
-        AXUIElementCopyAttributeValue(mainWindow, NSAccessibility.Attribute.minimized as CFString, &minimized)
-
-        return minimized as? Bool == true
-    }
-
-    var supportsPictureInPicture: Bool {
-        PipBrowser.allCases.contains { $0.bundleId == bundleIdentifier }
-    }
-
-    var isPictureInPictureActive: Bool {
-        allWindows.map(\.window).contains { $0.isPictureInPicture(bundleId: bundleIdentifier) }
-    }
+    var isMinimized: Bool { mainWindow?.getAttribute(.minimized) == true }
 
     func raise() {
         guard let mainWindow else {
@@ -82,16 +44,8 @@ extension NSRunningApplication {
         AXUIElementPerformAction(mainWindow, NSAccessibility.Action.raise as CFString)
     }
 
-    func setOrigin(_ position: CGPoint) {
-        guard let mainWindow else { return }
-
-        var position = position
-        let positionRef = AXValueCreate(.cgPoint, &position)
-        AXUIElementSetAttributeValue(
-            mainWindow,
-            NSAccessibility.Attribute.position as CFString,
-            positionRef as CFTypeRef
-        )
+    func setPosition(_ position: CGPoint) {
+        mainWindow?.setPosition(position)
     }
 
     func centerApp(display: DisplayName) {
@@ -107,11 +61,22 @@ extension NSRunningApplication {
             y: nsScreen.frame.midY - appFrame.height / 2.0
         )
 
-        setOrigin(origin)
+        setPosition(origin)
     }
 
     func isOnTheSameScreen(as workspace: Workspace) -> Bool {
         display == workspace.displayWithFallback
+    }
+
+    func runWithoutAnimations(action: () -> ()) {
+        let appElement = AXUIElementCreateApplication(processIdentifier)
+        let wasEnabled = appElement.enhancedUserInterface
+
+        if wasEnabled { appElement.setAttribute(.enchancedUserInterface, value: false) }
+
+        action()
+
+        if wasEnabled { appElement.setAttribute(.enchancedUserInterface, value: true) }
     }
 }
 

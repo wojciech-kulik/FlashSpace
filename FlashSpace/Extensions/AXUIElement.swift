@@ -7,12 +7,20 @@
 
 import AppKit
 
+extension NSAccessibility.Attribute {
+    static let enchancedUserInterface: NSAccessibility.Attribute = .init(rawValue: "AXEnhancedUserInterface")
+}
+
 extension AXUIElement {
     var id: String? { getAttribute(.identifier) }
     var title: String? { getAttribute(.title) }
     var isMain: Bool { getAttribute(.main) == true }
     var role: String? { getAttribute(.role) }
     var subrole: String? { getAttribute(.subrole) }
+    var enhancedUserInterface: Bool {
+        get { getAttribute(.enchancedUserInterface) == true }
+        set { setAttribute(.enchancedUserInterface, value: newValue) }
+    }
 
     var frame: CGRect? {
         var positionValue: CFTypeRef?
@@ -45,34 +53,30 @@ extension AXUIElement {
         return windowBounds.isEmpty ? nil : windowBounds
     }
 
-    func isPictureInPicture(bundleId: String?) -> Bool {
-        guard let browser = PipBrowser(rawValue: bundleId ?? "") else { return false }
-
-        if let pipWindowTitle = browser.title {
-            return title == pipWindowTitle
-        } else if let pipWindowSubrole = browser.subrole {
-            return subrole == pipWindowSubrole
-        }
-
-        return false
+    func setPosition(_ position: CGPoint) {
+        var position = position
+        let positionRef = AXValueCreate(.cgPoint, &position)
+        setAttribute(.position, value: positionRef)
     }
 
     func focus() {
         AXUIElementPerformAction(self, NSAccessibility.Action.raise as CFString)
     }
 
-    func minimize(_ minimize: Bool) {
-        AXUIElementSetAttributeValue(
-            self,
-            NSAccessibility.Attribute.minimized as CFString,
-            minimize ? kCFBooleanTrue : kCFBooleanFalse
-        )
+    func minimize(_ minimized: Bool) {
+        setAttribute(.minimized, value: minimized)
     }
+}
 
+extension AXUIElement {
     func getAttribute<T>(_ attribute: NSAccessibility.Attribute) -> T? {
         var value: CFTypeRef?
         AXUIElementCopyAttributeValue(self, attribute as CFString, &value)
 
         return value as? T
+    }
+
+    func setAttribute(_ attribute: NSAccessibility.Attribute, value: some Any) {
+        AXUIElementSetAttributeValue(self, attribute as CFString, value as CFTypeRef)
     }
 }

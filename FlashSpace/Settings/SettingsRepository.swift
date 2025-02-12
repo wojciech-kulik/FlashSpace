@@ -333,7 +333,7 @@ final class SettingsRepository: ObservableObject {
         unassignFocusedApp = settings.unassignFocusedApp
         showFloatingNotifications = settings.showFloatingNotifications ?? true
         changeWorkspaceOnAppAssign = settings.changeWorkspaceOnAppAssign ?? true
-        enablePictureInPictureSupport = settings.enablePictureInPictureSupport ?? false
+        enablePictureInPictureSupport = settings.enablePictureInPictureSupport ?? true
 
         floatingApps = settings.floatingApps
         floatTheFocusedApp = settings.floatTheFocusedApp

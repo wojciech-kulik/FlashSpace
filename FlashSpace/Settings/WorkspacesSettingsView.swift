@@ -21,8 +21,8 @@ struct WorkspacesSettingsView: View {
                 Toggle("Change Workspace On App Assign", isOn: $settings.changeWorkspaceOnAppAssign)
                 Toggle("Enable Picture in Picture Support", isOn: $settings.enablePictureInPictureSupport)
                 Text(
-                    "When enabled, if one of the supported browsers has a Picture in Picture active, " +
-                        "the other windows will be minimized to maintain PiP visible."
+                    "When enabled, if a supported browser has Picture-in-Picture (PiP) active, other " +
+                        "windows will be hidden in a screen corner to keep PiP visible."
                 )
                 .foregroundStyle(.secondary)
                 .font(.callout)
