@@ -32,6 +32,8 @@ struct SettingsView: View {
                     .tag("MenuBar")
                 Label("Workspaces", systemImage: "square.stack.3d.up")
                     .tag("Workspaces")
+                Label("Floating Apps", systemImage: "pip")
+                    .tag("FloatingApps")
                 Label("Focus Manager", systemImage: "macwindow.on.rectangle")
                     .tag("Focus")
                 Label("Space Control", systemImage: "rectangle.split.2x2")
@@ -65,6 +67,8 @@ struct SettingsView: View {
             FocusSettingsView()
         case "Workspaces":
             WorkspacesSettingsView()
+        case "FloatingApps":
+            FloatingAppsSettingsView()
         case "SpaceControl":
             SpaceControlSettingsView()
         case "Integrations":

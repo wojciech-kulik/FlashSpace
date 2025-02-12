@@ -17,11 +17,11 @@ struct FocusSettingsView: View {
             }
 
             Group {
-                Section(header: Text("Trigger when focus is changed using shortcuts")) {
+                Section("Trigger when focus is changed using shortcuts") {
                     Toggle("Center Cursor In Focused App", isOn: $settings.centerCursorOnFocusChange)
                 }
 
-                Section(header: Text("Shortcuts")) {
+                Section("Shortcuts") {
                     hotkey("Focus Left", for: $settings.focusLeft)
                     hotkey("Focus Right", for: $settings.focusRight)
                     hotkey("Focus Up", for: $settings.focusUp)

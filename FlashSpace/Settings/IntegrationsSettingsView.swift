@@ -16,7 +16,7 @@ struct IntegrationsSettingsView: View {
                 Toggle("Enable Integrations", isOn: $settings.enableIntegrations)
             }
 
-            Section(header: Text("Scripts To Run")) {
+            Section("Scripts To Run") {
                 HStack {
                     Text("On App Launch")
                     TextField("", text: $settings.runScriptOnLaunch)

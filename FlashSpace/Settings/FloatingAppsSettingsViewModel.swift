@@ -1,7 +1,7 @@
 import Foundation
 import SwiftUI
 
-final class WorkspacesSettingsViewModel: ObservableObject {
+final class FloatingAppsSettingsViewModel: ObservableObject {
     private let settingsRepository = AppDependencies.shared.settingsRepository
 
     func addFloatingApp() {

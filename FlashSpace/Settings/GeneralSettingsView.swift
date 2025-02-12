@@ -20,7 +20,7 @@ struct GeneralSettingsView: View {
                 Toggle("Check for updates automatically", isOn: $settings.checkForUpdatesAutomatically)
             }
 
-            Section(header: Text("Permissions")) {
+            Section("Permissions") {
                 HStack {
                     Text("Accessibility Permissions")
 
@@ -44,8 +44,15 @@ struct GeneralSettingsView: View {
                     .font(.callout)
             }
 
-            Section(header: Text("Shortcuts")) {
+            Section("Shortcuts") {
                 hotkey("Show FlashSpace", for: $settings.showFlashSpace)
+            }
+
+            Section("Notifications") {
+                Toggle("Enable Notifications", isOn: $settings.showFloatingNotifications)
+                Text("Some shortcuts will show a temporary notification.")
+                    .foregroundStyle(.secondary)
+                    .font(.callout)
             }
         }
         .onAppear {

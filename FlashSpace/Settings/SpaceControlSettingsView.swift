@@ -18,7 +18,7 @@ struct SpaceControlSettingsView: View {
             }
 
             Group {
-                Section(header: Text("Permissions")) {
+                Section("Permissions") {
                     HStack {
                         Text("Screen Recording Permission")
 
@@ -45,11 +45,11 @@ struct SpaceControlSettingsView: View {
                     .font(.callout)
                 }
 
-                Section(header: Text("Shortcuts")) {
+                Section("Shortcuts") {
                     hotkey("Show Space Control", for: $settings.showSpaceControl)
                 }
 
-                Section(header: Text("Appearance")) {
+                Section("Appearance") {
                     Toggle("Enable Animations", isOn: $settings.enableSpaceControlAnimations)
                     Toggle(
                         "Show Workspaces For Current Display Only",
