@@ -124,10 +124,11 @@ most efficient way of managing and switching between workspaces. Additionally,
 this hack-free approach is battery-friendly and doesn't break other features in
 the system like Mission Control.
 
-Adding support for individual app windows per workspace would require a lot of
-complexity and would downgrade the performance of the app. However, it is
-planned to further investigate a possibility of adding this feature in the
-future.
+Supporting individual windows per workspace would introduce significant
+complexity and could negatively impact the app's performance. This limitation
+results from the lack of a public API in macOS to hide specific windows.
+Currently, the only options are to move a window to a screen corner or minimize
+it - neither of which provides an ideal user experience.
 
 ### Picture-In-Picture Support
 
@@ -139,8 +140,7 @@ also hides the PiP window. To work around this issue, FlashSpace identifies if
 the app supports PiP and **hides in a screen corner** all windows except the
 PiP window.
 
-If the PiP window is not visible, the standard behavior is applied and no
-hiding is performed.
+If the PiP window is not visible, the standard behavior is applied.
 
 Supported browsers: Safari, Zen Browser, Chrome, Firefox, Brave, Vivaldi, Arc, Opera.
 
