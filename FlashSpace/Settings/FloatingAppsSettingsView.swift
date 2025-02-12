@@ -1,0 +1,65 @@
+//
+//  FloatingAppsSettingsView.swift
+//
+//  Created by Wojciech Kulik on 12/02/2025.
+//  Copyright © 2025 Wojciech Kulik. All rights reserved.
+//
+
+import SwiftUI
+
+struct FloatingAppsSettingsView: View {
+    @StateObject var viewModel = FloatingAppsSettingsViewModel()
+    @StateObject var settings = AppDependencies.shared.settingsRepository
+
+    var body: some View {
+        Form {
+            Section(header: header) {
+                if settings.floatingApps?.contains(where: \.bundleIdentifier.isEmpty) == true {
+                    Text("Could not migrate some apps. Please re-add them to fix the problem.")
+                        .foregroundStyle(.errorRed)
+                        .font(.callout)
+                }
+
+                appsList
+
+                Text("Floating applications remain visible across all workspaces.")
+                    .foregroundStyle(.secondary)
+                    .font(.callout)
+            }
+
+            Section("Shortcuts") {
+                hotkey("Float The Focused App", for: $settings.floatTheFocusedApp)
+                hotkey("Unfloat The Focused App", for: $settings.unfloatTheFocusedApp)
+            }
+        }
+        .formStyle(.grouped)
+        .navigationTitle("Floating Apps")
+    }
+
+    private var appsList: some View {
+        VStack(alignment: .leading) {
+            ForEach(settings.floatingApps ?? [], id: \.self) { app in
+                HStack {
+                    Button {
+                        viewModel.deleteFloatingApp(app: app)
+                    } label: {
+                        Image(systemName: "x.circle.fill").opacity(0.8)
+                    }.buttonStyle(.borderless)
+
+                    Text(app.name)
+                        .foregroundStyle(app.bundleIdentifier.isEmpty ? .errorRed : .primary)
+                }
+            }
+        }
+    }
+
+    private var header: some View {
+        HStack {
+            Text("Floating Apps")
+            Spacer()
+            Button(action: viewModel.addFloatingApp) {
+                Image(systemName: "plus")
+            }
+        }
+    }
+}
