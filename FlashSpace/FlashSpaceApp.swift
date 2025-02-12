@@ -10,6 +10,7 @@ import SwiftUI
 
 final class AppDelegate: NSObject, NSApplicationDelegate {
     @Environment(\.openWindow) private var openWindow
+    @Environment(\.dismissWindow) private var dismissWindow
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -23,6 +24,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 NSApp.activate(ignoringOtherApps: true)
             }
             .store(in: &cancellables)
+
+        #if DEBUG
+        dismissWindow(id: "main")
+        #endif
     }
 }
 

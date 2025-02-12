@@ -19,6 +19,13 @@ struct WorkspacesSettingsView: View {
 
             Section(header: Text("Behaviors")) {
                 Toggle("Change Workspace On App Assign", isOn: $settings.changeWorkspaceOnAppAssign)
+                Toggle("Enable Picture in Picture Support", isOn: $settings.enablePictureInPictureSupport)
+                Text(
+                    "When enabled, if one of the supported browsers has a Picture in Picture active, " +
+                        "the other windows will be minimized to maintain PiP visible."
+                )
+                .foregroundStyle(.secondary)
+                .font(.callout)
             }
 
             Section(header: Text("Shortcuts")) {

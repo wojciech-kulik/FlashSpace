@@ -72,6 +72,7 @@ The app allows workspaces to be switched independently on each display.
 - [x] Focus manager - set hotkeys to switch between apps quickly
 - [x] Cursor manager - auto-center the cursor in the active window
 - [x] Profiles - quickly switch between different configurations
+- [x] Picture-in-Picture support (see: [Design Decisions](https://github.com/wojciech-kulik/FlashSpace#picture-in-picture-support))
 - [x] Configurable Menu Bar icon & text (per workspace)
 - [x] [SketchyBar] integration
 
@@ -127,6 +128,22 @@ Adding support for individual app windows per workspace would require a lot of
 complexity and would downgrade the performance of the app. However, it is
 planned to further investigate a possibility of adding this feature in the
 future.
+
+### Picture-In-Picture Support
+
+FlashSpace partially supports Picture-In-Picture mode. This is an experimental
+feature and can be enabled in the App Settings -> Workspaces.
+
+macOS does not offer a public API to hide a specific window, and hiding the app
+also hides the PiP window. To work around this issue, FlashSpace identifies if
+the app supports PiP and **minimizes** all windows except the PiP window.
+
+This approach is not perfect because there is a visible minimization and
+restoration animation. However, it allows you to keep the PiP window visible
+when switching between workspaces. If the PiP window is not visible, the
+standard behavior is applied and no minimization is performed.
+
+Supported browsers: Safari, Zen Browser, Chrome, Firefox, Brave, Vivaldi, Arc, Opera.
 
 ## 🖥️ SketchyBar Integration
 
