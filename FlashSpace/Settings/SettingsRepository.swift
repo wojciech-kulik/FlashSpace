@@ -34,6 +34,7 @@ struct AppSettings: Codable {
     var unassignFocusedApp: HotKeyShortcut?
     var showFloatingNotifications: Bool?
     var changeWorkspaceOnAppAssign: Bool?
+    var enablePictureInPictureSupport: Bool?
 
     var floatingApps: [MacApp]?
     var floatTheFocusedApp: HotKeyShortcut?
@@ -163,6 +164,10 @@ final class SettingsRepository: ObservableObject {
         didSet { updateSettings() }
     }
 
+    @Published var enablePictureInPictureSupport: Bool = true {
+        didSet { updateSettings() }
+    }
+
     // MARK: - SpaceControl
 
     @Published var enableSpaceControl: Bool = false {
@@ -273,6 +278,7 @@ final class SettingsRepository: ObservableObject {
             unassignFocusedApp: unassignFocusedApp,
             showFloatingNotifications: showFloatingNotifications,
             changeWorkspaceOnAppAssign: changeWorkspaceOnAppAssign,
+            enablePictureInPictureSupport: enablePictureInPictureSupport,
 
             floatingApps: floatingApps,
             floatTheFocusedApp: floatTheFocusedApp,
@@ -327,6 +333,7 @@ final class SettingsRepository: ObservableObject {
         unassignFocusedApp = settings.unassignFocusedApp
         showFloatingNotifications = settings.showFloatingNotifications ?? true
         changeWorkspaceOnAppAssign = settings.changeWorkspaceOnAppAssign ?? true
+        enablePictureInPictureSupport = settings.enablePictureInPictureSupport ?? false
 
         floatingApps = settings.floatingApps
         floatTheFocusedApp = settings.floatTheFocusedApp

@@ -65,6 +65,14 @@ extension NSRunningApplication {
         return minimized as? Bool == true
     }
 
+    var supportsPictureInPicture: Bool {
+        PipBrowser.allCases.contains { $0.bundleId == bundleIdentifier }
+    }
+
+    var isPictureInPictureActive: Bool {
+        allWindows.map(\.window).contains { $0.isPictureInPicture(bundleId: bundleIdentifier) }
+    }
+
     func raise() {
         guard let mainWindow else {
             unhide()
