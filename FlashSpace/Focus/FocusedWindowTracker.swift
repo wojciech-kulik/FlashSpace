@@ -53,11 +53,16 @@ final class FocusedWindowTracker {
             .first(where: { $0.apps.containsApp(app) }) else { return }
 
         // Activate the workspace if it's not already active
-        if workspaceManager.activeWorkspace[workspace.displayWithFallback]?.id != workspace.id {
-            print("\n\nFound workspace for app: \(workspace.name)")
-            workspaceManager.updateLastFocusedApp(app.toMacApp, in: workspace)
-            workspaceManager.activateWorkspace(workspace, setFocus: false)
-            app.activate()
-        }
+        guard workspaceManager.activeWorkspace[workspace.displayWithFallback]?.id != workspace.id else { return }
+
+        // Skip if the app is in Picture in Picture mode
+        guard !settingsRepository.enablePictureInPictureSupport ||
+            !app.supportsPictureInPicture ||
+            app.mainWindow?.isPictureInPicture(bundleId: app.bundleIdentifier) != true else { return }
+
+        print("\n\nFound workspace for app: \(workspace.name)")
+        workspaceManager.updateLastFocusedApp(app.toMacApp, in: workspace)
+        workspaceManager.activateWorkspace(workspace, setFocus: false)
+        app.activate()
     }
 }
