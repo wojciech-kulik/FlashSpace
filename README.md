@@ -72,7 +72,7 @@ The app allows workspaces to be switched independently on each display.
 - [x] Focus manager - set hotkeys to switch between apps quickly
 - [x] Cursor manager - auto-center the cursor in the active window
 - [x] Profiles - quickly switch between different configurations
-- [x] Picture-in-Picture support (see: [Design Decisions](https://github.com/wojciech-kulik/FlashSpace/tree/docs/readme#picture-in-picture-support))
+- [x] Picture-in-Picture support (see: [Design Decisions](https://github.com/wojciech-kulik/FlashSpace#picture-in-picture-support))
 - [x] Configurable Menu Bar icon & text (per workspace)
 - [x] [SketchyBar] integration
 
