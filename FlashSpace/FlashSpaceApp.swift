@@ -29,6 +29,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         dismissWindow(id: "main")
         #endif
     }
+
+    func applicationWillTerminate(_ notification: Notification) {
+        AppDependencies.shared.pictureInPictureManager.restoreAllWindows()
+    }
 }
 
 @main

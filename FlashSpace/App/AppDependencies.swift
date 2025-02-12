@@ -14,6 +14,7 @@ struct AppDependencies {
     let workspaceManager: WorkspaceManager
     let workspaceHotKeys: WorkspaceHotKeys
     let workspaceScreenshotManager = WorkspaceScreenshotManager()
+    let pictureInPictureManager: PictureInPictureManager
 
     let hotKeysMonitor: HotKeysMonitorProtocol = GlobalShortcutMonitor.shared
     let hotKeysManager: HotKeysManager
@@ -26,13 +27,17 @@ struct AppDependencies {
     let profilesRepository: ProfilesRepository
 
     private init() {
+        self.pictureInPictureManager = PictureInPictureManager(
+            settingsRepository: settingsRepository
+        )
         self.profilesRepository = ProfilesRepository()
         self.workspaceRepository = WorkspaceRepository(
             profilesRepository: profilesRepository
         )
         self.workspaceManager = WorkspaceManager(
             workspaceRepository: workspaceRepository,
-            settingsRepository: settingsRepository
+            settingsRepository: settingsRepository,
+            pictureInPictureManager: pictureInPictureManager
         )
         self.workspaceHotKeys = WorkspaceHotKeys(
             workspaceManager: workspaceManager,
@@ -53,7 +58,8 @@ struct AppDependencies {
         self.focusedWindowTracker = FocusedWindowTracker(
             workspaceRepository: workspaceRepository,
             workspaceManager: workspaceManager,
-            settingsRepository: settingsRepository
+            settingsRepository: settingsRepository,
+            pictureInPictureManager: pictureInPictureManager
         )
 
         if Migrations.appsMigrated {

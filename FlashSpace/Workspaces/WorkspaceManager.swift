@@ -32,13 +32,16 @@ final class WorkspaceManager: ObservableObject {
 
     private let workspaceRepository: WorkspaceRepository
     private let settingsRepository: SettingsRepository
+    private let pictureInPictureManager: PictureInPictureManager
 
     init(
         workspaceRepository: WorkspaceRepository,
-        settingsRepository: SettingsRepository
+        settingsRepository: SettingsRepository,
+        pictureInPictureManager: PictureInPictureManager
     ) {
         self.workspaceRepository = workspaceRepository
         self.settingsRepository = settingsRepository
+        self.pictureInPictureManager = pictureInPictureManager
 
         PermissionsManager.shared.askForAccessibilityPermissions()
         observe()
@@ -117,11 +120,7 @@ final class WorkspaceManager: ObservableObject {
                     app.raise()
                 }
 
-                if settingsRepository.enablePictureInPictureSupport, app.supportsPictureInPicture {
-                    app.allWindows
-                        .map(\.window)
-                        .forEach { $0.minimize(false) }
-                }
+                pictureInPictureManager.showPipAppIfNeeded(app: app)
             }
 
             print("FOCUS: \(toFocus?.localizedName ?? "")")
@@ -150,13 +149,7 @@ final class WorkspaceManager: ObservableObject {
         for app in appsToHide {
             print("HIDE: \(app.localizedName ?? "")")
 
-            if settingsRepository.enablePictureInPictureSupport,
-               app.supportsPictureInPicture, app.isPictureInPictureActive {
-                app.allWindows
-                    .map(\.window)
-                    .filter { !$0.isPictureInPicture(bundleId: app.bundleIdentifier) }
-                    .forEach { $0.minimize(true) }
-            } else {
+            if !pictureInPictureManager.hidePipAppIfNeeded(app: app) {
                 app.hide()
             }
         }

@@ -14,15 +14,18 @@ final class FocusedWindowTracker {
     private let workspaceRepository: WorkspaceRepository
     private let workspaceManager: WorkspaceManager
     private let settingsRepository: SettingsRepository
+    private let pictureInPictureManager: PictureInPictureManager
 
     init(
         workspaceRepository: WorkspaceRepository,
         workspaceManager: WorkspaceManager,
-        settingsRepository: SettingsRepository
+        settingsRepository: SettingsRepository,
+        pictureInPictureManager: PictureInPictureManager
     ) {
         self.workspaceRepository = workspaceRepository
         self.workspaceManager = workspaceManager
         self.settingsRepository = settingsRepository
+        self.pictureInPictureManager = pictureInPictureManager
     }
 
     func startTracking() {
@@ -55,14 +58,19 @@ final class FocusedWindowTracker {
         // Activate the workspace if it's not already active
         guard workspaceManager.activeWorkspace[workspace.displayWithFallback]?.id != workspace.id else { return }
 
-        // Skip if the app is in Picture in Picture mode
+        // Skip if the focused window is in Picture in Picture mode
         guard !settingsRepository.enablePictureInPictureSupport ||
             !app.supportsPictureInPicture ||
-            app.mainWindow?.isPictureInPicture(bundleId: app.bundleIdentifier) != true else { return }
+            app.focusedWindow?.isPictureInPicture(bundleId: app.bundleIdentifier) != true else { return }
 
         print("\n\nFound workspace for app: \(workspace.name)")
         workspaceManager.updateLastFocusedApp(app.toMacApp, in: workspace)
         workspaceManager.activateWorkspace(workspace, setFocus: false)
         app.activate()
+
+        // Restore the app if it was hidden
+        if settingsRepository.enablePictureInPictureSupport, app.supportsPictureInPicture {
+            pictureInPictureManager.restoreAppIfNeeded(app: app)
+        }
     }
 }

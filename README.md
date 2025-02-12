@@ -131,17 +131,16 @@ future.
 
 ### Picture-In-Picture Support
 
-FlashSpace partially supports Picture-In-Picture mode. This is an experimental
-feature and can be enabled in the App Settings -> Workspaces.
+FlashSpace supports Picture-In-Picture mode. This is an experimental feature
+and can be disabled in the App Settings -> Workspaces.
 
 macOS does not offer a public API to hide a specific window, and hiding the app
 also hides the PiP window. To work around this issue, FlashSpace identifies if
-the app supports PiP and **minimizes** all windows except the PiP window.
+the app supports PiP and **hides in a screen corner** all windows except the
+PiP window.
 
-This approach is not perfect because there is a visible minimization and
-restoration animation. However, it allows you to keep the PiP window visible
-when switching between workspaces. If the PiP window is not visible, the
-standard behavior is applied and no minimization is performed.
+If the PiP window is not visible, the standard behavior is applied and no
+hiding is performed.
 
 Supported browsers: Safari, Zen Browser, Chrome, Firefox, Brave, Vivaldi, Arc, Opera.
 
