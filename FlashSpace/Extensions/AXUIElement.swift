@@ -12,6 +12,7 @@ extension AXUIElement {
     var title: String? { getAttribute(.title) }
     var isMain: Bool { getAttribute(.main) == true }
     var role: String? { getAttribute(.role) }
+    var subrole: String? { getAttribute(.subrole) }
 
     var frame: CGRect? {
         var positionValue: CFTypeRef?
@@ -44,7 +45,29 @@ extension AXUIElement {
         return windowBounds.isEmpty ? nil : windowBounds
     }
 
-    func focus() { AXUIElementPerformAction(self, NSAccessibility.Action.raise as CFString) }
+    func isPictureInPicture(bundleId: String?) -> Bool {
+        guard let browser = PipBrowser(rawValue: bundleId ?? "") else { return false }
+
+        if let pipWindowTitle = browser.title {
+            return title == pipWindowTitle
+        } else if let pipWindowSubrole = browser.subrole {
+            return subrole == pipWindowSubrole
+        }
+
+        return false
+    }
+
+    func focus() {
+        AXUIElementPerformAction(self, NSAccessibility.Action.raise as CFString)
+    }
+
+    func minimize(_ minimize: Bool) {
+        AXUIElementSetAttributeValue(
+            self,
+            NSAccessibility.Attribute.minimized as CFString,
+            minimize ? kCFBooleanTrue : kCFBooleanFalse
+        )
+    }
 
     func getAttribute<T>(_ attribute: NSAccessibility.Attribute) -> T? {
         var value: CFTypeRef?

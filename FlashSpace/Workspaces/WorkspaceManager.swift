@@ -112,8 +112,15 @@ final class WorkspaceManager: ObservableObject {
 
             for app in appsToShow {
                 print("SHOW: \(app.localizedName ?? "")")
+
                 if app == toFocus || app.isHidden || app.isMinimized {
                     app.raise()
+                }
+
+                if settingsRepository.enablePictureInPictureSupport, app.supportsPictureInPicture {
+                    app.allWindows
+                        .map(\.window)
+                        .forEach { $0.minimize(false) }
                 }
             }
 
@@ -142,7 +149,16 @@ final class WorkspaceManager: ObservableObject {
 
         for app in appsToHide {
             print("HIDE: \(app.localizedName ?? "")")
-            app.hide()
+
+            if settingsRepository.enablePictureInPictureSupport,
+               app.supportsPictureInPicture, app.isPictureInPictureActive {
+                app.allWindows
+                    .map(\.window)
+                    .filter { !$0.isPictureInPicture(bundleId: app.bundleIdentifier) }
+                    .forEach { $0.minimize(true) }
+            } else {
+                app.hide()
+            }
         }
     }
 
