@@ -33,7 +33,7 @@ struct SpaceControlView: View {
                         RoundedRectangle(cornerRadius: 18.0)
                             .stroke(
                                 workspace.isActive
-                                    ? !viewModel.onlyCurrentDisplay && workspace.originalWorkspace.isOnTheCurrentScreen
+                                    ? workspace.originalWorkspace.isOnTheCurrentScreen
                                         ? Color.positive
                                         : Color.teal
                                     : Color.black.opacity(0.8),
