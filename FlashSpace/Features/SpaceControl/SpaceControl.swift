@@ -17,6 +17,8 @@ enum SpaceControl {
     static var isVisible: Bool { window != nil }
     static var window: NSWindow?
 
+    private static var focusedAppBeforeShow: NSRunningApplication?
+
     static func getHotKey() -> (Shortcut, () -> ())? {
         guard isEnabled else { return nil }
 
@@ -29,9 +31,14 @@ enum SpaceControl {
         return nil
     }
 
-    static func hide() {
+    static func hide(restoreFocus: Bool = false) {
         window?.orderOut(nil)
         window = nil
+
+        if restoreFocus {
+            focusedAppBeforeShow?.activate()
+            focusedAppBeforeShow = nil
+        }
     }
 
     static func show() {
@@ -63,6 +70,7 @@ enum SpaceControl {
         window.contentView = contentView.addVisualEffect(material: .fullScreenUI)
         window.alphaValue = animations ? 0 : 1
 
+        focusedAppBeforeShow = NSWorkspace.shared.frontmostApplication
         NSApp.activate(ignoringOtherApps: true)
         window.orderFrontRegardless()
         window.makeKeyAndOrderFront(nil)
