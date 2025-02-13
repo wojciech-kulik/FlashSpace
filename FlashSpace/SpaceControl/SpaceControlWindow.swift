@@ -16,10 +16,15 @@ final class SpaceControlWindow: NSWindow, NSWindowDelegate {
         if event.keyCode == KeyCode.escape.rawValue {
             SpaceControl.hide()
             return
+        } else if [KeyCode.downArrow, .upArrow, .leftArrow, .rightArrow].map(\.rawValue).contains(event.keyCode) {
+            NotificationCenter.default.post(name: .spaceControlArrowDown, object: event.keyCode)
+            return
         }
 
         let settings = AppDependencies.shared.settingsRepository
+        let workspaceManager = AppDependencies.shared.workspaceManager
         var workspaces = AppDependencies.shared.workspaceRepository.workspaces
+
         if settings.spaceControlCurrentDisplayWorkspaces {
             workspaces = workspaces.filter(\.isOnTheCurrentScreen)
         }
@@ -29,9 +34,8 @@ final class SpaceControlWindow: NSWindow, NSWindowDelegate {
             SpaceControl.hide()
 
             if let workspace = workspaces[safe: digit - 1] {
-                AppDependencies.shared.workspaceManager.activateWorkspace(workspace, setFocus: true)
+                workspaceManager.activateWorkspace(workspace, setFocus: true)
             }
-
             return
         }
 

@@ -7,6 +7,12 @@
 
 extension Array {
     subscript(safe index: Index) -> Element? {
-        indices.contains(index) ? self[index] : nil
+        get {
+            indices.contains(index) ? self[index] : nil
+        }
+        set {
+            guard indices.contains(index), let newValue else { return }
+            self[index] = newValue
+        }
     }
 }
