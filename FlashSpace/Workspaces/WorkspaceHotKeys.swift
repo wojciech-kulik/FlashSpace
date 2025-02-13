@@ -25,6 +25,7 @@ final class WorkspaceHotKeys {
 
     func getHotKeys() -> [(Shortcut, () -> ())] {
         let shortcuts = [
+            getAssignAppShortcut(for: nil),
             getUnassignAppShortcut(),
             getRecentWorkspaceShortcut(),
             getCycleWorkspacesShortcut(next: false),
@@ -51,8 +52,12 @@ final class WorkspaceHotKeys {
         return (shortcut, action)
     }
 
-    private func getAssignAppShortcut(for workspace: Workspace) -> (Shortcut, () -> ())? {
-        guard let shortcut = workspace.assignAppShortcut?.toShortcut() else { return nil }
+    private func getAssignAppShortcut(for workspace: Workspace?) -> (Shortcut, () -> ())? {
+        let shortcut = workspace == nil
+            ? settingsRepository.assignFocusedApp?.toShortcut()
+            : workspace?.assignAppShortcut?.toShortcut()
+
+        guard let shortcut else { return nil }
 
         let action = { [weak self] in
             guard let activeApp = NSWorkspace.shared.frontmostApplication else { return }
@@ -64,6 +69,8 @@ final class WorkspaceHotKeys {
                 )
                 return
             }
+
+            guard let workspace = workspace ?? self?.workspaceManager.activeWorkspace[activeApp.display ?? ""] else { return }
 
             guard let updatedWorkspace = self?.workspaceRepository.workspaces
                 .first(where: { $0.id == workspace.id }) else { return }

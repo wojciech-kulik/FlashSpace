@@ -130,7 +130,7 @@ results from the lack of a public API in macOS to hide specific windows.
 Currently, the only options are to move a window to a screen corner or minimize
 it - neither of which provides an ideal user experience.
 
-### Picture-In-Picture Support
+## 🎥 Picture-In-Picture Support
 
 FlashSpace supports Picture-In-Picture mode. This is an experimental feature
 and can be disabled in the App Settings -> Workspaces.
