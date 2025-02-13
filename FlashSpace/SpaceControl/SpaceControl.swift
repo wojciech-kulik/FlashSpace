@@ -45,6 +45,7 @@ enum SpaceControl {
             rootView: SpaceControlView()
         )
 
+        // contentRect is in screen coordinates (0,0) is bottom left corner
         let window = SpaceControlWindow(
             contentRect: NSScreen.main!.frame,
             styleMask: [.borderless],
@@ -73,7 +74,7 @@ enum SpaceControl {
 
     private static func validate() -> Bool {
         if AppDependencies.shared.workspaceRepository.workspaces.count < 2 {
-            showOkAlert(title: "Space Control", message: "You need at least 2 workspaces to use Space Control.")
+            Alert.showOkAlert(title: "Space Control", message: "You need at least 2 workspaces to use Space Control.")
             return false
         }
 

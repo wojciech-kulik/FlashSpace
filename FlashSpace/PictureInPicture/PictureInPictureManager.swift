@@ -90,9 +90,11 @@ final class PictureInPictureManager {
             return nil
         }
 
-        // Screen left-bottom = (0, 0)
-        // Window origin is in the top-left corner
-        // Window position is set relative to the top-left screen corner
+        // Screen origin (0,0) is in the bottom-left corner, y-axis is pointing up
+        // Window origin (0,0) is in the top-left corner, y-axis is pointing down
+        // E.g. To place a window in the bottom-right corner of the screen
+        // we need to set window origin to:
+        // (screen.maxX - window.width, screen.maxY - window.height).
 
         let appFrame = app.frame
         let screenFrame = appScreen.frame
@@ -116,10 +118,13 @@ final class PictureInPictureManager {
         let isRightCornerUsed = allScreens.contains(where: { $0.contains(rightSide) || $0.contains(rightBottomSide) })
 
         if isLeftCornerUsed || !isRightCornerUsed || appFrame == nil {
-            // right corner
-            return CGPoint(x: screenFrame.maxX - 30.0, y: screenFrame.maxY - 30.0)
+            // right corner (window coordinates)
+            return CGPoint(
+                x: screenFrame.maxX - 30.0,
+                y: screenFrame.maxY - 30.0
+            )
         } else {
-            // left corner
+            // left corner (window coordinates)
             let appFrame = appFrame ?? .zero
             return CGPoint(
                 x: screenFrame.minX + 30.0 - appFrame.width,

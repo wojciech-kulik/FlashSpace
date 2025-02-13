@@ -63,13 +63,13 @@ final class UpdatesManager {
 
             if releaseInfo.isNewer {
                 detectedNewRelease = true
-                showNewReleaseAlert(release: releaseInfo)
+                Alert.showNewReleaseAlert(release: releaseInfo)
             } else if !silent {
-                showOkAlert(title: "No updates available", message: "You're using the latest version of FlashSpace.")
+                Alert.showOkAlert(title: "No updates available", message: "You're using the latest version of FlashSpace.")
             }
         case .failure(let error):
             if !silent {
-                showOkAlert(title: "Error", message: error.localizedDescription)
+                Alert.showOkAlert(title: "Error", message: error.localizedDescription)
             }
         }
     }

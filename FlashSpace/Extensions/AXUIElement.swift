@@ -22,6 +22,7 @@ extension AXUIElement {
         set { setAttribute(.enchancedUserInterface, value: newValue) }
     }
 
+    /// Frame is in window coordinates (0,0) is top left corner
     var frame: CGRect? {
         var positionValue: CFTypeRef?
         var sizeValue: CFTypeRef?
@@ -53,6 +54,7 @@ extension AXUIElement {
         return windowBounds.isEmpty ? nil : windowBounds
     }
 
+    /// Position is in window coordinates (0,0) is top left corner
     func setPosition(_ position: CGPoint) {
         var position = position
         let positionRef = AXValueCreate(.cgPoint, &position)

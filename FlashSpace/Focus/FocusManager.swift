@@ -164,6 +164,8 @@ final class FocusManager {
         }
     }
 
+    /// Predicate compares two frames using window coordinates.
+    /// (0,0) is top left corner. Y-axis is pointing down.
     private func focus(predicate: (CGRect, CGRect) -> Bool) {
         guard let focusedAppFrame else { return }
 

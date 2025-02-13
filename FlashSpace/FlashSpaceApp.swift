@@ -100,7 +100,7 @@ struct FlashSpaceApp: App {
             }.keyboardShortcut("q")
         } label: {
             HStack {
-                Image(systemName: workspaceManager.activeWorkspaceDetails?.symbolIconName ?? "bolt.fill")
+                Image(systemName: workspaceManager.activeWorkspaceDetails?.symbolIconName ?? .defaultIconSymbol)
                 if let title = MenuBarTitle.get() { Text(title) }
             }
             .id(settingsRepository.menuBarTitleTemplate)
