@@ -72,8 +72,8 @@ The app allows workspaces to be switched independently on each display.
 - [x] Focus manager - set hotkeys to switch between apps quickly
 - [x] Cursor manager - auto-center the cursor in the active window
 - [x] Profiles - quickly switch between different configurations
-- [x] Picture-in-Picture support (see: [Design Decisions](https://github.com/wojciech-kulik/FlashSpace#picture-in-picture-support))
 - [x] Configurable Menu Bar icon & text (per workspace)
+- [x] [Picture-in-Picture](https://github.com/wojciech-kulik/FlashSpace#-picture-in-picture-support) support
 - [x] [SketchyBar] integration
 
 ## ⚖️ Project Values
@@ -88,6 +88,8 @@ The app allows workspaces to be switched independently on each display.
 
 Space Control allows you to preview all workspaces on a grid and switch between them.
 
+Use 0-9 and arrow keys to switch between workspaces.
+
 ![FlashSpace - Space Control](https://github.com/user-attachments/assets/c5e15bca-59b5-46a0-a19a-f34ae3c0e9c1)
 
 ## 🪟 Focus Manager
@@ -97,38 +99,6 @@ shift focus in any desired direction. It also allows you to jump between
 displays.
 
 https://github.com/user-attachments/assets/9bc22b19-7cd7-48f8-a679-0adf4adc3aef
-
-## 📝 Design Decisions
-
-### Non-disruptive Behavior
-
-FlashSpace doesn't actively manage windows, so if you switch to a workspace and call
-another app that is not assigned to the workspace, it will be shown on top of
-the workspace apps.
-
-It is considered to be a desired behavior as it allows quickly accessing other
-apps without glitches or switching between workspaces.
-
-Glitches are common in tiling window managers, often caused by not configured
-pop-ups or dialog windows. FlashSpace prevents these issues by not managing
-windows & apps that are unassigned allowing you to interact with the system in
-a non-disruptive way.
-
-### No Support For Individual App Windows Per Workspace
-
-FlashSpace doesn't support the concept of individual app windows per workspace.
-This is a conscious decision to keep the app simple and fast.
-
-This way, FlashSpace can rely on native show & hide functionality ensuring the
-most efficient way of managing and switching between workspaces. Additionally,
-this hack-free approach is battery-friendly and doesn't break other features in
-the system like Mission Control.
-
-Supporting individual windows per workspace would introduce significant
-complexity and could negatively impact the app's performance. This limitation
-results from the lack of a public API in macOS to hide specific windows.
-Currently, the only options are to move a window to a screen corner or minimize
-it - neither of which provides an ideal user experience.
 
 ## 🎥 Picture-In-Picture Support
 
@@ -219,6 +189,38 @@ fi
 
 </details>
 
+## 📝 Design Decisions
+
+### Non-disruptive Behavior
+
+FlashSpace doesn't actively manage windows, so if you switch to a workspace and call
+another app that is not assigned to the workspace, it will be shown on top of
+the workspace apps.
+
+It is considered to be a desired behavior as it allows quickly accessing other
+apps without glitches or switching between workspaces.
+
+Glitches are common in tiling window managers, often caused by not configured
+pop-ups or dialog windows. FlashSpace prevents these issues by not managing
+windows & apps that are unassigned allowing you to interact with the system in
+a non-disruptive way.
+
+### No Support For Individual App Windows Per Workspace
+
+FlashSpace doesn't support the concept of individual app windows per workspace.
+This is a conscious decision to keep the app simple and fast.
+
+This way, FlashSpace can rely on native show & hide functionality ensuring the
+most efficient way of managing and switching between workspaces. Additionally,
+this hack-free approach is battery-friendly and doesn't break other features in
+the system like Mission Control.
+
+Supporting individual windows per workspace would introduce significant
+complexity and could negatively impact the app's performance. This limitation
+results from the lack of a public API in macOS to hide specific windows.
+Currently, the only options are to move a window to a screen corner or minimize
+it - neither of which provides an ideal user experience.
+
 ## 🛠️ Build From Source
 
 FlashSpace uses [XcodeGen] to generate the Xcode project from the `project.yml`
@@ -243,7 +245,7 @@ XCODE_DEVELOPMENT_TEAM=YOUR_TEAM_ID xcodegen generate
 
 You can also set this variable globally in your shell.
 
-## 💛  Sponsors
+## 💛 Sponsors
 
 Big thanks to all the sponsors who support this project 🍻!
 

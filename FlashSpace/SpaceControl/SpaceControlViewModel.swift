@@ -15,7 +15,6 @@ struct SpaceControlWorkspace {
     let symbol: String
     let screenshotData: Data?
     let isActive: Bool
-    var keyboardShortcut: KeyboardShortcut?
     let originalWorkspace: Workspace
 }
 
@@ -64,7 +63,6 @@ final class SpaceControlViewModel: ObservableObject {
                         symbol: $0.element.symbolIconName ?? .defaultIconSymbol,
                         screenshotData: screenshotManager.screenshots[$0.element.id],
                         isActive: activeWorkspaceIds.contains($0.element.id),
-                        keyboardShortcut: nil,
                         originalWorkspace: $0.element
                     )
                 }
