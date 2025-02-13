@@ -58,7 +58,7 @@ struct MainView: View {
                 selection: $viewModel.selectedWorkspace
             ) { workspace in
                 HStack {
-                    Image(systemName: workspace.symbolIconName ?? "bolt.fill")
+                    Image(systemName: workspace.symbolIconName ?? .defaultIconSymbol)
                         .resizable()
                         .scaledToFit()
                         .frame(width: 15, height: 15)
@@ -156,7 +156,7 @@ struct MainView: View {
                     Button {
                         viewModel.isSymbolPickerPresented = true
                     } label: {
-                        Image(systemName: viewModel.workspaceSymbolIconName ?? "bolt.fill")
+                        Image(systemName: viewModel.workspaceSymbolIconName ?? .defaultIconSymbol)
                             .frame(maxWidth: .infinity)
                     }
                 }.padding(.bottom)

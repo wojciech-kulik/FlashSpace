@@ -58,7 +58,7 @@ final class WorkspaceHotKeys {
             guard let activeApp = NSWorkspace.shared.frontmostApplication else { return }
             guard let appName = activeApp.localizedName else { return }
             guard activeApp.activationPolicy == .regular else {
-                showOkAlert(
+                Alert.showOkAlert(
                     title: appName,
                     message: "This application is an agent (runs in background) and cannot be managed by FlashSpace."
                 )
@@ -70,7 +70,7 @@ final class WorkspaceHotKeys {
 
             activeApp.centerApp(display: updatedWorkspace.display)
             self?.workspaceManager.assignApp(activeApp.toMacApp, to: updatedWorkspace)
-            showFloatingToast(
+            Toast.showWith(
                 icon: "square.stack.3d.up",
                 message: "\(appName) - Assigned To \(workspace.name)",
                 textColor: .positive
@@ -88,7 +88,7 @@ final class WorkspaceHotKeys {
             guard let appName = activeApp.localizedName else { return }
 
             if self?.workspaceRepository.workspaces.flatMap(\.apps).containsApp(activeApp) == true {
-                showFloatingToast(
+                Toast.showWith(
                     icon: "square.stack.3d.up.slash",
                     message: "\(appName) - Removed From Workspaces",
                     textColor: .negative
@@ -156,7 +156,7 @@ final class WorkspaceHotKeys {
                   let appName = activeApp.localizedName else { return }
 
             self.settingsRepository.addFloatingAppIfNeeded(app: activeApp.toMacApp)
-            showFloatingToast(
+            Toast.showWith(
                 icon: "macwindow.on.rectangle",
                 message: "\(appName) - Added To Floating Apps",
                 textColor: .positive
@@ -173,7 +173,7 @@ final class WorkspaceHotKeys {
                   let appName = activeApp.localizedName else { return }
 
             if settingsRepository.floatingApps?.containsApp(activeApp) == true {
-                showFloatingToast(
+                Toast.showWith(
                     icon: "macwindow",
                     message: "\(appName) - Removed From Floating Apps",
                     textColor: .negative

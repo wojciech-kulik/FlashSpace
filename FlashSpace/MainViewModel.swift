@@ -186,7 +186,7 @@ extension MainViewModel {
         let isAgent = appUrl.bundle?.isAgent == true && (runningApp == nil || runningApp?.activationPolicy != .regular)
 
         guard !isAgent else {
-            showOkAlert(
+            Alert.showOkAlert(
                 title: appName,
                 message: "This application is an agent (runs in background) and cannot be managed by FlashSpace."
             )

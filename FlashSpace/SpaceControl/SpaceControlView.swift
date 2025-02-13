@@ -11,11 +11,6 @@ struct SpaceControlView: View {
     @Environment(\.colorScheme) var colorScheme
     @StateObject var viewModel = SpaceControlViewModel()
 
-    let screenshotManager = AppDependencies.shared.workspaceScreenshotManager
-    let workspaceRepository = AppDependencies.shared.workspaceRepository
-    let workspaceManager = AppDependencies.shared.workspaceManager
-    let settingsRepository = AppDependencies.shared.settingsRepository
-
     var body: some View {
         let columns = Array(repeating: GridItem(.flexible()), count: viewModel.numberOfColumns)
         let width = (NSScreen.main?.frame.width ?? 1200) / CGFloat(viewModel.numberOfColumns) - 70.0
@@ -28,7 +23,7 @@ struct SpaceControlView: View {
 
                     Group {
                         if let image = workspace.screenshotData.flatMap(NSImage.init(data:)) {
-                            workspacePreview(image, width: width, height: height)
+                            workspacePreview(image: image, width: width, height: height)
                         } else {
                             workspacePlaceholder(width: width, height: height)
                         }
@@ -49,9 +44,7 @@ struct SpaceControlView: View {
                         y: 0.0
                     )
                 }
-                .onTapGesture {
-                    workspaceManager.activateWorkspace(workspace.originalWorkspace, setFocus: true)
-                }
+                .onTapGesture { viewModel.onWorkspaceTap(workspace) }
             }
         }
         .multilineTextAlignment(.center)
@@ -59,11 +52,7 @@ struct SpaceControlView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
-    private func workspacePreview(
-        _ image: NSImage,
-        width: CGFloat,
-        height: CGFloat
-    ) -> some View {
+    private func workspacePreview(image: NSImage, width: CGFloat, height: CGFloat) -> some View {
         Image(nsImage: image)
             .resizable()
             .scaledToFit()
@@ -73,10 +62,7 @@ struct SpaceControlView: View {
             .clipShape(RoundedRectangle(cornerRadius: 18.0))
     }
 
-    private func workspacePlaceholder(
-        width: CGFloat,
-        height: CGFloat
-    ) -> some View {
+    private func workspacePlaceholder(width: CGFloat, height: CGFloat) -> some View {
         RoundedRectangle(cornerRadius: 18.0)
             .fill(Color.black.opacity(0.5))
             .frame(maxWidth: width, maxHeight: height)

@@ -30,6 +30,10 @@ final class SpaceControlViewModel: ObservableObject {
         refresh()
     }
 
+    func onWorkspaceTap(_ workspace: SpaceControlWorkspace) {
+        workspaceManager.activateWorkspace(workspace.originalWorkspace, setFocus: true)
+    }
+
     func refresh() {
         let activeWorkspaceIds = Set(workspaceManager.activeWorkspace.map(\.value.id))
 
@@ -42,7 +46,7 @@ final class SpaceControlViewModel: ObservableObject {
                     SpaceControlWorkspace(
                         index: $0.offset,
                         name: $0.element.name,
-                        symbol: $0.element.symbolIconName ?? "bolt.fill",
+                        symbol: $0.element.symbolIconName ?? .defaultIconSymbol,
                         screenshotData: screenshotManager.screenshots[$0.element.id],
                         isActive: activeWorkspaceIds.contains($0.element.id),
                         originalWorkspace: $0.element
