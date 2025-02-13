@@ -32,7 +32,11 @@ struct SpaceControlView: View {
                     .overlay(
                         RoundedRectangle(cornerRadius: 18.0)
                             .stroke(
-                                workspace.isActive ? Color.teal : Color.black.opacity(0.8),
+                                workspace.isActive
+                                    ? !viewModel.onlyCurrentDisplay && workspace.originalWorkspace.isOnTheCurrentScreen
+                                        ? Color.positive
+                                        : Color.teal
+                                    : Color.black.opacity(0.8),
                                 lineWidth: 3.0
                             )
                     )
