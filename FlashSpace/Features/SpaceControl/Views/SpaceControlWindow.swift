@@ -14,7 +14,7 @@ final class SpaceControlWindow: NSWindow, NSWindowDelegate {
 
     override func keyDown(with event: NSEvent) {
         if event.keyCode == KeyCode.escape.rawValue {
-            SpaceControl.hide()
+            SpaceControl.hide(restoreFocus: true)
             return
         } else if [KeyCode.downArrow, .upArrow, .leftArrow, .rightArrow].map(\.rawValue).contains(event.keyCode) {
             NotificationCenter.default.post(name: .spaceControlArrowDown, object: event.keyCode)
