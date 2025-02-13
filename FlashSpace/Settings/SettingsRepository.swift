@@ -31,6 +31,7 @@ struct AppSettings: Codable {
     var switchToPreviousWorkspace: HotKeyShortcut?
     var switchToNextWorkspace: HotKeyShortcut?
     var switchToRecentWorkspace: HotKeyShortcut?
+    var assignFocusedApp: HotKeyShortcut?
     var unassignFocusedApp: HotKeyShortcut?
     var showFloatingNotifications: Bool?
     var changeWorkspaceOnAppAssign: Bool?
@@ -137,6 +138,10 @@ final class SettingsRepository: ObservableObject {
     }
 
     @Published var switchToRecentWorkspace: HotKeyShortcut? {
+        didSet { updateSettings() }
+    }
+
+    @Published var assignFocusedApp: HotKeyShortcut? {
         didSet { updateSettings() }
     }
 
@@ -275,7 +280,9 @@ final class SettingsRepository: ObservableObject {
             switchToPreviousWorkspace: switchToPreviousWorkspace,
             switchToNextWorkspace: switchToNextWorkspace,
             switchToRecentWorkspace: switchToRecentWorkspace,
+            assignFocusedApp: assignFocusedApp,
             unassignFocusedApp: unassignFocusedApp,
+
             showFloatingNotifications: showFloatingNotifications,
             changeWorkspaceOnAppAssign: changeWorkspaceOnAppAssign,
             enablePictureInPictureSupport: enablePictureInPictureSupport,
@@ -330,7 +337,9 @@ final class SettingsRepository: ObservableObject {
         switchToPreviousWorkspace = settings.switchToPreviousWorkspace
         switchToNextWorkspace = settings.switchToNextWorkspace
         switchToRecentWorkspace = settings.switchToRecentWorkspace
+        assignFocusedApp = settings.assignFocusedApp
         unassignFocusedApp = settings.unassignFocusedApp
+
         showFloatingNotifications = settings.showFloatingNotifications ?? true
         changeWorkspaceOnAppAssign = settings.changeWorkspaceOnAppAssign ?? true
         enablePictureInPictureSupport = settings.enablePictureInPictureSupport ?? true
