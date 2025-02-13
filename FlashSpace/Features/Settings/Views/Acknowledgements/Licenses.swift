@@ -5,7 +5,6 @@
 //  Copyright © 2025 Wojciech Kulik. All rights reserved.
 //
 
-// swiftlint:disable:next all
 enum Licenses {
     static let swiftFormat = """
     SwiftFormat

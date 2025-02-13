@@ -23,8 +23,6 @@ final class SpaceControlViewModel: ObservableObject {
     @Published private(set) var numberOfRows = 0
     @Published private(set) var numberOfColumns = 0
 
-    var onlyCurrentDisplay: Bool { settingsRepository.spaceControlCurrentDisplayWorkspaces }
-
     private var cancellables = Set<AnyCancellable>()
 
     private let settingsRepository = AppDependencies.shared.settingsRepository
