@@ -29,9 +29,10 @@ final class SpaceControlWindow: NSWindow, NSWindowDelegate {
             workspaces = workspaces.filter(\.isOnTheCurrentScreen)
         }
 
-        let digit = Int(event.charactersIgnoringModifiers ?? "") ?? -1
-        if digit >= 1, digit <= 10 {
+        var digit = Int(event.charactersIgnoringModifiers ?? "") ?? -1
+        if (0...9).contains(digit) {
             SpaceControl.hide()
+            digit = digit == 0 ? 10 : digit
 
             if let workspace = workspaces[safe: digit - 1] {
                 workspaceManager.activateWorkspace(workspace, setFocus: true)
