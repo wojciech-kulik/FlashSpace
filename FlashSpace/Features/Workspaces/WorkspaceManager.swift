@@ -12,6 +12,7 @@ import ShortcutRecorder
 typealias DisplayName = String
 
 struct ActiveWorkspace {
+    let id: WorkspaceID
     let name: String
     let number: String?
     let symbolIconName: String?
@@ -85,6 +86,7 @@ final class WorkspaceManager: ObservableObject {
                 if let activeWorkspace = activeWorkspace[application.display ?? ""],
                    activeWorkspace.apps.containsApp(application) {
                     lastFocusedApp[activeWorkspace.id] = application.toMacApp
+                    updateActiveWorkspace(activeWorkspace)
                 }
             }
     }
@@ -191,6 +193,7 @@ final class WorkspaceManager: ObservableObject {
         activeWorkspace[display] = workspace
 
         activeWorkspaceDetails = .init(
+            id: workspace.id,
             name: workspace.name,
             number: workspaceRepository.workspaces
                 .firstIndex { $0.id == workspace.id }
