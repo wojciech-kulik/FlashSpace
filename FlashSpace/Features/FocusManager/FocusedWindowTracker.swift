@@ -42,28 +42,29 @@ final class FocusedWindowTracker {
     }
 
     private func activeApplicationChanged(_ app: NSRunningApplication) {
+        let activeWorkspaces = workspaceManager.activeWorkspace.values
+
+        // Skip if the workspace was activated recently
         guard Date().timeIntervalSince(workspaceManager.lastWorkspaceActivation) > 0.2 else { return }
 
         // Skip if the app is floating
         guard settingsRepository.floatingApps?.containsApp(app) != true else { return }
 
-        // Skip if the app exists in any active workspace
-        guard !workspaceManager.activeWorkspace.values
-            .contains(where: { $0.apps.containsApp(app) }) else { return }
-
-        // Find the workspace that contains the app
-        guard let workspace = workspaceRepository.workspaces
+        // Find the workspace that contains the app.
+        // The same app can be in multiple workspaces, the highest priority has the one
+        // from the active workspace.
+        guard let workspace = (activeWorkspaces + workspaceRepository.workspaces)
             .first(where: { $0.apps.containsApp(app) }) else { return }
 
-        // Activate the workspace if it's not already active
-        guard workspaceManager.activeWorkspace[workspace.displayWithFallback]?.id != workspace.id else { return }
+        // Skip if the workspace is already active
+        guard !activeWorkspaces.map(\.id).contains(workspace.id) else { return }
 
         // Skip if the focused window is in Picture in Picture mode
         guard !settingsRepository.enablePictureInPictureSupport ||
             !app.supportsPictureInPicture ||
             app.focusedWindow?.isPictureInPicture(bundleId: app.bundleIdentifier) != true else { return }
 
-        print("\n\nFound workspace for app: \(workspace.name)")
+        print("\n\nActivating workspace for app: \(workspace.name)")
         workspaceManager.updateLastFocusedApp(app.toMacApp, in: workspace)
         workspaceManager.activateWorkspace(workspace, setFocus: false)
         app.activate()
