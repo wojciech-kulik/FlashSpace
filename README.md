@@ -258,6 +258,7 @@ Big thanks to all the sponsors who support this project 🍻!
 ### One Time Sponsors
 
 <a href="https://github.com/danscheer"><img src="https://avatars.githubusercontent.com/u/56642865" width="40" height="40" alt="@danscheer" title="danscheer"></a>
+<a href="https://github.com/felipeva"><img src="https://avatars.githubusercontent.com/u/4754195" width="40" height="40" alt="@felipeva" title="felipeva"></a>
 
 &nbsp;
 
