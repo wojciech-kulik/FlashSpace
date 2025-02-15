@@ -6,7 +6,6 @@
 //
 
 import AppKit
-import ShortcutRecorder
 
 final class WorkspaceHotKeys {
     private let workspaceManager: WorkspaceManager
@@ -23,24 +22,24 @@ final class WorkspaceHotKeys {
         self.settingsRepository = settingsRepository
     }
 
-    func getHotKeys() -> [(Shortcut, () -> ())] {
-        let shortcuts = [
-            getAssignAppShortcut(for: nil),
-            getUnassignAppShortcut(),
-            getRecentWorkspaceShortcut(),
-            getCycleWorkspacesShortcut(next: false),
-            getCycleWorkspacesShortcut(next: true),
-            getFloatTheFocusedAppShortcut(),
-            getUnfloatTheFocusedAppShortcut()
+    func getHotKeys() -> [(AppHotKey, () -> ())] {
+        let hotKeys = [
+            getAssignAppHotKey(for: nil),
+            getUnassignAppHotKey(),
+            getRecentWorkspaceHotKey(),
+            getCycleWorkspacesHotKey(next: false),
+            getCycleWorkspacesHotKey(next: true),
+            getFloatTheFocusedAppHotKey(),
+            getUnfloatTheFocusedAppHotKey()
         ] +
             workspaceRepository.workspaces
-            .flatMap { [getActivateShortcut(for: $0), getAssignAppShortcut(for: $0)] }
+            .flatMap { [getActivateHotKey(for: $0), getAssignAppHotKey(for: $0)] }
 
-        return shortcuts.compactMap(\.self)
+        return hotKeys.compactMap(\.self)
     }
 
-    private func getActivateShortcut(for workspace: Workspace) -> (Shortcut, () -> ())? {
-        guard let shortcut = workspace.activateShortcut?.toShortcut() else { return nil }
+    private func getActivateHotKey(for workspace: Workspace) -> (AppHotKey, () -> ())? {
+        guard let shortcut = workspace.activateShortcut else { return nil }
 
         let action = { [weak self] in
             guard let updatedWorkspace = self?.workspaceRepository.workspaces
@@ -52,10 +51,10 @@ final class WorkspaceHotKeys {
         return (shortcut, action)
     }
 
-    private func getAssignAppShortcut(for workspace: Workspace?) -> (Shortcut, () -> ())? {
+    private func getAssignAppHotKey(for workspace: Workspace?) -> (AppHotKey, () -> ())? {
         let shortcut = workspace == nil
-            ? settingsRepository.assignFocusedApp?.toShortcut()
-            : workspace?.assignAppShortcut?.toShortcut()
+            ? settingsRepository.assignFocusedApp
+            : workspace?.assignAppShortcut
 
         guard let shortcut else { return nil }
 
@@ -87,8 +86,8 @@ final class WorkspaceHotKeys {
         return (shortcut, action)
     }
 
-    private func getUnassignAppShortcut() -> (Shortcut, () -> ())? {
-        guard let shortcut = settingsRepository.unassignFocusedApp?.toShortcut() else { return nil }
+    private func getUnassignAppHotKey() -> (AppHotKey, () -> ())? {
+        guard let shortcut = settingsRepository.unassignFocusedApp else { return nil }
 
         let action = { [weak self] in
             guard let activeApp = NSWorkspace.shared.frontmostApplication else { return }
@@ -110,11 +109,11 @@ final class WorkspaceHotKeys {
         return (shortcut, action)
     }
 
-    private func getCycleWorkspacesShortcut(next: Bool) -> (Shortcut, () -> ())? {
+    private func getCycleWorkspacesHotKey(next: Bool) -> (AppHotKey, () -> ())? {
         guard let shortcut =
             next
-                ? settingsRepository.switchToNextWorkspace?.toShortcut()
-                : settingsRepository.switchToPreviousWorkspace?.toShortcut()
+                ? settingsRepository.switchToNextWorkspace
+                : settingsRepository.switchToPreviousWorkspace
         else { return nil }
 
         let action = { [weak self] in
@@ -141,8 +140,8 @@ final class WorkspaceHotKeys {
         return (shortcut, action)
     }
 
-    private func getRecentWorkspaceShortcut() -> (Shortcut, () -> ())? {
-        guard let shortcut = settingsRepository.switchToRecentWorkspace?.toShortcut() else { return nil }
+    private func getRecentWorkspaceHotKey() -> (AppHotKey, () -> ())? {
+        guard let shortcut = settingsRepository.switchToRecentWorkspace else { return nil }
         let action = { [weak self] in
             guard let self,
                   let screen = getCursorScreen(),
@@ -155,8 +154,8 @@ final class WorkspaceHotKeys {
         return (shortcut, action)
     }
 
-    private func getFloatTheFocusedAppShortcut() -> (Shortcut, () -> ())? {
-        guard let shortcut = settingsRepository.floatTheFocusedApp?.toShortcut() else { return nil }
+    private func getFloatTheFocusedAppHotKey() -> (AppHotKey, () -> ())? {
+        guard let shortcut = settingsRepository.floatTheFocusedApp else { return nil }
         let action = { [weak self] in
             guard let self,
                   let activeApp = NSWorkspace.shared.frontmostApplication,
@@ -172,8 +171,8 @@ final class WorkspaceHotKeys {
         return (shortcut, action)
     }
 
-    private func getUnfloatTheFocusedAppShortcut() -> (Shortcut, () -> ())? {
-        guard let shortcut = settingsRepository.unfloatTheFocusedApp?.toShortcut() else { return nil }
+    private func getUnfloatTheFocusedAppHotKey() -> (AppHotKey, () -> ())? {
+        guard let shortcut = settingsRepository.unfloatTheFocusedApp else { return nil }
         let action = { [weak self] in
             guard let self,
                   let activeApp = NSWorkspace.shared.frontmostApplication,

@@ -7,7 +7,6 @@
 
 import AppKit
 import Combine
-import ShortcutRecorder
 import SwiftUI
 
 final class MainViewModel: ObservableObject {
@@ -15,11 +14,11 @@ final class MainViewModel: ObservableObject {
     @Published var workspaceApps: [MacApp]?
 
     @Published var workspaceName = ""
-    @Published var workspaceShortcut: HotKeyShortcut? {
+    @Published var workspaceShortcut: AppHotKey? {
         didSet { saveWorkspace() }
     }
 
-    @Published var workspaceAssignShortcut: HotKeyShortcut? {
+    @Published var workspaceAssignShortcut: AppHotKey? {
         didSet { saveWorkspace() }
     }
 

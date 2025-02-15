@@ -7,7 +7,6 @@
 
 import AppKit
 import Foundation
-import ShortcutRecorder
 
 final class FocusManager {
     var visibleApps: [NSRunningApplication] {
@@ -32,20 +31,20 @@ final class FocusManager {
         self.settingsRepository = settingsRepository
     }
 
-    func getHotKeys() -> [(Shortcut, () -> ())] {
+    func getHotKeys() -> [(AppHotKey, () -> ())] {
         let settings = settingsRepository
 
         guard settings.enableFocusManagement else { return [] }
 
         return [
-            settings.focusLeft?.toShortcut().flatMap { ($0, focusLeft) },
-            settings.focusRight?.toShortcut().flatMap { ($0, focusRight) },
-            settings.focusUp?.toShortcut().flatMap { ($0, focusUp) },
-            settings.focusDown?.toShortcut().flatMap { ($0, focusDown) },
-            settings.focusNextWorkspaceApp?.toShortcut().flatMap { ($0, nextWorkspaceApp) },
-            settings.focusPreviousWorkspaceApp?.toShortcut().flatMap { ($0, previousWorkspaceApp) },
-            settings.focusNextWorkspaceWindow?.toShortcut().flatMap { ($0, nextWorkspaceWindow) },
-            settings.focusPreviousWorkspaceWindow?.toShortcut().flatMap { ($0, previousWorkspaceWindow) }
+            settings.focusLeft.flatMap { ($0, focusLeft) },
+            settings.focusRight.flatMap { ($0, focusRight) },
+            settings.focusUp.flatMap { ($0, focusUp) },
+            settings.focusDown.flatMap { ($0, focusDown) },
+            settings.focusNextWorkspaceApp.flatMap { ($0, nextWorkspaceApp) },
+            settings.focusPreviousWorkspaceApp.flatMap { ($0, previousWorkspaceApp) },
+            settings.focusNextWorkspaceWindow.flatMap { ($0, nextWorkspaceWindow) },
+            settings.focusPreviousWorkspaceWindow.flatMap { ($0, previousWorkspaceWindow) }
         ].compactMap { $0 }
     }
 

@@ -6,17 +6,18 @@
 //
 
 import AppKit
-import ShortcutRecorder
 import SwiftUI
 
 final class SpaceControlWindow: NSWindow, NSWindowDelegate {
     override var canBecomeKey: Bool { true }
 
     override func keyDown(with event: NSEvent) {
-        if event.keyCode == KeyCode.escape.rawValue {
+        if event.keyCode == KeyCodesMap["escape"] {
             SpaceControl.hide(restoreFocus: true)
             return
-        } else if [KeyCode.downArrow, .upArrow, .leftArrow, .rightArrow].map(\.rawValue).contains(event.keyCode) {
+        } else if ["up", "down", "right", "left"]
+            .compactMap({ KeyCodesMap[$0] })
+            .contains(event.keyCode) {
             NotificationCenter.default.post(name: .spaceControlArrowDown, object: event.keyCode)
             return
         }

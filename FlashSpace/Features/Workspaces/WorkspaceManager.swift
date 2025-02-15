@@ -7,7 +7,6 @@
 
 import AppKit
 import Combine
-import ShortcutRecorder
 
 typealias DisplayName = String
 
