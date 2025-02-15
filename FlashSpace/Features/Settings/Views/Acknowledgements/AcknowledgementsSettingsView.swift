@@ -12,6 +12,8 @@ struct AcknowledgementsSettingsView: View {
     @State private var dependencies = [
         "xnth97/SymbolPicker",
         "Kentzo/ShortcutRecorder",
+        "LebJe/TOMLKit",
+        "jpsim/Yams",
         "SwiftFormat",
         "SwiftLint"
     ]
@@ -34,6 +36,10 @@ struct AcknowledgementsSettingsView: View {
                             Text(Licenses.symbolPicker)
                         case "Kentzo/ShortcutRecorder":
                             Text(Licenses.shortcutRecorder)
+                        case "LebJe/TOMLKit":
+                            Text(Licenses.tomlKit)
+                        case "jpsim/Yams":
+                            Text(Licenses.yams)
                         case "SwiftFormat":
                             Text(Licenses.swiftFormat)
                         case "SwiftLint":

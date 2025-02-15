@@ -1,5 +1,5 @@
 {
-  "originHash" : "6b559d400857b01f87fd2d75fba30d6489a9e604c38c7bee5aa79009883863e4",
+  "originHash" : "3b750b289c105932eed74687277fdc4e10d0626c641ba6c78be0608a53196091",
   "pins" : [
     {
       "identity" : "shortcutrecorder",
@@ -17,6 +17,24 @@
       "state" : {
         "revision" : "da4136a37736de04df11f47ef096efe5557d066a",
         "version" : "1.6.0"
+      }
+    },
+    {
+      "identity" : "tomlkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/LebJe/TOMLKit",
+      "state" : {
+        "revision" : "ec6198d37d495efc6acd4dffbd262cdca7ff9b3f",
+        "version" : "0.6.0"
+      }
+    },
+    {
+      "identity" : "yams",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/jpsim/Yams",
+      "state" : {
+        "revision" : "db9ff235cf800bc657c3ed0961078fc231d0f28b",
+        "version" : "5.2.0"
       }
     }
   ],

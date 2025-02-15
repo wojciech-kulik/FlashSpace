@@ -65,14 +65,16 @@ The app allows workspaces to be switched independently on each display.
 
 - [x] Blazingly fast workspace switching
 - [x] Multiple displays support
-- [x] Activate workspace on app focus
-- [x] Move apps between workspaces with a hotkey
-- [x] Floating apps visible across all workspaces
 - [x] Space Control - preview all workspaces and switch between them
-- [x] Focus manager - set hotkeys to switch between apps quickly
+- [x] Hotkeys - manage apps and workspaces using keyboard
+- [x] Focus detection - activate workspace on app focus
+- [x] Focus manager - switch focus between apps using keyboard
 - [x] Cursor manager - auto-center the cursor in the active window
 - [x] Profiles - quickly switch between different configurations
-- [x] Configurable Menu Bar icon & text (per workspace)
+- [x] Menu bar - configurable icon & text (per workspace)
+- [x] Floating apps - keep apps visible across all workspaces
+- [x] Configuration through GUI and config file
+- [x] Support for multiple config file formats: JSON, YAML, and TOML
 - [x] [Picture-in-Picture](https://github.com/wojciech-kulik/FlashSpace#-picture-in-picture-support) support
 - [x] [SketchyBar] integration
 

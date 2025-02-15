@@ -42,28 +42,18 @@ final class ProfilesRepository: ObservableObject {
 
     private var shouldTrackProfileChange = true
 
-    private let profilesUrl = FileManager.default
-        .homeDirectoryForCurrentUser
-        .appendingPathComponent(".config/flashspace/profiles.json")
-
-    private let encoder = JSONEncoder()
-    private let decoder = JSONDecoder()
-
     init() {
-        encoder.outputFormatting = [.prettyPrinted, .withoutEscapingSlashes, .sortedKeys]
         loadFromDisk()
-        print(profilesUrl)
     }
 
     private func loadFromDisk() {
         shouldTrackProfileChange = false
         defer { shouldTrackProfileChange = true }
 
-        guard FileManager.default.fileExists(atPath: profilesUrl.path),
-              let data = try? Data(contentsOf: profilesUrl),
-              let config = (try? decoder.decode(ProfilesConfig.self, from: data)),
-              !config.profiles.isEmpty
-        else { return createDefaultProfile() }
+        guard let config = try? ConfigSerializer.deserialize(ProfilesConfig.self, filename: "profiles"),
+              !config.profiles.isEmpty else {
+            return createDefaultProfile()
+        }
 
         profiles = config.profiles
         selectedProfile = profiles.first { $0.id == config.selectedProfileId } ?? profiles.first ?? .default
@@ -153,9 +143,6 @@ extension ProfilesRepository {
             profiles: profiles
         )
 
-        guard let data = try? encoder.encode(config) else { return }
-
-        try? profilesUrl.createIntermediateDirectories()
-        try? data.write(to: profilesUrl)
+        try? ConfigSerializer.serialize(filename: "profiles", config)
     }
 }

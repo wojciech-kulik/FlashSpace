@@ -8,50 +8,6 @@
 import Combine
 import Foundation
 
-struct AppSettings: Codable {
-    var checkForUpdatesAutomatically: Bool?
-    var showFlashSpace: AppHotKey?
-
-    var showMenuBarTitle: Bool?
-    var menuBarTitleTemplate: String?
-    var menuBarDisplayAliases: String?
-
-    var enableFocusManagement: Bool?
-    var centerCursorOnFocusChange: Bool?
-    var focusLeft: AppHotKey?
-    var focusRight: AppHotKey?
-    var focusUp: AppHotKey?
-    var focusDown: AppHotKey?
-    var focusNextWorkspaceApp: AppHotKey?
-    var focusPreviousWorkspaceApp: AppHotKey?
-    var focusNextWorkspaceWindow: AppHotKey?
-    var focusPreviousWorkspaceWindow: AppHotKey?
-
-    var centerCursorOnWorkspaceChange: Bool?
-    var switchToPreviousWorkspace: AppHotKey?
-    var switchToNextWorkspace: AppHotKey?
-    var switchToRecentWorkspace: AppHotKey?
-    var assignFocusedApp: AppHotKey?
-    var unassignFocusedApp: AppHotKey?
-    var showFloatingNotifications: Bool?
-    var changeWorkspaceOnAppAssign: Bool?
-    var enablePictureInPictureSupport: Bool?
-
-    var floatingApps: [MacApp]?
-    var floatTheFocusedApp: AppHotKey?
-    var unfloatTheFocusedApp: AppHotKey?
-
-    var enableSpaceControl: Bool?
-    var showSpaceControl: AppHotKey?
-    var enableSpaceControlAnimations: Bool?
-    var spaceControlCurrentDisplayWorkspaces: Bool?
-
-    var enableIntegrations: Bool?
-    var runScriptOnWorkspaceChange: String?
-    var runScriptOnLaunch: String?
-    var runScriptOnProfileChange: String?
-}
-
 final class SettingsRepository: ObservableObject {
     static let defaultScript = "sketchybar --trigger flashspace_workspace_change WORKSPACE=\"$WORKSPACE\" DISPLAY=\"$DISPLAY\""
     static let defaultProfileChangeScript = "sketchybar --reload"
@@ -214,14 +170,8 @@ final class SettingsRepository: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
 
     private let debouncedUpdateSettings = PassthroughSubject<(), Never>()
-    private let encoder = JSONEncoder()
-    private let decoder = JSONDecoder()
-    private let dataUrl = FileManager.default
-        .homeDirectoryForCurrentUser
-        .appendingPathComponent(".config/flashspace/settings.json")
 
     init() {
-        encoder.outputFormatting = [.prettyPrinted, .withoutEscapingSlashes, .sortedKeys]
         loadFromDisk()
 
         debouncedUpdateSettings
@@ -248,10 +198,7 @@ final class SettingsRepository: ObservableObject {
     }
 
     func saveToDisk() {
-        guard let data = try? encoder.encode(currentSettings) else { return }
-
-        try? dataUrl.createIntermediateDirectories()
-        try? data.write(to: dataUrl)
+        try? ConfigSerializer.serialize(filename: "settings", currentSettings)
     }
 
     private func updateSettings() {
@@ -309,9 +256,7 @@ final class SettingsRepository: ObservableObject {
         shouldUpdate = false
         defer { shouldUpdate = true }
 
-        guard FileManager.default.fileExists(atPath: dataUrl.path) else { return }
-        guard let data = try? Data(contentsOf: dataUrl) else { return }
-        guard let settings = try? decoder.decode(AppSettings.self, from: data) else { return }
+        guard let settings = try? ConfigSerializer.deserialize(AppSettings.self, filename: "settings") else { return }
 
         currentSettings = settings
 

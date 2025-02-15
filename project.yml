@@ -15,6 +15,12 @@ packages:
   SymbolPicker:
     github: xnth97/SymbolPicker
     from: 1.6.0
+  TOMLKit:
+    github: LebJe/TOMLKit
+    from: 0.6.0
+  Yams:
+    github: jpsim/Yams
+    from: 5.2.0
 
 targets:
   FlashSpace:
@@ -47,6 +53,8 @@ targets:
       - sdk: ServiceManagement.framework
       - package: ShortcutRecorder
       - package: SymbolPicker
+      - package: TOMLKit
+      - package: Yams
 
     preBuildScripts:
       - name: Run SwiftLint
