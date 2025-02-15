@@ -50,7 +50,7 @@ final class ProfilesRepository: ObservableObject {
     private let decoder = JSONDecoder()
 
     init() {
-        encoder.outputFormatting = .prettyPrinted
+        encoder.outputFormatting = [.prettyPrinted, .withoutEscapingSlashes, .sortedKeys]
         loadFromDisk()
         print(profilesUrl)
     }

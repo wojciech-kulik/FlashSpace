@@ -9,11 +9,6 @@ import AppKit
 import Combine
 import ShortcutRecorder
 
-struct HotKeyShortcut: Codable, Hashable {
-    let keyCode: UInt16
-    let modifiers: UInt
-}
-
 final class HotKeysManager {
     private var cancellables = Set<AnyCancellable>()
 
@@ -42,7 +37,7 @@ final class HotKeysManager {
     }
 
     func enableAll() {
-        for (shortcut, action) in workspaceHotKeys.getHotKeys() {
+        for (shortcut, action) in workspaceHotKeys.getHotKeys().toShortcutPairs() {
             let action = ShortcutAction(shortcut: shortcut) { _ in
                 action()
                 return true
@@ -50,7 +45,7 @@ final class HotKeysManager {
             hotKeysMonitor.addAction(action, forKeyEvent: .down)
         }
 
-        for (shortcut, action) in focusManager.getHotKeys() {
+        for (shortcut, action) in focusManager.getHotKeys().toShortcutPairs() {
             let action = ShortcutAction(shortcut: shortcut) { _ in
                 action()
                 return true
@@ -66,7 +61,7 @@ final class HotKeysManager {
             hotKeysMonitor.addAction(action, forKeyEvent: .down)
         }
 
-        if let (shortcut, action) = SpaceControl.getHotKey() {
+        if let (hotKey, action) = SpaceControl.getHotKey(), let shortcut = hotKey.toShortcut() {
             let action = ShortcutAction(shortcut: shortcut) { _ in
                 action()
                 return true

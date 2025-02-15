@@ -25,8 +25,8 @@ struct Workspace: Identifiable, Codable, Hashable {
     var id: WorkspaceID
     var name: String
     var display: DisplayName
-    var activateShortcut: HotKeyShortcut?
-    var assignAppShortcut: HotKeyShortcut?
+    var activateShortcut: AppHotKey?
+    var assignAppShortcut: AppHotKey?
     var apps: [MacApp]
     var appToFocus: MacApp?
     var symbolIconName: String?

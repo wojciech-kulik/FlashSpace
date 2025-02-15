@@ -10,7 +10,7 @@ import Foundation
 
 struct AppSettings: Codable {
     var checkForUpdatesAutomatically: Bool?
-    var showFlashSpace: HotKeyShortcut?
+    var showFlashSpace: AppHotKey?
 
     var showMenuBarTitle: Bool?
     var menuBarTitleTemplate: String?
@@ -18,31 +18,31 @@ struct AppSettings: Codable {
 
     var enableFocusManagement: Bool?
     var centerCursorOnFocusChange: Bool?
-    var focusLeft: HotKeyShortcut?
-    var focusRight: HotKeyShortcut?
-    var focusUp: HotKeyShortcut?
-    var focusDown: HotKeyShortcut?
-    var focusNextWorkspaceApp: HotKeyShortcut?
-    var focusPreviousWorkspaceApp: HotKeyShortcut?
-    var focusNextWorkspaceWindow: HotKeyShortcut?
-    var focusPreviousWorkspaceWindow: HotKeyShortcut?
+    var focusLeft: AppHotKey?
+    var focusRight: AppHotKey?
+    var focusUp: AppHotKey?
+    var focusDown: AppHotKey?
+    var focusNextWorkspaceApp: AppHotKey?
+    var focusPreviousWorkspaceApp: AppHotKey?
+    var focusNextWorkspaceWindow: AppHotKey?
+    var focusPreviousWorkspaceWindow: AppHotKey?
 
     var centerCursorOnWorkspaceChange: Bool?
-    var switchToPreviousWorkspace: HotKeyShortcut?
-    var switchToNextWorkspace: HotKeyShortcut?
-    var switchToRecentWorkspace: HotKeyShortcut?
-    var assignFocusedApp: HotKeyShortcut?
-    var unassignFocusedApp: HotKeyShortcut?
+    var switchToPreviousWorkspace: AppHotKey?
+    var switchToNextWorkspace: AppHotKey?
+    var switchToRecentWorkspace: AppHotKey?
+    var assignFocusedApp: AppHotKey?
+    var unassignFocusedApp: AppHotKey?
     var showFloatingNotifications: Bool?
     var changeWorkspaceOnAppAssign: Bool?
     var enablePictureInPictureSupport: Bool?
 
     var floatingApps: [MacApp]?
-    var floatTheFocusedApp: HotKeyShortcut?
-    var unfloatTheFocusedApp: HotKeyShortcut?
+    var floatTheFocusedApp: AppHotKey?
+    var unfloatTheFocusedApp: AppHotKey?
 
     var enableSpaceControl: Bool?
-    var showSpaceControl: HotKeyShortcut?
+    var showSpaceControl: AppHotKey?
     var enableSpaceControlAnimations: Bool?
     var spaceControlCurrentDisplayWorkspaces: Bool?
 
@@ -59,7 +59,7 @@ final class SettingsRepository: ObservableObject {
 
     // MARK: - General
 
-    @Published var showFlashSpace: HotKeyShortcut? {
+    @Published var showFlashSpace: AppHotKey? {
         didSet { updateSettings() }
     }
 
@@ -91,35 +91,35 @@ final class SettingsRepository: ObservableObject {
         didSet { updateSettings() }
     }
 
-    @Published var focusLeft: HotKeyShortcut? {
+    @Published var focusLeft: AppHotKey? {
         didSet { updateSettings() }
     }
 
-    @Published var focusRight: HotKeyShortcut? {
+    @Published var focusRight: AppHotKey? {
         didSet { updateSettings() }
     }
 
-    @Published var focusUp: HotKeyShortcut? {
+    @Published var focusUp: AppHotKey? {
         didSet { updateSettings() }
     }
 
-    @Published var focusDown: HotKeyShortcut? {
+    @Published var focusDown: AppHotKey? {
         didSet { updateSettings() }
     }
 
-    @Published var focusNextWorkspaceApp: HotKeyShortcut? {
+    @Published var focusNextWorkspaceApp: AppHotKey? {
         didSet { updateSettings() }
     }
 
-    @Published var focusPreviousWorkspaceApp: HotKeyShortcut? {
+    @Published var focusPreviousWorkspaceApp: AppHotKey? {
         didSet { updateSettings() }
     }
 
-    @Published var focusNextWorkspaceWindow: HotKeyShortcut? {
+    @Published var focusNextWorkspaceWindow: AppHotKey? {
         didSet { updateSettings() }
     }
 
-    @Published var focusPreviousWorkspaceWindow: HotKeyShortcut? {
+    @Published var focusPreviousWorkspaceWindow: AppHotKey? {
         didSet { updateSettings() }
     }
 
@@ -129,23 +129,23 @@ final class SettingsRepository: ObservableObject {
         didSet { updateSettings() }
     }
 
-    @Published var switchToPreviousWorkspace: HotKeyShortcut? {
+    @Published var switchToPreviousWorkspace: AppHotKey? {
         didSet { updateSettings() }
     }
 
-    @Published var switchToNextWorkspace: HotKeyShortcut? {
+    @Published var switchToNextWorkspace: AppHotKey? {
         didSet { updateSettings() }
     }
 
-    @Published var switchToRecentWorkspace: HotKeyShortcut? {
+    @Published var switchToRecentWorkspace: AppHotKey? {
         didSet { updateSettings() }
     }
 
-    @Published var assignFocusedApp: HotKeyShortcut? {
+    @Published var assignFocusedApp: AppHotKey? {
         didSet { updateSettings() }
     }
 
-    @Published var unassignFocusedApp: HotKeyShortcut? {
+    @Published var unassignFocusedApp: AppHotKey? {
         didSet { updateSettings() }
     }
 
@@ -153,11 +153,11 @@ final class SettingsRepository: ObservableObject {
         didSet { updateSettings() }
     }
 
-    @Published var floatTheFocusedApp: HotKeyShortcut? {
+    @Published var floatTheFocusedApp: AppHotKey? {
         didSet { updateSettings() }
     }
 
-    @Published var unfloatTheFocusedApp: HotKeyShortcut? {
+    @Published var unfloatTheFocusedApp: AppHotKey? {
         didSet { updateSettings() }
     }
 
@@ -179,7 +179,7 @@ final class SettingsRepository: ObservableObject {
         didSet { updateSettings() }
     }
 
-    @Published var showSpaceControl: HotKeyShortcut? {
+    @Published var showSpaceControl: AppHotKey? {
         didSet { updateSettings() }
     }
 
@@ -221,7 +221,7 @@ final class SettingsRepository: ObservableObject {
         .appendingPathComponent(".config/flashspace/settings.json")
 
     init() {
-        encoder.outputFormatting = .prettyPrinted
+        encoder.outputFormatting = [.prettyPrinted, .withoutEscapingSlashes, .sortedKeys]
         loadFromDisk()
 
         debouncedUpdateSettings

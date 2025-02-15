@@ -62,22 +62,10 @@ struct AppDependencies {
             pictureInPictureManager: pictureInPictureManager
         )
 
-        if Migrations.appsMigrated {
-            print("Migrated apps")
-
-            let workspacesJsonUrl = FileManager.default
-                .homeDirectoryForCurrentUser
-                .appendingPathComponent(".config/flashspace/workspaces.json")
-            try? FileManager.default.moveItem(
-                at: workspacesJsonUrl,
-                to: workspacesJsonUrl.deletingLastPathComponent()
-                    .appendingPathComponent("workspaces.json.bak")
-            )
-
-            settingsRepository.saveToDisk()
-            profilesRepository.saveToDisk()
-            Migrations.appsMigrated = false
-        }
+        Migrations.migrateIfNeeded(
+            settingsRepository: settingsRepository,
+            profilesRepository: profilesRepository
+        )
 
         focusedWindowTracker.startTracking()
     }

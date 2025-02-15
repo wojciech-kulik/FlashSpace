@@ -6,7 +6,6 @@
 //
 
 import AppKit
-import ShortcutRecorder
 import SwiftUI
 
 enum SpaceControl {
@@ -19,12 +18,12 @@ enum SpaceControl {
 
     private static var focusedAppBeforeShow: NSRunningApplication?
 
-    static func getHotKey() -> (Shortcut, () -> ())? {
+    static func getHotKey() -> (AppHotKey, () -> ())? {
         guard isEnabled else { return nil }
 
         let settings = AppDependencies.shared.settingsRepository
 
-        if let spaceControlHotKey = settings.showSpaceControl?.toShortcut() {
+        if let spaceControlHotKey = settings.showSpaceControl {
             return (spaceControlHotKey, show)
         }
 

@@ -6,7 +6,6 @@
 //
 
 import Combine
-import ShortcutRecorder
 import SwiftUI
 
 struct SpaceControlWorkspace {
@@ -35,10 +34,8 @@ final class SpaceControlViewModel: ObservableObject {
 
         NotificationCenter.default
             .publisher(for: .spaceControlArrowDown)
-            .compactMap { $0.object as? UInt16 }
-            .sink { [weak self] keyCode in
-                self?.handleArrowKey(keyCode)
-            }
+            .compactMap { $0.object as? RawKeyCode }
+            .sink { [weak self] in self?.handleArrowKey($0) }
             .store(in: &cancellables)
     }
 
@@ -78,20 +75,20 @@ final class SpaceControlViewModel: ObservableObject {
         numberOfRows = Int(ceil(Double(workspaceCount) / Double(numberOfColumns)))
     }
 
-    private func handleArrowKey(_ keyCode: UInt16) {
+    private func handleArrowKey(_ keyCode: RawKeyCode) {
         let activeWorkspaceIndex = workspaces.firstIndex {
             $0.isActive && $0.originalWorkspace.isOnTheCurrentScreen
         }
         guard let activeWorkspaceIndex else { return }
 
-        let workspace: Workspace? = switch keyCode {
-        case KeyCode.downArrow.rawValue:
+        let workspace: Workspace? = switch KeyCodesMap.toString[keyCode] {
+        case "down":
             workspaces[safe: activeWorkspaceIndex + numberOfColumns]?.originalWorkspace
-        case KeyCode.upArrow.rawValue:
+        case "up":
             workspaces[safe: activeWorkspaceIndex - numberOfColumns]?.originalWorkspace
-        case KeyCode.rightArrow.rawValue:
+        case "right":
             workspaces[safe: (activeWorkspaceIndex + 1) % workspaces.count]?.originalWorkspace
-        case KeyCode.leftArrow.rawValue:
+        case "left":
             workspaces[
                 safe: activeWorkspaceIndex == 0
                     ? workspaces.count - 1

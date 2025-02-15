@@ -10,7 +10,7 @@ import ShortcutRecorder
 import SwiftUI
 
 struct HotKeyControl: NSViewRepresentable {
-    @Binding var shortcut: HotKeyShortcut?
+    @Binding var shortcut: AppHotKey?
 
     func makeNSView(context: Context) -> RecorderControl {
         let control = RecorderControl(frame: .zero)
