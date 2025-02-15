@@ -42,6 +42,8 @@ struct SettingsView: View {
                     .tag("Profiles")
                 Label("Integrations", systemImage: "link")
                     .tag("Integrations")
+                Label("Configuration File", systemImage: "doc.text")
+                    .tag("Configuration")
                 Label("Acknowledgements", systemImage: "info.circle")
                     .tag("Acknowledgements")
             }
@@ -75,6 +77,8 @@ struct SettingsView: View {
             IntegrationsSettingsView()
         case "Profiles":
             ProfilesSettingsView()
+        case "Configuration":
+            ConfigurationFileSettingsView()
         case "Acknowledgements":
             AcknowledgementsSettingsView()
         default:
