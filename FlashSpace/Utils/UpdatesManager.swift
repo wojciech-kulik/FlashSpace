@@ -48,7 +48,7 @@ final class UpdatesManager {
 
             return .success(releaseInfo)
         } catch {
-            print(error)
+            Logger.log(error)
             return .failure(error)
         }
     }

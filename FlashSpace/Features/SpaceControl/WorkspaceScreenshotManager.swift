@@ -57,7 +57,7 @@ final class WorkspaceScreenshotManager {
                 saveScreenshot(image, workspace: workspace)
             }
         } catch {
-            print(error)
+            Logger.log(error)
         }
     }
 

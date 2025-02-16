@@ -69,12 +69,12 @@ final class HotKeysManager {
             hotKeysMonitor.addAction(action, forKeyEvent: .down)
         }
 
-        print("Enabled all shortcuts")
+        Logger.log("Enabled all shortcuts")
     }
 
     func disableAll() {
         hotKeysMonitor.removeAllActions()
-        print("Disabled all shortcuts")
+        Logger.log("Disabled all shortcuts")
     }
 
     private func observe() {

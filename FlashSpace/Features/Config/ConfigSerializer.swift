@@ -33,7 +33,7 @@ enum ConfigSerializer {
 
             return try decoder.decode(type, from: data)
         } catch {
-            print("Failed to deserialize \(filename): \(error)")
+            Logger.log("Failed to deserialize \(filename): \(error)")
             throw error
         }
     }
@@ -58,7 +58,7 @@ enum ConfigSerializer {
         AppDependencies.shared.settingsRepository.saveToDisk()
         AppDependencies.shared.profilesRepository.saveToDisk()
 
-        print("Converted config format to \(to.displayName)")
+        Logger.log("Converted config format to \(to.displayName)")
     }
 }
 
@@ -105,7 +105,7 @@ private extension ConfigSerializer {
         for format in ConfigFormat.allCases {
             let url = getUrl(for: "profiles", ext: format.rawValue)
             if FileManager.default.fileExists(atPath: url.path) {
-                print("Detected config format \(format.displayName) at \(url.path)")
+                Logger.log("Detected config format \(format.displayName) at \(url.path)")
                 return format
             }
         }

@@ -16,7 +16,7 @@ enum Migrations {
         profilesRepository: ProfilesRepository
     ) {
         if Migrations.appsMigrated {
-            print("Migrated apps")
+            Logger.log("Migrated apps")
 
             let workspacesJsonUrl = FileManager.default
                 .homeDirectoryForCurrentUser
@@ -30,7 +30,7 @@ enum Migrations {
             settingsRepository.saveToDisk()
             profilesRepository.saveToDisk()
         } else if Migrations.hotKeysMigrated {
-            print("Migrated hot keys")
+            Logger.log("Migrated hot keys")
             settingsRepository.saveToDisk()
             profilesRepository.saveToDisk()
         }

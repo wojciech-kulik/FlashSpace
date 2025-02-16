@@ -18,7 +18,7 @@ final class AutostartService {
 
             try SMAppService.mainApp.register()
         } catch {
-            print("Failed to enable launch at login: \(error)")
+            Logger.log("Failed to enable launch at login: \(error)")
         }
     }
 
@@ -26,7 +26,7 @@ final class AutostartService {
         do {
             try SMAppService.mainApp.unregister()
         } catch {
-            print("Failed to disable launch at login: \(error)")
+            Logger.log("Failed to disable launch at login: \(error)")
         }
     }
 }

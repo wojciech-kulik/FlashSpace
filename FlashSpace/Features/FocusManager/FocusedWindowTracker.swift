@@ -64,7 +64,9 @@ final class FocusedWindowTracker {
             !app.supportsPictureInPicture ||
             app.focusedWindow?.isPictureInPicture(bundleId: app.bundleIdentifier) != true else { return }
 
-        print("\n\nActivating workspace for app: \(workspace.name)")
+        Logger.log("")
+        Logger.log("")
+        Logger.log("Activating workspace for app: \(workspace.name)")
         workspaceManager.updateLastFocusedApp(app.toMacApp, in: workspace)
         workspaceManager.activateWorkspace(workspace, setFocus: false)
         app.activate()

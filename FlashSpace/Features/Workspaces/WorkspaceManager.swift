@@ -115,7 +115,7 @@ final class WorkspaceManager: ObservableObject {
             }
 
             for app in appsToShow {
-                print("SHOW: \(app.localizedName ?? "")")
+                Logger.log("SHOW: \(app.localizedName ?? "")")
 
                 if app == toFocus || app.isHidden || app.isMinimized {
                     app.raise()
@@ -124,12 +124,12 @@ final class WorkspaceManager: ObservableObject {
                 pictureInPictureManager.showPipAppIfNeeded(app: app)
             }
 
-            print("FOCUS: \(toFocus?.localizedName ?? "")")
+            Logger.log("FOCUS: \(toFocus?.localizedName ?? "")")
             toFocus?.activate()
             centerCursorIfNeeded(in: toFocus?.frame)
         } else {
             for app in appsToShow {
-                print("SHOW: \(app.localizedName ?? "")")
+                Logger.log("SHOW: \(app.localizedName ?? "")")
                 app.raise()
             }
         }
@@ -148,7 +148,7 @@ final class WorkspaceManager: ObservableObject {
             .filter { $0.isOnTheSameScreen(as: workspace) }
 
         for app in appsToHide {
-            print("HIDE: \(app.localizedName ?? "")")
+            Logger.log("HIDE: \(app.localizedName ?? "")")
 
             if !pictureInPictureManager.hidePipAppIfNeeded(app: app) {
                 app.hide()
@@ -210,8 +210,10 @@ final class WorkspaceManager: ObservableObject {
 // MARK: - Workspace Actions
 extension WorkspaceManager {
     func activateWorkspace(_ workspace: Workspace, setFocus: Bool) {
-        print("\n\nWORKSPACE: \(workspace.name)")
-        print("----")
+        Logger.log("")
+        Logger.log("")
+        Logger.log("WORKSPACE: \(workspace.name)")
+        Logger.log("----")
         SpaceControl.hide()
 
         updateActiveWorkspace(workspace)

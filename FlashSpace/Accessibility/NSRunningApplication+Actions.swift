@@ -24,7 +24,7 @@ extension NSRunningApplication {
 
     func centerApp(display: DisplayName) {
         guard let appFrame = frame else {
-            return print("Could not get frame for app: \(localizedName ?? "")")
+            return Logger.log("Could not get frame for app: \(localizedName ?? "")")
         }
 
         guard let nsScreen = NSScreen.screens.first(where: { $0.localizedName == display }) else { return }
