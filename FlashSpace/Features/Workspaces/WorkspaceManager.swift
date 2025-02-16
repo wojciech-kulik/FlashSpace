@@ -168,8 +168,10 @@ final class WorkspaceManager: ObservableObject {
             appToFocus = apps.find(workspace.appToFocus)
         }
 
-        let fallbackToLastApp = apps.find(workspace.apps.last)
-        let fallbackToFinder = NSWorkspace.shared.runningApplications.first { $0.bundleIdentifier == "com.apple.finder" }
+        let fallbackToLastApp = apps.findFirstMatch(with: workspace.apps.reversed())
+        let fallbackToFinder = NSWorkspace.shared.runningApplications.first {
+            $0.bundleIdentifier == "com.apple.finder"
+        }
 
         return appToFocus ?? fallbackToLastApp ?? fallbackToFinder
     }
