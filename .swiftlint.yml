@@ -8,7 +8,7 @@ included:
   - FlashSpace
 
 excluded:
-  - FlashSpace/Features/Settings/Views/Acknowledgements/Licenses.swift
+  - FlashSpace/Features/Settings/Acknowledgements/Licenses.swift
 
 line_length: 160
 
