@@ -12,6 +12,7 @@ struct FlashSpaceMenuBar: Scene {
 
     @StateObject private var workspaceManager = AppDependencies.shared.workspaceManager
     @StateObject private var settingsRepository = AppDependencies.shared.settingsRepository
+    @StateObject private var profilesRepository = AppDependencies.shared.profilesRepository
 
     var body: some Scene {
         MenuBarExtra {
@@ -34,6 +35,20 @@ struct FlashSpaceMenuBar: Scene {
                 openWindow(id: "settings")
                 NSApp.activate(ignoringOtherApps: true)
             }.keyboardShortcut(",")
+
+            Menu("Profiles") {
+                ForEach(profilesRepository.profiles) { profile in
+                    Toggle(
+                        profile.name,
+                        isOn: .init(
+                            get: { profilesRepository.selectedProfile == profile },
+                            set: {
+                                if $0 { profilesRepository.selectedProfile = profile }
+                            }
+                        )
+                    )
+                }
+            }.hidden(profilesRepository.profiles.count < 2)
 
             Divider()
 
