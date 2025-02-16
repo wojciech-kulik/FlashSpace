@@ -2,7 +2,7 @@ import Foundation
 import SwiftUI
 
 final class FloatingAppsSettingsViewModel: ObservableObject {
-    private let settingsRepository = AppDependencies.shared.settingsRepository
+    private let settings = AppDependencies.shared.floatingAppsSettings
 
     func addFloatingApp() {
         let fileChooser = FileChooser()
@@ -13,7 +13,7 @@ final class FloatingAppsSettingsViewModel: ObservableObject {
 
         guard let bundle = appUrl?.bundle else { return }
 
-        settingsRepository.addFloatingAppIfNeeded(
+        settings.addFloatingAppIfNeeded(
             app: .init(
                 name: bundle.localizedAppName,
                 bundleIdentifier: bundle.bundleIdentifier ?? "",
@@ -23,6 +23,6 @@ final class FloatingAppsSettingsViewModel: ObservableObject {
     }
 
     func deleteFloatingApp(app: MacApp) {
-        settingsRepository.deleteFloatingApp(app: app)
+        settings.deleteFloatingApp(app: app)
     }
 }

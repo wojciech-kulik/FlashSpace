@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct WorkspacesSettingsView: View {
-    @StateObject var settings = AppDependencies.shared.settingsRepository
+    @StateObject var settings = AppDependencies.shared.workspaceSettings
 
     var body: some View {
         Form {

@@ -48,7 +48,7 @@ final class UpdatesManager {
 
             return .success(releaseInfo)
         } catch {
-            print(error)
+            Logger.log(error)
             return .failure(error)
         }
     }
@@ -76,7 +76,7 @@ final class UpdatesManager {
 
     @MainActor
     func autoCheckForUpdates() async {
-        guard AppDependencies.shared.settingsRepository.checkForUpdatesAutomatically else { return }
+        guard AppDependencies.shared.generalSettings.checkForUpdatesAutomatically else { return }
         guard Date().timeIntervalSince(lastCheckDate) > 30 * 60 else { return }
         guard !detectedNewRelease else { return }
 

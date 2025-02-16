@@ -12,7 +12,7 @@ enum Toast {
     weak static var toastWindow: NSWindow?
 
     static func showWith(icon: String, message: String, textColor: Color) {
-        guard AppDependencies.shared.settingsRepository.showFloatingNotifications else { return }
+        guard AppDependencies.shared.generalSettings.showFloatingNotifications else { return }
 
         if let window = toastWindow {
             window.orderOut(nil)

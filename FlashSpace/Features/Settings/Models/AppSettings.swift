@@ -9,6 +9,7 @@ struct AppSettings: Codable {
     // General
     var checkForUpdatesAutomatically: Bool?
     var showFlashSpace: AppHotKey?
+    var showFloatingNotifications: Bool?
 
     // Menu Bar
     var showMenuBarTitle: Bool?
@@ -29,14 +30,13 @@ struct AppSettings: Codable {
 
     // Workspaces
     var centerCursorOnWorkspaceChange: Bool?
+    var changeWorkspaceOnAppAssign: Bool?
+    var enablePictureInPictureSupport: Bool?
     var switchToPreviousWorkspace: AppHotKey?
     var switchToNextWorkspace: AppHotKey?
     var switchToRecentWorkspace: AppHotKey?
     var assignFocusedApp: AppHotKey?
     var unassignFocusedApp: AppHotKey?
-    var showFloatingNotifications: Bool?
-    var changeWorkspaceOnAppAssign: Bool?
-    var enablePictureInPictureSupport: Bool?
 
     // Floating apps
     var floatingApps: [MacApp]?
@@ -51,7 +51,7 @@ struct AppSettings: Codable {
 
     // Integrations
     var enableIntegrations: Bool?
-    var runScriptOnWorkspaceChange: String?
     var runScriptOnLaunch: String?
+    var runScriptOnWorkspaceChange: String?
     var runScriptOnProfileChange: String?
 }

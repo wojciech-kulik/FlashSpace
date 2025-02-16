@@ -9,4 +9,7 @@ import Foundation
 
 extension String {
     static let defaultIconSymbol = "bolt.fill"
+
+    var isNotEmpty: Bool { !isEmpty }
+    var nilIfEmpty: String? { isEmpty ? nil : self }
 }

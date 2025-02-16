@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MenuBarSettingsView: View {
-    @StateObject var settings = AppDependencies.shared.settingsRepository
+    @StateObject var settings = AppDependencies.shared.menuBarSettings
 
     var body: some View {
         Form {

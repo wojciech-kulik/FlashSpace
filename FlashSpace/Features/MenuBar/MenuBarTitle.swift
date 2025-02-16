@@ -6,7 +6,7 @@
 //
 
 enum MenuBarTitle {
-    static let settings = AppDependencies.shared.settingsRepository
+    static let settings = AppDependencies.shared.menuBarSettings
     static let workspaceManager = AppDependencies.shared.workspaceManager
     static let profilesRepository = AppDependencies.shared.profilesRepository
 

@@ -48,7 +48,7 @@ final class FocusedWindowTracker {
         guard Date().timeIntervalSince(workspaceManager.lastWorkspaceActivation) > 0.2 else { return }
 
         // Skip if the app is floating
-        guard settingsRepository.floatingApps?.containsApp(app) != true else { return }
+        guard !settingsRepository.floatingAppsSettings.floatingApps.containsApp(app) else { return }
 
         // Find the workspace that contains the app.
         // The same app can be in multiple workspaces, the highest priority has the one
@@ -60,17 +60,19 @@ final class FocusedWindowTracker {
         guard !activeWorkspaces.map(\.id).contains(workspace.id) else { return }
 
         // Skip if the focused window is in Picture in Picture mode
-        guard !settingsRepository.enablePictureInPictureSupport ||
+        guard !settingsRepository.workspaceSettings.enablePictureInPictureSupport ||
             !app.supportsPictureInPicture ||
             app.focusedWindow?.isPictureInPicture(bundleId: app.bundleIdentifier) != true else { return }
 
-        print("\n\nActivating workspace for app: \(workspace.name)")
+        Logger.log("")
+        Logger.log("")
+        Logger.log("Activating workspace for app: \(workspace.name)")
         workspaceManager.updateLastFocusedApp(app.toMacApp, in: workspace)
         workspaceManager.activateWorkspace(workspace, setFocus: false)
         app.activate()
 
         // Restore the app if it was hidden
-        if settingsRepository.enablePictureInPictureSupport, app.supportsPictureInPicture {
+        if settingsRepository.workspaceSettings.enablePictureInPictureSupport, app.supportsPictureInPicture {
             pictureInPictureManager.restoreAppIfNeeded(app: app)
         }
     }

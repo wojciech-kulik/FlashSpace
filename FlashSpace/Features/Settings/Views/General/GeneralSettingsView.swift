@@ -9,7 +9,7 @@ import AppKit
 import SwiftUI
 
 struct GeneralSettingsView: View {
-    @StateObject var settings = AppDependencies.shared.settingsRepository
+    @StateObject var settings = AppDependencies.shared.generalSettings
     @State var isAutostartEnabled = false
     @State var hasAccessibilityPermissions = false
 

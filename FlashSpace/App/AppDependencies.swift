@@ -19,14 +19,31 @@ struct AppDependencies {
     let hotKeysMonitor: HotKeysMonitorProtocol = GlobalShortcutMonitor.shared
     let hotKeysManager: HotKeysManager
 
-    let autostartService = AutostartService()
-    let focusedWindowTracker: FocusedWindowTracker
     let focusManager: FocusManager
+    let focusedWindowTracker: FocusedWindowTracker
 
-    let settingsRepository = SettingsRepository()
+    let settingsRepository: SettingsRepository
+    let generalSettings = GeneralSettings()
+    let menuBarSettings = MenuBarSettings()
+    let focusManagerSettings = FocusManagerSettings()
+    let workspaceSettings = WorkspaceSettings()
+    let floatingAppsSettings = FloatingAppsSettings()
+    let spaceControlSettings = SpaceControlSettings()
+    let integrationsSettings = IntegrationsSettings()
+
     let profilesRepository: ProfilesRepository
+    let autostartService = AutostartService()
 
     private init() {
+        self.settingsRepository = SettingsRepository(
+            generalSettings: generalSettings,
+            menuBarSettings: menuBarSettings,
+            focusManagerSettings: focusManagerSettings,
+            workspaceSettings: workspaceSettings,
+            floatingAppsSettings: floatingAppsSettings,
+            spaceControlSettings: spaceControlSettings,
+            integrationsSettings: integrationsSettings
+        )
         self.pictureInPictureManager = PictureInPictureManager(
             settingsRepository: settingsRepository
         )
@@ -47,7 +64,7 @@ struct AppDependencies {
         self.focusManager = FocusManager(
             workspaceRepository: workspaceRepository,
             workspaceManager: workspaceManager,
-            settingsRepository: settingsRepository
+            focusManagerSettings: focusManagerSettings
         )
         self.hotKeysManager = HotKeysManager(
             hotKeysMonitor: GlobalShortcutMonitor.shared,
