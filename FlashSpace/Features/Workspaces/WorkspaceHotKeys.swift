@@ -10,7 +10,8 @@ import AppKit
 final class WorkspaceHotKeys {
     private let workspaceManager: WorkspaceManager
     private let workspaceRepository: WorkspaceRepository
-    private let settingsRepository: SettingsRepository
+    private let workspaceSettings: WorkspaceSettings
+    private let floatingAppsSettings: FloatingAppsSettings
 
     init(
         workspaceManager: WorkspaceManager,
@@ -19,7 +20,8 @@ final class WorkspaceHotKeys {
     ) {
         self.workspaceManager = workspaceManager
         self.workspaceRepository = workspaceRepository
-        self.settingsRepository = settingsRepository
+        self.workspaceSettings = settingsRepository.workspaceSettings
+        self.floatingAppsSettings = settingsRepository.floatingAppsSettings
     }
 
     func getHotKeys() -> [(AppHotKey, () -> ())] {
@@ -53,7 +55,7 @@ final class WorkspaceHotKeys {
 
     private func getAssignAppHotKey(for workspace: Workspace?) -> (AppHotKey, () -> ())? {
         let shortcut = workspace == nil
-            ? settingsRepository.assignFocusedApp
+            ? workspaceSettings.assignFocusedApp
             : workspace?.assignAppShortcut
 
         guard let shortcut else { return nil }
@@ -87,7 +89,7 @@ final class WorkspaceHotKeys {
     }
 
     private func getUnassignAppHotKey() -> (AppHotKey, () -> ())? {
-        guard let shortcut = settingsRepository.unassignFocusedApp else { return nil }
+        guard let shortcut = workspaceSettings.unassignFocusedApp else { return nil }
 
         let action = { [weak self] in
             guard let activeApp = NSWorkspace.shared.frontmostApplication else { return }
@@ -112,8 +114,8 @@ final class WorkspaceHotKeys {
     private func getCycleWorkspacesHotKey(next: Bool) -> (AppHotKey, () -> ())? {
         guard let shortcut =
             next
-                ? settingsRepository.switchToNextWorkspace
-                : settingsRepository.switchToPreviousWorkspace
+                ? workspaceSettings.switchToNextWorkspace
+                : workspaceSettings.switchToPreviousWorkspace
         else { return nil }
 
         let action = { [weak self] in
@@ -141,7 +143,7 @@ final class WorkspaceHotKeys {
     }
 
     private func getRecentWorkspaceHotKey() -> (AppHotKey, () -> ())? {
-        guard let shortcut = settingsRepository.switchToRecentWorkspace else { return nil }
+        guard let shortcut = workspaceSettings.switchToRecentWorkspace else { return nil }
         let action = { [weak self] in
             guard let self,
                   let screen = getCursorScreen(),
@@ -155,13 +157,13 @@ final class WorkspaceHotKeys {
     }
 
     private func getFloatTheFocusedAppHotKey() -> (AppHotKey, () -> ())? {
-        guard let shortcut = settingsRepository.floatTheFocusedApp else { return nil }
+        guard let shortcut = floatingAppsSettings.floatTheFocusedApp else { return nil }
         let action = { [weak self] in
             guard let self,
                   let activeApp = NSWorkspace.shared.frontmostApplication,
                   let appName = activeApp.localizedName else { return }
 
-            self.settingsRepository.addFloatingAppIfNeeded(app: activeApp.toMacApp)
+            self.floatingAppsSettings.addFloatingAppIfNeeded(app: activeApp.toMacApp)
             Toast.showWith(
                 icon: "macwindow.on.rectangle",
                 message: "\(appName) - Added To Floating Apps",
@@ -172,13 +174,13 @@ final class WorkspaceHotKeys {
     }
 
     private func getUnfloatTheFocusedAppHotKey() -> (AppHotKey, () -> ())? {
-        guard let shortcut = settingsRepository.unfloatTheFocusedApp else { return nil }
+        guard let shortcut = floatingAppsSettings.unfloatTheFocusedApp else { return nil }
         let action = { [weak self] in
             guard let self,
                   let activeApp = NSWorkspace.shared.frontmostApplication,
                   let appName = activeApp.localizedName else { return }
 
-            if settingsRepository.floatingApps?.containsApp(activeApp) == true {
+            if floatingAppsSettings.floatingApps.containsApp(activeApp) {
                 Toast.showWith(
                     icon: "macwindow",
                     message: "\(appName) - Removed From Floating Apps",
@@ -186,7 +188,7 @@ final class WorkspaceHotKeys {
                 )
             }
 
-            settingsRepository.deleteFloatingApp(app: activeApp.toMacApp)
+            floatingAppsSettings.deleteFloatingApp(app: activeApp.toMacApp)
 
             guard let screen = activeApp.display else { return }
 

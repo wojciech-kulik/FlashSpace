@@ -9,12 +9,12 @@ import SwiftUI
 
 struct FloatingAppsSettingsView: View {
     @StateObject var viewModel = FloatingAppsSettingsViewModel()
-    @StateObject var settings = AppDependencies.shared.settingsRepository
+    @StateObject var settings = AppDependencies.shared.floatingAppsSettings
 
     var body: some View {
         Form {
             Section(header: header) {
-                if settings.floatingApps?.contains(where: \.bundleIdentifier.isEmpty) == true {
+                if settings.floatingApps.contains(where: \.bundleIdentifier.isEmpty) {
                     Text("Could not migrate some apps. Please re-add them to fix the problem.")
                         .foregroundStyle(.errorRed)
                         .font(.callout)
@@ -38,7 +38,7 @@ struct FloatingAppsSettingsView: View {
 
     private var appsList: some View {
         VStack(alignment: .leading) {
-            ForEach(settings.floatingApps ?? [], id: \.self) { app in
+            ForEach(settings.floatingApps, id: \.self) { app in
                 HStack {
                     Button {
                         viewModel.deleteFloatingApp(app: app)

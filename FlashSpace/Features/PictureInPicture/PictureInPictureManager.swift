@@ -13,15 +13,15 @@ final class PictureInPictureManager {
     private var hiddenWindows: [NSRunningApplication: [AXWindow]] = [:]
     private var capturedFrame: [AXWindow: CGRect] = [:]
 
-    private let settingsRepository: SettingsRepository
+    private let settings: WorkspaceSettings
 
     init(settingsRepository: SettingsRepository) {
-        self.settingsRepository = settingsRepository
+        self.settings = settingsRepository.workspaceSettings
         setupSignalHandlers()
     }
 
     func restoreAppIfNeeded(app: NSRunningApplication) {
-        guard settingsRepository.enablePictureInPictureSupport else { return }
+        guard settings.enablePictureInPictureSupport else { return }
 
         if hiddenWindows.keys.contains(app) {
             restoreFromCornerNonPipWindows(app: app)
@@ -35,14 +35,14 @@ final class PictureInPictureManager {
     }
 
     func showPipAppIfNeeded(app: NSRunningApplication) {
-        guard settingsRepository.enablePictureInPictureSupport,
+        guard settings.enablePictureInPictureSupport,
               app.supportsPictureInPicture else { return }
 
         restoreFromCornerNonPipWindows(app: app)
     }
 
     func hidePipAppIfNeeded(app: NSRunningApplication) -> Bool {
-        guard settingsRepository.enablePictureInPictureSupport,
+        guard settings.enablePictureInPictureSupport,
               app.supportsPictureInPicture,
               app.isPictureInPictureActive
         else { return false }

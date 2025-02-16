@@ -9,298 +9,81 @@ import Combine
 import Foundation
 
 final class SettingsRepository: ObservableObject {
-    static let defaultScript = "sketchybar --trigger flashspace_workspace_change WORKSPACE=\"$WORKSPACE\" DISPLAY=\"$DISPLAY\""
-    static let defaultProfileChangeScript = "sketchybar --reload"
-    static let defaultMenuBarTitleTemplate = "$WORKSPACE"
+    private(set) var generalSettings: GeneralSettings
+    private(set) var menuBarSettings: MenuBarSettings
+    private(set) var focusManagerSettings: FocusManagerSettings
+    private(set) var workspaceSettings: WorkspaceSettings
+    private(set) var floatingAppsSettings: FloatingAppsSettings
+    private(set) var spaceControlSettings: SpaceControlSettings
+    private(set) var integrationsSettings: IntegrationsSettings
 
-    // MARK: - General
-
-    @Published var showFlashSpace: AppHotKey? {
-        didSet { updateSettings() }
-    }
-
-    @Published var checkForUpdatesAutomatically: Bool = false {
-        didSet { updateSettings() }
-    }
-
-    @Published var showMenuBarTitle: Bool = true {
-        didSet { updateSettings() }
-    }
-
-    // MARK: - Menu Bar
-
-    @Published var menuBarTitleTemplate: String = SettingsRepository.defaultMenuBarTitleTemplate {
-        didSet { debouncedUpdateSettings.send(()) }
-    }
-
-    @Published var menuBarDisplayAliases: String = "" {
-        didSet { debouncedUpdateSettings.send(()) }
-    }
-
-    // MARK: - Focus Manager
-
-    @Published var enableFocusManagement: Bool = false {
-        didSet { updateSettings() }
-    }
-
-    @Published var centerCursorOnFocusChange: Bool = false {
-        didSet { updateSettings() }
-    }
-
-    @Published var focusLeft: AppHotKey? {
-        didSet { updateSettings() }
-    }
-
-    @Published var focusRight: AppHotKey? {
-        didSet { updateSettings() }
-    }
-
-    @Published var focusUp: AppHotKey? {
-        didSet { updateSettings() }
-    }
-
-    @Published var focusDown: AppHotKey? {
-        didSet { updateSettings() }
-    }
-
-    @Published var focusNextWorkspaceApp: AppHotKey? {
-        didSet { updateSettings() }
-    }
-
-    @Published var focusPreviousWorkspaceApp: AppHotKey? {
-        didSet { updateSettings() }
-    }
-
-    @Published var focusNextWorkspaceWindow: AppHotKey? {
-        didSet { updateSettings() }
-    }
-
-    @Published var focusPreviousWorkspaceWindow: AppHotKey? {
-        didSet { updateSettings() }
-    }
-
-    // MARK: - Workspaces
-
-    @Published var centerCursorOnWorkspaceChange: Bool = false {
-        didSet { updateSettings() }
-    }
-
-    @Published var switchToPreviousWorkspace: AppHotKey? {
-        didSet { updateSettings() }
-    }
-
-    @Published var switchToNextWorkspace: AppHotKey? {
-        didSet { updateSettings() }
-    }
-
-    @Published var switchToRecentWorkspace: AppHotKey? {
-        didSet { updateSettings() }
-    }
-
-    @Published var assignFocusedApp: AppHotKey? {
-        didSet { updateSettings() }
-    }
-
-    @Published var unassignFocusedApp: AppHotKey? {
-        didSet { updateSettings() }
-    }
-
-    @Published var floatingApps: [MacApp]? {
-        didSet { updateSettings() }
-    }
-
-    @Published var floatTheFocusedApp: AppHotKey? {
-        didSet { updateSettings() }
-    }
-
-    @Published var unfloatTheFocusedApp: AppHotKey? {
-        didSet { updateSettings() }
-    }
-
-    @Published var showFloatingNotifications: Bool = true {
-        didSet { updateSettings() }
-    }
-
-    @Published var changeWorkspaceOnAppAssign: Bool = true {
-        didSet { updateSettings() }
-    }
-
-    @Published var enablePictureInPictureSupport: Bool = true {
-        didSet { updateSettings() }
-    }
-
-    // MARK: - SpaceControl
-
-    @Published var enableSpaceControl: Bool = false {
-        didSet { updateSettings() }
-    }
-
-    @Published var showSpaceControl: AppHotKey? {
-        didSet { updateSettings() }
-    }
-
-    @Published var enableSpaceControlAnimations: Bool = true {
-        didSet { updateSettings() }
-    }
-
-    @Published var spaceControlCurrentDisplayWorkspaces: Bool = false {
-        didSet { updateSettings() }
-    }
-
-    // MARK: - Integrations
-
-    @Published var enableIntegrations: Bool = false {
-        didSet { updateSettings() }
-    }
-
-    @Published var runScriptOnWorkspaceChange: String = "" {
-        didSet { debouncedUpdateSettings.send(()) }
-    }
-
-    @Published var runScriptOnLaunch: String = "" {
-        didSet { debouncedUpdateSettings.send(()) }
-    }
-
-    @Published var runScriptOnProfileChange: String = "" {
-        didSet { debouncedUpdateSettings.send(()) }
-    }
+    private lazy var allSettings: [SettingsProtocol] = [
+        generalSettings,
+        menuBarSettings,
+        focusManagerSettings,
+        workspaceSettings,
+        floatingAppsSettings,
+        spaceControlSettings,
+        integrationsSettings
+    ]
 
     private var currentSettings = AppSettings()
-    private var shouldUpdate = false
     private var cancellables = Set<AnyCancellable>()
+    private var shouldUpdate = false
 
-    private let debouncedUpdateSettings = PassthroughSubject<(), Never>()
+    init(
+        generalSettings: GeneralSettings,
+        menuBarSettings: MenuBarSettings,
+        focusManagerSettings: FocusManagerSettings,
+        workspaceSettings: WorkspaceSettings,
+        floatingAppsSettings: FloatingAppsSettings,
+        spaceControlSettings: SpaceControlSettings,
+        integrationsSettings: IntegrationsSettings
+    ) {
+        self.generalSettings = generalSettings
+        self.menuBarSettings = menuBarSettings
+        self.focusManagerSettings = focusManagerSettings
+        self.workspaceSettings = workspaceSettings
+        self.floatingAppsSettings = floatingAppsSettings
+        self.spaceControlSettings = spaceControlSettings
+        self.integrationsSettings = integrationsSettings
 
-    init() {
         loadFromDisk()
 
-        debouncedUpdateSettings
-            .debounce(for: .seconds(1), scheduler: DispatchQueue.main)
+        Publishers.MergeMany(allSettings.map(\.updatePublisher))
             .sink { [weak self] in self?.updateSettings() }
             .store(in: &cancellables)
-
-        DispatchQueue.main.async {
-            Integrations.runOnAppLaunchIfNeeded()
-        }
-    }
-
-    func addFloatingAppIfNeeded(app: MacApp) {
-        var unwrappedFloatingApps = floatingApps ?? []
-        guard !unwrappedFloatingApps.contains(app) else { return }
-        unwrappedFloatingApps.append(app)
-        floatingApps = unwrappedFloatingApps
-        saveToDisk()
-    }
-
-    func deleteFloatingApp(app: MacApp) {
-        floatingApps?.removeAll { $0 == app }
-        saveToDisk()
     }
 
     func saveToDisk() {
+        Logger.log("Saving settings to disk")
         try? ConfigSerializer.serialize(filename: "settings", currentSettings)
     }
 
     private func updateSettings() {
         guard shouldUpdate else { return }
 
-        currentSettings = AppSettings(
-            checkForUpdatesAutomatically: checkForUpdatesAutomatically,
-            showFlashSpace: showFlashSpace,
-
-            showMenuBarTitle: showMenuBarTitle,
-            menuBarTitleTemplate: menuBarTitleTemplate,
-            menuBarDisplayAliases: menuBarDisplayAliases,
-
-            enableFocusManagement: enableFocusManagement,
-            centerCursorOnFocusChange: centerCursorOnFocusChange,
-            focusLeft: focusLeft,
-            focusRight: focusRight,
-            focusUp: focusUp,
-            focusDown: focusDown,
-            focusNextWorkspaceApp: focusNextWorkspaceApp,
-            focusPreviousWorkspaceApp: focusPreviousWorkspaceApp,
-            focusNextWorkspaceWindow: focusNextWorkspaceWindow,
-            focusPreviousWorkspaceWindow: focusPreviousWorkspaceWindow,
-
-            centerCursorOnWorkspaceChange: centerCursorOnWorkspaceChange,
-            switchToPreviousWorkspace: switchToPreviousWorkspace,
-            switchToNextWorkspace: switchToNextWorkspace,
-            switchToRecentWorkspace: switchToRecentWorkspace,
-            assignFocusedApp: assignFocusedApp,
-            unassignFocusedApp: unassignFocusedApp,
-
-            showFloatingNotifications: showFloatingNotifications,
-            changeWorkspaceOnAppAssign: changeWorkspaceOnAppAssign,
-            enablePictureInPictureSupport: enablePictureInPictureSupport,
-
-            floatingApps: floatingApps,
-            floatTheFocusedApp: floatTheFocusedApp,
-            unfloatTheFocusedApp: unfloatTheFocusedApp,
-
-            enableSpaceControl: enableSpaceControl,
-            showSpaceControl: showSpaceControl,
-            enableSpaceControlAnimations: enableSpaceControlAnimations,
-            spaceControlCurrentDisplayWorkspaces: spaceControlCurrentDisplayWorkspaces,
-
-            enableIntegrations: enableIntegrations,
-            runScriptOnWorkspaceChange: runScriptOnWorkspaceChange,
-            runScriptOnLaunch: runScriptOnLaunch,
-            runScriptOnProfileChange: runScriptOnProfileChange
-        )
+        var settings = AppSettings()
+        allSettings.forEach { $0.update(&settings) }
+        currentSettings = settings
         saveToDisk()
+
         AppDependencies.shared.hotKeysManager.refresh()
+        objectWillChange.send()
     }
 
     private func loadFromDisk() {
+        Logger.log("Loading settings from disk")
+
         shouldUpdate = false
         defer { shouldUpdate = true }
 
-        guard let settings = try? ConfigSerializer.deserialize(AppSettings.self, filename: "settings") else { return }
+        guard let settings = try? ConfigSerializer.deserialize(
+            AppSettings.self,
+            filename: "settings"
+        ) else { return }
 
         currentSettings = settings
-
-        checkForUpdatesAutomatically = settings.checkForUpdatesAutomatically ?? false
-        showFlashSpace = settings.showFlashSpace
-
-        showMenuBarTitle = settings.showMenuBarTitle ?? true
-        menuBarTitleTemplate = settings.menuBarTitleTemplate ?? Self.defaultMenuBarTitleTemplate
-        menuBarDisplayAliases = settings.menuBarDisplayAliases ?? ""
-
-        enableFocusManagement = settings.enableFocusManagement ?? false
-        centerCursorOnFocusChange = settings.centerCursorOnFocusChange ?? false
-        focusLeft = settings.focusLeft
-        focusRight = settings.focusRight
-        focusUp = settings.focusUp
-        focusDown = settings.focusDown
-        focusNextWorkspaceApp = settings.focusNextWorkspaceApp
-        focusPreviousWorkspaceApp = settings.focusPreviousWorkspaceApp
-        focusNextWorkspaceWindow = settings.focusNextWorkspaceWindow
-        focusPreviousWorkspaceWindow = settings.focusPreviousWorkspaceWindow
-
-        centerCursorOnWorkspaceChange = settings.centerCursorOnWorkspaceChange ?? false
-        switchToPreviousWorkspace = settings.switchToPreviousWorkspace
-        switchToNextWorkspace = settings.switchToNextWorkspace
-        switchToRecentWorkspace = settings.switchToRecentWorkspace
-        assignFocusedApp = settings.assignFocusedApp
-        unassignFocusedApp = settings.unassignFocusedApp
-
-        showFloatingNotifications = settings.showFloatingNotifications ?? true
-        changeWorkspaceOnAppAssign = settings.changeWorkspaceOnAppAssign ?? true
-        enablePictureInPictureSupport = settings.enablePictureInPictureSupport ?? true
-
-        floatingApps = settings.floatingApps
-        floatTheFocusedApp = settings.floatTheFocusedApp
-        unfloatTheFocusedApp = settings.unfloatTheFocusedApp
-
-        enableSpaceControl = settings.enableSpaceControl ?? false
-        showSpaceControl = settings.showSpaceControl
-        enableSpaceControlAnimations = settings.enableSpaceControlAnimations ?? true
-        spaceControlCurrentDisplayWorkspaces = settings.spaceControlCurrentDisplayWorkspaces ?? false
-
-        enableIntegrations = settings.enableIntegrations ?? false
-        runScriptOnWorkspaceChange = settings.runScriptOnWorkspaceChange ?? Self.defaultScript
-        runScriptOnLaunch = settings.runScriptOnLaunch ?? ""
-        runScriptOnProfileChange = settings.runScriptOnProfileChange ?? Self.defaultProfileChangeScript
+        allSettings.forEach { $0.load(from: settings) }
     }
 }

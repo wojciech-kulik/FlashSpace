@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct IntegrationsSettingsView: View {
-    @StateObject var settings = AppDependencies.shared.settingsRepository
+    @StateObject var settings = AppDependencies.shared.integrationsSettings
 
     var body: some View {
         Form {

@@ -24,7 +24,7 @@ final class SpaceControlViewModel: ObservableObject {
 
     private var cancellables = Set<AnyCancellable>()
 
-    private let settingsRepository = AppDependencies.shared.settingsRepository
+    private let settings = AppDependencies.shared.spaceControlSettings
     private let workspaceRepository = AppDependencies.shared.workspaceRepository
     private let workspaceManager = AppDependencies.shared.workspaceManager
     private let screenshotManager = AppDependencies.shared.workspaceScreenshotManager
@@ -48,7 +48,7 @@ final class SpaceControlViewModel: ObservableObject {
 
         workspaces = Array(
             workspaceRepository.workspaces
-                .filter { !settingsRepository.spaceControlCurrentDisplayWorkspaces || $0.isOnTheCurrentScreen }
+                .filter { !settings.spaceControlCurrentDisplayWorkspaces || $0.isOnTheCurrentScreen }
                 .prefix(15)
                 .enumerated()
                 .map {

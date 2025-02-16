@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct FocusSettingsView: View {
-    @StateObject private var settings = AppDependencies.shared.settingsRepository
+    @StateObject private var settings = AppDependencies.shared.focusManagerSettings
 
     var body: some View {
         Form {

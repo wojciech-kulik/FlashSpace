@@ -22,7 +22,7 @@ final class SpaceControlWindow: NSWindow, NSWindowDelegate {
             return
         }
 
-        let settings = AppDependencies.shared.settingsRepository
+        let settings = AppDependencies.shared.spaceControlSettings
         let workspaceManager = AppDependencies.shared.workspaceManager
         var workspaces = AppDependencies.shared.workspaceRepository.workspaces
 

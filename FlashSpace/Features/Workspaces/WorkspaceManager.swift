@@ -31,7 +31,8 @@ final class WorkspaceManager: ObservableObject {
     private let hideAgainSubject = PassthroughSubject<Workspace, Never>()
 
     private let workspaceRepository: WorkspaceRepository
-    private let settingsRepository: SettingsRepository
+    private let workspaceSettings: WorkspaceSettings
+    private let floatingAppsSettings: FloatingAppsSettings
     private let pictureInPictureManager: PictureInPictureManager
 
     init(
@@ -40,7 +41,8 @@ final class WorkspaceManager: ObservableObject {
         pictureInPictureManager: PictureInPictureManager
     ) {
         self.workspaceRepository = workspaceRepository
-        self.settingsRepository = settingsRepository
+        self.workspaceSettings = settingsRepository.workspaceSettings
+        self.floatingAppsSettings = settingsRepository.floatingAppsSettings
         self.pictureInPictureManager = pictureInPictureManager
 
         PermissionsManager.shared.askForAccessibilityPermissions()
@@ -93,7 +95,7 @@ final class WorkspaceManager: ObservableObject {
     private func showApps(in workspace: Workspace, setFocus: Bool) {
         let regularApps = NSWorkspace.shared.runningApplications
             .filter { $0.activationPolicy == .regular }
-        let floatingApps = (settingsRepository.floatingApps ?? [])
+        let floatingApps = (floatingAppsSettings.floatingApps ?? [])
         var appsToShow = regularApps
             .filter {
                 workspace.apps.containsApp($0) ||
@@ -138,7 +140,7 @@ final class WorkspaceManager: ObservableObject {
     private func hideApps(in workspace: Workspace) {
         let regularApps = NSWorkspace.shared.runningApplications
             .filter { $0.activationPolicy == .regular }
-        let workspaceApps = workspace.apps + (settingsRepository.floatingApps ?? [])
+        let workspaceApps = workspace.apps + (floatingAppsSettings.floatingApps ?? [])
         let isAnyWorkspaceAppRunning = regularApps
             .contains { workspaceApps.containsApp($0) }
 
@@ -177,7 +179,7 @@ final class WorkspaceManager: ObservableObject {
     }
 
     private func centerCursorIfNeeded(in frame: CGRect?) {
-        guard settingsRepository.centerCursorOnWorkspaceChange, let frame else { return }
+        guard workspaceSettings.centerCursorOnWorkspaceChange, let frame else { return }
 
         CGWarpMouseCursorPosition(CGPoint(x: frame.midX, y: frame.midY))
     }
@@ -239,7 +241,7 @@ extension WorkspaceManager {
 
         updateLastFocusedApp(app, in: targetWorkspace)
 
-        if settingsRepository.changeWorkspaceOnAppAssign {
+        if workspaceSettings.changeWorkspaceOnAppAssign {
             activateWorkspace(targetWorkspace, setFocus: true)
         } else if !isTargetWorkspaceActive {
             NSWorkspace.shared.runningApplications

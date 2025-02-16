@@ -19,21 +19,19 @@ final class FocusManager {
 
     private let workspaceRepository: WorkspaceRepository
     private let workspaceManager: WorkspaceManager
-    private let settingsRepository: SettingsRepository
+    private let settings: FocusManagerSettings
 
     init(
         workspaceRepository: WorkspaceRepository,
         workspaceManager: WorkspaceManager,
-        settingsRepository: SettingsRepository
+        focusManagerSettings: FocusManagerSettings
     ) {
         self.workspaceRepository = workspaceRepository
         self.workspaceManager = workspaceManager
-        self.settingsRepository = settingsRepository
+        self.settings = focusManagerSettings
     }
 
     func getHotKeys() -> [(AppHotKey, () -> ())] {
-        let settings = settingsRepository
-
         guard settings.enableFocusManagement else { return [] }
 
         return [
@@ -183,7 +181,7 @@ final class FocusManager {
     }
 
     private func centerCursorIfNeeded(in frame: CGRect?) {
-        guard settingsRepository.centerCursorOnFocusChange, let frame else { return }
+        guard settings.centerCursorOnFocusChange, let frame else { return }
 
         CGWarpMouseCursorPosition(CGPoint(x: frame.midX, y: frame.midY))
     }

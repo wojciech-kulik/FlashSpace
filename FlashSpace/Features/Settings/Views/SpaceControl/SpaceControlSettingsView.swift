@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SpaceControlSettingsView: View {
-    @StateObject var settings = AppDependencies.shared.settingsRepository
+    @StateObject var settings = AppDependencies.shared.spaceControlSettings
     @State var hasScreenRecordingPermissions = false
 
     var body: some View {

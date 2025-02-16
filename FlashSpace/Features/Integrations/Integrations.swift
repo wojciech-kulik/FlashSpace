@@ -8,7 +8,7 @@
 import Foundation
 
 enum Integrations {
-    private static let settings = AppDependencies.shared.settingsRepository
+    private static let settings = AppDependencies.shared.integrationsSettings
     private static let profilesRepository = AppDependencies.shared.profilesRepository
 
     static func runOnActivateIfNeeded(workspace: ActiveWorkspace) {

@@ -23,7 +23,7 @@ struct FlashSpaceMenuBar: Scene {
                 NSApp.activate(ignoringOtherApps: true)
             }
 
-            if settingsRepository.enableSpaceControl {
+            if settingsRepository.spaceControlSettings.enableSpaceControl {
                 Button("Space Control") {
                     SpaceControl.show()
                 }
@@ -78,7 +78,7 @@ struct FlashSpaceMenuBar: Scene {
                 Image(systemName: workspaceManager.activeWorkspaceDetails?.symbolIconName ?? .defaultIconSymbol)
                 if let title = MenuBarTitle.get() { Text(title) }
             }
-            .id(settingsRepository.menuBarTitleTemplate)
+            .id(settingsRepository.menuBarSettings.menuBarTitleTemplate)
         }
     }
 }

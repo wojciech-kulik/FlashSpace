@@ -53,7 +53,7 @@ final class HotKeysManager {
             hotKeysMonitor.addAction(action, forKeyEvent: .down)
         }
 
-        if let showHotKey = settingsRepository.showFlashSpace?.toShortcut() {
+        if let showHotKey = settingsRepository.generalSettings.showFlashSpace?.toShortcut() {
             let action = ShortcutAction(shortcut: showHotKey) { _ in
                 NotificationCenter.default.post(name: .openMainWindow, object: nil)
                 return true
@@ -68,13 +68,10 @@ final class HotKeysManager {
             }
             hotKeysMonitor.addAction(action, forKeyEvent: .down)
         }
-
-        Logger.log("Enabled all shortcuts")
     }
 
     func disableAll() {
         hotKeysMonitor.removeAllActions()
-        Logger.log("Disabled all shortcuts")
     }
 
     private func observe() {

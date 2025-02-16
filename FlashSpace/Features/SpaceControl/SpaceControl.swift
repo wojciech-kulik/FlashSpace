@@ -9,19 +9,15 @@ import AppKit
 import SwiftUI
 
 enum SpaceControl {
-    static var isEnabled: Bool {
-        AppDependencies.shared.settingsRepository.enableSpaceControl
-    }
-
+    static var isEnabled: Bool { settings.enableSpaceControl }
     static var isVisible: Bool { window != nil }
     static var window: NSWindow?
 
+    private static var settings: SpaceControlSettings { AppDependencies.shared.spaceControlSettings }
     private static var focusedAppBeforeShow: NSRunningApplication?
 
     static func getHotKey() -> (AppHotKey, () -> ())? {
         guard isEnabled else { return nil }
-
-        let settings = AppDependencies.shared.settingsRepository
 
         if let spaceControlHotKey = settings.showSpaceControl {
             return (spaceControlHotKey, show)
@@ -64,7 +60,7 @@ enum SpaceControl {
         window.delegate = window
         Self.window = window
 
-        let animations = AppDependencies.shared.settingsRepository.enableSpaceControlAnimations
+        let animations = settings.enableSpaceControlAnimations
 
         window.contentView = contentView.addVisualEffect(material: .fullScreenUI)
         window.alphaValue = animations ? 0 : 1
