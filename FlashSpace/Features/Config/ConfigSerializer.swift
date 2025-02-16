@@ -60,18 +60,6 @@ enum ConfigSerializer {
 
         print("Converted config format to \(to.displayName)")
     }
-
-    static func detectFormat() -> ConfigFormat {
-        for format in ConfigFormat.allCases {
-            let url = getUrl(for: "profiles", ext: format.rawValue)
-            if FileManager.default.fileExists(atPath: url.path) {
-                print("Detected config format \(format.displayName) at \(url.path)")
-                return format
-            }
-        }
-
-        return .json
-    }
 }
 
 private extension ConfigSerializer {
@@ -111,5 +99,17 @@ private extension ConfigSerializer {
         configDirectory
             .appendingPathComponent(filename)
             .appendingPathExtension(ext ?? ConfigSerializer.format.extensionName)
+    }
+
+    static func detectFormat() -> ConfigFormat {
+        for format in ConfigFormat.allCases {
+            let url = getUrl(for: "profiles", ext: format.rawValue)
+            if FileManager.default.fileExists(atPath: url.path) {
+                print("Detected config format \(format.displayName) at \(url.path)")
+                return format
+            }
+        }
+
+        return .json
     }
 }

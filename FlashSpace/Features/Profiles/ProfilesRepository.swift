@@ -7,27 +7,6 @@
 
 import Foundation
 
-typealias ProfileId = UUID
-
-struct ProfilesConfig: Codable {
-    let selectedProfileId: ProfileId
-    let profiles: [Profile]
-}
-
-struct Profile: Identifiable, Codable, Hashable {
-    let id: ProfileId
-    var name: String
-    var workspaces: [Workspace]
-}
-
-extension Profile {
-    static let `default` = Profile(
-        id: UUID(),
-        name: "Default",
-        workspaces: []
-    )
-}
-
 final class ProfilesRepository: ObservableObject {
     @Published var profiles: [Profile] = [.default]
     @Published var selectedProfile: Profile = .default {
