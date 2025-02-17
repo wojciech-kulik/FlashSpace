@@ -40,7 +40,7 @@ final class WorkspaceHotKeys {
         return hotKeys.compactMap(\.self)
     }
 
-    private func getActivateHotKey(for workspace: Workspace) -> (AppHotKey, () -> ())? {
+    func getActivateHotKey(for workspace: Workspace) -> (AppHotKey, () -> ())? {
         guard let shortcut = workspace.activateShortcut else { return nil }
 
         let action = { [weak self] in
@@ -53,7 +53,7 @@ final class WorkspaceHotKeys {
         return (shortcut, action)
     }
 
-    private func getAssignAppHotKey(for workspace: Workspace?) -> (AppHotKey, () -> ())? {
+    func getAssignAppHotKey(for workspace: Workspace?) -> (AppHotKey, () -> ())? {
         let shortcut = workspace == nil
             ? workspaceSettings.assignFocusedApp
             : workspace?.assignAppShortcut
@@ -88,7 +88,7 @@ final class WorkspaceHotKeys {
         return (shortcut, action)
     }
 
-    private func getUnassignAppHotKey() -> (AppHotKey, () -> ())? {
+    func getUnassignAppHotKey() -> (AppHotKey, () -> ())? {
         guard let shortcut = workspaceSettings.unassignFocusedApp else { return nil }
 
         let action = { [weak self] in
@@ -111,7 +111,7 @@ final class WorkspaceHotKeys {
         return (shortcut, action)
     }
 
-    private func getCycleWorkspacesHotKey(next: Bool) -> (AppHotKey, () -> ())? {
+    func getCycleWorkspacesHotKey(next: Bool) -> (AppHotKey, () -> ())? {
         guard let shortcut =
             next
                 ? workspaceSettings.switchToNextWorkspace
@@ -142,7 +142,7 @@ final class WorkspaceHotKeys {
         return (shortcut, action)
     }
 
-    private func getRecentWorkspaceHotKey() -> (AppHotKey, () -> ())? {
+    func getRecentWorkspaceHotKey() -> (AppHotKey, () -> ())? {
         guard let shortcut = workspaceSettings.switchToRecentWorkspace else { return nil }
         let action = { [weak self] in
             guard let self,
@@ -156,7 +156,7 @@ final class WorkspaceHotKeys {
         return (shortcut, action)
     }
 
-    private func getFloatTheFocusedAppHotKey() -> (AppHotKey, () -> ())? {
+    func getFloatTheFocusedAppHotKey() -> (AppHotKey, () -> ())? {
         guard let shortcut = floatingAppsSettings.floatTheFocusedApp else { return nil }
         let action = { [weak self] in
             guard let self,
@@ -173,7 +173,7 @@ final class WorkspaceHotKeys {
         return (shortcut, action)
     }
 
-    private func getUnfloatTheFocusedAppHotKey() -> (AppHotKey, () -> ())? {
+    func getUnfloatTheFocusedAppHotKey() -> (AppHotKey, () -> ())? {
         guard let shortcut = floatingAppsSettings.unfloatTheFocusedApp else { return nil }
         let action = { [weak self] in
             guard let self,
