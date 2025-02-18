@@ -12,6 +12,10 @@ struct GitHubRelease: Codable {
     let htmlUrl: URL
 }
 
+struct GitHubError: Codable {
+    let message: String
+}
+
 struct ReleaseInfo {
     let isNewer: Bool
     let version: String
@@ -35,6 +39,10 @@ final class UpdatesManager {
 
             let decoder = JSONDecoder()
             decoder.keyDecodingStrategy = .convertFromSnakeCase
+
+            if let error = try? decoder.decode(GitHubError.self, from: data) {
+                return .failure(NSError(domain: "GitHub", code: 1, userInfo: [NSLocalizedDescriptionKey: error.message]))
+            }
 
             let release = try decoder.decode(GitHubRelease.self, from: data)
             let currentVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String

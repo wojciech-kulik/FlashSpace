@@ -48,6 +48,8 @@ struct SettingsView: View {
                     .tag("CLI")
                 Label("Acknowledgements", systemImage: "info.circle")
                     .tag("Acknowledgements")
+                Label("About", systemImage: "person")
+                    .tag("About")
             }
             .toolbar(removing: .sidebarToggle)
             .listStyle(.sidebar)
@@ -85,6 +87,8 @@ struct SettingsView: View {
             CLISettingsView()
         case "Acknowledgements":
             AcknowledgementsSettingsView()
+        case "About":
+            AboutSettingsView()
         default:
             EmptyView()
         }
