@@ -71,3 +71,20 @@ targets:
           fi
         basedOnDependencyAnalysis: false
         showEnvVars: false
+    postBuildScripts:
+      - name: Build & Copy FlashSpace CLI
+        script: |
+          SOURCE_PATH="FlashSpaceCLI/.build/release/flashspace"
+          DESTINATION_PATH="${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Contents/Resources/"
+
+          if [ ! -e "$SOURCE_PATH" ] || [ "$CONFIGURATION" == "Release" ]; then
+            echo "Building FlashSpace CLI"
+            swift build -c release --package-path FlashSpaceCLI
+          else
+            echo "FlashSpace CLI already built"
+          fi
+
+          echo "Copying FlashSpace CLI from $SOURCE_PATH to $DESTINATION_PATH"
+          cp "$SOURCE_PATH" "$DESTINATION_PATH"
+        basedOnDependencyAnalysis: false
+        showEnvVars: false
