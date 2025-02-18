@@ -29,6 +29,9 @@ struct WorkspaceCommand: ParsableCommand {
     @Flag(help: "Activate the previous workspace")
     var prev = false
 
+    @Flag(help: "Activate the most recently used workspace")
+    var recent = false
+
     func run() throws {
         if let name {
             sendCommand(.activateWorkspace(name: name, number: nil))
@@ -38,6 +41,8 @@ struct WorkspaceCommand: ParsableCommand {
             sendCommand(.nextWorkspace)
         } else if prev {
             sendCommand(.previousWorkspace)
+        } else if recent {
+            sendCommand(.recentWorkspace)
         } else {
             fallbackToHelp()
         }

@@ -1,5 +1,5 @@
 //
-//  ProfileCommand.swift
+//  OpenSpaceControlCommand.swift
 //
 //  Created by Wojciech Kulik on 18/02/2025.
 //  Copyright © 2025 Wojciech Kulik. All rights reserved.
@@ -8,17 +8,14 @@
 import ArgumentParser
 import Foundation
 
-struct ProfileCommand: ParsableCommand {
+struct OpenSpaceControlCommand: ParsableCommand {
     static var configuration = CommandConfiguration(
-        commandName: "profile",
-        abstract: "Activate a profile"
+        commandName: "open-space-control",
+        abstract: "Open Space Control"
     )
 
-    @Argument(help: "Profile name.")
-    var name: String
-
     func run() throws {
-        sendCommand(.changeProfile(name: name))
+        sendCommand(.openSpaceControl)
         runWithTimeout()
     }
 }

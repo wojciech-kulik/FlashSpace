@@ -12,9 +12,13 @@ final class CLIServer {
     private var listener: NWListener?
     private let socketPath = "/tmp/flashspace.socket"
     private let executors: [CommandExecutor] = [
+        ProfileCommands(),
         WorkspaceCommands(),
+        AppCommands(),
         FocusCommands(),
-        ProfileCommands()
+        SpaceControlCommands(),
+        ListCommands(),
+        GetCommands()
     ]
 
     init() { startServer() }
@@ -76,10 +80,11 @@ final class CLIServer {
     }
 
     private func handleCommand(_ command: CommandRequest, connection: NWConnection) {
-        let result = executors
-            .lazy
-            .compactMap { $0.execute(command: command) }
-            .first
+        var result: CommandResponse?
+        for executor in executors {
+            result = executor.execute(command: command)
+            if result != nil { break }
+        }
 
         DispatchQueue.global(qos: .userInitiated).async {
             if let response = result?.encodeSocketData() {

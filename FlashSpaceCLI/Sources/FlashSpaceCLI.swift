@@ -14,12 +14,57 @@ struct FlashSpaceCLI: ParsableCommand {
         commandName: "flashspace",
         abstract: "FlashSpace CLI",
         version: "1.0.0",
-        subcommands: [
-            AssignAppCommand.self,
-            UnassignAppCommand.self,
-            FocusCommand.self,
-            ProfileCommand.self,
-            WorkspaceCommand.self
+        groupedSubcommands: [
+            .init(
+                name: "Profile",
+                subcommands: [
+                    CreateProfileCommand.self,
+                    DeleteProfileCommand.self,
+                    ProfileCommand.self
+                ]
+            ),
+            .init(
+                name: "Workspace",
+                subcommands: [
+                    CreateWorkspaceCommand.self,
+                    DeleteWorkspaceCommand.self,
+                    WorkspaceCommand.self
+                ]
+            ),
+            .init(
+                name: "App",
+                subcommands: [
+                    AssignAppCommand.self,
+                    UnassignAppCommand.self,
+                    FocusCommand.self
+                ]
+            ),
+            .init(
+                name: "List",
+                subcommands: [
+                    ListProfilesCommand.self,
+                    ListWorkspacesCommand.self,
+                    ListAppsCommand.self,
+                    ListRunningAppsCommand.self,
+                    ListDisplaysCommand.self
+                ]
+            ),
+            .init(
+                name: "Get",
+                subcommands: [
+                    GetProfileCommand.self,
+                    GetWorkspaceCommand.self,
+                    GetAppCommand.self,
+                    GetDisplayCommand.self
+                ]
+            ),
+            .init(
+                name: "Open",
+                subcommands: [
+                    OpenAppCommand.self,
+                    OpenSpaceControlCommand.self
+                ]
+            )
         ]
     )
 }

@@ -14,13 +14,16 @@ struct UnassignAppCommand: ParsableCommand {
         abstract: "Unassign an app from all workspaces"
     )
     @Option(help: .init(
-        "The name of the app or bundle id. If not provided, the active app will be unassigned.",
+        "The name of the app or bundle id. If not provided, the active app will be unassigned. Default: active app.",
         valueName: "name|bundle id"
     ))
     var name: String?
 
+    @Flag(help: "Show toast notification")
+    var showNotification = false
+
     func run() throws {
-        sendCommand(.unassignApp(app: name))
+        sendCommand(.unassignApp(app: name, showNotification: showNotification))
         runWithTimeout()
     }
 }

@@ -13,11 +13,29 @@ final class ProfileCommands: CommandExecutor {
 
     func execute(command: CommandRequest) -> CommandResponse? {
         switch command {
-        case .changeProfile(let name):
+        case .activateProfile(let name):
             let profile = profilesRepository.profiles.first { $0.name == name }
 
             if let profile {
                 profilesRepository.selectedProfile = profile
+                return CommandResponse(success: true)
+            } else {
+                return CommandResponse(success: false, error: "Profile not found")
+            }
+
+        case .createProfile(let name, let copy, let activate):
+            profilesRepository.createProfile(name: name, keepWorkspaces: copy)
+            if activate {
+                profilesRepository.profiles
+                    .first { $0.name == name }
+                    .flatMap { profilesRepository.selectedProfile = $0 }
+            }
+            return CommandResponse(success: true)
+
+        case .deleteProfile(let name):
+            let profile = profilesRepository.profiles.first { $0.name == name }
+            if let profile {
+                profilesRepository.deleteProfile(id: profile.id)
                 return CommandResponse(success: true)
             } else {
                 return CommandResponse(success: false, error: "Profile not found")
