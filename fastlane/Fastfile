@@ -3,6 +3,9 @@ lane :release do
 
   build_mac_app
 
+  sh("codesign --force --sign \"Developer ID Application: Wojciech Kulik ($XCODE_DEVELOPMENT_TEAM)\" --options runtime ../.build/FlashSpace.app/Contents/Resources/flashspace")
+  sh("codesign --force --deep --sign \"Developer ID Application: Wojciech Kulik ($XCODE_DEVELOPMENT_TEAM)\" --options runtime ../.build/FlashSpace.app")
+
   notarize(
     package: ".build/FlashSpace.app",
     api_key_path: "../appstore.json",
@@ -16,4 +19,5 @@ lane :release do
   )
 
   sh("spctl", "-a", "-vvv", "-t", "install", "../.build/FlashSpace.app")
+  sh("codesign", "-vvv", "--deep", "--strict", "../.build/FlashSpace.app")
 end
