@@ -20,15 +20,15 @@ struct SpaceControlSettingsView: View {
             Group {
                 Section("Permissions") {
                     HStack {
-                        Text("Screen Recording Permission")
-
                         if hasScreenRecordingPermissions {
-                            Spacer()
                             Image(systemName: "checkmark.circle.fill")
                                 .foregroundColor(.green)
+                            Text("Screen Recording Permission")
+                            Spacer()
                         } else {
                             Image(systemName: "xmark.circle.fill")
                                 .foregroundColor(.red)
+                            Text("Screen Recording Permission")
                             Spacer()
                             Button("Open Privacy & Security") {
                                 NSWorkspace.shared.open(

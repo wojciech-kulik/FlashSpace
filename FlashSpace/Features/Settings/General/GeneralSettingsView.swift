@@ -22,15 +22,15 @@ struct GeneralSettingsView: View {
 
             Section("Permissions") {
                 HStack {
-                    Text("Accessibility Permissions")
-
                     if hasAccessibilityPermissions {
-                        Spacer()
                         Image(systemName: "checkmark.circle.fill")
                             .foregroundColor(.green)
+                        Text("Accessibility Permissions")
+                        Spacer()
                     } else {
                         Image(systemName: "xmark.circle.fill")
                             .foregroundColor(.red)
+                        Text("Accessibility Permissions")
                         Spacer()
                         Button("Open Privacy & Security") {
                             NSWorkspace.shared.open(
