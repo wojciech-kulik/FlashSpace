@@ -20,9 +20,7 @@ struct UnassignAppCommand: ParsableCommand {
     var name: String?
 
     func run() throws {
-        SocketClient.shared.sendCommand(.unassignApp(app: name))
-
-        RunLoop.current.run(until: Date().addingTimeInterval(5.0))
-        Self.exit(withError: CommandError.timeout)
+        sendCommand(.unassignApp(app: name))
+        runWithTimeout()
     }
 }

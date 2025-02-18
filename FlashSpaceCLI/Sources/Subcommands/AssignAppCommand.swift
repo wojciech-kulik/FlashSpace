@@ -33,9 +33,7 @@ struct AssignAppCommand: ParsableCommand {
     var activate: Bool?
 
     func run() throws {
-        SocketClient.shared.sendCommand(.assignApp(app: name, workspaceName: workspace, activate: activate))
-
-        RunLoop.current.run(until: Date().addingTimeInterval(5.0))
-        Self.exit(withError: CommandError.timeout)
+        sendCommand(.assignApp(app: name, workspaceName: workspace, activate: activate))
+        runWithTimeout()
     }
 }

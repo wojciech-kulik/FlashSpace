@@ -34,21 +34,19 @@ struct FocusCommand: ParsableCommand {
 
     func run() throws {
         if let focusDirection {
-            SocketClient.shared.sendCommand(.focusWindow(direction: focusDirection))
+            sendCommand(.focusWindow(direction: focusDirection))
         } else if nextApp {
-            SocketClient.shared.sendCommand(.focusNextApp)
+            sendCommand(.focusNextApp)
         } else if prevApp {
-            SocketClient.shared.sendCommand(.focusPreviousApp)
+            sendCommand(.focusPreviousApp)
         } else if nextWindow {
-            SocketClient.shared.sendCommand(.focusNextWindow)
+            sendCommand(.focusNextWindow)
         } else if prevWindow {
-            SocketClient.shared.sendCommand(.focusPreviousWindow)
+            sendCommand(.focusPreviousWindow)
         } else {
-            print(Self.helpMessage(for: FocusCommand.self))
-            Self.exit(withError: CommandError.other)
+            fallbackToHelp()
         }
 
-        RunLoop.current.run(until: Date().addingTimeInterval(5.0))
-        Self.exit(withError: CommandError.timeout)
+        runWithTimeout()
     }
 }

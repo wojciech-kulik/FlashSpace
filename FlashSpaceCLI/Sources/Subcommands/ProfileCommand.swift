@@ -18,9 +18,7 @@ struct ProfileCommand: ParsableCommand {
     var name: String
 
     func run() throws {
-        SocketClient.shared.sendCommand(.changeProfile(name: name))
-
-        RunLoop.current.run(until: Date().addingTimeInterval(5.0))
-        Self.exit(withError: CommandError.timeout)
+        sendCommand(.changeProfile(name: name))
+        runWithTimeout()
     }
 }

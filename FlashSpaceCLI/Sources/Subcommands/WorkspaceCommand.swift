@@ -31,19 +31,17 @@ struct WorkspaceCommand: ParsableCommand {
 
     func run() throws {
         if let name {
-            SocketClient.shared.sendCommand(.activateWorkspace(name: name))
+            sendCommand(.activateWorkspace(name: name))
         } else if let number {
-            SocketClient.shared.sendCommand(.activateWorkspaceNumber(number: number))
+            sendCommand(.activateWorkspaceNumber(number: number))
         } else if next {
-            SocketClient.shared.sendCommand(.nextWorkspace)
+            sendCommand(.nextWorkspace)
         } else if prev {
-            SocketClient.shared.sendCommand(.previousWorkspace)
+            sendCommand(.previousWorkspace)
         } else {
-            print(Self.helpMessage(for: WorkspaceCommand.self))
-            Self.exit(withError: CommandError.other)
+            fallbackToHelp()
         }
 
-        RunLoop.current.run(until: Date().addingTimeInterval(5.0))
-        Self.exit(withError: CommandError.timeout)
+        runWithTimeout()
     }
 }
