@@ -38,9 +38,9 @@ struct MainView: View {
             Button("OK", role: .cancel) {}
         } message: {
             Text(
-                "FlashSpace introduces a new feature: Space Control.\n\n" +
-                    "It allows you to quickly preview all workspace on a grid.\n\n" +
-                    "Go to settings to enable it."
+                "FlashSpace introduces the new feature: command-line integration.\n\n" +
+                    "It allows you to integrate FlashSpace with other apps and services.\n" +
+                    "Run `flashspace --help` in your terminal to learn more."
             )
         }
         .sheet(isPresented: $viewModel.isSymbolPickerPresented) {
