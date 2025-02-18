@@ -13,6 +13,9 @@ enum CommandRequest: Codable {
     case nextWorkspace
     case previousWorkspace
 
+    case assignApp(app: String?, workspaceName: String?, activate: Bool?)
+    case unassignApp(app: String?)
+
     case focusWindow(direction: FocusDirection)
     case focusNextWindow
     case focusPreviousWindow

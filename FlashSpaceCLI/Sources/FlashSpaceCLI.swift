@@ -16,7 +16,8 @@ struct FlashSpaceCLI: ParsableCommand {
         version: "1.0.0",
         subcommands: [
             ActivateCommand.self,
-            FocusCommand.self
+            FocusCommand.self,
+            WorkspaceCommand.self
         ]
     )
 }

@@ -14,7 +14,7 @@ struct ActivateCommand: ParsableCommand {
         abstract: "Activate a workspace"
     )
 
-    @Option(help: "The name of the workspace to activate")
+    @Option(help: .init("The name of the workspace to activate", valueName: "name"))
     var workspace: String?
 
     @Flag(help: "Activate the next workspace")

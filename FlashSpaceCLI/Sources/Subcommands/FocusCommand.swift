@@ -14,7 +14,10 @@ struct FocusCommand: ParsableCommand {
         abstract: "Focus windows"
     )
 
-    @Option(name: .customLong("direction"), help: "Focus a window in a specific direction")
+    @Option(
+        name: .customLong("direction"),
+        help: .init("Focus a window in a specific direction", valueName: "up|down|left|right")
+    )
     var focusDirection: FocusDirection?
 
     @Flag(help: "Focus the next workspace app")
