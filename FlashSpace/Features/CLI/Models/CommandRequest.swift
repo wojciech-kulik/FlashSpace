@@ -8,8 +8,7 @@
 import Foundation
 
 enum CommandRequest: Codable {
-    case activateWorkspace(name: String)
-    case activateWorkspaceNumber(number: Int)
+    case activateWorkspace(name: String?, number: Int?)
     case nextWorkspace
     case previousWorkspace
 

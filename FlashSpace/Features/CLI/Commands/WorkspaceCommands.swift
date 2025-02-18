@@ -16,7 +16,7 @@ final class WorkspaceCommands: CommandExecutor {
 
     func execute(command: CommandRequest) -> CommandResponse? {
         switch command {
-        case .activateWorkspace(let name):
+        case .activateWorkspace(.some(let name), _):
             let workspace = workspaceRepository.workspaces.first { $0.name == name }
             if let workspace {
                 workspaceManager.activateWorkspace(workspace, setFocus: true)
@@ -25,7 +25,7 @@ final class WorkspaceCommands: CommandExecutor {
                 return CommandResponse(success: false, error: "Workspace not found")
             }
 
-        case .activateWorkspaceNumber(let number):
+        case .activateWorkspace(_, .some(let number)):
             let workspace = workspaceRepository.workspaces[safe: number - 1]
             if let workspace {
                 workspaceManager.activateWorkspace(workspace, setFocus: true)

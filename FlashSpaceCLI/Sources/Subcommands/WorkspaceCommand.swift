@@ -31,9 +31,9 @@ struct WorkspaceCommand: ParsableCommand {
 
     func run() throws {
         if let name {
-            sendCommand(.activateWorkspace(name: name))
+            sendCommand(.activateWorkspace(name: name, number: nil))
         } else if let number {
-            sendCommand(.activateWorkspaceNumber(number: number))
+            sendCommand(.activateWorkspace(name: nil, number: number))
         } else if next {
             sendCommand(.nextWorkspace)
         } else if prev {
