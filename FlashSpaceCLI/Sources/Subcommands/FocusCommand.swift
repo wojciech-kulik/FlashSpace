@@ -11,7 +11,7 @@ import Foundation
 struct FocusCommand: ParsableCommand {
     static var configuration = CommandConfiguration(
         commandName: "focus",
-        abstract: "Focus windows"
+        abstract: "Focus window"
     )
 
     @Option(

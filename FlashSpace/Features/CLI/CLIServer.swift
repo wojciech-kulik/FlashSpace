@@ -13,7 +13,8 @@ final class CLIServer {
     private let socketPath = "/tmp/flashspace.socket"
     private let executors: [CommandExecutor] = [
         WorkspaceCommands(),
-        FocusCommands()
+        FocusCommands(),
+        ProfileCommands()
     ]
 
     init() { startServer() }

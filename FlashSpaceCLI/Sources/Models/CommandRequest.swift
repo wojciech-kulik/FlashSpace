@@ -21,6 +21,8 @@ enum CommandRequest: Codable {
     case focusPreviousWindow
     case focusNextApp
     case focusPreviousApp
+
+    case changeProfile(name: String)
 }
 
 enum FocusDirection: String, Codable, ExpressibleByArgument, CaseIterable {
