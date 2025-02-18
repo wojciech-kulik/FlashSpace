@@ -95,7 +95,7 @@ final class WorkspaceManager: ObservableObject {
     private func showApps(in workspace: Workspace, setFocus: Bool) {
         let regularApps = NSWorkspace.shared.runningApplications
             .filter { $0.activationPolicy == .regular }
-        let floatingApps = (floatingAppsSettings.floatingApps ?? [])
+        let floatingApps = floatingAppsSettings.floatingApps
         var appsToShow = regularApps
             .filter {
                 workspace.apps.containsApp($0) ||
@@ -140,7 +140,7 @@ final class WorkspaceManager: ObservableObject {
     private func hideApps(in workspace: Workspace) {
         let regularApps = NSWorkspace.shared.runningApplications
             .filter { $0.activationPolicy == .regular }
-        let workspaceApps = workspace.apps + (floatingAppsSettings.floatingApps ?? [])
+        let workspaceApps = workspace.apps + floatingAppsSettings.floatingApps
         let isAnyWorkspaceAppRunning = regularApps
             .contains { workspaceApps.containsApp($0) }
 
@@ -207,6 +207,14 @@ final class WorkspaceManager: ObservableObject {
 
         Integrations.runOnActivateIfNeeded(workspace: activeWorkspaceDetails!)
     }
+
+    private func getCursorScreen() -> DisplayName? {
+        let cursorLocation = NSEvent.mouseLocation
+
+        return NSScreen.screens
+            .first { NSMouseInRect(cursorLocation, $0.frame, false) }?
+            .localizedName
+    }
 }
 
 // MARK: - Workspace Actions
@@ -251,6 +259,35 @@ extension WorkspaceManager {
         }
 
         NotificationCenter.default.post(name: .appsListChanged, object: nil)
+    }
+
+    func activateWorkspace(next: Bool) {
+        guard let screen = getCursorScreen() else { return }
+
+        var screenWorkspaces = workspaceRepository.workspaces
+            .filter { $0.displayWithFallback == screen }
+
+        if !next {
+            screenWorkspaces = screenWorkspaces.reversed()
+        }
+
+        guard let activeWorkspace = activeWorkspace[screen] ?? screenWorkspaces.first else { return }
+
+        guard let workspace = screenWorkspaces
+            .drop(while: { $0.id != activeWorkspace.id })
+            .dropFirst()
+            .first ?? screenWorkspaces.first
+        else { return }
+
+        activateWorkspace(workspace, setFocus: true)
+    }
+
+    func activateRecentWorkspace() {
+        guard let screen = getCursorScreen(),
+              let mostRecentWorkspace = mostRecentWorkspace[screen]
+        else { return }
+
+        activateWorkspace(mostRecentWorkspace, setFocus: true)
     }
 
     func updateLastFocusedApp(_ app: MacApp, in workspace: Workspace) {

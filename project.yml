@@ -30,8 +30,8 @@ targets:
     sources: [FlashSpace]
     settings:
       base:
-        MARKETING_VERSION: 1.4.22
-        CURRENT_PROJECT_VERSION: 22
+        MARKETING_VERSION: 2.0.23
+        CURRENT_PROJECT_VERSION: 23
         CODE_SIGN_ENTITLEMENTS: FlashSpace/FlashSpace.entitlements
         DEVELOPMENT_TEAM: "${XCODE_DEVELOPMENT_TEAM}"
         ENABLE_HARDENED_RUNTIME: true
@@ -69,5 +69,22 @@ targets:
           if [ "$GITHUB_ACTIONS" != "true" ]; then
             /opt/homebrew/bin/swiftformat --lint ${SRCROOT} --config .swiftformat || exit 0
           fi
+        basedOnDependencyAnalysis: false
+        showEnvVars: false
+    postBuildScripts:
+      - name: Build & Copy FlashSpace CLI
+        script: |
+          SOURCE_PATH="FlashSpaceCLI/.build/release/flashspace"
+          DESTINATION_PATH="${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Contents/Resources/"
+
+          if [ ! -e "$SOURCE_PATH" ] || [ "$CONFIGURATION" == "Release" ]; then
+            echo "Building FlashSpace CLI"
+            swift build -c release --package-path FlashSpaceCLI
+          else
+            echo "FlashSpace CLI already built"
+          fi
+
+          echo "Copying FlashSpace CLI from $SOURCE_PATH to $DESTINATION_PATH"
+          cp "$SOURCE_PATH" "$DESTINATION_PATH"
         basedOnDependencyAnalysis: false
         showEnvVars: false

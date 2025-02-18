@@ -112,31 +112,13 @@ final class WorkspaceHotKeys {
     }
 
     private func getCycleWorkspacesHotKey(next: Bool) -> (AppHotKey, () -> ())? {
-        guard let shortcut =
-            next
-                ? workspaceSettings.switchToNextWorkspace
-                : workspaceSettings.switchToPreviousWorkspace
+        guard let shortcut = next
+            ? workspaceSettings.switchToNextWorkspace
+            : workspaceSettings.switchToPreviousWorkspace
         else { return nil }
 
-        let action = { [weak self] in
-            guard let self, let screen = getCursorScreen() else { return }
-
-            var screenWorkspaces = workspaceRepository.workspaces
-                .filter { $0.displayWithFallback == screen }
-
-            if !next {
-                screenWorkspaces = screenWorkspaces.reversed()
-            }
-
-            guard let activeWorkspace = workspaceManager.activeWorkspace[screen] ?? screenWorkspaces.first else { return }
-
-            guard let workspace = screenWorkspaces
-                .drop(while: { $0.id != activeWorkspace.id })
-                .dropFirst()
-                .first ?? screenWorkspaces.first
-            else { return }
-
-            workspaceManager.activateWorkspace(workspace, setFocus: true)
+        let action: () -> () = { [weak self] in
+            self?.workspaceManager.activateWorkspace(next: next)
         }
 
         return (shortcut, action)
@@ -144,13 +126,9 @@ final class WorkspaceHotKeys {
 
     private func getRecentWorkspaceHotKey() -> (AppHotKey, () -> ())? {
         guard let shortcut = workspaceSettings.switchToRecentWorkspace else { return nil }
-        let action = { [weak self] in
-            guard let self,
-                  let screen = getCursorScreen(),
-                  let mostRecentWorkspace = workspaceManager.mostRecentWorkspace[screen]
-            else { return }
 
-            workspaceManager.activateWorkspace(mostRecentWorkspace, setFocus: true)
+        let action: () -> () = { [weak self] in
+            self?.workspaceManager.activateRecentWorkspace()
         }
 
         return (shortcut, action)
@@ -197,13 +175,5 @@ final class WorkspaceHotKeys {
             }
         }
         return (shortcut, action)
-    }
-
-    private func getCursorScreen() -> DisplayName? {
-        let cursorLocation = NSEvent.mouseLocation
-
-        return NSScreen.screens
-            .first { NSMouseInRect(cursorLocation, $0.frame, false) }?
-            .localizedName
     }
 }

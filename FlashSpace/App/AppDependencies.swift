@@ -33,6 +33,7 @@ struct AppDependencies {
 
     let profilesRepository: ProfilesRepository
     let autostartService = AutostartService()
+    let cliServer = CLIServer()
 
     private init() {
         self.settingsRepository = SettingsRepository(

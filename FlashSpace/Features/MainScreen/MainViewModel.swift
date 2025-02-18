@@ -241,7 +241,7 @@ extension MainViewModel {
     }
 
     func showWhatsNewIfNeeded() {
-        @AppStorage("v1.1.17-whats-new") var whatsNewShown = false
+        @AppStorage("v2.0.23-whats-new") var whatsNewShown = false
 
         if workspaceRepository.workspaces.isEmpty {
             whatsNewShown = true
