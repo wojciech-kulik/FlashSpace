@@ -75,7 +75,8 @@ The app allows workspaces to be switched independently on each display.
 - [x] Floating apps - keep apps visible across all workspaces
 - [x] Configuration through GUI and config file
 - [x] Support for multiple config file formats: JSON, YAML, and TOML
-- [x] [Picture-in-Picture](https://github.com/wojciech-kulik/FlashSpace#-picture-in-picture-support) support
+- [x] [CLI](#-command-line-interface) - interact with the app using the command line interface
+- [x] [Picture-in-Picture](#-picture-in-picture-support) support
 - [x] [SketchyBar] integration
 
 ## ⚖️ Project Values
@@ -190,6 +191,19 @@ fi
 ```
 
 </details>
+
+## 💻 Command Line Interface
+
+FlashSpace provides a command-line interface to interact with the app. You can
+use it to manage workspaces, apps, and profiles.
+
+First, install the CLI in the App Settings -> CLI. Then, use the `flashspace`
+command to interact with the app. Run the following command to see all
+available commands:
+
+```bash
+flashspace --help
+```
 
 ## 📝 Design Decisions
 
