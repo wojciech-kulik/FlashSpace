@@ -44,6 +44,8 @@ struct SettingsView: View {
                     .tag("Integrations")
                 Label("Configuration File", systemImage: "doc.text")
                     .tag("Configuration")
+                Label("CLI", systemImage: "apple.terminal")
+                    .tag("CLI")
                 Label("Acknowledgements", systemImage: "info.circle")
                     .tag("Acknowledgements")
             }
@@ -79,6 +81,8 @@ struct SettingsView: View {
             ProfilesSettingsView()
         case "Configuration":
             ConfigurationFileSettingsView()
+        case "CLI":
+            CLISettingsView()
         case "Acknowledgements":
             AcknowledgementsSettingsView()
         default:

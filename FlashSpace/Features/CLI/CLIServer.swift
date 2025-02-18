@@ -9,6 +9,13 @@ import Foundation
 import Network
 
 final class CLIServer {
+    var isRunning: Bool {
+        switch listener?.state ?? .cancelled {
+        case .cancelled, .failed: return false
+        default: return true
+        }
+    }
+
     private var listener: NWListener?
     private let socketPath = "/tmp/flashspace.socket"
     private let executors: [CommandExecutor] = [
@@ -22,6 +29,11 @@ final class CLIServer {
     ]
 
     init() { startServer() }
+
+    func restart() {
+        listener?.cancel()
+        startServer()
+    }
 
     private func startServer() {
         try? FileManager.default.removeItem(atPath: socketPath)

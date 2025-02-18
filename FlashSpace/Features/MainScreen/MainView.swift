@@ -39,8 +39,8 @@ struct MainView: View {
         } message: {
             Text(
                 "FlashSpace introduces the new feature: command-line integration.\n\n" +
-                    "It allows you to integrate FlashSpace with other apps and services.\n" +
-                    "Run `flashspace --help` in your terminal to learn more."
+                    "It allows you to integrate FlashSpace with other apps and services.\n\n" +
+                    "Go to App Settings -> CLI to learn more."
             )
         }
         .sheet(isPresented: $viewModel.isSymbolPickerPresented) {
