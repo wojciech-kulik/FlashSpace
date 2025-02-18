@@ -15,10 +15,11 @@ struct FlashSpaceCLI: ParsableCommand {
         abstract: "FlashSpace CLI",
         version: "1.0.0",
         subcommands: [
-            ActivateCommand.self,
+            AssignAppCommand.self,
+            UnassignAppCommand.self,
             FocusCommand.self,
-            WorkspaceCommand.self,
-            ProfileCommand.self
+            ProfileCommand.self,
+            WorkspaceCommand.self
         ]
     )
 }

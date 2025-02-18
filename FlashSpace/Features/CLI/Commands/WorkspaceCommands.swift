@@ -25,6 +25,15 @@ final class WorkspaceCommands: CommandExecutor {
                 return CommandResponse(success: false, error: "Workspace not found")
             }
 
+        case .activateWorkspaceNumber(let number):
+            let workspace = workspaceRepository.workspaces[safe: number - 1]
+            if let workspace {
+                workspaceManager.activateWorkspace(workspace, setFocus: true)
+                return CommandResponse(success: true)
+            } else {
+                return CommandResponse(success: false, error: "Workspace not found")
+            }
+
         case .nextWorkspace:
             workspaceHotKeys.getCycleWorkspacesHotKey(next: true)?.1()
             return CommandResponse(success: true)

@@ -1,7 +1,7 @@
 //
 //  WorkspaceCommand.swift
 //
-//  Created by Wojciech Kulik on 18/02/2025.
+//  Created by Wojciech Kulik on 17/02/2025.
 //  Copyright © 2025 Wojciech Kulik. All rights reserved.
 //
 
@@ -11,38 +11,33 @@ import Foundation
 struct WorkspaceCommand: ParsableCommand {
     static var configuration = CommandConfiguration(
         commandName: "workspace",
-        abstract: "Manage workspaces"
+        abstract: "Activate a workspace"
     )
 
-    @Option(
-        name: .customLong("name"),
-        help: .init("Applicable for --assign-app", valueName: "workspace name")
-    )
-    var workspace: String?
+    @Option(help: .init("The name of the workspace"))
+    var name: String?
 
     @Option(help: .init(
-        "Activate the workspace after assigning the app. Default: app config.",
-        valueName: "true|false"
+        "The number of the workspace to activate. Starting from 1.",
+        valueName: "number"
     ))
-    var activate: Bool?
+    var number: Int?
 
-    @Option(help: .init(
-        "The name of the app or bundle id to assign to a workspace",
-        valueName: "name|bundle id"
-    ))
-    var assignApp: String?
+    @Flag(help: "Activate the next workspace")
+    var next = false
 
-    @Option(help: .init(
-        "The name of the app or bundle id to unassign from all workspaces",
-        valueName: "name|bundle id"
-    ))
-    var unassignApp: String?
+    @Flag(help: "Activate the previous workspace")
+    var prev = false
 
     func run() throws {
-        if let assignApp {
-            SocketClient.shared.sendCommand(.assignApp(app: assignApp, workspaceName: workspace, activate: activate))
-        } else if let unassignApp {
-            SocketClient.shared.sendCommand(.unassignApp(app: unassignApp))
+        if let name {
+            SocketClient.shared.sendCommand(.activateWorkspace(name: name))
+        } else if let number {
+            SocketClient.shared.sendCommand(.activateWorkspaceNumber(number: number))
+        } else if next {
+            SocketClient.shared.sendCommand(.nextWorkspace)
+        } else if prev {
+            SocketClient.shared.sendCommand(.previousWorkspace)
         } else {
             print(Self.helpMessage(for: WorkspaceCommand.self))
             Self.exit(withError: CommandError.other)
