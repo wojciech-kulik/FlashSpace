@@ -17,38 +17,42 @@ enum CLI {
             return print("✅ CLI already installed at \(symlinkPath)")
         }
 
-        let process = Process()
-        process.launchPath = "/bin/bash"
-        process.arguments = ["-c", "echo 'ln -s \"\(cliPath)\" \"\(symlinkPath)\"' | sudo -S bash"]
-
-        let pipe = Pipe()
-        process.standardOutput = pipe
-        process.standardError = pipe
-
-        let fileHandle = pipe.fileHandleForReading
-        process.launch()
-
-        let output = String(data: fileHandle.readDataToEndOfFile(), encoding: .utf8) ?? "Unknown error"
-        Logger.log(output)
-        Logger.log("✅ CLI installed at \(symlinkPath)")
+        if runSudoScript("ln -s '\(cliPath)' '\(symlinkPath)'") {
+            Logger.log("✅ CLI installed from \(symlinkPath)")
+        }
     }
 
     static func uninstall() {
-        let process = Process()
-        process.launchPath = "/bin/bash"
-        process.arguments = ["-c", "echo 'rm \"\(symlinkPath)\"' | sudo -S bash"]
-
         guard isInstalled else { return print("✅ CLI already uninstalled") }
 
-        let pipe = Pipe()
-        process.standardOutput = pipe
-        process.standardError = pipe
+        if runSudoScript("rm '\(symlinkPath)'") {
+            Logger.log("✅ CLI uninstalled from \(symlinkPath)")
+        }
+    }
 
-        let fileHandle = pipe.fileHandleForReading
-        process.launch()
+    private static func runSudoScript(_ script: String) -> Bool {
+        let appleScript =
+            "do shell script \"sudo \(script)\" with administrator privileges"
 
-        let output = String(data: fileHandle.readDataToEndOfFile(), encoding: .utf8) ?? "Unknown error"
-        Logger.log(output)
-        Logger.log("✅ CLI uninstalled from \(symlinkPath)")
+        guard let scriptObject = NSAppleScript(source: appleScript) else {
+            Logger.log("❌ Error: Failed to create AppleScript object")
+            Alert.showOkAlert(title: "Error", message: "Could not run script")
+            return false
+        }
+
+        var error: NSDictionary?
+        scriptObject.executeAndReturnError(&error)
+
+        if let error {
+            Logger.log("❌ Error: \(error)")
+            if let errorNumber = error["NSAppleScriptErrorNumber"],
+               errorNumber as? NSNumber != -128,
+               let errorMessage = error["NSAppleScriptErrorMessage"] as? String {
+                Alert.showOkAlert(title: "Error", message: errorMessage)
+            }
+            return false
+        }
+
+        return true
     }
 }
