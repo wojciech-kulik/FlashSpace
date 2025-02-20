@@ -10,7 +10,15 @@ import Combine
 import SwiftUI
 
 final class MainViewModel: ObservableObject {
-    @Published var workspaces: [Workspace] = []
+    @Published var workspaces: [Workspace] = [] {
+        didSet {
+            guard workspaces.count == oldValue.count,
+                  workspaces.map(\.id) != oldValue.map(\.id) else { return }
+
+            workspaceRepository.reorderWorkspaces(newOrder: workspaces.map(\.id))
+        }
+    }
+
     @Published var workspaceApps: [MacApp]?
 
     @Published var workspaceName = ""
@@ -43,18 +51,35 @@ final class MainViewModel: ObservableObject {
         [AppConstants.lastFocusedOption] + (workspaceApps ?? [])
     }
 
-    var selectedApp: MacApp? {
+    var selectedApps: Set<MacApp> = [] {
         didSet {
-            guard selectedApp != oldValue else { return }
-
             // To avoid warnings
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-                self.objectWillChange.send()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) { [self] in
+                objectWillChange.send()
             }
         }
     }
 
-    var selectedWorkspace: Workspace? {
+    var selectedWorkspaces: Set<Workspace> = [] {
+        didSet {
+            selectedWorkspace = selectedWorkspaces.count == 1
+                ? selectedWorkspaces.first
+                : nil
+
+            // To avoid warnings
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) { [self] in
+                if selectedWorkspaces.count == 1,
+                   selectedWorkspaces.first?.id != oldValue.first?.id {
+                    selectedApps = []
+                } else if selectedWorkspaces.count != 1 {
+                    selectedApps = []
+                }
+                objectWillChange.send()
+            }
+        }
+    }
+
+    private(set) var selectedWorkspace: Workspace? {
         didSet {
             guard selectedWorkspace != oldValue else { return }
 
@@ -109,12 +134,17 @@ final class MainViewModel: ObservableObject {
         workspaceApps = selectedWorkspace?.apps
         workspaceAppToFocus = selectedWorkspace?.appToFocus ?? AppConstants.lastFocusedOption
         workspaceSymbolIconName = selectedWorkspace?.symbolIconName
-        selectedApp = workspaceApps?.first { $0 == selectedApp }
+        selectedWorkspace.flatMap { selectedWorkspaces = [$0] }
     }
 
     private func reloadWorkspaces() {
         workspaces = workspaceRepository.workspaces
-        selectedWorkspace = workspaces.first { $0.id == selectedWorkspace?.id }
+        if let selectedWorkspace, let workspace = workspaces.first(where: { $0.id == selectedWorkspace.id }) {
+            selectedWorkspaces = [workspace]
+        } else {
+            selectedWorkspaces = []
+        }
+        selectedApps = []
     }
 }
 
@@ -158,14 +188,12 @@ extension MainViewModel {
             .store(in: &cancellables)
     }
 
-    func deleteWorkspace() {
-        guard let selectedWorkspace else { return }
+    func deleteSelectedWorkspaces() {
+        guard !selectedWorkspaces.isEmpty else { return }
 
-        let newIndex = min(workspaces.firstIndex { $0.id == selectedWorkspace.id } ?? 0, workspaces.count - 2)
-
-        workspaceRepository.deleteWorkspace(id: selectedWorkspace.id)
+        workspaceRepository.deleteWorkspaces(ids: Set(selectedWorkspaces.map(\.id)))
         workspaces = workspaceRepository.workspaces
-        self.selectedWorkspace = workspaces[safe: newIndex]
+        selectedWorkspaces = []
     }
 
     func addApp() {
@@ -205,39 +233,34 @@ extension MainViewModel {
 
         workspaces = workspaceRepository.workspaces
         self.selectedWorkspace = workspaces.first { $0.id == selectedWorkspace.id }
+
+        workspaceManager.activateWorkspaceIfActive(selectedWorkspace.id)
     }
 
-    func deleteApp() {
-        guard let selectedWorkspace, let selectedApp else { return }
+    func deleteSelectedApps() {
+        guard let selectedWorkspace, !selectedApps.isEmpty else { return }
 
-        let newAppIndex = min(workspaceApps?.firstIndex(of: selectedApp) ?? 0, (workspaceApps?.count ?? 1) - 2)
+        let selectedApps = Array(selectedApps)
 
-        workspaceRepository.deleteApp(
-            from: selectedWorkspace.id,
-            app: selectedApp
-        )
+        for app in selectedApps {
+            workspaceRepository.deleteApp(
+                from: selectedWorkspace.id,
+                app: app,
+                notify: app == selectedApps.last
+            )
+        }
 
         workspaces = workspaceRepository.workspaces
         self.selectedWorkspace = workspaces.first { $0.id == selectedWorkspace.id }
         workspaceApps = self.selectedWorkspace?.apps
-        self.selectedApp = workspaceApps?[safe: newAppIndex]
+        self.selectedApps = []
+
+        workspaceManager.activateWorkspaceIfActive(selectedWorkspace.id)
     }
 
     func resetWorkspaceSymbolIcon() {
         workspaceSymbolIconName = nil
         saveWorkspace()
-    }
-
-    func moveWorkspace(up: Bool) {
-        guard let selectedWorkspace else { return }
-
-        if up {
-            workspaceRepository.moveUp(workspaceId: selectedWorkspace.id)
-        } else {
-            workspaceRepository.moveDown(workspaceId: selectedWorkspace.id)
-        }
-
-        workspaces = workspaceRepository.workspaces
     }
 
     func showWhatsNewIfNeeded() {

@@ -53,6 +53,11 @@ final class WorkspaceRepository {
         notifyAboutChanges()
     }
 
+    func deleteWorkspaces(ids: Set<WorkspaceID>) {
+        workspaces.removeAll { ids.contains($0.id) }
+        notifyAboutChanges()
+    }
+
     func addApp(to workspaceId: WorkspaceID, app: MacApp) {
         guard let workspaceIndex = workspaces.firstIndex(where: { $0.id == workspaceId }) else { return }
         guard !workspaces[workspaceIndex].apps.contains(app) else { return }
@@ -61,7 +66,7 @@ final class WorkspaceRepository {
         notifyAboutChanges()
     }
 
-    func deleteApp(from workspaceId: WorkspaceID, app: MacApp) {
+    func deleteApp(from workspaceId: WorkspaceID, app: MacApp, notify: Bool = true) {
         guard let workspaceIndex = workspaces.firstIndex(where: { $0.id == workspaceId }) else { return }
 
         if workspaces[workspaceIndex].appToFocus == app {
@@ -69,7 +74,7 @@ final class WorkspaceRepository {
         }
 
         workspaces[workspaceIndex].apps.removeAll { $0 == app }
-        notifyAboutChanges()
+        if notify { notifyAboutChanges() }
     }
 
     func deleteAppFromAllWorkspaces(app: MacApp) {
@@ -84,24 +89,28 @@ final class WorkspaceRepository {
         notifyAboutChanges()
     }
 
-    func moveUp(workspaceId: WorkspaceID) {
-        guard let index = workspaces.firstIndex(where: { $0.id == workspaceId }) else { return }
-        guard index > 0 else { return }
-
-        let tmp = workspaces[index - 1]
-        workspaces[index - 1] = workspaces[index]
-        workspaces[index] = tmp
+    func reorderWorkspaces(newOrder: [WorkspaceID]) {
+        let map = newOrder.enumerated().reduce(into: [WorkspaceID: Int]()) { $0[$1.element] = $1.offset }
+        workspaces = workspaces.sorted { map[$0.id] ?? 0 < map[$1.id] ?? 0 }
         notifyAboutChanges()
     }
 
-    func moveDown(workspaceId: WorkspaceID) {
-        guard let index = workspaces.firstIndex(where: { $0.id == workspaceId }) else { return }
-        guard index < workspaces.count - 1 else { return }
+    func moveApps(_ apps: [MacApp], from sourceWorkspaceId: WorkspaceID, to targetWorkspaceId: WorkspaceID) {
+        guard let sourceWorkspaceIndex = workspaces.firstIndex(where: { $0.id == sourceWorkspaceId }),
+              let targetWorkspaceIndex = workspaces.firstIndex(where: { $0.id == targetWorkspaceId }) else { return }
 
-        let tmp = workspaces[index + 1]
-        workspaces[index + 1] = workspaces[index]
-        workspaces[index] = tmp
+        if let appToFocus = workspaces[sourceWorkspaceIndex].appToFocus, apps.contains(appToFocus) {
+            workspaces[sourceWorkspaceIndex].appToFocus = nil
+        }
+
+        let targetAppBundleIds = Set(workspaces[targetWorkspaceIndex].apps.map(\.bundleIdentifier))
+        let appsToAdd = apps.filter { !targetAppBundleIds.contains($0.bundleIdentifier) }
+
+        workspaces[sourceWorkspaceIndex].apps.removeAll { apps.contains($0) }
+        workspaces[targetWorkspaceIndex].apps.append(contentsOf: appsToAdd)
+
         notifyAboutChanges()
+        NotificationCenter.default.post(name: .appsListChanged, object: nil)
     }
 
     private func notifyAboutChanges() {

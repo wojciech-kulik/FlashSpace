@@ -290,6 +290,13 @@ extension WorkspaceManager {
         activateWorkspace(mostRecentWorkspace, setFocus: true)
     }
 
+    func activateWorkspaceIfActive(_ workspaceId: WorkspaceID) {
+        guard activeWorkspace.values.contains(where: { $0.id == workspaceId }) else { return }
+        guard let updatedWorkspace = workspaceRepository.workspaces.first(where: { $0.id == workspaceId }) else { return }
+
+        activateWorkspace(updatedWorkspace, setFocus: false)
+    }
+
     func updateLastFocusedApp(_ app: MacApp, in workspace: Workspace) {
         lastFocusedApp[workspace.id] = app
     }
