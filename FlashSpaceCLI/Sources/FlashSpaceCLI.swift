@@ -28,6 +28,7 @@ struct FlashSpaceCLI: ParsableCommand {
                 subcommands: [
                     CreateWorkspaceCommand.self,
                     DeleteWorkspaceCommand.self,
+                    UpdateWorkspaceCommand.self,
                     WorkspaceCommand.self
                 ]
             ),

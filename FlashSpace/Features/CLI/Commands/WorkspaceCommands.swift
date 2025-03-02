@@ -12,7 +12,7 @@ final class WorkspaceCommands: CommandExecutor {
     var workspaceManager: WorkspaceManager { AppDependencies.shared.workspaceManager }
     var workspaceRepository: WorkspaceRepository { AppDependencies.shared.workspaceRepository }
 
-    // swiftlint:disable:next cyclomatic_complexity
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     func execute(command: CommandRequest) -> CommandResponse? {
         switch command {
         case .activateWorkspace(.some(let name), _):
@@ -32,6 +32,28 @@ final class WorkspaceCommands: CommandExecutor {
             } else {
                 return CommandResponse(success: false, error: "Workspace not found")
             }
+
+        case .updateWorkspace(let request):
+            var workspace: Workspace?
+            if let workspaceName = request.name {
+                workspace = workspaceRepository.workspaces.first { $0.name == workspaceName }
+            } else if let workspaceId = workspaceManager.activeWorkspaceDetails?.id {
+                workspace = workspaceRepository.workspaces.first { $0.id == workspaceId }
+            } else {
+                return CommandResponse(success: false, error: "Workspace not found")
+            }
+
+            guard var workspace else {
+                return CommandResponse(success: false, error: "Workspace not found")
+            }
+
+            if let display = request.display {
+                workspace.display = display
+            }
+            workspaceRepository.updateWorkspace(workspace)
+            NotificationCenter.default.post(name: .appsListChanged, object: nil)
+
+            return CommandResponse(success: true)
 
         case .nextWorkspace:
             workspaceManager.activateWorkspace(next: true)
