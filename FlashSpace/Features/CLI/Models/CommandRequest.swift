@@ -10,6 +10,7 @@ import Foundation
 enum CommandRequest: Codable {
     case createWorkspace(CreateWorkspaceRequest)
     case deleteWorkspace(name: String)
+    case updateWorkspace(UpdateWorkspaceRequest)
     case activateWorkspace(name: String?, number: Int?)
     case nextWorkspace
     case previousWorkspace
