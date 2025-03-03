@@ -12,7 +12,7 @@ final class WorkspaceCommands: CommandExecutor {
     var workspaceManager: WorkspaceManager { AppDependencies.shared.workspaceManager }
     var workspaceRepository: WorkspaceRepository { AppDependencies.shared.workspaceRepository }
 
-    // swiftlint:disable:next cyclomatic_complexity function_body_length
+    // swiftlint:disable:next cyclomatic_complexity
     func execute(command: CommandRequest) -> CommandResponse? {
         switch command {
         case .activateWorkspace(.some(let name), _):
@@ -34,26 +34,7 @@ final class WorkspaceCommands: CommandExecutor {
             }
 
         case .updateWorkspace(let request):
-            var workspace: Workspace?
-            if let workspaceName = request.name {
-                workspace = workspaceRepository.workspaces.first { $0.name == workspaceName }
-            } else if let workspaceId = workspaceManager.activeWorkspaceDetails?.id {
-                workspace = workspaceRepository.workspaces.first { $0.id == workspaceId }
-            } else {
-                return CommandResponse(success: false, error: "Workspace not found")
-            }
-
-            guard var workspace else {
-                return CommandResponse(success: false, error: "Workspace not found")
-            }
-
-            if let display = request.display {
-                workspace.display = display
-            }
-            workspaceRepository.updateWorkspace(workspace)
-            NotificationCenter.default.post(name: .appsListChanged, object: nil)
-
-            return CommandResponse(success: true)
+            return updateWorkspace(request)
 
         case .nextWorkspace:
             workspaceManager.activateWorkspace(next: true)
@@ -89,5 +70,38 @@ final class WorkspaceCommands: CommandExecutor {
         default:
             return nil
         }
+    }
+
+    private func updateWorkspace(_ request: UpdateWorkspaceRequest) -> CommandResponse {
+        var workspace: Workspace?
+        if let workspaceName = request.name {
+            workspace = workspaceRepository.workspaces.first { $0.name == workspaceName }
+        } else if let workspaceId = workspaceManager.activeWorkspaceDetails?.id {
+            workspace = workspaceRepository.workspaces.first { $0.id == workspaceId }
+        } else {
+            return CommandResponse(success: false, error: "Workspace not found")
+        }
+
+        guard var workspace else {
+            return CommandResponse(success: false, error: "Workspace not found")
+        }
+
+        if let display = request.display {
+            switch display {
+            case .active:
+                if let display = NSWorkspace.shared.frontmostApplication?.display {
+                    workspace.display = display
+                } else {
+                    return CommandResponse(success: false, error: "No active display found")
+                }
+            case .name(let name):
+                workspace.display = name
+            }
+        }
+
+        workspaceRepository.updateWorkspace(workspace)
+        NotificationCenter.default.post(name: .appsListChanged, object: nil)
+
+        return CommandResponse(success: true)
     }
 }
