@@ -13,6 +13,7 @@ final class SpaceControlSettings: ObservableObject {
     @Published var showSpaceControl: AppHotKey?
     @Published var enableSpaceControlAnimations = true
     @Published var spaceControlCurrentDisplayWorkspaces = false
+    @Published var spaceControlMaxColumns = 6
 
     private var observer: AnyCancellable?
     private let updateSubject = PassthroughSubject<(), Never>()
@@ -24,7 +25,8 @@ final class SpaceControlSettings: ObservableObject {
             $enableSpaceControl.settingsPublisher(),
             $showSpaceControl.settingsPublisher(),
             $enableSpaceControlAnimations.settingsPublisher(),
-            $spaceControlCurrentDisplayWorkspaces.settingsPublisher()
+            $spaceControlCurrentDisplayWorkspaces.settingsPublisher(),
+            $spaceControlMaxColumns.settingsPublisher(debounce: true)
         )
         .receive(on: DispatchQueue.main)
         .sink { [weak self] in self?.updateSubject.send() }
@@ -42,6 +44,7 @@ extension SpaceControlSettings: SettingsProtocol {
         showSpaceControl = appSettings.showSpaceControl
         enableSpaceControlAnimations = appSettings.enableSpaceControlAnimations ?? true
         spaceControlCurrentDisplayWorkspaces = appSettings.spaceControlCurrentDisplayWorkspaces ?? false
+        spaceControlMaxColumns = appSettings.spaceControlMaxColumns ?? 6
         observe()
     }
 
@@ -50,5 +53,6 @@ extension SpaceControlSettings: SettingsProtocol {
         appSettings.showSpaceControl = showSpaceControl
         appSettings.enableSpaceControlAnimations = enableSpaceControlAnimations
         appSettings.spaceControlCurrentDisplayWorkspaces = spaceControlCurrentDisplayWorkspaces
+        appSettings.spaceControlMaxColumns = spaceControlMaxColumns
     }
 }

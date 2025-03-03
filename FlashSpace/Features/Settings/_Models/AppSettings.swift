@@ -48,6 +48,7 @@ struct AppSettings: Codable {
     var showSpaceControl: AppHotKey?
     var enableSpaceControlAnimations: Bool?
     var spaceControlCurrentDisplayWorkspaces: Bool?
+    var spaceControlMaxColumns: Int?
 
     // Integrations
     var enableIntegrations: Bool?

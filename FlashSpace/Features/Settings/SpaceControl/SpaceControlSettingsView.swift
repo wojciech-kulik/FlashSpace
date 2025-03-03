@@ -55,6 +55,18 @@ struct SpaceControlSettingsView: View {
                         "Show Workspaces For Current Display Only",
                         isOn: $settings.spaceControlCurrentDisplayWorkspaces
                     )
+
+                    HStack {
+                        Text("Max Number Of Columns")
+                        Spacer()
+                        Text("\(settings.spaceControlMaxColumns)")
+                        Stepper(
+                            "",
+                            value: $settings.spaceControlMaxColumns,
+                            in: 2...20,
+                            step: 1
+                        ).labelsHidden()
+                    }
                 }
             }
             .disabled(!settings.enableSpaceControl)
