@@ -8,6 +8,11 @@
 import Foundation
 
 struct UpdateWorkspaceRequest: Codable {
+    enum Display: Codable {
+        case active
+        case name(String)
+    }
+
     let name: String?
-    let display: String?
+    let display: Display?
 }

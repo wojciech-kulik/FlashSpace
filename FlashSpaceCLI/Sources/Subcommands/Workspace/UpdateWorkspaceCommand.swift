@@ -10,8 +10,13 @@ import ArgumentParser
 import Foundation
 
 struct UpdateWorkspaceRequest: Codable {
+    enum Display: Codable {
+        case active
+        case name(String)
+    }
+
     let name: String?
-    let display: String?
+    let display: Display?
 }
 
 struct UpdateWorkspaceCommand: ParsableCommand {
@@ -34,10 +39,9 @@ struct UpdateWorkspaceCommand: ParsableCommand {
 
     func run() throws {
         if let display {
-            sendCommand(.updateWorkspace(.init(name: workspace, display: display)))
+            sendCommand(.updateWorkspace(.init(name: workspace, display: .name(display))))
         } else if activeDisplay {
-            let display = NSScreen.main?.localizedName ?? ""
-            sendCommand(.updateWorkspace(.init(name: workspace, display: display)))
+            sendCommand(.updateWorkspace(.init(name: workspace, display: .active)))
         } else {
             throw CommandError.operationFailed("Invalid command")
         }
