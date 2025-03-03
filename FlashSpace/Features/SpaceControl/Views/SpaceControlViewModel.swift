@@ -71,6 +71,7 @@ final class SpaceControlViewModel: ObservableObject {
         numberOfColumns = workspaceCount <= 3
             ? workspaceCount
             : max(3, Int(ceil(Double(workspaceCount) / maxNumberOfRows)))
+        numberOfColumns = min(numberOfColumns, settings.spaceControlMaxColumns)
 
         numberOfRows = Int(ceil(Double(workspaceCount) / Double(numberOfColumns)))
     }
