@@ -172,7 +172,7 @@ final class FocusManager {
                     (app: app, window: $0.window, frame: $0.frame)
                 }
             }
-            .filter { predicate(focusedAppFrame, $0.frame) }
+            .filter { predicate(focusedAppFrame, $0.frame) && !$0.window.isMinimized }
             .min { $0.frame.distance(to: focusedAppFrame) < $1.frame.distance(to: focusedAppFrame) }
 
         toFocus?.window.focus()

@@ -11,6 +11,7 @@ extension AXUIElement {
     var id: String? { getAttribute(.identifier) }
     var title: String? { getAttribute(.title) }
     var isMain: Bool { getAttribute(.main) == true }
+    var isMinimized: Bool { getAttribute(.minimized) == true }
     var role: String? { getAttribute(.role) }
     var subrole: String? { getAttribute(.subrole) }
     var enhancedUserInterface: Bool {
