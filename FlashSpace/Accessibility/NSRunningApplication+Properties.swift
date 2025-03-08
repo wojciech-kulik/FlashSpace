@@ -10,7 +10,7 @@ import AppKit
 extension NSRunningApplication {
     var display: DisplayName? { frame?.getDisplay() }
     var frame: CGRect? { mainWindow?.frame }
-    var isMinimized: Bool { mainWindow?.getAttribute(.minimized) == true }
+    var isMinimized: Bool { mainWindow?.isMinimized == true }
 
     var mainWindow: AXUIElement? {
         let appElement = AXUIElementCreateApplication(processIdentifier)
