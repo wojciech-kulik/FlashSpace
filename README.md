@@ -2,7 +2,6 @@
 [![Homebrew Cask Version](https://img.shields.io/homebrew/cask/v/flashspace)](https://formulae.brew.sh/cask/flashspace)
 [![min macOS](https://img.shields.io/badge/macOS-14.0+-silver)](#)
 [![CI Status](https://img.shields.io/github/actions/workflow/status/wojciech-kulik/FlashSpace/xcode-build-check.yml)](https://github.com/wojciech-kulik/FlashSpace/actions/workflows/xcode-build-check.yml)
-[![Supported Xcode](https://img.shields.io/badge/xcode-16.2-blue)](#)
 
 # ⚡ FlashSpace
 
@@ -13,7 +12,10 @@ enhance and replace native macOS Spaces. No more waiting for macOS animations.
 
 ## ⚙️ Installation
 
-**Requirements:** macOS 14.0 or later.
+**Requirements:**
+
+- macOS 14.0 or later.
+- Enabled "Displays have separate Spaces" in "Desktop & Dock" system settings.
 
 ### Homebrew
 
@@ -38,8 +40,7 @@ https://github.com/user-attachments/assets/03498386-7c3d-4d9e-8fbd-cd49dea36661
 
 ## 💬 How to use
 
-1. Move all your apps to a single macOS space. You can keep separate spaces on
-   each display.
+1. Move all your apps to a single macOS space (per display).
 1. Create a workspace.
 1. Assign apps to it.
 1. Assign a display to the workspace.
@@ -191,7 +192,7 @@ fi
 
 </details>
 
-## 💻 Command Line Interface
+## 💻 Command-Line Interface
 
 FlashSpace provides a command-line interface to interact with the app. You can
 use it to manage workspaces, apps, and profiles.
@@ -206,7 +207,7 @@ flashspace --help
 
 ## 📝 Design Decisions
 
-### Non-disruptive Behavior
+### 👉 Non-disruptive Behavior
 
 FlashSpace doesn't actively manage windows, so if you switch to a workspace and call
 another app that is not assigned to the workspace, it will be shown on top of
@@ -220,7 +221,7 @@ pop-ups or dialog windows. FlashSpace prevents these issues by not managing
 windows & apps that are unassigned allowing you to interact with the system in
 a non-disruptive way.
 
-### No Support For Individual App Windows Per Workspace
+### 👉 No Support For Individual App Windows Per Workspace
 
 FlashSpace doesn't support the concept of individual app windows per workspace.
 This is a conscious decision to keep the app simple and fast.
@@ -235,6 +236,21 @@ complexity and could negatively impact the app's performance. This limitation
 results from the lack of a public API in macOS to hide specific windows.
 Currently, the only options are to move a window to a screen corner or minimize
 it - neither of which provides an ideal user experience.
+
+### 👉 No Support For Layouts
+
+FlashSpace doesn't support moving windows, resizing, or changing their layout.
+This is a conscious decision to keep the app simple and fast.
+
+This feature would introduce significant complexity and could negatively impact
+the app's performance. Additionally, it would require a lot of work to support
+all edge cases and glitches. The app is designed to manage workspaces and it
+follows the UNIX philosophy of doing one thing and doing it well.
+
+There are many great and free window management apps available that can be used
+in conjunction with FlashSpace, so there is no need to duplicate this
+functionality. Examples of such apps are Magnet, Rectangle, Raycast, and many
+others.
 
 ## 🛠️ Build From Source
 
@@ -260,6 +276,31 @@ XCODE_DEVELOPMENT_TEAM=YOUR_TEAM_ID xcodegen generate
 
 You can also set this variable globally in your shell.
 
+## 💡 Tips & Tricks
+
+### Move & Resize Windows
+
+macOS 15 introduced new features that allow you to move & resize windows
+without 3rd party apps. To see all available options, select "Window" from the
+menu bar and go to "Move & Resize" submenu.
+
+Adjusting shortcuts is quite limited, but it's possible: [see
+here](https://discussions.apple.com/thread/255773494?sortBy=rank). However, the
+most flexible approach would be to use Raycast, Magnet, or other window
+management apps.
+
+### Switch Between Windows
+
+macOS allows you to switch focus between windows of the same app using the `` Cmd + ` `` shortcut.
+
+### SKHD
+
+There is a great command-line tool called [SKHD] that allows you to define
+custom global shortcuts. You can use it also with FlashSpace through the CLI.
+
+You could even define some shortcuts that are not available in FlashSpace, like
+switching between specific profiles.
+
 ## 💛 Sponsors
 
 Big thanks to all the sponsors who support this project 🍻!
@@ -283,3 +324,4 @@ Big thanks to all the sponsors who support this project 🍻!
 [SketchyBar]: https://github.com/FelixKratz/SketchyBar
 [XcodeGen]: https://github.com/yonaskolb/XcodeGen
 [Releases Page]: https://github.com/wojciech-kulik/FlashSpace/releases
+[SKHD]: https://github.com/koekeishiya/skhd
