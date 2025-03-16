@@ -85,7 +85,15 @@ final class HotKeysManager {
         // General
         if let showHotKey = settingsRepository.generalSettings.showFlashSpace?.toShortcut() {
             let action = ShortcutAction(shortcut: showHotKey) { _ in
-                NotificationCenter.default.post(name: .openMainWindow, object: nil)
+                guard !SpaceControl.isVisible else { return true }
+
+                if NSApp.windows.contains(where: \.isVisible) {
+                    NSApp.windows
+                        .filter(\.isVisible)
+                        .forEach { $0.close() }
+                } else {
+                    NotificationCenter.default.post(name: .openMainWindow, object: nil)
+                }
                 return true
             }
             hotKeysMonitor.addAction(action, forKeyEvent: .down)
