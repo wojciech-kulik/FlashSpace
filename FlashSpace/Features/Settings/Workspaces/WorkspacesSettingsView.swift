@@ -30,6 +30,7 @@ struct WorkspacesSettingsView: View {
             Section("Shortcuts") {
                 hotkey("Assign Focused App (to active workspace)", for: $settings.assignFocusedApp)
                 hotkey("Unassign Focused App", for: $settings.unassignFocusedApp)
+                hotkey("Toggle Focused App Assignment", for: $settings.toggleFocusedAppAssignment)
             }
 
             Section {

@@ -20,10 +20,18 @@ enum SpaceControl {
         guard isEnabled else { return nil }
 
         if let spaceControlHotKey = settings.showSpaceControl {
-            return (spaceControlHotKey, show)
+            return (spaceControlHotKey, toggle)
         }
 
         return nil
+    }
+
+    static func toggle() {
+        if isVisible {
+            hide(restoreFocus: true)
+        } else {
+            show()
+        }
     }
 
     static func hide(restoreFocus: Bool = false) {

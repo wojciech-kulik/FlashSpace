@@ -12,6 +12,7 @@ final class FloatingAppsSettings: ObservableObject {
     @Published var floatingApps: [MacApp] = []
     @Published var floatTheFocusedApp: AppHotKey?
     @Published var unfloatTheFocusedApp: AppHotKey?
+    @Published var toggleTheFocusedAppFloating: AppHotKey?
 
     private var observer: AnyCancellable?
     private let updateSubject = PassthroughSubject<(), Never>()
@@ -31,7 +32,8 @@ final class FloatingAppsSettings: ObservableObject {
         observer = Publishers.MergeMany(
             $floatingApps.settingsPublisher(),
             $floatTheFocusedApp.settingsPublisher(),
-            $unfloatTheFocusedApp.settingsPublisher()
+            $unfloatTheFocusedApp.settingsPublisher(),
+            $toggleTheFocusedAppFloating.settingsPublisher()
         )
         .receive(on: DispatchQueue.main)
         .sink { [weak self] in self?.updateSubject.send() }
@@ -48,6 +50,7 @@ extension FloatingAppsSettings: SettingsProtocol {
         floatingApps = appSettings.floatingApps ?? []
         floatTheFocusedApp = appSettings.floatTheFocusedApp
         unfloatTheFocusedApp = appSettings.unfloatTheFocusedApp
+        toggleTheFocusedAppFloating = appSettings.toggleTheFocusedAppFloating
         observe()
     }
 
@@ -55,5 +58,6 @@ extension FloatingAppsSettings: SettingsProtocol {
         appSettings.floatingApps = floatingApps.isEmpty ? nil : floatingApps
         appSettings.floatTheFocusedApp = floatTheFocusedApp
         appSettings.unfloatTheFocusedApp = unfloatTheFocusedApp
+        appSettings.toggleTheFocusedAppFloating = toggleTheFocusedAppFloating
     }
 }

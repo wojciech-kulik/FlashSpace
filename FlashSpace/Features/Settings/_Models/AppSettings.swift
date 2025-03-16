@@ -37,11 +37,13 @@ struct AppSettings: Codable {
     var switchToRecentWorkspace: AppHotKey?
     var assignFocusedApp: AppHotKey?
     var unassignFocusedApp: AppHotKey?
+    var toggleFocusedAppAssignment: AppHotKey?
 
     // Floating apps
     var floatingApps: [MacApp]?
     var floatTheFocusedApp: AppHotKey?
     var unfloatTheFocusedApp: AppHotKey?
+    var toggleTheFocusedAppFloating: AppHotKey?
 
     // Space Control
     var enableSpaceControl: Bool?

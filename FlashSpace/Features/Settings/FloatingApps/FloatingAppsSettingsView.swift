@@ -28,8 +28,9 @@ struct FloatingAppsSettingsView: View {
             }
 
             Section("Shortcuts") {
-                hotkey("Float The Focused App", for: $settings.floatTheFocusedApp)
-                hotkey("Unfloat The Focused App", for: $settings.unfloatTheFocusedApp)
+                hotkey("Float Focused App", for: $settings.floatTheFocusedApp)
+                hotkey("Unfloat Focused App", for: $settings.unfloatTheFocusedApp)
+                hotkey("Toggle Focused App Floating", for: $settings.toggleTheFocusedAppFloating)
             }
         }
         .formStyle(.grouped)
