@@ -41,6 +41,7 @@ final class HotKeysManager {
         enableAll()
     }
 
+    // swiftlint:disable:next function_body_length
     func enableAll() {
         allHotKeys.removeAll()
         let addShortcut = { (title: String, shortcut: Shortcut) in
@@ -87,12 +88,14 @@ final class HotKeysManager {
             let action = ShortcutAction(shortcut: showHotKey) { _ in
                 guard !SpaceControl.isVisible else { return true }
 
-                if NSApp.windows.contains(where: \.isVisible) {
-                    NSApp.windows
-                        .filter(\.isVisible)
-                        .forEach { $0.close() }
-                } else {
+                let visibleAppWindows = NSApp.windows
+                    .filter(\.isVisible)
+                    .filter { $0.identifier?.rawValue == "main" || $0.identifier?.rawValue == "settings" }
+
+                if visibleAppWindows.isEmpty {
                     NotificationCenter.default.post(name: .openMainWindow, object: nil)
+                } else {
+                    visibleAppWindows.forEach { $0.close() }
                 }
                 return true
             }
@@ -107,7 +110,7 @@ final class HotKeysManager {
                 return true
             }
             hotKeysMonitor.addAction(action, forKeyEvent: .down)
-            addShortcut("SpaceControl", shortcut)
+            addShortcut("Space Control", shortcut)
         }
     }
 
