@@ -11,7 +11,6 @@ final class WorkspaceHotKeys {
     private let workspaceManager: WorkspaceManager
     private let workspaceRepository: WorkspaceRepository
     private let workspaceSettings: WorkspaceSettings
-    private let floatingAppsSettings: FloatingAppsSettings
 
     init(
         workspaceManager: WorkspaceManager,
@@ -21,7 +20,6 @@ final class WorkspaceHotKeys {
         self.workspaceManager = workspaceManager
         self.workspaceRepository = workspaceRepository
         self.workspaceSettings = settingsRepository.workspaceSettings
-        self.floatingAppsSettings = settingsRepository.floatingAppsSettings
     }
 
     func getHotKeys() -> [(AppHotKey, () -> ())] {
@@ -31,10 +29,7 @@ final class WorkspaceHotKeys {
             getToggleAssignmentHotKey(),
             getRecentWorkspaceHotKey(),
             getCycleWorkspacesHotKey(next: false),
-            getCycleWorkspacesHotKey(next: true),
-            getFloatTheFocusedAppHotKey(),
-            getUnfloatTheFocusedAppHotKey(),
-            getToggleTheFocusedAppFloatingHotKey()
+            getCycleWorkspacesHotKey(next: true)
         ] +
             workspaceRepository.workspaces
             .flatMap { [getActivateHotKey(for: $0), getAssignAppHotKey(for: $0)] }
@@ -109,33 +104,6 @@ final class WorkspaceHotKeys {
 
         return (shortcut, action)
     }
-
-    private func getFloatTheFocusedAppHotKey() -> (AppHotKey, () -> ())? {
-        guard let shortcut = floatingAppsSettings.floatTheFocusedApp else { return nil }
-
-        return (shortcut, { [weak self] in self?.floatApp() })
-    }
-
-    private func getUnfloatTheFocusedAppHotKey() -> (AppHotKey, () -> ())? {
-        guard let shortcut = floatingAppsSettings.unfloatTheFocusedApp else { return nil }
-
-        return (shortcut, { [weak self] in self?.unfloatApp() })
-    }
-
-    private func getToggleTheFocusedAppFloatingHotKey() -> (AppHotKey, () -> ())? {
-        guard let shortcut = floatingAppsSettings.toggleTheFocusedAppFloating else { return nil }
-
-        let action = { [weak self] in
-            guard let self, let activeApp = NSWorkspace.shared.frontmostApplication else { return }
-
-            if floatingAppsSettings.floatingApps.containsApp(activeApp) {
-                unfloatApp()
-            } else {
-                floatApp()
-            }
-        }
-        return (shortcut, action)
-    }
 }
 
 extension WorkspaceHotKeys {
@@ -185,38 +153,5 @@ extension WorkspaceHotKeys {
         workspaceRepository.deleteAppFromAllWorkspaces(app: activeApp.toMacApp)
         activeApp.hide()
         NotificationCenter.default.post(name: .appsListChanged, object: nil)
-    }
-
-    private func floatApp() {
-        guard let activeApp = NSWorkspace.shared.frontmostApplication,
-              let appName = activeApp.localizedName else { return }
-
-        floatingAppsSettings.addFloatingAppIfNeeded(app: activeApp.toMacApp)
-        Toast.showWith(
-            icon: "macwindow.on.rectangle",
-            message: "\(appName) - Added To Floating Apps",
-            textColor: .positive
-        )
-    }
-
-    private func unfloatApp() {
-        guard let activeApp = NSWorkspace.shared.frontmostApplication,
-              let appName = activeApp.localizedName else { return }
-
-        if floatingAppsSettings.floatingApps.containsApp(activeApp) {
-            Toast.showWith(
-                icon: "macwindow",
-                message: "\(appName) - Removed From Floating Apps",
-                textColor: .negative
-            )
-        }
-
-        floatingAppsSettings.deleteFloatingApp(app: activeApp.toMacApp)
-
-        guard let screen = activeApp.display else { return }
-
-        if workspaceManager.activeWorkspace[screen]?.apps.containsApp(activeApp) != true {
-            activeApp.hide()
-        }
     }
 }

@@ -16,6 +16,8 @@ struct AppDependencies {
     let workspaceScreenshotManager = WorkspaceScreenshotManager()
     let pictureInPictureManager: PictureInPictureManager
 
+    let floatingAppsHotKeys: FloatingAppsHotKeys
+
     let hotKeysMonitor: HotKeysMonitorProtocol = GlobalShortcutMonitor.shared
     let hotKeysManager: HotKeysManager
 
@@ -35,6 +37,7 @@ struct AppDependencies {
     let autostartService = AutostartService()
     let cliServer = CLIServer()
 
+    // swiftlint:disable:next function_body_length
     private init() {
         self.settingsRepository = SettingsRepository(
             generalSettings: generalSettings,
@@ -62,6 +65,10 @@ struct AppDependencies {
             workspaceRepository: workspaceRepository,
             settingsRepository: settingsRepository
         )
+        self.floatingAppsHotKeys = FloatingAppsHotKeys(
+            workspaceManager: workspaceManager,
+            settingsRepository: settingsRepository
+        )
         self.focusManager = FocusManager(
             workspaceRepository: workspaceRepository,
             workspaceManager: workspaceManager,
@@ -70,6 +77,7 @@ struct AppDependencies {
         self.hotKeysManager = HotKeysManager(
             hotKeysMonitor: GlobalShortcutMonitor.shared,
             workspaceHotKeys: workspaceHotKeys,
+            floatingAppsHotKeys: floatingAppsHotKeys,
             focusManager: focusManager,
             settingsRepository: settingsRepository
         )
