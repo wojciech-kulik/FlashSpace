@@ -41,7 +41,15 @@ struct HotKeyControl: NSViewRepresentable {
         }
 
         func recorderControl(_ aControl: RecorderControl, canRecord aShortcut: Shortcut) -> Bool {
-            true
+            if let conflict = hotKeysManager.allHotKeys.first(where: { $0.hotKey.toShortcut() == aShortcut })?.scope {
+                Alert.showOkAlert(
+                    title: "Conflict",
+                    message: "This shortcut is already assigned within the \(conflict) scope."
+                )
+                return false
+            }
+
+            return true
         }
 
         func recorderControlDidEndRecording(_ aControl: RecorderControl) {
