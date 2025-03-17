@@ -8,7 +8,7 @@
 import Carbon
 
 enum KeyCodesMap {
-    static let toKeyCode = create()
+    private(set) static var toKeyCode = create()
 
     static let toString = toKeyCode.reduce(into: [RawKeyCode: String]()) { result, pair in
         result[pair.value] = pair.key
@@ -19,6 +19,10 @@ enum KeyCodesMap {
     }
 
     static subscript(key: String) -> RawKeyCode? { toKeyCode[key] }
+
+    static func refresh() {
+        toKeyCode = create()
+    }
 
     private static func create() -> [String: RawKeyCode] {
         var stringToKeyCodes: [String: RawKeyCode] = [:]

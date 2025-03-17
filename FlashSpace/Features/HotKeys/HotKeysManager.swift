@@ -123,5 +123,14 @@ final class HotKeysManager {
             .publisher(for: .profileChanged)
             .sink { [weak self] _ in self?.refresh() }
             .store(in: &cancellables)
+
+        DistributedNotificationCenter.default()
+            .publisher(for: .init(rawValue: kTISNotifySelectedKeyboardInputSourceChanged as String))
+            .sink { [weak self] _ in
+                KeyCodesMap.refresh()
+                self?.disableAll()
+                self?.enableAll()
+            }
+            .store(in: &cancellables)
     }
 }
