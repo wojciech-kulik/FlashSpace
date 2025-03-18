@@ -8,7 +8,8 @@
 import AppKit
 
 extension AXUIElement {
-    /// Position is in window coordinates (0,0) is top left corner
+    /// Position is in window coordinates where (0,0) is top-left corner
+    /// and it is relative to the main screen.
     func setPosition(_ position: CGPoint) {
         var position = position
         let positionRef = AXValueCreate(.cgPoint, &position)

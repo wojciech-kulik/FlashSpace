@@ -10,7 +10,7 @@ import AppKit
 extension CGRect {
     func getDisplay() -> String? {
         NSScreen.screens
-            .first { $0.frame.contains(.init(x: self.midX, y: self.midY)) }?
+            .first { $0.normalizedFrame.contains(.init(x: self.midX, y: self.midY)) }?
             .localizedName
     }
 

@@ -17,7 +17,8 @@ extension NSRunningApplication {
         AXUIElementPerformAction(mainWindow, NSAccessibility.Action.raise as CFString)
     }
 
-    /// Position is in window coordinates (0,0) is top left corner
+    /// Position is in window coordinates where (0,0) is top-left corner
+    /// and it is relative to the main screen.
     func setPosition(_ position: CGPoint) {
         mainWindow?.setPosition(position)
     }
@@ -30,9 +31,11 @@ extension NSRunningApplication {
         guard let nsScreen = NSScreen.screens.first(where: { $0.localizedName == display }) else { return }
         guard appFrame.getDisplay() != nsScreen.localizedName else { return }
 
+        let normalizedScreenFrame = nsScreen.normalizedFrame
+
         let origin = CGPoint(
-            x: nsScreen.frame.midX - appFrame.width / 2.0,
-            y: nsScreen.frame.midY - appFrame.height / 2.0
+            x: normalizedScreenFrame.midX - appFrame.width / 2.0,
+            y: normalizedScreenFrame.midY - appFrame.height / 2.0
         )
 
         setPosition(origin)
