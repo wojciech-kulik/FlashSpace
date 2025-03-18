@@ -28,7 +28,8 @@ enum Toast {
         )
         let size = contentView.fittingSize
 
-        // contentRect is in screen coordinates (0,0) is bottom left corner
+        // contentRect is in screen coordinates where (0,0) is bottom-left corner
+        // and it is relative to the main screen.
         let window = NSWindow(
             contentRect: NSRect(
                 x: (NSScreen.main?.frame.midX ?? 200.0) - size.width / 2.0,

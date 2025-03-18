@@ -55,7 +55,8 @@ enum SpaceControl {
             rootView: SpaceControlView()
         )
 
-        // contentRect is in screen coordinates (0,0) is bottom left corner
+        // contentRect is in screen coordinates where (0,0) is bottom-left corner
+        // and it is relative to the main screen.
         let window = SpaceControlWindow(
             contentRect: NSScreen.main!.frame,
             styleMask: [.borderless],

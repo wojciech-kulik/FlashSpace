@@ -17,7 +17,8 @@ extension NSRunningApplication {
         AXUIElementPerformAction(mainWindow, NSAccessibility.Action.raise as CFString)
     }
 
-    /// Position is in window coordinates (0,0) is top left corner
+    /// Position is in window coordinates where (0,0) is top-left corner
+    /// and it is relative to the main screen.
     func setPosition(_ position: CGPoint) {
         mainWindow?.setPosition(position)
     }

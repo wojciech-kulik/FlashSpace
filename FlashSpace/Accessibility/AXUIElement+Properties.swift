@@ -19,7 +19,8 @@ extension AXUIElement {
         set { setAttribute(.enchancedUserInterface, value: newValue) }
     }
 
-    /// Frame is in window coordinates (0,0) is top left corner
+    /// Frame is in window coordinates where (0,0) is top-left corner
+    /// and it is relative to the main screen.
     var frame: CGRect? {
         var positionValue: CFTypeRef?
         var sizeValue: CFTypeRef?
