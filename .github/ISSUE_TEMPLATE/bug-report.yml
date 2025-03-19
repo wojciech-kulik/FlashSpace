@@ -1,0 +1,62 @@
+---
+name: Bug Report
+description: File a bug report
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for filing a bug report!
+
+        ## Important
+        - Please search existing issues to avoid creating duplicates.
+        - For questions or if you're unsure if it's a bug, please use GitHub Discussions.
+        - Please fill out the template below to the best of your ability.
+        - Please describe the issue as much as possible and provide steps to reproduce it along with visual aids if possible.
+  - type: checkboxes
+    id: captchas
+    attributes:
+      label: Captchas
+      description: Please confirm that you have read the following before submitting your issue.
+      options:
+        - label: I have read [README](https://github.com/wojciech-kulik/FlashSpace).
+        - label: I am not asking about [individual windows support](https://github.com/wojciech-kulik/FlashSpace#-no-support-for-individual-app-windows-per-workspace).
+        - label: I am not asking about [support for agent apps](https://github.com/wojciech-kulik/FlashSpace/issues/203).
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Please provide a step-by-step guide to reproduce the issue.
+      placeholder: |
+        1. Open the app
+        2. Click on the button
+        3. etc.
+    validations:
+      required: true
+  - type: textarea
+    id: actual-result
+    attributes:
+      label: Actual result
+      description: Describe what happened. If possible, include screenshots or screen recordings.
+    validations:
+      required: true
+  - type: textarea
+    id: expected-result
+    attributes:
+      label: Expected result
+      description: Describe what you expected to happen.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: What version of FlashSpace are you running? Please include the version number.
+      placeholder: 1.0.0
+    validations:
+      required: true
+  - type: textarea
+    id: config
+    attributes:
+      label: Your config
+      description: Please share your config if possible. You can find it in ~/.config/FlashSpace.
