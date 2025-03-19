@@ -20,9 +20,7 @@ body:
       options:
         - label: I have read [README](https://github.com/wojciech-kulik/FlashSpace).
         - label: I am not requesting [individual windows support](https://github.com/wojciech-kulik/FlashSpace#-no-support-for-individual-app-windows-per-workspace).
-        - label: I am not requesting [tiling related feature](https://github.com/wojciech-kulik/FlashSpace/issues/203).
-        - label: I am not requesting a new hot key that can be achieved using [FlashSpace CLI](https://github.com/wojciech-kulik/FlashSpace#-command-line-interface) + [SKHD](https://github.com/koekeishiya/skhd).
-        - label: This feature can be useful for other users as well.
+        - label: I am not requesting [tiling related feature](https://github.com/wojciech-kulik/FlashSpace#-no-support-for-layouts).
   - type: checkboxes
     id: workaround
     attributes:
