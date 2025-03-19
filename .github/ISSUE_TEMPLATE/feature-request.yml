@@ -1,0 +1,46 @@
+---
+name: Feature Request
+description: Request a new feature
+labels: ["feature request"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for filing a feature report!
+
+        ## Important
+        - Please search existing issues to avoid creating duplicates.
+        - For questions or if you're unsure, please use GitHub Discussions.
+        - Please fill out the template below to the best of your ability.
+  - type: checkboxes
+    id: captchas
+    attributes:
+      label: Captchas
+      description: Please confirm that you have read the following before submitting your issue.
+      options:
+        - label: I have read [README](https://github.com/wojciech-kulik/FlashSpace).
+        - label: I am not requesting [individual windows support](https://github.com/wojciech-kulik/FlashSpace#-no-support-for-individual-app-windows-per-workspace).
+        - label: I am not requesting [tiling related feature](https://github.com/wojciech-kulik/FlashSpace/issues/203).
+        - label: I am not requesting a new hot key that can be achieved using [FlashSpace CLI](https://github.com/wojciech-kulik/FlashSpace#-command-line-interface) + [SKHD](https://github.com/koekeishiya/skhd).
+        - label: This feature can be useful for other users as well.
+  - type: checkboxes
+    id: workaround
+    attributes:
+      label: Workaround?
+      description: Could it be achieved using the existing features?
+      options:
+        - label: It could be achieved using existing features.
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem are you trying to solve?
+      description: Please describe the problem you are trying to solve with this feature.
+    validations:
+      required: true
+  - type: textarea
+    id: request
+    attributes:
+      label: Requested feature
+      description: Please provide a detailed description of the feature you would like to see.
+    validations:
+      required: true

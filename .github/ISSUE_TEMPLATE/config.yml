@@ -1,0 +1,6 @@
+---
+blank_issues_enabled: false
+contact_links:
+  - name: Questions
+    url: https://github.com/wojciech-kulik/FlashSpace/discussions/categories/q-a
+    about: Please use GitHub discussions for questions.
