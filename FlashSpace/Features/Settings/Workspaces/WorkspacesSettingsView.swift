@@ -43,6 +43,28 @@ struct WorkspacesSettingsView: View {
                 .foregroundStyle(.secondary)
                 .font(.callout)
             }
+
+            Section {
+                HStack {
+                    Text("Alternative Displays")
+                    TextField("", text: $settings.alternativeDisplays)
+                        .foregroundColor(.secondary)
+                        .standardPlaceholder(settings.alternativeDisplays.isEmpty)
+                }
+
+                Text(
+                    """
+                    Example: DELL XYZ=Benq ABC;LG 123=DELL XYZ
+
+                    This setting is useful if you want to use the same configuration for different displays.
+                    You can tell FlashSpace which display should be used if the selected one is not connected.
+
+                    If only one display is connected, it will always act as the fallback.
+                    """
+                )
+                .foregroundStyle(.secondary)
+                .font(.callout)
+            }
         }
         .formStyle(.grouped)
         .navigationTitle("Workspaces")

@@ -19,4 +19,12 @@ extension NSScreen {
             height: frame.height
         )
     }
+
+    static func isConnected(_ display: DisplayName) -> Bool {
+        NSScreen.screens.contains { $0.localizedName == display }
+    }
+
+    static func screen(_ display: DisplayName?) -> NSScreen? {
+        NSScreen.screens.first { $0.localizedName == display }
+    }
 }

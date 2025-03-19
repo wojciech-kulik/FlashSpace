@@ -20,6 +20,8 @@ final class WorkspaceSettings: ObservableObject {
     @Published var switchToPreviousWorkspace: AppHotKey?
     @Published var switchToNextWorkspace: AppHotKey?
 
+    @Published var alternativeDisplays = ""
+
     private var observer: AnyCancellable?
     private let updateSubject = PassthroughSubject<(), Never>()
 
@@ -35,7 +37,8 @@ final class WorkspaceSettings: ObservableObject {
             $toggleFocusedAppAssignment.settingsPublisher(),
             $switchToRecentWorkspace.settingsPublisher(),
             $switchToPreviousWorkspace.settingsPublisher(),
-            $switchToNextWorkspace.settingsPublisher()
+            $switchToNextWorkspace.settingsPublisher(),
+            $alternativeDisplays.settingsPublisher(debounce: true)
         )
         .receive(on: DispatchQueue.main)
         .sink { [weak self] in self?.updateSubject.send() }
@@ -59,6 +62,8 @@ extension WorkspaceSettings: SettingsProtocol {
         switchToRecentWorkspace = appSettings.switchToRecentWorkspace
         switchToPreviousWorkspace = appSettings.switchToPreviousWorkspace
         switchToNextWorkspace = appSettings.switchToNextWorkspace
+
+        alternativeDisplays = appSettings.alternativeDisplays ?? ""
         observe()
     }
 
@@ -73,5 +78,7 @@ extension WorkspaceSettings: SettingsProtocol {
         appSettings.switchToRecentWorkspace = switchToRecentWorkspace
         appSettings.switchToPreviousWorkspace = switchToPreviousWorkspace
         appSettings.switchToNextWorkspace = switchToNextWorkspace
+
+        appSettings.alternativeDisplays = alternativeDisplays
     }
 }

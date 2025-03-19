@@ -28,7 +28,7 @@ extension NSRunningApplication {
             return Logger.log("Could not get frame for app: \(localizedName ?? "")")
         }
 
-        guard let nsScreen = NSScreen.screens.first(where: { $0.localizedName == display }) else { return }
+        guard let nsScreen = NSScreen.screen(display) else { return }
         guard appFrame.getDisplay() != nsScreen.localizedName else { return }
 
         let normalizedScreenFrame = nsScreen.normalizedFrame

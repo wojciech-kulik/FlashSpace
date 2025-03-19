@@ -86,7 +86,7 @@ final class PictureInPictureManager {
     }
 
     private func findScreenCorner(app: NSRunningApplication) -> CGPoint? {
-        guard let appScreen = NSScreen.screens.first(where: { $0.localizedName == app.display }) else {
+        guard let appScreen = NSScreen.screen(app.display) else {
             return nil
         }
 
