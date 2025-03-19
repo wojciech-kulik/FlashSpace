@@ -33,11 +33,32 @@ struct Workspace: Identifiable, Codable, Hashable {
 }
 
 extension Workspace {
-    /// If only one display is connected, fallbacks to the main display
+    /// Returns the assigned display name or fallback if not connected
     var displayWithFallback: DisplayName {
-        NSScreen.screens.count > 1
-            ? display
-            : NSScreen.main?.localizedName ?? ""
+        guard !NSScreen.isConnected(display) else {
+            return display
+        }
+
+        guard NSScreen.screens.count > 1 else {
+            return NSScreen.main?.localizedName ?? ""
+        }
+
+        let settings = AppDependencies.shared.workspaceSettings
+        let alternativeDisplays = settings.alternativeDisplays
+            .split(separator: ";")
+            .map { $0.split(separator: "=") }
+            .compactMap { pair -> (source: String, target: String)? in
+                guard pair.count == 2 else { return nil }
+
+                return (String(pair[0]).trimmed, String(pair[1]).trimmed)
+            }
+
+        let alternative = alternativeDisplays
+            .filter { $0.source == display }
+            .first { NSScreen.isConnected($0.target) }?
+            .target
+
+        return alternative ?? NSScreen.main?.localizedName ?? ""
     }
 
     var isOnTheCurrentScreen: Bool {

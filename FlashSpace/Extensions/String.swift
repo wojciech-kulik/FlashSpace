@@ -12,4 +12,5 @@ extension String {
 
     var isNotEmpty: Bool { !isEmpty }
     var nilIfEmpty: String? { isEmpty ? nil : self }
+    var trimmed: String { trimmingCharacters(in: .whitespacesAndNewlines) }
 }

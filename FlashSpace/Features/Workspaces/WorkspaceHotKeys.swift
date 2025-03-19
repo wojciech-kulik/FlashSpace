@@ -129,7 +129,7 @@ extension WorkspaceHotKeys {
         guard let updatedWorkspace = workspaceRepository.workspaces
             .first(where: { $0.id == workspace.id }) else { return }
 
-        activeApp.centerApp(display: updatedWorkspace.display)
+        activeApp.centerApp(display: updatedWorkspace.displayWithFallback)
         workspaceManager.assignApp(activeApp.toMacApp, to: updatedWorkspace)
         Toast.showWith(
             icon: "square.stack.3d.up",
