@@ -19,9 +19,8 @@ body:
       label: Captchas
       description: Please confirm that you have read the following before submitting your issue.
       options:
-        - label: I have read [README](https://github.com/wojciech-kulik/FlashSpace).
-        - label: I am not asking about [individual windows support](https://github.com/wojciech-kulik/FlashSpace#-no-support-for-individual-app-windows-per-workspace).
-        - label: I am not asking about [support for agent apps](https://github.com/wojciech-kulik/FlashSpace/issues/203).
+        - label: I have read the [Design Decisions](https://github.com/wojciech-kulik/FlashSpace#-design-decisions) section in the README.
+        - label: My issue is not about [support for agent apps](https://github.com/wojciech-kulik/FlashSpace/issues/203?no-mention).
   - type: textarea
     id: steps
     attributes:
