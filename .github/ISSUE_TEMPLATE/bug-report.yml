@@ -20,7 +20,7 @@ body:
       description: Please confirm that you have read the following before submitting your issue.
       options:
         - label: I have read the [Design Decisions](https://github.com/wojciech-kulik/FlashSpace#-design-decisions) section in the README.
-        - label: My issue is not about [support for agent apps](https://github.com/wojciech-kulik/FlashSpace/issues/203?no-mention).
+        - label: My issue is not about [support for agent apps](https://bit.ly/agent-app-support).
   - type: textarea
     id: steps
     attributes:
