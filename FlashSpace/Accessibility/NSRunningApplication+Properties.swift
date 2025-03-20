@@ -25,16 +25,26 @@ extension NSRunningApplication {
     var isMinimized: Bool { mainWindow?.isMinimized == true }
 
     var mainWindow: AXUIElement? {
+        // HACK: Python app with running pygame module is causing
+        // huge lags when other apps attempt to access its window
+        // through the accessibility API.
+        // A workaround is to simply skip this app.
+        guard bundleIdentifier != "org.python.python" else { return nil }
+
         let appElement = AXUIElementCreateApplication(processIdentifier)
         return appElement.getAttribute(.mainWindow)
     }
 
     var focusedWindow: AXUIElement? {
+        guard bundleIdentifier != "org.python.python" else { return nil }
+
         let appElement = AXUIElementCreateApplication(processIdentifier)
         return appElement.getAttribute(.focusedWindow)
     }
 
     var allWindows: [(window: AXUIElement, frame: CGRect)] {
+        guard bundleIdentifier != "org.python.python" else { return [] }
+
         let appElement = AXUIElementCreateApplication(processIdentifier)
         let windows: [AXUIElement]? = appElement.getAttribute(.windows)
 
