@@ -37,6 +37,19 @@ struct FocusSettingsView: View {
                     hotkey("Focus Next Window", for: $settings.focusNextWorkspaceWindow)
                     hotkey("Focus Previous Window", for: $settings.focusPreviousWorkspaceWindow)
                 }
+
+                Section("Experimental") {
+                    Toggle("Focus Frontmost Window", isOn: $settings.focusFrontmostWindow)
+                    Text(
+                        """
+                        This is an experimental feature. It sets the focus to the frontmost window if two or more windows are overlapping in the pointed direction.
+
+                        It works only with directional focus shortcuts (left, right, up, down).
+                        """
+                    )
+                    .foregroundStyle(.secondary)
+                    .font(.callout)
+                }
             }
             .disabled(!settings.enableFocusManagement)
             .opacity(settings.enableFocusManagement ? 1 : 0.5)

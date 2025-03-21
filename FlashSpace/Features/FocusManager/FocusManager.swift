@@ -167,14 +167,24 @@ final class FocusManager {
     private func focus(predicate: (CGRect, CGRect) -> Bool) {
         guard let focusedAppFrame else { return }
 
-        let toFocus = visibleApps
+        let appsToCheck = visibleApps
             .flatMap { app in
                 app.allWindows.map {
                     (app: app, window: $0.window, frame: $0.frame)
                 }
             }
+
+        let toFocus = appsToCheck
             .filter { predicate(focusedAppFrame, $0.frame) && !$0.window.isMinimized }
-            .min { $0.frame.distance(to: focusedAppFrame) < $1.frame.distance(to: focusedAppFrame) }
+            .sorted { $0.frame.distance(to: focusedAppFrame) < $1.frame.distance(to: focusedAppFrame) }
+            .first { app in
+                guard settings.focusFrontmostWindow else { return true }
+
+                let otherWindows = appsToCheck
+                    .filter { $0.app != app.app && $0.app != focusedApp }
+                    .map(\.window)
+                return !app.window.isBelowAnyOf(otherWindows)
+            }
 
         toFocus?.window.focus()
         toFocus?.app.activate()

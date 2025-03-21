@@ -20,6 +20,7 @@ final class FocusManagerSettings: ObservableObject {
     @Published var focusPreviousWorkspaceApp: AppHotKey?
     @Published var focusNextWorkspaceWindow: AppHotKey?
     @Published var focusPreviousWorkspaceWindow: AppHotKey?
+    @Published var focusFrontmostWindow = false
 
     private var observer: AnyCancellable?
     private let updateSubject = PassthroughSubject<(), Never>()
@@ -37,7 +38,8 @@ final class FocusManagerSettings: ObservableObject {
             $focusNextWorkspaceApp.settingsPublisher(),
             $focusPreviousWorkspaceApp.settingsPublisher(),
             $focusNextWorkspaceWindow.settingsPublisher(),
-            $focusPreviousWorkspaceWindow.settingsPublisher()
+            $focusPreviousWorkspaceWindow.settingsPublisher(),
+            $focusFrontmostWindow.settingsPublisher()
         )
         .receive(on: DispatchQueue.main)
         .sink { [weak self] in self?.updateSubject.send() }
@@ -61,6 +63,7 @@ extension FocusManagerSettings: SettingsProtocol {
         focusPreviousWorkspaceApp = appSettings.focusPreviousWorkspaceApp
         focusNextWorkspaceWindow = appSettings.focusNextWorkspaceWindow
         focusPreviousWorkspaceWindow = appSettings.focusPreviousWorkspaceWindow
+        focusFrontmostWindow = appSettings.focusFrontmostWindow ?? false
         observe()
     }
 
@@ -75,5 +78,6 @@ extension FocusManagerSettings: SettingsProtocol {
         appSettings.focusPreviousWorkspaceApp = focusPreviousWorkspaceApp
         appSettings.focusNextWorkspaceWindow = focusNextWorkspaceWindow
         appSettings.focusPreviousWorkspaceWindow = focusPreviousWorkspaceWindow
+        appSettings.focusFrontmostWindow = focusFrontmostWindow
     }
 }
