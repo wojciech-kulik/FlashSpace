@@ -27,6 +27,7 @@ struct AppSettings: Codable {
     var focusPreviousWorkspaceApp: AppHotKey?
     var focusNextWorkspaceWindow: AppHotKey?
     var focusPreviousWorkspaceWindow: AppHotKey?
+    var focusFrontmostWindow: Bool?
 
     // Workspaces
     var centerCursorOnWorkspaceChange: Bool?
