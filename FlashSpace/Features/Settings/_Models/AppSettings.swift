@@ -29,6 +29,11 @@ struct AppSettings: Codable {
     var focusPreviousWorkspaceWindow: AppHotKey?
     var focusFrontmostWindow: Bool?
 
+    // Gestures
+    var enableThreeFingersSwipe: Bool?
+    var naturalDirection: Bool?
+    var swipeThreshold: Double?
+
     // Workspaces
     var centerCursorOnWorkspaceChange: Bool?
     var changeWorkspaceOnAppAssign: Bool?

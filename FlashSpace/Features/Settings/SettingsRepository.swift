@@ -11,6 +11,7 @@ import Foundation
 final class SettingsRepository: ObservableObject {
     private(set) var generalSettings: GeneralSettings
     private(set) var menuBarSettings: MenuBarSettings
+    private(set) var gesturesSettings: GesturesSettings
     private(set) var focusManagerSettings: FocusManagerSettings
     private(set) var workspaceSettings: WorkspaceSettings
     private(set) var floatingAppsSettings: FloatingAppsSettings
@@ -20,6 +21,7 @@ final class SettingsRepository: ObservableObject {
     private lazy var allSettings: [SettingsProtocol] = [
         generalSettings,
         menuBarSettings,
+        gesturesSettings,
         focusManagerSettings,
         workspaceSettings,
         floatingAppsSettings,
@@ -34,6 +36,7 @@ final class SettingsRepository: ObservableObject {
     init(
         generalSettings: GeneralSettings,
         menuBarSettings: MenuBarSettings,
+        gesturesSettings: GesturesSettings,
         focusManagerSettings: FocusManagerSettings,
         workspaceSettings: WorkspaceSettings,
         floatingAppsSettings: FloatingAppsSettings,
@@ -42,6 +45,7 @@ final class SettingsRepository: ObservableObject {
     ) {
         self.generalSettings = generalSettings
         self.menuBarSettings = menuBarSettings
+        self.gesturesSettings = gesturesSettings
         self.focusManagerSettings = focusManagerSettings
         self.workspaceSettings = workspaceSettings
         self.floatingAppsSettings = floatingAppsSettings
