@@ -29,16 +29,11 @@ struct AppSettings: Codable {
     var focusPreviousWorkspaceWindow: AppHotKey?
     var focusFrontmostWindow: Bool?
 
-    // Gestures
-    var enableSwipeGesture: Bool?
-    var swipeFingerCount: Int?
-    var naturalDirection: Bool?
-    var swipeThreshold: Double?
-
     // Workspaces
     var centerCursorOnWorkspaceChange: Bool?
     var changeWorkspaceOnAppAssign: Bool?
     var enablePictureInPictureSupport: Bool?
+    var enableWorkspaceTransition: Bool?
     var switchToPreviousWorkspace: AppHotKey?
     var switchToNextWorkspace: AppHotKey?
     var switchToRecentWorkspace: AppHotKey?
@@ -46,6 +41,12 @@ struct AppSettings: Codable {
     var unassignFocusedApp: AppHotKey?
     var toggleFocusedAppAssignment: AppHotKey?
     var alternativeDisplays: String?
+
+    // Swipe Gestures (part of Workspaces)
+    var enableSwipeGesture: Bool?
+    var swipeFingerCount: Int?
+    var naturalDirection: Bool?
+    var swipeThreshold: Double?
 
     // Floating apps
     var floatingApps: [MacApp]?

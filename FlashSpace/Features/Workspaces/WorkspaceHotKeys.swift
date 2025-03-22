@@ -41,10 +41,17 @@ final class WorkspaceHotKeys {
         guard let shortcut = workspace.activateShortcut else { return nil }
 
         let action = { [weak self] in
-            guard let updatedWorkspace = self?.workspaceRepository.workspaces
+            guard let self, let updatedWorkspace = self.workspaceRepository.workspaces
                 .first(where: { $0.id == workspace.id }) else { return }
 
-            self?.workspaceManager.activateWorkspace(updatedWorkspace, setFocus: true)
+            if self.workspaceSettings.enableWorkspaceTransition {
+                WorkspaceTransitionManager.shared.enableTransitionEffects = true
+                WorkspaceTransitionManager.shared.performTransition(direction: .right) {
+                    self.workspaceManager.activateWorkspace(updatedWorkspace, setFocus: true)
+                }
+            } else {
+                self.workspaceManager.activateWorkspace(updatedWorkspace, setFocus: true)
+            }
         }
 
         return (shortcut, action)
@@ -89,7 +96,17 @@ final class WorkspaceHotKeys {
         else { return nil }
 
         let action: () -> () = { [weak self] in
-            self?.workspaceManager.activateWorkspace(next: next)
+            guard let self else { return }
+      
+            if self.workspaceSettings.enableWorkspaceTransition {
+                let direction: WorkspaceTransitionManager.TransitionDirection = next ? .right : .left
+                WorkspaceTransitionManager.shared.enableTransitionEffects = true
+                WorkspaceTransitionManager.shared.performTransition(direction: direction) {
+                    self.workspaceManager.activateWorkspace(next: next)
+                }
+            } else {
+                self.workspaceManager.activateWorkspace(next: next)
+            }
         }
 
         return (shortcut, action)
@@ -99,7 +116,16 @@ final class WorkspaceHotKeys {
         guard let shortcut = workspaceSettings.switchToRecentWorkspace else { return nil }
 
         let action: () -> () = { [weak self] in
-            self?.workspaceManager.activateRecentWorkspace()
+            guard let self else { return }
+            
+            if self.workspaceSettings.enableWorkspaceTransition {
+                WorkspaceTransitionManager.shared.enableTransitionEffects = true
+                WorkspaceTransitionManager.shared.performTransition(direction: .right) {
+                    self.workspaceManager.activateRecentWorkspace()
+                }
+            } else {
+                self.workspaceManager.activateRecentWorkspace()
+            }
         }
 
         return (shortcut, action)

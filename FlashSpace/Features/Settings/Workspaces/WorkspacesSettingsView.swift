@@ -25,6 +25,45 @@ struct WorkspacesSettingsView: View {
                 )
                 .foregroundStyle(.secondary)
                 .font(.callout)
+             
+                Toggle("Enable Workspace Transition Effects", isOn: $settings.enableWorkspaceTransition)
+                Text(
+                    "Shows a subtle fade effect when switching between workspaces, whether using shortcuts or gestures."
+                )
+                .foregroundStyle(.secondary)
+                .font(.callout)
+            }
+            
+            Section("Swipe Gestures") {
+                Toggle("Enable Swipe Gestures", isOn: $settings.enableSwipeGesture)
+                
+                Group {
+                    Picker("Finger Count", selection: $settings.swipeFingerCount) {
+                        ForEach(WorkspaceSettings.FingerCount.allCases) { fingerCount in
+                            Text(fingerCount.description).tag(fingerCount)
+                        }
+                    }
+                    
+                    Toggle("Natural Direction", isOn: $settings.naturalDirection)
+                    
+                    HStack {
+                        Text("Activation Threshold")
+                        Spacer()
+                        Text("\(settings.swipeThreshold, specifier: "%.1f")")
+                        Stepper(
+                            "",
+                            value: $settings.swipeThreshold,
+                            in: 0.1...1.0,
+                            step: 0.1
+                        ).labelsHidden()
+                    }
+                }
+                .disabled(!settings.enableSwipeGesture)
+                .opacity(settings.enableSwipeGesture ? 1 : 0.5)
+                
+                Text("This gesture allows you to switch between workspaces by swiping horizontally with multiple fingers.")
+                    .foregroundStyle(.secondary)
+                    .font(.callout)
             }
 
             Section("Shortcuts") {
