@@ -130,7 +130,7 @@ final class SwipeManager {
 
         if touchesCount == 0 {
             gestureFinished()
-        } else if touchesCount == swipeFingerCount, enableSwipeGesture {
+        } else if touchesCount == swipeFingerCount {
             state = .began
             horizontalSwipeSum += horizontalSwipeDistance(touches: touches)
         }
