@@ -15,12 +15,25 @@ struct ListRunningAppsCommand: ParsableCommand {
         abstract: "List running apps"
     )
 
+    @Flag(help: "Include bundle id")
+    var withBundleId = false
+
     func run() throws {
         let apps = NSWorkspace.shared.runningApplications
             .filter { $0.activationPolicy == .regular }
-            .compactMap(\.localizedName)
 
-        let result = Set(apps).sorted().joined(separator: "\n")
+        let result = Set(apps)
+            .filter { $0.localizedName != nil }
+            .map { (bundleId: $0.bundleIdentifier ?? "-", name: $0.localizedName ?? "-") }
+            .sorted { $0.name.lowercased() < $1.name.lowercased() }
+            .map { app in
+                if withBundleId {
+                    return [app.name, app.bundleId].joined(separator: ",")
+                } else {
+                    return app.name
+                }
+            }
+            .joined(separator: "\n")
         print(result)
     }
 }
