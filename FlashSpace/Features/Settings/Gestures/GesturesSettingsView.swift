@@ -22,7 +22,7 @@ struct GesturesSettingsView: View {
                         }
                     }
 
-                    Toggle("Natural Direction", isOn: $settings.naturalDirection)
+                    Toggle("Natural Direction", isOn: $settings.swipeNaturalDirection)
 
                     HStack {
                         Text("Activation Threshold")

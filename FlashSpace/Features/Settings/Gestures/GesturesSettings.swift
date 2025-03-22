@@ -31,7 +31,7 @@ final class GesturesSettings: ObservableObject {
         didSet { updateSwipeManager() }
     }
 
-    @Published var naturalDirection = false
+    @Published var swipeNaturalDirection = false
     @Published var swipeThreshold: Double = 0.2
 
     private var observer: AnyCancellable?
@@ -46,7 +46,7 @@ final class GesturesSettings: ObservableObject {
         observer = Publishers.MergeMany(
             $enableSwipeGesture.settingsPublisher(),
             $swipeFingerCount.settingsPublisher(),
-            $naturalDirection.settingsPublisher(),
+            $swipeNaturalDirection.settingsPublisher(),
             $swipeThreshold.settingsPublisher()
         )
         .receive(on: DispatchQueue.main)
@@ -71,7 +71,7 @@ extension GesturesSettings: SettingsProtocol {
         observer = nil
         enableSwipeGesture = appSettings.enableSwipeGesture ?? false
         swipeFingerCount = appSettings.swipeFingerCount == 4 ? .four : .three
-        naturalDirection = appSettings.naturalDirection ?? false
+        swipeNaturalDirection = appSettings.swipeNaturalDirection ?? false
         swipeThreshold = appSettings.swipeThreshold ?? 0.2
         observe()
     }
@@ -79,7 +79,7 @@ extension GesturesSettings: SettingsProtocol {
     func update(_ appSettings: inout AppSettings) {
         appSettings.enableSwipeGesture = enableSwipeGesture
         appSettings.swipeFingerCount = swipeFingerCount.rawValue
-        appSettings.naturalDirection = naturalDirection
+        appSettings.swipeNaturalDirection = swipeNaturalDirection
         appSettings.swipeThreshold = swipeThreshold
     }
 }

@@ -20,7 +20,7 @@ final class SwipeManager {
     static let shared = SwipeManager()
 
     private var swipeThreshold: Double { gesturesSettings.swipeThreshold }
-    private var naturalDirection: Bool { gesturesSettings.naturalDirection }
+    private var naturalDirection: Bool { gesturesSettings.swipeNaturalDirection }
     private var swipeFingerCount: Int { gesturesSettings.swipeFingerCount.rawValue }
 
     private var eventTap: CFMachPort?

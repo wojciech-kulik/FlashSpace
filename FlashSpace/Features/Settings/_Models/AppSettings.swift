@@ -32,7 +32,7 @@ struct AppSettings: Codable {
     // Gestures
     var enableSwipeGesture: Bool?
     var swipeFingerCount: Int?
-    var naturalDirection: Bool?
+    var swipeNaturalDirection: Bool?
     var swipeThreshold: Double?
 
     // Workspaces
