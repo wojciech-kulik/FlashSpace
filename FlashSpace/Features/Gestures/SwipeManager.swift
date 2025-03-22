@@ -20,7 +20,8 @@ final class SwipeManager {
     static let shared = SwipeManager()
 
     private var swipeThreshold: Double { gesturesSettings.swipeThreshold }
-    private var naturalDirection: Bool { gesturesSettings.naturalDirection }
+    private var naturalDirection: Bool { gesturesSettings.swipeNaturalDirection }
+    private var swipeFingerCount: Int { gesturesSettings.swipeFingerCount.rawValue }
 
     private var eventTap: CFMachPort?
     private var touchDistance: [TouchId: CGFloat] = [:]
@@ -109,7 +110,7 @@ final class SwipeManager {
             state = .idle
         }
 
-        if touches.count == 3 {
+        if touches.count == swipeFingerCount {
             if state == .idle {
                 state = .inProgress
                 touchDistance = [:]
@@ -128,9 +129,10 @@ final class SwipeManager {
         let swipes = touchDistance.values
         let allMovedRight = swipes.allSatisfy { $0 > 0 }
         let allMovedLeft = swipes.allSatisfy { $0 < 0 }
+        let minFingerContribution = swipeThreshold / (CGFloat(swipeFingerCount) + 2.0)
 
-        guard swipes.count == 3,
-              swipes.allSatisfy({ abs($0) > swipeThreshold / 5.0 }),
+        guard swipes.count == swipeFingerCount,
+              swipes.allSatisfy({ abs($0) > minFingerContribution }),
               abs(swipes.reduce(0.0, +)) >= swipeThreshold,
               allMovedLeft || allMovedRight else { return }
 
@@ -142,7 +144,7 @@ final class SwipeManager {
 
         state = .ended
         workspaceManager.activateWorkspace(next: next)
-        Logger.log("3 fingers swipe ended, direction: \(next ? "next" : "prev")")
+        Logger.log("\(swipeFingerCount) fingers swipe ended, direction: \(next ? "next" : "prev")")
     }
 
     private func updateSwipeDistance(touches: Set<NSTouch>) {
