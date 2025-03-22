@@ -12,11 +12,17 @@ struct GesturesSettingsView: View {
 
     var body: some View {
         Form {
-            Section("Three Fingers Swipe") {
-                Toggle("Enable Gestures", isOn: $settings.enableThreeFingersSwipe)
+            Section("Swipe Gestures") {
+                Toggle("Enable Swipe Gestures", isOn: $settings.enableSwipeGesture)
 
                 Group {
-                    Toggle("Natural Direction", isOn: $settings.naturalDirection)
+                    Picker("Finger Count", selection: $settings.swipeFingerCount) {
+                        ForEach(GesturesSettings.FingerCount.allCases) { fingerCount in
+                            Text(fingerCount.description).tag(fingerCount)
+                        }
+                    }
+
+                    Toggle("Natural Direction", isOn: $settings.swipeNaturalDirection)
 
                     HStack {
                         Text("Activation Threshold")
@@ -30,8 +36,8 @@ struct GesturesSettingsView: View {
                         ).labelsHidden()
                     }
                 }
-                .disabled(!settings.enableThreeFingersSwipe)
-                .opacity(settings.enableThreeFingersSwipe ? 1 : 0.5)
+                .disabled(!settings.enableSwipeGesture)
+                .opacity(settings.enableSwipeGesture ? 1 : 0.5)
 
                 Text("This gesture allows to switch between next and previous workspace.")
                     .foregroundStyle(.secondary)

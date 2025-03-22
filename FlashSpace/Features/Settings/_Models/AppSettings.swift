@@ -30,8 +30,9 @@ struct AppSettings: Codable {
     var focusFrontmostWindow: Bool?
 
     // Gestures
-    var enableThreeFingersSwipe: Bool?
-    var naturalDirection: Bool?
+    var enableSwipeGesture: Bool?
+    var swipeFingerCount: Int?
+    var swipeNaturalDirection: Bool?
     var swipeThreshold: Double?
 
     // Workspaces
@@ -45,6 +46,7 @@ struct AppSettings: Codable {
     var unassignFocusedApp: AppHotKey?
     var toggleFocusedAppAssignment: AppHotKey?
     var alternativeDisplays: String?
+    var pipApps: [PipApp]?
 
     // Floating apps
     var floatingApps: [MacApp]?

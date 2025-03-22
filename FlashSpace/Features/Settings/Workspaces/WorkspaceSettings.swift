@@ -21,11 +21,20 @@ final class WorkspaceSettings: ObservableObject {
     @Published var switchToNextWorkspace: AppHotKey?
 
     @Published var alternativeDisplays = ""
+    @Published var pipApps: [PipApp] = []
 
     private var observer: AnyCancellable?
     private let updateSubject = PassthroughSubject<(), Never>()
 
     init() { observe() }
+
+    func addPipApp(_ app: PipApp) {
+        pipApps.append(app)
+    }
+
+    func deletePipApp(_ app: PipApp) {
+        pipApps.removeAll { $0 == app }
+    }
 
     private func observe() {
         observer = Publishers.MergeMany(
@@ -38,7 +47,8 @@ final class WorkspaceSettings: ObservableObject {
             $switchToRecentWorkspace.settingsPublisher(),
             $switchToPreviousWorkspace.settingsPublisher(),
             $switchToNextWorkspace.settingsPublisher(),
-            $alternativeDisplays.settingsPublisher(debounce: true)
+            $alternativeDisplays.settingsPublisher(debounce: true),
+            $pipApps.settingsPublisher()
         )
         .receive(on: DispatchQueue.main)
         .sink { [weak self] in self?.updateSubject.send() }
@@ -64,6 +74,7 @@ extension WorkspaceSettings: SettingsProtocol {
         switchToNextWorkspace = appSettings.switchToNextWorkspace
 
         alternativeDisplays = appSettings.alternativeDisplays ?? ""
+        pipApps = appSettings.pipApps ?? []
         observe()
     }
 
@@ -80,5 +91,6 @@ extension WorkspaceSettings: SettingsProtocol {
         appSettings.switchToNextWorkspace = switchToNextWorkspace
 
         appSettings.alternativeDisplays = alternativeDisplays
+        appSettings.pipApps = pipApps
     }
 }
