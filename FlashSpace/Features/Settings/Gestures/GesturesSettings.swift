@@ -70,7 +70,7 @@ extension GesturesSettings: SettingsProtocol {
     func load(from appSettings: AppSettings) {
         observer = nil
         enableSwipeGesture = appSettings.enableSwipeGesture ?? false
-        swipeFingerCount = appSettings.swipeFingerCount == 4 ? .four : .three
+        swipeFingerCount = appSettings.swipeFingerCount.flatMap(FingerCount.init(rawValue:)) ?? .three
         swipeNaturalDirection = appSettings.swipeNaturalDirection ?? false
         swipeThreshold = appSettings.swipeThreshold ?? 0.2
         observe()
