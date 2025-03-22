@@ -1,39 +1,20 @@
 //
 //  SwipeManager.swift
 //
-//  Original source code: https://github.com/MediosZ/SwipeAeroSpace
-//  Refactored and modified by Wojciech Kulik on 21/03/2025.
-
-// MIT License
+//  Created by Wojciech Kulik on 22/03/2025.
+//  Copyright © 2025 Wojciech Kulik. All rights reserved.
 //
-// Copyright (c) 2025 Tricster
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
+//  Based on: https://github.com/MediosZ/SwipeAeroSpace
 
 import AppKit
 
 final class SwipeManager {
+    typealias TouchId = ObjectIdentifier
+
     enum GestureState {
-        case began
-        case changed
+        case idle
+        case inProgress
         case ended
-        case cancelled
     }
 
     static let shared = SwipeManager()
@@ -42,8 +23,9 @@ final class SwipeManager {
     private var naturalDirection: Bool { gesturesSettings.naturalDirection }
 
     private var eventTap: CFMachPort?
-    private var horizontalSwipeSum: Float = 0
-    private var prevTouchPositions: [String: NSPoint] = [:]
+    private var touchDistance: [TouchId: CGFloat] = [:]
+    private var prevTouchPositions: [TouchId: NSPoint] = [:]
+    private var lastTouchDate = Date.distantPast
     private var state: GestureState = .ended
 
     private lazy var gesturesSettings = AppDependencies.shared.gesturesSettings
@@ -121,74 +103,68 @@ final class SwipeManager {
 
     private func handleGesture(_ nsEvent: NSEvent) {
         let touches = nsEvent.allTouches()
+            .filter { !$0.isResting && $0.phase != .stationary }
 
-        guard !touches.isEmpty else { return }
-
-        let touchesCount = touches.allSatisfy { $0.phase == .ended } ? 0 : touches.count
-
-        if touchesCount == 0 {
-            gestureFinished()
-        } else if touchesCount == 3 {
-            state = .began
-            horizontalSwipeSum += horizontalSwipeDistance(touches: touches)
-        }
-    }
-
-    private func gestureFinished() {
-        guard state == .began else { return }
-
-        state = .ended
-
-        guard abs(horizontalSwipeSum) >= Float(swipeThreshold) else { return }
-
-        let next = if naturalDirection {
-            horizontalSwipeSum < 0
-        } else {
-            horizontalSwipeSum >= 0
+        if touches.count == 0 || Date().timeIntervalSince(lastTouchDate) > 0.8 {
+            state = .idle
         }
 
-        Logger.log("3 fingers swipe finished, direction: \(next ? "next" : "prev")")
-        horizontalSwipeSum = 0.0
-        prevTouchPositions.removeAll()
-
-        workspaceManager.activateWorkspace(next: next)
-    }
-
-    private func horizontalSwipeDistance(touches: Set<NSTouch>) -> Float {
-        var allRight = true
-        var allLeft = true
-        var sumX = Float(0)
-        var sumY = Float(0)
-
-        for touch in touches {
-            let (distanceX, distanceY) = touchDistance(touch)
-            allRight = allRight && distanceX >= 0
-            allLeft = allLeft && distanceX <= 0
-            sumX += distanceX
-            sumY += distanceY
-
-            if touch.phase == .ended {
-                prevTouchPositions.removeValue(forKey: "\(touch.identity)")
-            } else {
-                prevTouchPositions["\(touch.identity)"] = touch.normalizedPosition
+        if touches.count == 3 {
+            if state == .idle {
+                state = .inProgress
+                touchDistance = [:]
+                prevTouchPositions = [:]
+            }
+            if state == .inProgress {
+                lastTouchDate = Date()
+                handleSwipe(touches: touches)
             }
         }
-
-        // All fingers should move in the same direction.
-        guard allRight || allLeft else { return 0.0 }
-
-        // Only horizontal swipes are interesting.
-        guard abs(sumX) > abs(sumY) else { return 0.0 }
-
-        return sumX
     }
 
-    private func touchDistance(_ touch: NSTouch) -> (Float, Float) {
-        guard let prevPosition = prevTouchPositions["\(touch.identity)"] else { return (0, 0) }
+    private func handleSwipe(touches: Set<NSTouch>) {
+        updateSwipeDistance(touches: touches)
+
+        let swipes = touchDistance.values
+        let allMovedRight = swipes.allSatisfy { $0 > 0 }
+        let allMovedLeft = swipes.allSatisfy { $0 < 0 }
+
+        guard swipes.count == 3,
+              swipes.allSatisfy({ abs($0) > swipeThreshold / 5.0 }),
+              abs(swipes.reduce(0.0, +)) >= swipeThreshold,
+              allMovedLeft || allMovedRight else { return }
+
+        let next = if naturalDirection {
+            allMovedLeft
+        } else {
+            allMovedRight
+        }
+
+        state = .ended
+        workspaceManager.activateWorkspace(next: next)
+        Logger.log("3 fingers swipe ended, direction: \(next ? "next" : "prev")")
+    }
+
+    private func updateSwipeDistance(touches: Set<NSTouch>) {
+        for touch in touches {
+            let (distanceX, distanceY) = touchDistance(touch)
+
+            if abs(distanceX) > abs(distanceY) {
+                touchDistance[ObjectIdentifier(touch.identity), default: 0.0] += distanceX
+            }
+
+            prevTouchPositions[ObjectIdentifier(touch.identity)] = touch.normalizedPosition
+        }
+    }
+
+    private func touchDistance(_ touch: NSTouch) -> (CGFloat, CGFloat) {
+        guard let prevPosition = prevTouchPositions[ObjectIdentifier(touch.identity)] else {
+            return (0.0, 0.0)
+        }
 
         return (
-            Float(touch.normalizedPosition.x - prevPosition.x),
-            Float(touch.normalizedPosition.y - prevPosition.y)
+            touch.normalizedPosition.x - prevPosition.x,
+            touch.normalizedPosition.y - prevPosition.y
         )
     }
 }

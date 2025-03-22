@@ -21,12 +21,12 @@ struct GesturesSettingsView: View {
                     HStack {
                         Text("Activation Threshold")
                         Spacer()
-                        Text("\(settings.swipeThreshold, specifier: "%.1f")")
+                        Text("\(settings.swipeThreshold, specifier: "%.2f")")
                         Stepper(
                             "",
                             value: $settings.swipeThreshold,
-                            in: 0.1...1.0,
-                            step: 0.1
+                            in: 0.05...0.7,
+                            step: 0.05
                         ).labelsHidden()
                     }
                 }

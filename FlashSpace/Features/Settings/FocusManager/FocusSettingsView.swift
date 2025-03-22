@@ -41,11 +41,9 @@ struct FocusSettingsView: View {
                 Section("Experimental") {
                     Toggle("Focus Frontmost Window", isOn: $settings.focusFrontmostWindow)
                     Text(
-                        """
-                        This is an experimental feature. It sets the focus to the frontmost window if two or more windows are overlapping in the pointed direction.
-
-                        It works only with directional focus shortcuts (left, right, up, down).
-                        """
+                        "This is an experimental feature. It sets the focus to the frontmost window" +
+                            " if two or more windows are overlapping in the pointed direction.\n\n" +
+                            "It works only with directional focus shortcuts (left, right, up, down)."
                     )
                     .foregroundStyle(.secondary)
                     .font(.callout)
