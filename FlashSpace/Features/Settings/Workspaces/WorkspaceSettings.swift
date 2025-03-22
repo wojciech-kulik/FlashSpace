@@ -12,9 +12,9 @@ final class WorkspaceSettings: ObservableObject {
     enum FingerCount: Int, CaseIterable, Identifiable {
         case three = 3
         case four = 4
-     
+
         var id: Int { rawValue }
-        
+
         var description: String {
             switch self {
             case .three: return "Three Fingers"
@@ -22,7 +22,7 @@ final class WorkspaceSettings: ObservableObject {
             }
         }
     }
-    
+
     // General workspace settings
     @Published var centerCursorOnWorkspaceChange = false
     @Published var changeWorkspaceOnAppAssign = true
@@ -41,14 +41,16 @@ final class WorkspaceSettings: ObservableObject {
     @Published var enableSwipeGesture = false {
         didSet { updateSwipeManager() }
     }
+
     @Published var swipeFingerCount: FingerCount = .three {
         didSet { updateSwipeManager() }
     }
+
     @Published var naturalDirection = false
     @Published var swipeThreshold: Double = 0.3
 
     @Published var alternativeDisplays = ""
-    
+
     private func updateSwipeManager() {
         if enableSwipeGesture {
             SwipeManager.shared.start()
@@ -69,7 +71,7 @@ final class WorkspaceSettings: ObservableObject {
             $changeWorkspaceOnAppAssign.settingsPublisher(),
             $enablePictureInPictureSupport.settingsPublisher(),
             $enableWorkspaceTransition.settingsPublisher(),
-            
+
             // Hotkeys
             $assignFocusedApp.settingsPublisher(),
             $unassignFocusedApp.settingsPublisher(),
@@ -77,13 +79,13 @@ final class WorkspaceSettings: ObservableObject {
             $switchToRecentWorkspace.settingsPublisher(),
             $switchToPreviousWorkspace.settingsPublisher(),
             $switchToNextWorkspace.settingsPublisher(),
-            
+
             // Swipe settings
             $enableSwipeGesture.settingsPublisher(),
             $swipeFingerCount.settingsPublisher(),
             $naturalDirection.settingsPublisher(),
             $swipeThreshold.settingsPublisher(),
-            
+
             // Alternative displays
             $alternativeDisplays.settingsPublisher(debounce: true)
         )
@@ -99,7 +101,7 @@ extension WorkspaceSettings: SettingsProtocol {
 
     func load(from appSettings: AppSettings) {
         observer = nil
-        
+
         // General settings
         centerCursorOnWorkspaceChange = appSettings.centerCursorOnWorkspaceChange ?? false
         changeWorkspaceOnAppAssign = appSettings.changeWorkspaceOnAppAssign ?? true
@@ -119,10 +121,10 @@ extension WorkspaceSettings: SettingsProtocol {
         swipeFingerCount = appSettings.swipeFingerCount == 4 ? .four : .three
         naturalDirection = appSettings.naturalDirection ?? false
         swipeThreshold = appSettings.swipeThreshold ?? 0.3
-        
+
         // Alternative displays
         alternativeDisplays = appSettings.alternativeDisplays ?? ""
-        
+
         observe()
         updateSwipeManager()
     }
@@ -147,7 +149,7 @@ extension WorkspaceSettings: SettingsProtocol {
         appSettings.swipeFingerCount = swipeFingerCount.rawValue
         appSettings.naturalDirection = naturalDirection
         appSettings.swipeThreshold = swipeThreshold
-        
+
         // Alternative displays
         appSettings.alternativeDisplays = alternativeDisplays
     }

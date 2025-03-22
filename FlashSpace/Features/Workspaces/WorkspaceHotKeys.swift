@@ -97,7 +97,7 @@ final class WorkspaceHotKeys {
 
         let action: () -> () = { [weak self] in
             guard let self else { return }
-      
+
             if self.workspaceSettings.enableWorkspaceTransition {
                 let direction: WorkspaceTransitionManager.TransitionDirection = next ? .right : .left
                 WorkspaceTransitionManager.shared.enableTransitionEffects = true
@@ -117,7 +117,7 @@ final class WorkspaceHotKeys {
 
         let action: () -> () = { [weak self] in
             guard let self else { return }
-            
+
             if self.workspaceSettings.enableWorkspaceTransition {
                 WorkspaceTransitionManager.shared.enableTransitionEffects = true
                 WorkspaceTransitionManager.shared.performTransition(direction: .right) {
