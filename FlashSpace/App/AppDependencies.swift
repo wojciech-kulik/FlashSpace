@@ -27,6 +27,7 @@ struct AppDependencies {
     let settingsRepository: SettingsRepository
     let generalSettings = GeneralSettings()
     let menuBarSettings = MenuBarSettings()
+    let gesturesSettings = GesturesSettings()
     let focusManagerSettings = FocusManagerSettings()
     let workspaceSettings = WorkspaceSettings()
     let floatingAppsSettings = FloatingAppsSettings()
@@ -42,6 +43,7 @@ struct AppDependencies {
         self.settingsRepository = SettingsRepository(
             generalSettings: generalSettings,
             menuBarSettings: menuBarSettings,
+            gesturesSettings: gesturesSettings,
             focusManagerSettings: focusManagerSettings,
             workspaceSettings: workspaceSettings,
             floatingAppsSettings: floatingAppsSettings,
