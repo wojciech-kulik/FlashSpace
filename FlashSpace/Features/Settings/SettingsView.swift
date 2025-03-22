@@ -30,8 +30,6 @@ struct SettingsView: View {
                     .tag("General")
                 Label("Menu Bar", systemImage: "contextualmenu.and.cursorarrow")
                     .tag("MenuBar")
-                Label("Gestures", systemImage: "hand.draw")
-                    .tag("Gestures")
                 Label("Workspaces", systemImage: "square.stack.3d.up")
                     .tag("Workspaces")
                 Label("Floating Apps", systemImage: "pip")
@@ -73,8 +71,6 @@ struct SettingsView: View {
             MenuBarSettingsView()
         case "Focus":
             FocusSettingsView()
-        case "Gestures":
-            GesturesSettingsView()
         case "Workspaces":
             WorkspacesSettingsView()
         case "FloatingApps":

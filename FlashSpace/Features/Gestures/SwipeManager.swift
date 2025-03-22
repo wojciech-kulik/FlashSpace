@@ -38,15 +38,17 @@ final class SwipeManager {
 
     static let shared = SwipeManager()
 
-    private var swipeThreshold: Double { gesturesSettings.swipeThreshold }
-    private var naturalDirection: Bool { gesturesSettings.naturalDirection }
+    private var enableWorkspaceTransition: Bool { workspaceSettings.enableWorkspaceTransition }
+    private var naturalDirection: Bool { workspaceSettings.naturalDirection }
+    private var swipeFingerCount: Int { workspaceSettings.swipeFingerCount.rawValue }
+    private var swipeThreshold: Double { workspaceSettings.swipeThreshold }
 
     private var eventTap: CFMachPort?
     private var horizontalSwipeSum: Float = 0
     private var prevTouchPositions: [String: NSPoint] = [:]
     private var state: GestureState = .ended
 
-    private lazy var gesturesSettings = AppDependencies.shared.gesturesSettings
+    private lazy var workspaceSettings = AppDependencies.shared.workspaceSettings
     private lazy var workspaceManager = AppDependencies.shared.workspaceManager
 
     func start() {
@@ -128,7 +130,7 @@ final class SwipeManager {
 
         if touchesCount == 0 {
             gestureFinished()
-        } else if touchesCount == 3 {
+        } else if touchesCount == swipeFingerCount {
             state = .began
             horizontalSwipeSum += horizontalSwipeDistance(touches: touches)
         }
@@ -147,11 +149,15 @@ final class SwipeManager {
             horizontalSwipeSum >= 0
         }
 
-        Logger.log("3 fingers swipe finished, direction: \(next ? "next" : "prev")")
+        Logger.log("\(swipeFingerCount) fingers swipe finished, direction: \(next ? "next" : "prev")")
         horizontalSwipeSum = 0.0
         prevTouchPositions.removeAll()
 
-        workspaceManager.activateWorkspace(next: next)
+        let direction: WorkspaceTransitionManager.TransitionDirection = next ? .right : .left
+        WorkspaceTransitionManager.shared.enableTransitionEffects = enableWorkspaceTransition
+        WorkspaceTransitionManager.shared.performTransition(direction: direction) {
+            self.workspaceManager.activateWorkspace(next: next)
+        }
     }
 
     private func horizontalSwipeDistance(touches: Set<NSTouch>) -> Float {
