@@ -20,7 +20,13 @@ struct FloatingAppsSettingsView: View {
                         .font(.callout)
                 }
 
-                appsList
+                if settings.floatingApps.isEmpty {
+                    Text("(no floating apps added)")
+                        .foregroundStyle(.secondary)
+                        .font(.callout)
+                } else {
+                    appsList
+                }
 
                 Text("Floating applications remain visible across all workspaces.")
                     .foregroundStyle(.secondary)

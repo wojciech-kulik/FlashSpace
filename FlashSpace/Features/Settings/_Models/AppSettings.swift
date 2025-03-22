@@ -46,6 +46,7 @@ struct AppSettings: Codable {
     var unassignFocusedApp: AppHotKey?
     var toggleFocusedAppAssignment: AppHotKey?
     var alternativeDisplays: String?
+    var pipApps: [PipApp]?
 
     // Floating apps
     var floatingApps: [MacApp]?

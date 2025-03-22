@@ -32,7 +32,7 @@ final class GesturesSettings: ObservableObject {
     }
 
     @Published var naturalDirection = false
-    @Published var swipeThreshold: Double = 0.3
+    @Published var swipeThreshold: Double = 0.2
 
     private var observer: AnyCancellable?
     private let updateSubject = PassthroughSubject<(), Never>()
@@ -72,7 +72,7 @@ extension GesturesSettings: SettingsProtocol {
         enableSwipeGesture = appSettings.enableSwipeGesture ?? false
         swipeFingerCount = appSettings.swipeFingerCount == 4 ? .four : .three
         naturalDirection = appSettings.naturalDirection ?? false
-        swipeThreshold = appSettings.swipeThreshold ?? 0.3
+        swipeThreshold = appSettings.swipeThreshold ?? 0.2
         observe()
     }
 
