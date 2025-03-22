@@ -9,6 +9,7 @@ import SwiftUI
 
 struct InputDialog: View {
     let title: String
+    var placeholder = "Type here..."
 
     @Binding var userInput: String
     @Binding var isPresented: Bool
@@ -18,7 +19,7 @@ struct InputDialog: View {
             Text(title)
                 .font(.headline)
 
-            TextField("Type here...", text: $userInput)
+            TextField(placeholder, text: $userInput)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding(.vertical, 8.0)
                 .onSubmit { isPresented = false }

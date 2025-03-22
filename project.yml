@@ -30,7 +30,7 @@ targets:
     sources: [FlashSpace]
     settings:
       base:
-        MARKETING_VERSION: 2.7.35
+        MARKETING_VERSION: 2.8.35
         CURRENT_PROJECT_VERSION: 35
         CODE_SIGN_ENTITLEMENTS: FlashSpace/FlashSpace.entitlements
         DEVELOPMENT_TEAM: "${XCODE_DEVELOPMENT_TEAM}"

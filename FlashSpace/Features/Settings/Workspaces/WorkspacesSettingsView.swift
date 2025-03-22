@@ -9,22 +9,13 @@ import SwiftUI
 
 struct WorkspacesSettingsView: View {
     @StateObject var settings = AppDependencies.shared.workspaceSettings
+    @StateObject var viewModel = WorkspaceSettingsViewModel()
 
     var body: some View {
         Form {
-            Section("Trigger when workspace is changed using shortcuts") {
-                Toggle("Center Cursor In Focused App", isOn: $settings.centerCursorOnWorkspaceChange)
-            }
-
             Section("Behaviors") {
+                Toggle("Center Cursor In Focused App On Workspace Change", isOn: $settings.centerCursorOnWorkspaceChange)
                 Toggle("Change Workspace On App Assign", isOn: $settings.changeWorkspaceOnAppAssign)
-                Toggle("Enable Picture in Picture Support", isOn: $settings.enablePictureInPictureSupport)
-                Text(
-                    "When enabled, if a supported browser has Picture-in-Picture (PiP) active, other " +
-                        "windows will be hidden in a screen corner to keep PiP visible."
-                )
-                .foregroundStyle(.secondary)
-                .font(.callout)
             }
 
             Section("Shortcuts") {
@@ -65,8 +56,68 @@ struct WorkspacesSettingsView: View {
                 .foregroundStyle(.secondary)
                 .font(.callout)
             }
+
+            Section("Picture-in-Picture") {
+                Toggle("Enable Picture-in-Picture Support", isOn: $settings.enablePictureInPictureSupport)
+                Text(
+                    "If a supported browser has Picture-in-Picture active, other " +
+                        "windows will be hidden in a screen corner to keep PiP visible."
+                )
+                .foregroundStyle(.secondary)
+                .font(.callout)
+            }
+
+            Section(header: pipAppsHeader) {
+                if settings.pipApps.isEmpty {
+                    Text("You can apply Picture-in-Picture behavior to any app by adding it here.")
+                        .foregroundStyle(.secondary)
+                        .font(.callout)
+                } else {
+                    pipAppsList
+                }
+            }
+            .opacity(settings.enablePictureInPictureSupport ? 1 : 0.5)
+        }
+        .sheet(isPresented: $viewModel.isInputDialogPresented) {
+            InputDialog(
+                title: "Enter PiP window title regex:",
+                placeholder: "e.g. Meeting with.*",
+                userInput: $viewModel.windowTitleRegex,
+                isPresented: $viewModel.isInputDialogPresented
+            )
         }
         .formStyle(.grouped)
         .navigationTitle("Workspaces")
+    }
+
+    private var pipAppsList: some View {
+        VStack(alignment: .leading) {
+            ForEach(settings.pipApps, id: \.self) { app in
+                HStack {
+                    Button {
+                        viewModel.deletePipApp(app)
+                    } label: {
+                        Image(systemName: "x.circle.fill").opacity(0.8)
+                    }.buttonStyle(.borderless)
+
+                    Text(app.name)
+                    Spacer()
+                    Text(app.pipWindowTitleRegex)
+                        .foregroundColor(.secondary)
+                }
+            }
+        }
+    }
+
+    private var pipAppsHeader: some View {
+        HStack {
+            Text("Custom Picture-in-Picture Apps")
+            Spacer()
+            Button {
+                viewModel.addPipApp()
+            } label: {
+                Image(systemName: "plus")
+            }
+        }
     }
 }
