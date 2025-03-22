@@ -30,7 +30,8 @@ struct AppSettings: Codable {
     var focusFrontmostWindow: Bool?
 
     // Gestures
-    var enableThreeFingersSwipe: Bool?
+    var enableSwipeGesture: Bool?
+    var swipeFingerCount: Int?
     var naturalDirection: Bool?
     var swipeThreshold: Double?
 

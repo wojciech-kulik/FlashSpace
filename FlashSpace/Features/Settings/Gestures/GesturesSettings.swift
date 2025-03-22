@@ -9,7 +9,25 @@ import Combine
 import Foundation
 
 final class GesturesSettings: ObservableObject {
-    @Published var enableThreeFingersSwipe = false {
+    enum FingerCount: Int, CaseIterable, Identifiable {
+        case three = 3
+        case four = 4
+
+        var id: Int { rawValue }
+
+        var description: String {
+            switch self {
+            case .three: return "Three Fingers"
+            case .four: return "Four Fingers"
+            }
+        }
+    }
+
+    @Published var enableSwipeGesture = false {
+        didSet { updateSwipeManager() }
+    }
+
+    @Published var swipeFingerCount: FingerCount = .three {
         didSet { updateSwipeManager() }
     }
 
@@ -26,7 +44,8 @@ final class GesturesSettings: ObservableObject {
 
     private func observe() {
         observer = Publishers.MergeMany(
-            $enableThreeFingersSwipe.settingsPublisher(),
+            $enableSwipeGesture.settingsPublisher(),
+            $swipeFingerCount.settingsPublisher(),
             $naturalDirection.settingsPublisher(),
             $swipeThreshold.settingsPublisher()
         )
@@ -35,7 +54,7 @@ final class GesturesSettings: ObservableObject {
     }
 
     private func updateSwipeManager() {
-        if enableThreeFingersSwipe {
+        if enableSwipeGesture {
             SwipeManager.shared.start()
         } else {
             SwipeManager.shared.stop()
@@ -50,14 +69,16 @@ extension GesturesSettings: SettingsProtocol {
 
     func load(from appSettings: AppSettings) {
         observer = nil
-        enableThreeFingersSwipe = appSettings.enableThreeFingersSwipe ?? false
+        enableSwipeGesture = appSettings.enableSwipeGesture ?? false
+        swipeFingerCount = appSettings.swipeFingerCount == 4 ? .four : .three
         naturalDirection = appSettings.naturalDirection ?? false
         swipeThreshold = appSettings.swipeThreshold ?? 0.3
         observe()
     }
 
     func update(_ appSettings: inout AppSettings) {
-        appSettings.enableThreeFingersSwipe = enableThreeFingersSwipe
+        appSettings.enableSwipeGesture = enableSwipeGesture
+        appSettings.swipeFingerCount = swipeFingerCount.rawValue
         appSettings.naturalDirection = naturalDirection
         appSettings.swipeThreshold = swipeThreshold
     }
