@@ -50,7 +50,7 @@ final class WorkspaceSettings: ObservableObject {
     @Published var swipeThreshold: Double = 0.3
 
     @Published var alternativeDisplays = ""
-
+    
     private func updateSwipeManager() {
         if enableSwipeGesture {
             SwipeManager.shared.start()

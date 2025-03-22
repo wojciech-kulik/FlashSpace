@@ -38,11 +38,10 @@ final class SwipeManager {
 
     static let shared = SwipeManager()
 
-    private var swipeThreshold: Double { workspaceSettings.swipeThreshold }
-    private var naturalDirection: Bool { workspaceSettings.naturalDirection }
-    private var enableSwipeGesture: Bool { workspaceSettings.enableSwipeGesture }
-    private var swipeFingerCount: Int { workspaceSettings.swipeFingerCount.rawValue }
     private var enableWorkspaceTransition: Bool { workspaceSettings.enableWorkspaceTransition }
+    private var naturalDirection: Bool { workspaceSettings.naturalDirection }
+    private var swipeFingerCount: Int { workspaceSettings.swipeFingerCount.rawValue }
+    private var swipeThreshold: Double { workspaceSettings.swipeThreshold }
 
     private var eventTap: CFMachPort?
     private var horizontalSwipeSum: Float = 0
