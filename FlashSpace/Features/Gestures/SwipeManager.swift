@@ -40,7 +40,6 @@ final class SwipeManager {
 
     private var swipeThreshold: Double { gesturesSettings.swipeThreshold }
     private var naturalDirection: Bool { gesturesSettings.naturalDirection }
-    private var enableSwipeGesture: Bool { gesturesSettings.enableSwipeGesture }
     private var swipeFingerCount: Int { gesturesSettings.swipeFingerCount.rawValue }
 
     private var eventTap: CFMachPort?
