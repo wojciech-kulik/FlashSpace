@@ -40,6 +40,7 @@ final class SwipeManager {
 
     private var swipeThreshold: Double { gesturesSettings.swipeThreshold }
     private var naturalDirection: Bool { gesturesSettings.naturalDirection }
+    private var swipeFingerCount: Int { gesturesSettings.swipeFingerCount.rawValue }
 
     private var eventTap: CFMachPort?
     private var horizontalSwipeSum: Float = 0
@@ -128,7 +129,7 @@ final class SwipeManager {
 
         if touchesCount == 0 {
             gestureFinished()
-        } else if touchesCount == 3 {
+        } else if touchesCount == swipeFingerCount {
             state = .began
             horizontalSwipeSum += horizontalSwipeDistance(touches: touches)
         }
@@ -147,7 +148,7 @@ final class SwipeManager {
             horizontalSwipeSum >= 0
         }
 
-        Logger.log("3 fingers swipe finished, direction: \(next ? "next" : "prev")")
+        Logger.log("\(swipeFingerCount) fingers swipe finished, direction: \(next ? "next" : "prev")")
         horizontalSwipeSum = 0.0
         prevTouchPositions.removeAll()
 
