@@ -73,7 +73,7 @@ The app allows workspaces to be switched independently on each display.
 - [x] Cursor manager - auto-center the cursor in the active window
 - [x] Profiles - quickly switch between different configurations
 - [x] Menu bar - configurable icon & text (per workspace)
-- [x] Three Fingers Swipe - switch between workspaces using trackpad gestures
+- [x] Swipe Gesture - switch between workspaces using trackpad swipe gesture
 - [x] Floating apps - keep apps visible across all workspaces
 - [x] Configuration through GUI and config file
 - [x] Support for multiple config file formats: JSON, YAML, and TOML
