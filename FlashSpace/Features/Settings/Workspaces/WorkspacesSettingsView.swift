@@ -16,7 +16,7 @@ struct WorkspacesSettingsView: View {
             Section("Behaviors") {
                 Toggle("Center Cursor In Focused App On Workspace Change", isOn: $settings.centerCursorOnWorkspaceChange)
                 Toggle("Change Workspace On App Assign", isOn: $settings.changeWorkspaceOnAppAssign)
-                Toggle("Enable Workspace Transition Animation Effect", isOn: $settings.enableWorkspaceTransitions)
+                Toggle("Enable Workspace Transition Animation", isOn: $settings.enableWorkspaceTransitions)
                     .help("Show a brief visual transition effect when switching between workspaces")
             }
 

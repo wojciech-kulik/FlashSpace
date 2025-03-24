@@ -34,16 +34,19 @@ final class WorkspaceManager: ObservableObject {
     private let workspaceSettings: WorkspaceSettings
     private let floatingAppsSettings: FloatingAppsSettings
     private let pictureInPictureManager: PictureInPictureManager
+    private let workspaceTransitionManager: WorkspaceTransitionManager
 
     init(
         workspaceRepository: WorkspaceRepository,
         settingsRepository: SettingsRepository,
-        pictureInPictureManager: PictureInPictureManager
+        pictureInPictureManager: PictureInPictureManager,
+        workspaceTransitionManager: WorkspaceTransitionManager
     ) {
         self.workspaceRepository = workspaceRepository
         self.workspaceSettings = settingsRepository.workspaceSettings
         self.floatingAppsSettings = settingsRepository.floatingAppsSettings
         self.pictureInPictureManager = pictureInPictureManager
+        self.workspaceTransitionManager = workspaceTransitionManager
 
         PermissionsManager.shared.askForAccessibilityPermissions()
         observe()
@@ -225,6 +228,10 @@ extension WorkspaceManager {
         Logger.log("WORKSPACE: \(workspace.name)")
         Logger.log("----")
         SpaceControl.hide()
+
+        if !activeWorkspace.values.contains(where: { $0.id == workspace.id }) {
+            workspaceTransitionManager.showTransitionIfNeeded(for: workspace)
+        }
 
         updateActiveWorkspace(workspace)
         showApps(in: workspace, setFocus: setFocus)
