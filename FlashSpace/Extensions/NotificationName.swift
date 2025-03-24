@@ -12,5 +12,6 @@ extension Notification.Name {
     static let openMainWindow = Notification.Name("openMainWindow")
     static let profileChanged = Notification.Name("profileChanged")
     static let workspaceChanged = Notification.Name("workspaceChanged")
+    static let workspaceTransitionFinished = Notification.Name("workspaceTransitionFinished")
     static let spaceControlArrowDown = Notification.Name("spaceControlArrowDown")
 }

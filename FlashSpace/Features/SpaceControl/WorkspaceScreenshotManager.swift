@@ -96,7 +96,7 @@ final class WorkspaceScreenshotManager {
 
     private func observe() {
         NotificationCenter.default
-            .publisher(for: .workspaceChanged)
+            .publisher(for: .workspaceTransitionFinished)
             .compactMap { $0.object as? Workspace }
             .sink { [weak self] workspace in
                 Task.detached { [weak self] in

@@ -12,6 +12,7 @@ final class WorkspaceSettings: ObservableObject {
     @Published var centerCursorOnWorkspaceChange = false
     @Published var changeWorkspaceOnAppAssign = true
     @Published var enablePictureInPictureSupport = true
+    @Published var enableWorkspaceTransitions = false
 
     @Published var assignFocusedApp: AppHotKey?
     @Published var unassignFocusedApp: AppHotKey?
@@ -48,7 +49,8 @@ final class WorkspaceSettings: ObservableObject {
             $switchToPreviousWorkspace.settingsPublisher(),
             $switchToNextWorkspace.settingsPublisher(),
             $alternativeDisplays.settingsPublisher(debounce: true),
-            $pipApps.settingsPublisher()
+            $pipApps.settingsPublisher(),
+            $enableWorkspaceTransitions.settingsPublisher()
         )
         .receive(on: DispatchQueue.main)
         .sink { [weak self] in self?.updateSubject.send() }
@@ -65,6 +67,7 @@ extension WorkspaceSettings: SettingsProtocol {
         centerCursorOnWorkspaceChange = appSettings.centerCursorOnWorkspaceChange ?? false
         changeWorkspaceOnAppAssign = appSettings.changeWorkspaceOnAppAssign ?? true
         enablePictureInPictureSupport = appSettings.enablePictureInPictureSupport ?? true
+        enableWorkspaceTransitions = appSettings.enableWorkspaceTransitions ?? false
 
         assignFocusedApp = appSettings.assignFocusedApp
         unassignFocusedApp = appSettings.unassignFocusedApp
@@ -82,6 +85,7 @@ extension WorkspaceSettings: SettingsProtocol {
         appSettings.centerCursorOnWorkspaceChange = centerCursorOnWorkspaceChange
         appSettings.changeWorkspaceOnAppAssign = changeWorkspaceOnAppAssign
         appSettings.enablePictureInPictureSupport = enablePictureInPictureSupport
+        appSettings.enableWorkspaceTransitions = enableWorkspaceTransitions
 
         appSettings.assignFocusedApp = assignFocusedApp
         appSettings.unassignFocusedApp = unassignFocusedApp
