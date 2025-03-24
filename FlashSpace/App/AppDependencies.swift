@@ -14,6 +14,7 @@ struct AppDependencies {
     let workspaceManager: WorkspaceManager
     let workspaceHotKeys: WorkspaceHotKeys
     let workspaceScreenshotManager = WorkspaceScreenshotManager()
+    let workspaceTransitionManager: WorkspaceTransitionManager
     let pictureInPictureManager: PictureInPictureManager
 
     let floatingAppsHotKeys: FloatingAppsHotKeys
@@ -50,6 +51,9 @@ struct AppDependencies {
             spaceControlSettings: spaceControlSettings,
             integrationsSettings: integrationsSettings
         )
+        self.workspaceTransitionManager = WorkspaceTransitionManager(
+            workspaceSettings: workspaceSettings
+        )
         self.pictureInPictureManager = PictureInPictureManager(
             settingsRepository: settingsRepository
         )
@@ -60,7 +64,8 @@ struct AppDependencies {
         self.workspaceManager = WorkspaceManager(
             workspaceRepository: workspaceRepository,
             settingsRepository: settingsRepository,
-            pictureInPictureManager: pictureInPictureManager
+            pictureInPictureManager: pictureInPictureManager,
+            workspaceTransitionManager: workspaceTransitionManager
         )
         self.workspaceHotKeys = WorkspaceHotKeys(
             workspaceManager: workspaceManager,
