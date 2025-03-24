@@ -35,7 +35,7 @@ final class WorkspaceTransitionManager {
         window.isOpaque = false
         window.backgroundColor = .clear
         window.level = .screenSaver
-        window.alphaValue = 0.25
+        window.alphaValue = 0.15
         window.contentView?.wantsLayer = true
         window.contentView?.layer?.backgroundColor = NSColor.black.cgColor
 
