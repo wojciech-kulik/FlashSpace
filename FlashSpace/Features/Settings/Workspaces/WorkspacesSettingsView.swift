@@ -18,6 +18,40 @@ struct WorkspacesSettingsView: View {
                 Toggle("Change Workspace On App Assign", isOn: $settings.changeWorkspaceOnAppAssign)
                 Toggle("Enable Workspace Transition Animation", isOn: $settings.enableWorkspaceTransitions)
                     .help("Show a brief visual transition effect when switching between workspaces")
+
+                if settings.enableWorkspaceTransitions {
+                    HStack {
+                        VStack(alignment: .leading) {
+                            Text("Transition Duration")
+                            Text("Controls how long the transition animation lasts when switching workspaces")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                        Spacer()
+                        Slider(value: $settings.workspaceTransitionDuration, in: 0.1...0.5, step: 0.05)
+                            .frame(width: 150)
+                        Text("\(settings.workspaceTransitionDuration, specifier: "%.2f")s")
+                            .foregroundStyle(.secondary)
+                            .frame(width: 45.0, alignment: .trailing)
+                    }
+                    .padding(.leading, 16)
+
+                    HStack {
+                        VStack(alignment: .leading) {
+                            Text("Transition Dimming")
+                            Text("Adjusts how dark the screen becomes during workspace transitions")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                        Spacer()
+                        Slider(value: $settings.workspaceTransitionDimming, in: 0.05...0.5, step: 0.05)
+                            .frame(width: 150)
+                        Text("\(Int(settings.workspaceTransitionDimming * 100))%")
+                            .foregroundStyle(.secondary)
+                            .frame(width: 45.0, alignment: .trailing)
+                    }
+                    .padding(.leading, 16)
+                }
             }
 
             Section("Shortcuts") {

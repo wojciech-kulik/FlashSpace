@@ -35,7 +35,7 @@ final class WorkspaceTransitionManager {
         window.isOpaque = false
         window.backgroundColor = .clear
         window.level = .screenSaver
-        window.alphaValue = 0.15
+        window.alphaValue = CGFloat(settings.workspaceTransitionDimming)
         window.contentView?.wantsLayer = true
         window.contentView?.layer?.backgroundColor = NSColor.black.cgColor
 
@@ -51,7 +51,7 @@ final class WorkspaceTransitionManager {
         guard let window else { return }
 
         NSAnimationContext.runAnimationGroup({ context in
-            context.duration = 0.3
+            context.duration = settings.workspaceTransitionDuration
             context.timingFunction = CAMediaTimingFunction(name: .easeIn)
             window.animator().alphaValue = 0.0
         }, completionHandler: { [weak self] in
