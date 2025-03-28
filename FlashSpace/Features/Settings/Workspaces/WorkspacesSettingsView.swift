@@ -18,7 +18,7 @@ struct WorkspacesSettingsView: View {
                 Toggle("Change Workspace On App Assign", isOn: $settings.changeWorkspaceOnAppAssign)
                 Toggle("Enable Workspace Transition Animation", isOn: $settings.enableWorkspaceTransitions)
                     .help("Show a brief visual transition effect when switching between workspaces")
-                
+
                 if settings.enableWorkspaceTransitions {
                     VStack(alignment: .leading) {
                         HStack {
@@ -37,7 +37,7 @@ struct WorkspacesSettingsView: View {
                     }
                     .padding(.leading, 20)
                     .transition(.opacity)
-                    
+
                     VStack(alignment: .leading) {
                         HStack {
                             Text("Transition Dimming")
