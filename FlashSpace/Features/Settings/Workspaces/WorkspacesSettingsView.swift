@@ -20,40 +20,37 @@ struct WorkspacesSettingsView: View {
                     .help("Show a brief visual transition effect when switching between workspaces")
 
                 if settings.enableWorkspaceTransitions {
-                    VStack(alignment: .leading) {
-                        HStack {
+                    HStack {
+                        VStack(alignment: .leading) {
                             Text("Transition Duration")
-                            Spacer()
-                            Slider(value: $settings.workspaceTransitionDuration, in: 0.1...0.5, step: 0.05)
-                                .frame(width: 150)
-                            Text("\(settings.workspaceTransitionDuration, specifier: "%.2f")s")
-                                .frame(width: 45, alignment: .trailing)
+                            Text("Controls how long the transition animation lasts when switching workspaces")
+                                .font(.caption)
                                 .foregroundStyle(.secondary)
                         }
-                        Text("Controls how long the transition animation lasts when switching workspaces")
-                            .font(.caption)
+                        Spacer()
+                        Slider(value: $settings.workspaceTransitionDuration, in: 0.1...0.5, step: 0.05)
+                            .frame(width: 150)
+                        Text("\(settings.workspaceTransitionDuration, specifier: "%.2f")s")
                             .foregroundStyle(.secondary)
-                            .padding(.bottom, 8)
+                            .frame(width: 45.0, alignment: .trailing)
                     }
-                    .padding(.leading, 20)
-                    .transition(.opacity)
+                    .padding(.leading, 16)
 
-                    VStack(alignment: .leading) {
-                        HStack {
+                    HStack {
+                        VStack(alignment: .leading) {
                             Text("Transition Dimming")
-                            Spacer()
-                            Slider(value: $settings.workspaceTransitionDimming, in: 0.05...0.5, step: 0.05)
-                                .frame(width: 150)
-                            Text("\(Int(settings.workspaceTransitionDimming * 100))%")
-                                .frame(width: 45, alignment: .trailing)
+                            Text("Adjusts how dark the screen becomes during workspace transitions")
+                                .font(.caption)
                                 .foregroundStyle(.secondary)
                         }
-                        Text("Adjusts how dark the screen becomes during workspace transitions")
-                            .font(.caption)
+                        Spacer()
+                        Slider(value: $settings.workspaceTransitionDimming, in: 0.05...0.5, step: 0.05)
+                            .frame(width: 150)
+                        Text("\(Int(settings.workspaceTransitionDimming * 100))%")
                             .foregroundStyle(.secondary)
+                            .frame(width: 45.0, alignment: .trailing)
                     }
-                    .padding(.leading, 20)
-                    .transition(.opacity)
+                    .padding(.leading, 16)
                 }
             }
 

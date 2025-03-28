@@ -14,7 +14,7 @@ final class WorkspaceSettings: ObservableObject {
     @Published var enablePictureInPictureSupport = true
     @Published var enableWorkspaceTransitions = false
     @Published var workspaceTransitionDuration = 0.3
-    @Published var workspaceTransitionDimming = 0.15
+    @Published var workspaceTransitionDimming = 0.2
 
     @Published var assignFocusedApp: AppHotKey?
     @Published var unassignFocusedApp: AppHotKey?
@@ -53,8 +53,8 @@ final class WorkspaceSettings: ObservableObject {
             $alternativeDisplays.settingsPublisher(debounce: true),
             $pipApps.settingsPublisher(),
             $enableWorkspaceTransitions.settingsPublisher(),
-            $workspaceTransitionDuration.settingsPublisher(),
-            $workspaceTransitionDimming.settingsPublisher()
+            $workspaceTransitionDuration.settingsPublisher(debounce: true),
+            $workspaceTransitionDimming.settingsPublisher(debounce: true)
         )
         .receive(on: DispatchQueue.main)
         .sink { [weak self] in self?.updateSubject.send() }
@@ -73,7 +73,7 @@ extension WorkspaceSettings: SettingsProtocol {
         enablePictureInPictureSupport = appSettings.enablePictureInPictureSupport ?? true
         enableWorkspaceTransitions = appSettings.enableWorkspaceTransitions ?? false
         workspaceTransitionDuration = min(appSettings.workspaceTransitionDuration ?? 0.3, 0.5)
-        workspaceTransitionDimming = appSettings.workspaceTransitionDimming ?? 0.15
+        workspaceTransitionDimming = min(appSettings.workspaceTransitionDimming ?? 0.2, 0.5)
 
         assignFocusedApp = appSettings.assignFocusedApp
         unassignFocusedApp = appSettings.unassignFocusedApp
