@@ -13,6 +13,8 @@ final class WorkspaceSettings: ObservableObject {
     @Published var changeWorkspaceOnAppAssign = true
     @Published var enablePictureInPictureSupport = true
     @Published var enableWorkspaceTransitions = false
+    @Published var workspaceTransitionDuration = 0.3
+    @Published var workspaceTransitionDimming = 0.15
 
     @Published var assignFocusedApp: AppHotKey?
     @Published var unassignFocusedApp: AppHotKey?
@@ -50,7 +52,9 @@ final class WorkspaceSettings: ObservableObject {
             $switchToNextWorkspace.settingsPublisher(),
             $alternativeDisplays.settingsPublisher(debounce: true),
             $pipApps.settingsPublisher(),
-            $enableWorkspaceTransitions.settingsPublisher()
+            $enableWorkspaceTransitions.settingsPublisher(),
+            $workspaceTransitionDuration.settingsPublisher(),
+            $workspaceTransitionDimming.settingsPublisher()
         )
         .receive(on: DispatchQueue.main)
         .sink { [weak self] in self?.updateSubject.send() }
@@ -68,6 +72,8 @@ extension WorkspaceSettings: SettingsProtocol {
         changeWorkspaceOnAppAssign = appSettings.changeWorkspaceOnAppAssign ?? true
         enablePictureInPictureSupport = appSettings.enablePictureInPictureSupport ?? true
         enableWorkspaceTransitions = appSettings.enableWorkspaceTransitions ?? false
+        workspaceTransitionDuration = min(appSettings.workspaceTransitionDuration ?? 0.3, 0.5)
+        workspaceTransitionDimming = appSettings.workspaceTransitionDimming ?? 0.15
 
         assignFocusedApp = appSettings.assignFocusedApp
         unassignFocusedApp = appSettings.unassignFocusedApp
@@ -86,6 +92,8 @@ extension WorkspaceSettings: SettingsProtocol {
         appSettings.changeWorkspaceOnAppAssign = changeWorkspaceOnAppAssign
         appSettings.enablePictureInPictureSupport = enablePictureInPictureSupport
         appSettings.enableWorkspaceTransitions = enableWorkspaceTransitions
+        appSettings.workspaceTransitionDuration = workspaceTransitionDuration
+        appSettings.workspaceTransitionDimming = workspaceTransitionDimming
 
         appSettings.assignFocusedApp = assignFocusedApp
         appSettings.unassignFocusedApp = unassignFocusedApp

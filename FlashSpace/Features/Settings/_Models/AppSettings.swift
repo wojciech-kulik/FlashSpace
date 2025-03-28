@@ -61,6 +61,8 @@ struct AppSettings: Codable {
     var spaceControlCurrentDisplayWorkspaces: Bool?
     var spaceControlMaxColumns: Int?
     var enableWorkspaceTransitions: Bool?
+    var workspaceTransitionDuration: Double?
+    var workspaceTransitionDimming: Double?
 
     // Integrations
     var enableIntegrations: Bool?
