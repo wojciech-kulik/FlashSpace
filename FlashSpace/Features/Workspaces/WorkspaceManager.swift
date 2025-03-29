@@ -87,10 +87,21 @@ final class WorkspaceManager: ObservableObject {
             .sink { [weak self] application in
                 guard let self else { return }
 
+                // Track focused app for the workspace it belongs to
                 if let activeWorkspace = activeWorkspace[application.display ?? ""],
                    activeWorkspace.apps.containsApp(application) {
                     lastFocusedApp[activeWorkspace.id] = application.toMacApp
                     updateActiveWorkspace(activeWorkspace)
+                }
+
+                // Also track floating apps for workspaces on the same display
+                if floatingAppsSettings.floatingApps.containsApp(application) {
+                    let displayName = application.display ?? ""
+
+                    // Store the floating app as the last focused app for all workspaces on the same display
+                    for workspace in activeWorkspace.values where workspace.displayWithFallback == displayName {
+                        lastFocusedApp[workspace.id] = application.toMacApp
+                    }
                 }
             }
     }
@@ -167,12 +178,16 @@ final class WorkspaceManager: ObservableObject {
     ) -> NSRunningApplication? {
         var appToFocus: NSRunningApplication?
 
-        if workspace.appToFocus == nil {
-            appToFocus = apps.find(lastFocusedApp[workspace.id])
-        } else {
-            appToFocus = apps.find(workspace.appToFocus)
+        // First, try to use explicit appToFocus from workspace
+        if let explicitApp = workspace.appToFocus {
+            appToFocus = apps.find(explicitApp)
+        }
+        // Next, try last focused app for this workspace (including floating apps)
+        else if let lastFocused = lastFocusedApp[workspace.id] {
+            appToFocus = apps.find(lastFocused)
         }
 
+        // Fallback options if neither is available or found
         let fallbackToLastApp = apps.findFirstMatch(with: workspace.apps.reversed())
         let fallbackToFinder = NSWorkspace.shared.runningApplications.first {
             $0.bundleIdentifier == "com.apple.finder"
