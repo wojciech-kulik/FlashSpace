@@ -30,10 +30,16 @@ struct AppSettings: Codable {
     var focusFrontmostWindow: Bool?
 
     // Gestures
-    var enableSwipeGesture: Bool?
-    var swipeFingerCount: Int?
-    var swipeNaturalDirection: Bool?
+    var enableSwipeGestures: Bool?
     var swipeThreshold: Double?
+    var swipeLeft3FingerAction: GestureAction?
+    var swipeRight3FingerAction: GestureAction?
+    var swipeUp3FingerAction: GestureAction?
+    var swipeDown3FingerAction: GestureAction?
+    var swipeLeft4FingerAction: GestureAction?
+    var swipeRight4FingerAction: GestureAction?
+    var swipeUp4FingerAction: GestureAction?
+    var swipeDown4FingerAction: GestureAction?
 
     // Workspaces
     var centerCursorOnWorkspaceChange: Bool?
