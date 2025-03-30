@@ -63,14 +63,6 @@ extension FloatingAppsHotKeys {
               let appName = activeApp.localizedName else { return }
 
         floatingAppsSettings.addFloatingAppIfNeeded(app: activeApp.toMacApp)
-
-        // Update the lastFocusedApp history for all workspaces on the same display
-        if let display = activeApp.display {
-            for workspace in workspaceManager.activeWorkspace.values where workspace.displayWithFallback == display {
-                workspaceManager.updateLastFocusedApp(activeApp.toMacApp, in: workspace)
-            }
-        }
-
         Toast.showWith(
             icon: "macwindow.on.rectangle",
             message: "\(appName) - Added To Floating Apps",
