@@ -88,7 +88,8 @@ final class WorkspaceManager: ObservableObject {
                 guard let self else { return }
 
                 if let activeWorkspace = activeWorkspace[application.display ?? ""],
-                   activeWorkspace.apps.containsApp(application) {
+                   activeWorkspace.apps.containsApp(application) ||
+                   floatingAppsSettings.floatingApps.containsApp(application) {
                     lastFocusedApp[activeWorkspace.id] = application.toMacApp
                     updateActiveWorkspace(activeWorkspace)
                 }
