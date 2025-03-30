@@ -91,6 +91,8 @@ The app allows workspaces to be switched independently on each display.
 
 ## 🔭 Space Control
 
+TEST
+
 Space Control allows you to preview all workspaces on a grid and switch between them.
 
 Use 0-9 and arrow keys to switch between workspaces.
