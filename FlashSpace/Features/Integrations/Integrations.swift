@@ -35,8 +35,9 @@ enum Integrations {
     private static func runScript(_ script: String) {
         guard settings.enableIntegrations, !script.isEmpty else { return }
 
+        let shell = ProcessInfo.processInfo.environment["SHELL"] ?? "/bin/sh"
         let task = Process()
-        task.launchPath = "/bin/sh"
+        task.launchPath = shell
         task.arguments = ["-c", script]
         task.launch()
     }

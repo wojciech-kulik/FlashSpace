@@ -37,6 +37,7 @@ jobs:
             space-control
             menu-bar
             profiles
+            integrations
 
       - uses: marocchino/sticky-pull-request-comment@v2
         # When the previous steps fails, the workflow would stop. By adding this
