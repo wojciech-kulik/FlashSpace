@@ -36,7 +36,7 @@ See: [Build From Source](#%EF%B8%8F-build-from-source).
 The video shows a sample configuration where I use 3 workspaces and switch
 between them using hotkeys.
 
-https://github.com/user-attachments/assets/03498386-7c3d-4d9e-8fbd-cd49dea36661
+https://github.com/user-attachments/assets/09c574c5-512f-47b5-b644-feac0e1de4b0
 
 ## 💬 How to use
 
