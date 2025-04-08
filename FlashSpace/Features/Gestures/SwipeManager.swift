@@ -34,6 +34,7 @@ final class SwipeManager {
     private var state: GestureState = .ended
 
     private lazy var gesturesSettings = AppDependencies.shared.gesturesSettings
+    private lazy var workspaceSettings = AppDependencies.shared.workspaceSettings
     private lazy var workspaceManager = AppDependencies.shared.workspaceManager
     private lazy var workspaceRepository = AppDependencies.shared.workspaceRepository
     private lazy var focusManager = AppDependencies.shared.focusManager
@@ -219,13 +220,15 @@ final class SwipeManager {
 
     // swiftlint:disable:next cyclomatic_complexity
     private func callAction(_ action: GestureAction) {
+        let skipEmpty = workspaceSettings.skipEmptyWorkspacesOnSwitch
+
         switch action {
         case .none: break
         case .toggleSpaceControl: SpaceControl.toggle()
         case .showSpaceControl: SpaceControl.show()
         case .hideSpaceControl: SpaceControl.hide()
-        case .nextWorkspace: workspaceManager.activateWorkspace(next: true)
-        case .previousWorkspace: workspaceManager.activateWorkspace(next: false)
+        case .nextWorkspace: workspaceManager.activateWorkspace(next: true, skipEmpty: skipEmpty)
+        case .previousWorkspace: workspaceManager.activateWorkspace(next: false, skipEmpty: skipEmpty)
         case .mostRecentWorkspace: workspaceManager.activateRecentWorkspace()
         case .focusLeft: focusManager.focusLeft()
         case .focusRight: focusManager.focusRight()

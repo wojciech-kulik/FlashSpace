@@ -89,7 +89,12 @@ final class WorkspaceHotKeys {
         else { return nil }
 
         let action: () -> () = { [weak self] in
-            self?.workspaceManager.activateWorkspace(next: next)
+            guard let self else { return }
+
+            workspaceManager.activateWorkspace(
+                next: next,
+                skipEmpty: workspaceSettings.skipEmptyWorkspacesOnSwitch
+            )
         }
 
         return (shortcut, action)

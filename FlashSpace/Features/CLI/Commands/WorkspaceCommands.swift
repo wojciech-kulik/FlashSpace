@@ -36,12 +36,12 @@ final class WorkspaceCommands: CommandExecutor {
         case .updateWorkspace(let request):
             return updateWorkspace(request)
 
-        case .nextWorkspace:
-            workspaceManager.activateWorkspace(next: true)
+        case .nextWorkspace(let skipEmpty):
+            workspaceManager.activateWorkspace(next: true, skipEmpty: skipEmpty)
             return CommandResponse(success: true)
 
-        case .previousWorkspace:
-            workspaceManager.activateWorkspace(next: false)
+        case .previousWorkspace(let skipEmpty):
+            workspaceManager.activateWorkspace(next: false, skipEmpty: skipEmpty)
             return CommandResponse(success: true)
 
         case .recentWorkspace:

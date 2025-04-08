@@ -269,7 +269,7 @@ extension WorkspaceManager {
         NotificationCenter.default.post(name: .appsListChanged, object: nil)
     }
 
-    func activateWorkspace(next: Bool) {
+    func activateWorkspace(next: Bool, skipEmpty: Bool) {
         guard let screen = getCursorScreen() else { return }
 
         var screenWorkspaces = workspaceRepository.workspaces
@@ -281,13 +281,27 @@ extension WorkspaceManager {
 
         guard let activeWorkspace = activeWorkspace[screen] ?? screenWorkspaces.first else { return }
 
-        guard let workspace = screenWorkspaces
+        let nextWorkspaces = screenWorkspaces
             .drop(while: { $0.id != activeWorkspace.id })
             .dropFirst()
-            .first ?? screenWorkspaces.first
-        else { return }
 
-        activateWorkspace(workspace, setFocus: true)
+        var selectedWorkspace = nextWorkspaces.first ?? screenWorkspaces.first
+
+        if skipEmpty {
+            let runningApps = Set(
+                NSWorkspace.shared.runningApplications
+                    .filter { $0.activationPolicy == .regular }
+                    .compactMap(\.bundleIdentifier)
+            )
+
+            selectedWorkspace = (nextWorkspaces + screenWorkspaces)
+                .drop(while: { $0.apps.allSatisfy { !runningApps.contains($0.bundleIdentifier) } })
+                .first
+        }
+
+        guard let selectedWorkspace, selectedWorkspace.id != activeWorkspace.id else { return }
+
+        activateWorkspace(selectedWorkspace, setFocus: true)
     }
 
     func activateRecentWorkspace() {
