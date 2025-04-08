@@ -22,6 +22,7 @@ final class WorkspaceSettings: ObservableObject {
     @Published var switchToRecentWorkspace: AppHotKey?
     @Published var switchToPreviousWorkspace: AppHotKey?
     @Published var switchToNextWorkspace: AppHotKey?
+    @Published var skipEmptyWorkspacesOnSwitch = false
 
     @Published var alternativeDisplays = ""
     @Published var pipApps: [PipApp] = []
@@ -50,6 +51,7 @@ final class WorkspaceSettings: ObservableObject {
             $switchToRecentWorkspace.settingsPublisher(),
             $switchToPreviousWorkspace.settingsPublisher(),
             $switchToNextWorkspace.settingsPublisher(),
+            $skipEmptyWorkspacesOnSwitch.settingsPublisher(),
             $alternativeDisplays.settingsPublisher(debounce: true),
             $pipApps.settingsPublisher(),
             $enableWorkspaceTransitions.settingsPublisher(),
@@ -81,6 +83,7 @@ extension WorkspaceSettings: SettingsProtocol {
         switchToRecentWorkspace = appSettings.switchToRecentWorkspace
         switchToPreviousWorkspace = appSettings.switchToPreviousWorkspace
         switchToNextWorkspace = appSettings.switchToNextWorkspace
+        skipEmptyWorkspacesOnSwitch = appSettings.skipEmptyWorkspacesOnSwitch ?? false
 
         alternativeDisplays = appSettings.alternativeDisplays ?? ""
         pipApps = appSettings.pipApps ?? []
@@ -101,6 +104,7 @@ extension WorkspaceSettings: SettingsProtocol {
         appSettings.switchToRecentWorkspace = switchToRecentWorkspace
         appSettings.switchToPreviousWorkspace = switchToPreviousWorkspace
         appSettings.switchToNextWorkspace = switchToNextWorkspace
+        appSettings.skipEmptyWorkspacesOnSwitch = skipEmptyWorkspacesOnSwitch
 
         appSettings.alternativeDisplays = alternativeDisplays
         appSettings.pipApps = pipApps

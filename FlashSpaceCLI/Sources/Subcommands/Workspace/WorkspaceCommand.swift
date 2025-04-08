@@ -32,15 +32,18 @@ struct WorkspaceCommand: ParsableCommand {
     @Flag(help: "Activate the most recently used workspace")
     var recent = false
 
+    @Flag(help: "Skip empty workspaces (works only with --next or --prev)")
+    var skipEmpty = false
+
     func run() throws {
         if let name {
             sendCommand(.activateWorkspace(name: name, number: nil))
         } else if let number {
             sendCommand(.activateWorkspace(name: nil, number: number))
         } else if next {
-            sendCommand(.nextWorkspace)
+            sendCommand(.nextWorkspace(skipEmpty: skipEmpty))
         } else if prev {
-            sendCommand(.previousWorkspace)
+            sendCommand(.previousWorkspace(skipEmpty: skipEmpty))
         } else if recent {
             sendCommand(.recentWorkspace)
         } else {

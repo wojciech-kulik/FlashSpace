@@ -48,6 +48,7 @@ struct AppSettings: Codable {
     var switchToPreviousWorkspace: AppHotKey?
     var switchToNextWorkspace: AppHotKey?
     var switchToRecentWorkspace: AppHotKey?
+    var skipEmptyWorkspacesOnSwitch: Bool?
     var assignFocusedApp: AppHotKey?
     var unassignFocusedApp: AppHotKey?
     var toggleFocusedAppAssignment: AppHotKey?
