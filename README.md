@@ -320,6 +320,7 @@ Big thanks to all the sponsors who support this project 🍻!
 <a href="https://github.com/sinan-guler"><img src="https://avatars.githubusercontent.com/u/37443512" width="40" height="40" alt="@sinan-guler" title="sinan-guler"></a>
 <a href="https://github.com/maxschipper"><img src="https://avatars.githubusercontent.com/u/150921823" width="40" height="40" alt="@maxschipper" title="maxschipper"></a>
 <a href="https://github.com/sergiopatino"><img src="https://avatars.githubusercontent.com/u/868839" width="40" height="40" alt="@sergiopatino" title="sergiopatino"></a>
+<a href="https://github.com/ashaney"><img src="https://avatars.githubusercontent.com/u/25646923" width="40" height="40" alt="@ashaney" title="ashaney"></a>
 
 &nbsp;
 
