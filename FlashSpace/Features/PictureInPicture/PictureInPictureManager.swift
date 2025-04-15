@@ -96,21 +96,23 @@ final class PictureInPictureManager {
         // we need to set window origin to:
         // (screen.maxX - window.width, screen.maxY - window.height).
 
+        let testOffset: CGFloat = 30.0
+        let cornerOffset = CGFloat(settings.pipScreenCornerOffset)
         let appFrame = app.frame
         let screenFrame = appScreen.frame
         let leftCorner = CGPoint(x: screenFrame.minX, y: screenFrame.minY)
         let rightCorner = CGPoint(x: screenFrame.maxX, y: screenFrame.minY)
         let leftSide = leftCorner.applying(
-            CGAffineTransform(translationX: -30.0, y: 30.0)
+            CGAffineTransform(translationX: -testOffset, y: testOffset)
         )
         let leftBottomSide = leftCorner.applying(
-            CGAffineTransform(translationX: 30.0, y: -30.0)
+            CGAffineTransform(translationX: testOffset, y: -testOffset)
         )
         let rightSide = rightCorner.applying(
-            CGAffineTransform(translationX: 30.0, y: 30.0)
+            CGAffineTransform(translationX: testOffset, y: testOffset)
         )
         let rightBottomSide = rightCorner.applying(
-            CGAffineTransform(translationX: -30.0, y: -30.0)
+            CGAffineTransform(translationX: -testOffset, y: -testOffset)
         )
 
         let allScreens = NSScreen.screens.map(\.frame)
@@ -120,15 +122,15 @@ final class PictureInPictureManager {
         if isLeftCornerUsed || !isRightCornerUsed || appFrame == nil {
             // right corner (window coordinates)
             return CGPoint(
-                x: screenFrame.maxX - 30.0,
-                y: screenFrame.maxY - 30.0
+                x: screenFrame.maxX - cornerOffset,
+                y: screenFrame.maxY - cornerOffset
             )
         } else {
             // left corner (window coordinates)
             let appFrame = appFrame ?? .zero
             return CGPoint(
-                x: screenFrame.minX + 30.0 - appFrame.width,
-                y: screenFrame.maxY - 30.0
+                x: screenFrame.minX + cornerOffset - appFrame.width,
+                y: screenFrame.maxY - cornerOffset
             )
         }
     }

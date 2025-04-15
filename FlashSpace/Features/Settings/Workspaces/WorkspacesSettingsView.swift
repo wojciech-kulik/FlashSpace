@@ -99,6 +99,19 @@ struct WorkspacesSettingsView: View {
 
             Section("Picture-in-Picture") {
                 Toggle("Enable Picture-in-Picture Support", isOn: $settings.enablePictureInPictureSupport)
+
+                HStack {
+                    Text("Screen Corner Offset")
+                    Spacer()
+                    Text("\(settings.pipScreenCornerOffset)")
+                    Stepper(
+                        "",
+                        value: $settings.pipScreenCornerOffset,
+                        in: 1...50,
+                        step: 1
+                    ).labelsHidden()
+                }
+
                 Text(
                     "If a supported browser has Picture-in-Picture active, other " +
                         "windows will be hidden in a screen corner to keep PiP visible."
