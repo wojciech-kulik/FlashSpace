@@ -26,6 +26,7 @@ final class WorkspaceSettings: ObservableObject {
 
     @Published var alternativeDisplays = ""
     @Published var pipApps: [PipApp] = []
+    @Published var pipScreenCornerOffset = 15
 
     private var observer: AnyCancellable?
     private let updateSubject = PassthroughSubject<(), Never>()
@@ -54,6 +55,7 @@ final class WorkspaceSettings: ObservableObject {
             $skipEmptyWorkspacesOnSwitch.settingsPublisher(),
             $alternativeDisplays.settingsPublisher(debounce: true),
             $pipApps.settingsPublisher(),
+            $pipScreenCornerOffset.settingsPublisher(debounce: true),
             $enableWorkspaceTransitions.settingsPublisher(),
             $workspaceTransitionDuration.settingsPublisher(debounce: true),
             $workspaceTransitionDimming.settingsPublisher(debounce: true)
@@ -87,6 +89,7 @@ extension WorkspaceSettings: SettingsProtocol {
 
         alternativeDisplays = appSettings.alternativeDisplays ?? ""
         pipApps = appSettings.pipApps ?? []
+        pipScreenCornerOffset = appSettings.pipScreenCornerOffset ?? 15
         observe()
     }
 
@@ -108,5 +111,6 @@ extension WorkspaceSettings: SettingsProtocol {
 
         appSettings.alternativeDisplays = alternativeDisplays
         appSettings.pipApps = pipApps
+        appSettings.pipScreenCornerOffset = pipScreenCornerOffset
     }
 }

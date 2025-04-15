@@ -38,6 +38,7 @@ jobs:
             menu-bar
             profiles
             integrations
+            pip
 
       - uses: marocchino/sticky-pull-request-comment@v2
         # When the previous steps fails, the workflow would stop. By adding this
