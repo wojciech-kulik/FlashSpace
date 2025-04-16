@@ -279,7 +279,16 @@ You can also set this variable globally in your shell.
 
 ## 💡 Tips & Tricks
 
-### Move & Resize Windows
+### 👉 Apps Appear On The Wrong Display After Sleep
+
+macOS has a bug that causes apps to appear on the wrong display after sleep.
+This happens if the app is hidden while the Mac is in sleep mode.
+
+There is one workaround that can help with this issue. When you wake up
+your Mac, make sure to turn on all displays before logging in. This way,
+all apps should be shown on the correct display.
+
+### 👉 Move & Resize Windows
 
 macOS 15 introduced new features that allow you to move & resize windows
 without 3rd party apps. To see all available options, select "Window" from the
@@ -290,11 +299,11 @@ here](https://discussions.apple.com/thread/255773494?sortBy=rank). However, the
 most flexible approach would be to use Raycast, Magnet, or other window
 management apps.
 
-### Switch Between Windows
+### 👉 Switch Between Windows
 
 macOS allows you to switch focus between windows of the same app using the `` Cmd + ` `` shortcut.
 
-### SKHD
+### 👉 SKHD
 
 There is a great command-line tool called [SKHD] that allows you to define
 custom global shortcuts. You can use it also with FlashSpace through the CLI.
