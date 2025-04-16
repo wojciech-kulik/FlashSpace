@@ -20,7 +20,7 @@ struct AppCell: View {
                     .frame(width: 20, height: 20)
             }
             Text(app.name)
-                .foregroundColor(app.bundleIdentifier.isEmpty ? .errorRed : .primary)
+                .foregroundColor(app.identifier.isEmpty ? .errorRed : .primary)
         }
         .draggable(MacAppWithWorkspace(app: app, workspaceId: workspaceId))
     }
