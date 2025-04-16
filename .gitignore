@@ -18,3 +18,7 @@ playground.xcworkspace
 .vscode
 fastlane/report.xml
 fastlane/README.md
+
+.nvim/
+.swift-format
+buildServer.json
