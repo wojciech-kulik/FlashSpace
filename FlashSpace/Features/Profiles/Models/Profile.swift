@@ -10,7 +10,6 @@ import Foundation
 typealias ProfileId = UUID
 
 struct ProfilesConfig: Codable {
-    let selectedProfileId: ProfileId
     let profiles: [Profile]
 }
 

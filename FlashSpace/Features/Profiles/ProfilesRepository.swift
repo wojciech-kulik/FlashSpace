@@ -19,6 +19,20 @@ final class ProfilesRepository: ObservableObject {
 
     var onProfileChange: ((Profile) -> ())?
 
+    private var selectedProfileId: ProfileId? {
+        get {
+            UserDefaults.standard.string(forKey: AppConstants.UserDefaultsKey.selectedProfileId)
+                .flatMap { UUID(uuidString: $0) }
+        }
+        set {
+            if let newValue {
+                UserDefaults.standard.set(newValue.uuidString, forKey: AppConstants.UserDefaultsKey.selectedProfileId)
+            } else {
+                UserDefaults.standard.removeObject(forKey: AppConstants.UserDefaultsKey.selectedProfileId)
+            }
+        }
+    }
+
     private var shouldTrackProfileChange = true
 
     init() {
@@ -34,8 +48,29 @@ final class ProfilesRepository: ObservableObject {
             return createDefaultProfile()
         }
 
+        let migrated = migrateOldConfigIfNeeded()
         profiles = config.profiles
-        selectedProfile = profiles.first { $0.id == config.selectedProfileId } ?? profiles.first ?? .default
+
+        let selectedProfileId = selectedProfileId
+        selectedProfile = profiles.first { $0.id == selectedProfileId } ?? profiles.first ?? .default
+
+        if migrated { saveToDisk() }
+    }
+
+    private func migrateOldConfigIfNeeded() -> Bool {
+        struct OldProfilesConfig: Codable {
+            let selectedProfileId: ProfileId?
+        }
+
+        if let oldConfig = try? ConfigSerializer.deserialize(OldProfilesConfig.self, filename: "profiles"),
+           let profileId = oldConfig.selectedProfileId {
+            selectedProfileId = profileId
+            Logger.log("Migrated old profile config to new format. Profile ID: \(profileId)")
+
+            return true
+        }
+
+        return false
     }
 
     private func createDefaultProfile() {
@@ -117,11 +152,9 @@ extension ProfilesRepository {
     }
 
     func saveToDisk() {
-        let config = ProfilesConfig(
-            selectedProfileId: selectedProfile.id,
-            profiles: profiles
-        )
-
+        let config = ProfilesConfig(profiles: profiles)
         try? ConfigSerializer.serialize(filename: "profiles", config)
+
+        selectedProfileId = selectedProfile.id
     }
 }
