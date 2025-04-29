@@ -30,6 +30,15 @@ enum PipBrowser: String, CaseIterable {
         }
     }
 
+    var partialTitle: String? {
+        switch self {
+        case .chrome:
+            return "about:blank "
+        default:
+            return nil
+        }
+    }
+
     var subrole: String? {
         switch self {
         case .arc:
