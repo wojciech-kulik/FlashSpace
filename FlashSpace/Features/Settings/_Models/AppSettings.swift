@@ -13,6 +13,7 @@ struct AppSettings: Codable {
 
     // Menu Bar
     var showMenuBarTitle: Bool?
+    var showMenuBarIcon: Bool?
     var menuBarTitleTemplate: String?
     var menuBarDisplayAliases: String?
 

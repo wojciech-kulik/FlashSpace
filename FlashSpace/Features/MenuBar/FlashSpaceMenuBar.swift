@@ -75,8 +75,11 @@ struct FlashSpaceMenuBar: Scene {
             }.keyboardShortcut("q")
         } label: {
             HStack {
-                Image(systemName: workspaceManager.activeWorkspaceDetails?.symbolIconName ?? .defaultIconSymbol)
-                if let title = MenuBarTitle.get() { Text(title) }
+                let title = MenuBarTitle.get()
+                if title == nil || settingsRepository.menuBarSettings.showMenuBarIcon {
+                    Image(systemName: workspaceManager.activeWorkspaceDetails?.symbolIconName ?? .defaultIconSymbol)
+                }
+                if let title { Text(title) }
             }
             .id(settingsRepository.menuBarSettings.menuBarTitleTemplate)
         }
