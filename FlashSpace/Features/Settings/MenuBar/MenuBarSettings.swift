@@ -12,6 +12,7 @@ final class MenuBarSettings: ObservableObject {
     static let defaultMenuBarTitleTemplate = "$WORKSPACE"
 
     @Published var showMenuBarTitle = true
+    @Published var showMenuBarIcon = true
     @Published var menuBarTitleTemplate = MenuBarSettings.defaultMenuBarTitleTemplate
     @Published var menuBarDisplayAliases = ""
 
@@ -23,6 +24,7 @@ final class MenuBarSettings: ObservableObject {
     private func observe() {
         observer = Publishers.MergeMany(
             $showMenuBarTitle.settingsPublisher(),
+            $showMenuBarIcon.settingsPublisher(),
             $menuBarTitleTemplate.settingsPublisher(debounce: true),
             $menuBarDisplayAliases.settingsPublisher(debounce: true)
         )
@@ -39,6 +41,7 @@ extension MenuBarSettings: SettingsProtocol {
     func load(from appSettings: AppSettings) {
         observer = nil
         showMenuBarTitle = appSettings.showMenuBarTitle ?? true
+        showMenuBarIcon = appSettings.showMenuBarIcon ?? true
         menuBarTitleTemplate = appSettings.menuBarTitleTemplate ?? Self.defaultMenuBarTitleTemplate
         menuBarDisplayAliases = appSettings.menuBarDisplayAliases ?? ""
         observe()
@@ -46,6 +49,7 @@ extension MenuBarSettings: SettingsProtocol {
 
     func update(_ appSettings: inout AppSettings) {
         appSettings.showMenuBarTitle = showMenuBarTitle
+        appSettings.showMenuBarIcon = showMenuBarIcon
         appSettings.menuBarTitleTemplate = menuBarTitleTemplate
         appSettings.menuBarDisplayAliases = menuBarDisplayAliases
     }
