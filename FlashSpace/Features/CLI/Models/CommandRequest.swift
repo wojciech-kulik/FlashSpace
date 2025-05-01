@@ -43,7 +43,7 @@ enum CommandRequest: Codable {
 
     case getProfile
     case getWorkspace(display: String?)
-    case getApp
+    case getApp(withWindowsCount: Bool)
     case getDisplay
 }
 

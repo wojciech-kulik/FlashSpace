@@ -15,8 +15,11 @@ struct GetAppCommand: ParsableCommand {
         abstract: "Get active app"
     )
 
+    @Flag(help: "Include windows count")
+    var withWindowsCount = false
+
     func run() throws {
-        sendCommand(.getApp)
+        sendCommand(.getApp(withWindowsCount: withWindowsCount))
         runWithTimeout()
     }
 }
