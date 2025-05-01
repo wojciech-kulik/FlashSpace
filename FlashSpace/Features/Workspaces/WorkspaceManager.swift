@@ -95,7 +95,7 @@ final class WorkspaceManager: ObservableObject {
                         updateActiveWorkspace(activeWorkspace)
                     }
 
-                    if floatingAppsSettings.floatingApps.containsApp(application),
+                    if floatingAppsSettings.floatingApps.containsApp(application) || workspaceSettings.keepUnassignedAppsOnSwitch,
                        application.bundleIdentifier != "com.apple.finder" || application.allWindows.count > 0 {
                         lastFocusedFloatingApp[activeWorkspace.displayWithFallback] = application.toMacApp
                     }
@@ -154,9 +154,13 @@ final class WorkspaceManager: ObservableObject {
         let workspaceApps = workspace.apps + floatingAppsSettings.floatingApps
         let isAnyWorkspaceAppRunning = regularApps
             .contains { workspaceApps.containsApp($0) }
+        let allAssignedApps = Set(workspaceRepository.workspaces.flatMap(\.apps).map(\.bundleIdentifier))
 
         let appsToHide = regularApps
-            .filter { !$0.isHidden && !workspaceApps.containsApp($0) }
+            .filter {
+                !$0.isHidden && !workspaceApps.containsApp($0) &&
+                    (!workspaceSettings.keepUnassignedAppsOnSwitch || allAssignedApps.contains($0.bundleIdentifier ?? ""))
+            }
             .filter { isAnyWorkspaceAppRunning || $0.bundleURL?.fileName != "Finder" }
             .filter { $0.isOnTheSameScreen(as: workspace) }
 

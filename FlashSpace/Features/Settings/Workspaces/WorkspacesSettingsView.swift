@@ -20,6 +20,7 @@ struct WorkspacesSettingsView: View {
                     "Skip Empty Workspaces On Switch (affects previous/next)",
                     isOn: $settings.skipEmptyWorkspacesOnSwitch
                 )
+                Toggle("Keep Unassigned Apps On Switch", isOn: $settings.keepUnassignedAppsOnSwitch)
                 Toggle("Enable Workspace Transition Animation", isOn: $settings.enableWorkspaceTransitions)
                     .help("Show a brief visual transition effect when switching between workspaces")
 
