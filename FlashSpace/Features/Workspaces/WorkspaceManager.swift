@@ -93,10 +93,9 @@ final class WorkspaceManager: ObservableObject {
                         lastFocusedApp[activeWorkspace.id] = application.toMacApp
                         lastFocusedFloatingApp[activeWorkspace.displayWithFallback] = nil
                         updateActiveWorkspace(activeWorkspace)
-                    }
-
-                    if floatingAppsSettings.floatingApps.containsApp(application) || workspaceSettings.keepUnassignedAppsOnSwitch,
-                       application.bundleIdentifier != "com.apple.finder" || application.allWindows.count > 0 {
+                    } else if floatingAppsSettings.floatingApps.containsApp(application) ||
+                        workspaceSettings.keepUnassignedAppsOnSwitch,
+                        application.bundleIdentifier != "com.apple.finder" || application.allWindows.count > 0 {
                         lastFocusedFloatingApp[activeWorkspace.displayWithFallback] = application.toMacApp
                     }
                 }
