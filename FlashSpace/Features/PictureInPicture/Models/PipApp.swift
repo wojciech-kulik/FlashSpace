@@ -9,6 +9,6 @@ import Foundation
 
 struct PipApp: Codable, Equatable, Hashable {
     let name: String
-    let bundleIdentifier: String
+    let bundleIdentifier: BundleId
     let pipWindowTitleRegex: String
 }

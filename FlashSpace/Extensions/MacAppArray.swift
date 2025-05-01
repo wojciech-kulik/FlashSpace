@@ -8,7 +8,7 @@
 import AppKit
 
 extension [MacApp] {
-    func firstIndex(ofAppWith bundleIdentifier: String) -> Int? {
+    func firstIndex(ofAppWith bundleIdentifier: BundleId) -> Int? {
         firstIndex { $0.bundleIdentifier == bundleIdentifier }
     }
 
@@ -16,7 +16,7 @@ extension [MacApp] {
         firstIndex { $0.bundleIdentifier == app.bundleIdentifier }
     }
 
-    func containsApp(with bundleIdentifier: String?) -> Bool {
+    func containsApp(with bundleIdentifier: BundleId?) -> Bool {
         contains { $0.bundleIdentifier == bundleIdentifier }
     }
 
