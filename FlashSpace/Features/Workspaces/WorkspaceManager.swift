@@ -28,6 +28,7 @@ final class WorkspaceManager: ObservableObject {
 
     private var cancellables = Set<AnyCancellable>()
     private var observeFocusCancellable: AnyCancellable?
+    private var lastFocusedFloatingApp: [DisplayName: MacApp] = [:]
     private let hideAgainSubject = PassthroughSubject<Workspace, Never>()
 
     private let workspaceRepository: WorkspaceRepository
@@ -87,11 +88,17 @@ final class WorkspaceManager: ObservableObject {
             .sink { [weak self] application in
                 guard let self else { return }
 
-                if let activeWorkspace = activeWorkspace[application.display ?? ""],
-                   activeWorkspace.apps.containsApp(application) ||
-                   floatingAppsSettings.floatingApps.containsApp(application) {
-                    lastFocusedApp[activeWorkspace.id] = application.toMacApp
-                    updateActiveWorkspace(activeWorkspace)
+                if let activeWorkspace = activeWorkspace[application.display ?? ""] {
+                    if activeWorkspace.apps.containsApp(application) {
+                        lastFocusedApp[activeWorkspace.id] = application.toMacApp
+                        lastFocusedFloatingApp[activeWorkspace.displayWithFallback] = nil
+                        updateActiveWorkspace(activeWorkspace)
+                    }
+
+                    if floatingAppsSettings.floatingApps.containsApp(application),
+                       application.bundleIdentifier != "com.apple.finder" || application.allWindows.count > 0 {
+                        lastFocusedFloatingApp[activeWorkspace.displayWithFallback] = application.toMacApp
+                    }
                 }
             }
     }
@@ -166,6 +173,10 @@ final class WorkspaceManager: ObservableObject {
         in workspace: Workspace,
         apps: [NSRunningApplication]
     ) -> NSRunningApplication? {
+        if workspace.appToFocus == nil, let floatingApp = lastFocusedFloatingApp[workspace.displayWithFallback] {
+            return NSWorkspace.shared.runningApplications.find(floatingApp)
+        }
+
         var appToFocus: NSRunningApplication?
 
         if workspace.appToFocus == nil {

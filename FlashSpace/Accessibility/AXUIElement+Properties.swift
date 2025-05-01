@@ -19,6 +19,12 @@ extension AXUIElement {
         set { setAttribute(.enchancedUserInterface, value: newValue) }
     }
 
+    var processId: pid_t? {
+        var pid: pid_t = 0
+        AXUIElementGetPid(self, &pid)
+        return pid
+    }
+
     /// Frame is in window coordinates where (0,0) is top-left corner
     /// and it is relative to the main screen.
     var frame: CGRect? {

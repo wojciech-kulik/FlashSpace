@@ -16,7 +16,7 @@ struct MacAppWithWindows {
     }
 
     let app: NSRunningApplication
-    let bundleIdentifier: String
+    let bundleIdentifier: BundleId
 
     /// Sorted by title and then by x position
     let windows: [MacAppWindow]
