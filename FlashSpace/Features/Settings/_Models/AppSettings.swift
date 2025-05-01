@@ -45,15 +45,16 @@ struct AppSettings: Codable {
     // Workspaces
     var centerCursorOnWorkspaceChange: Bool?
     var changeWorkspaceOnAppAssign: Bool?
-    var enablePictureInPictureSupport: Bool?
+    var skipEmptyWorkspacesOnSwitch: Bool?
+    var keepUnassignedAppsOnSwitch: Bool?
     var switchToPreviousWorkspace: AppHotKey?
     var switchToNextWorkspace: AppHotKey?
     var switchToRecentWorkspace: AppHotKey?
-    var skipEmptyWorkspacesOnSwitch: Bool?
     var assignFocusedApp: AppHotKey?
     var unassignFocusedApp: AppHotKey?
     var toggleFocusedAppAssignment: AppHotKey?
     var alternativeDisplays: String?
+    var enablePictureInPictureSupport: Bool?
     var pipApps: [PipApp]?
     var pipScreenCornerOffset: Int?
 

@@ -11,7 +11,8 @@ import Foundation
 final class WorkspaceSettings: ObservableObject {
     @Published var centerCursorOnWorkspaceChange = false
     @Published var changeWorkspaceOnAppAssign = true
-    @Published var enablePictureInPictureSupport = true
+    @Published var skipEmptyWorkspacesOnSwitch = false
+    @Published var keepUnassignedAppsOnSwitch = false
     @Published var enableWorkspaceTransitions = false
     @Published var workspaceTransitionDuration = 0.3
     @Published var workspaceTransitionDimming = 0.2
@@ -22,11 +23,12 @@ final class WorkspaceSettings: ObservableObject {
     @Published var switchToRecentWorkspace: AppHotKey?
     @Published var switchToPreviousWorkspace: AppHotKey?
     @Published var switchToNextWorkspace: AppHotKey?
-    @Published var skipEmptyWorkspacesOnSwitch = false
 
     @Published var alternativeDisplays = ""
-    @Published var pipApps: [PipApp] = []
+
+    @Published var enablePictureInPictureSupport = true
     @Published var pipScreenCornerOffset = 15
+    @Published var pipApps: [PipApp] = []
 
     private var observer: AnyCancellable?
     private let updateSubject = PassthroughSubject<(), Never>()
@@ -45,20 +47,23 @@ final class WorkspaceSettings: ObservableObject {
         observer = Publishers.MergeMany(
             $centerCursorOnWorkspaceChange.settingsPublisher(),
             $changeWorkspaceOnAppAssign.settingsPublisher(),
-            $enablePictureInPictureSupport.settingsPublisher(),
+            $skipEmptyWorkspacesOnSwitch.settingsPublisher(),
+            $keepUnassignedAppsOnSwitch.settingsPublisher(),
+            $enableWorkspaceTransitions.settingsPublisher(),
+            $workspaceTransitionDuration.settingsPublisher(debounce: true),
+            $workspaceTransitionDimming.settingsPublisher(debounce: true),
+
             $assignFocusedApp.settingsPublisher(),
             $unassignFocusedApp.settingsPublisher(),
             $toggleFocusedAppAssignment.settingsPublisher(),
             $switchToRecentWorkspace.settingsPublisher(),
             $switchToPreviousWorkspace.settingsPublisher(),
             $switchToNextWorkspace.settingsPublisher(),
-            $skipEmptyWorkspacesOnSwitch.settingsPublisher(),
+
             $alternativeDisplays.settingsPublisher(debounce: true),
+            $enablePictureInPictureSupport.settingsPublisher(),
             $pipApps.settingsPublisher(),
-            $pipScreenCornerOffset.settingsPublisher(debounce: true),
-            $enableWorkspaceTransitions.settingsPublisher(),
-            $workspaceTransitionDuration.settingsPublisher(debounce: true),
-            $workspaceTransitionDimming.settingsPublisher(debounce: true)
+            $pipScreenCornerOffset.settingsPublisher(debounce: true)
         )
         .receive(on: DispatchQueue.main)
         .sink { [weak self] in self?.updateSubject.send() }
@@ -74,7 +79,8 @@ extension WorkspaceSettings: SettingsProtocol {
         observer = nil
         centerCursorOnWorkspaceChange = appSettings.centerCursorOnWorkspaceChange ?? false
         changeWorkspaceOnAppAssign = appSettings.changeWorkspaceOnAppAssign ?? true
-        enablePictureInPictureSupport = appSettings.enablePictureInPictureSupport ?? true
+        skipEmptyWorkspacesOnSwitch = appSettings.skipEmptyWorkspacesOnSwitch ?? false
+        keepUnassignedAppsOnSwitch = appSettings.keepUnassignedAppsOnSwitch ?? false
         enableWorkspaceTransitions = appSettings.enableWorkspaceTransitions ?? false
         workspaceTransitionDuration = min(appSettings.workspaceTransitionDuration ?? 0.3, 0.5)
         workspaceTransitionDimming = min(appSettings.workspaceTransitionDimming ?? 0.2, 0.5)
@@ -85,9 +91,9 @@ extension WorkspaceSettings: SettingsProtocol {
         switchToRecentWorkspace = appSettings.switchToRecentWorkspace
         switchToPreviousWorkspace = appSettings.switchToPreviousWorkspace
         switchToNextWorkspace = appSettings.switchToNextWorkspace
-        skipEmptyWorkspacesOnSwitch = appSettings.skipEmptyWorkspacesOnSwitch ?? false
 
         alternativeDisplays = appSettings.alternativeDisplays ?? ""
+        enablePictureInPictureSupport = appSettings.enablePictureInPictureSupport ?? true
         pipApps = appSettings.pipApps ?? []
         pipScreenCornerOffset = appSettings.pipScreenCornerOffset ?? 15
         observe()
@@ -96,7 +102,8 @@ extension WorkspaceSettings: SettingsProtocol {
     func update(_ appSettings: inout AppSettings) {
         appSettings.centerCursorOnWorkspaceChange = centerCursorOnWorkspaceChange
         appSettings.changeWorkspaceOnAppAssign = changeWorkspaceOnAppAssign
-        appSettings.enablePictureInPictureSupport = enablePictureInPictureSupport
+        appSettings.skipEmptyWorkspacesOnSwitch = skipEmptyWorkspacesOnSwitch
+        appSettings.keepUnassignedAppsOnSwitch = keepUnassignedAppsOnSwitch
         appSettings.enableWorkspaceTransitions = enableWorkspaceTransitions
         appSettings.workspaceTransitionDuration = workspaceTransitionDuration
         appSettings.workspaceTransitionDimming = workspaceTransitionDimming
@@ -107,9 +114,9 @@ extension WorkspaceSettings: SettingsProtocol {
         appSettings.switchToRecentWorkspace = switchToRecentWorkspace
         appSettings.switchToPreviousWorkspace = switchToPreviousWorkspace
         appSettings.switchToNextWorkspace = switchToNextWorkspace
-        appSettings.skipEmptyWorkspacesOnSwitch = skipEmptyWorkspacesOnSwitch
 
         appSettings.alternativeDisplays = alternativeDisplays
+        appSettings.enablePictureInPictureSupport = enablePictureInPictureSupport
         appSettings.pipApps = pipApps
         appSettings.pipScreenCornerOffset = pipScreenCornerOffset
     }
