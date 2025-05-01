@@ -85,21 +85,24 @@ final class WorkspaceManager: ObservableObject {
         observeFocusCancellable = NSWorkspace.shared.notificationCenter
             .publisher(for: NSWorkspace.didActivateApplicationNotification)
             .compactMap { $0.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication }
+            .delay(for: .milliseconds(200), scheduler: RunLoop.main)
             .sink { [weak self] application in
-                guard let self else { return }
-
-                if let activeWorkspace = activeWorkspace[application.display ?? ""] {
-                    if activeWorkspace.apps.containsApp(application) {
-                        lastFocusedApp[activeWorkspace.id] = application.toMacApp
-                        lastFocusedFloatingApp[activeWorkspace.displayWithFallback] = nil
-                        updateActiveWorkspace(activeWorkspace)
-                    } else if floatingAppsSettings.floatingApps.containsApp(application) ||
-                        workspaceSettings.keepUnassignedAppsOnSwitch,
-                        application.bundleIdentifier != "com.apple.finder" || application.allWindows.count > 0 {
-                        lastFocusedFloatingApp[activeWorkspace.displayWithFallback] = application.toMacApp
-                    }
-                }
+                self?.rememberLastFocusedApp(application)
             }
+    }
+
+    private func rememberLastFocusedApp(_ application: NSRunningApplication) {
+        guard let display = application.display else { return }
+
+        if let activeWorkspace = activeWorkspace[display], activeWorkspace.apps.containsApp(application) {
+            lastFocusedApp[activeWorkspace.id] = application.toMacApp
+            lastFocusedFloatingApp[display] = nil
+            updateActiveWorkspace(activeWorkspace)
+        } else if floatingAppsSettings.floatingApps.containsApp(application) ||
+            workspaceSettings.keepUnassignedAppsOnSwitch,
+            application.bundleIdentifier != "com.apple.finder" || application.allWindows.count > 0 {
+            lastFocusedFloatingApp[display] = application.toMacApp
+        }
     }
 
     private func showApps(in workspace: Workspace, setFocus: Bool) {
@@ -176,8 +179,10 @@ final class WorkspaceManager: ObservableObject {
         in workspace: Workspace,
         apps: [NSRunningApplication]
     ) -> NSRunningApplication? {
-        if workspace.appToFocus == nil, let floatingApp = lastFocusedFloatingApp[workspace.displayWithFallback] {
-            return NSWorkspace.shared.runningApplications.find(floatingApp)
+        if workspace.appToFocus == nil,
+           let floatingApp = lastFocusedFloatingApp[workspace.displayWithFallback],
+           let runningApp = NSWorkspace.shared.runningApplications.find(floatingApp) {
+            return runningApp
         }
 
         var appToFocus: NSRunningApplication?
