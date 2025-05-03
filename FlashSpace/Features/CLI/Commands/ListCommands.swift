@@ -11,6 +11,7 @@ import Foundation
 final class ListCommands: CommandExecutor {
     var workspaceRepository: WorkspaceRepository { AppDependencies.shared.workspaceRepository }
     var profilesRepository: ProfilesRepository { AppDependencies.shared.profilesRepository }
+    var settingsRepository: SettingsRepository { AppDependencies.shared.settingsRepository }
 
     func execute(command: CommandRequest) -> CommandResponse? {
         switch command {
@@ -59,6 +60,18 @@ final class ListCommands: CommandExecutor {
                 .joined(separator: "\n")
 
             return CommandResponse(success: true, message: result)
+
+        case .listFloatingApps(let withBundleId):
+            let floatingApps = settingsRepository.floatingAppsSettings.floatingApps
+                .map { app in
+                    [
+                        app.name,
+                        withBundleId ? app.bundleIdentifier : nil
+                    ].compactMap { $0 }.joined(separator: ",")
+                }
+                .joined(separator: "\n")
+
+            return CommandResponse(success: true, message: floatingApps)
 
         default:
             return nil

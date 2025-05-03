@@ -19,6 +19,10 @@ enum CommandRequest: Codable {
     case assignApp(app: String?, workspaceName: String?, activate: Bool?, showNotification: Bool)
     case unassignApp(app: String?, showNotification: Bool)
 
+    case floatApp(app: String?, showNotification: Bool)
+    case unfloatApp(app: String?, showNotification: Bool)
+    case toggleFloatApp(app: String?, showNotification: Bool)
+
     case focusWindow(direction: FocusDirection)
     case focusNextWindow
     case focusPreviousWindow
@@ -40,6 +44,7 @@ enum CommandRequest: Codable {
         withIcon: Bool,
         onlyRunning: Bool
     )
+    case listFloatingApps(withBundleId: Bool)
 
     case getProfile
     case getWorkspace(display: String?)
