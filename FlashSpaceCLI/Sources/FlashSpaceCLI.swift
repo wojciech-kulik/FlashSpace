@@ -35,6 +35,7 @@ struct FlashSpaceCLI: ParsableCommand {
             .init(
                 name: "App",
                 subcommands: [
+                    AssignVisibleAppsCommand.self,
                     AssignAppCommand.self,
                     UnassignAppCommand.self,
                     FocusCommand.self,

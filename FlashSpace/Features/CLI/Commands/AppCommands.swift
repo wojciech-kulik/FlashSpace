@@ -16,6 +16,9 @@ final class AppCommands: CommandExecutor {
 
     func execute(command: CommandRequest) -> CommandResponse? {
         switch command {
+        case .assignVisibleApps(let workspaceName, let showNotification):
+            return assignVisibleApps(workspaceName: workspaceName, showNotification: showNotification)
+
         case .assignApp(let app, let workspaceName, let activate, let showNotification):
             return assignApp(
                 app: app,
@@ -76,6 +79,43 @@ final class AppCommands: CommandExecutor {
                 icon: "square.stack.3d.up.slash",
                 message: "\(app.name) - Removed From Workspaces",
                 textColor: .negative
+            )
+        }
+
+        return CommandResponse(success: true)
+    }
+
+    private func assignVisibleApps(workspaceName: String?, showNotification: Bool) -> CommandResponse {
+        guard let workspaceName = workspaceName ?? workspaceManager.activeWorkspaceDetails?.name else {
+            return CommandResponse(success: false, error: "No workspace selected")
+        }
+
+        guard let workspace = workspaceRepository.workspaces.first(where: { $0.name == workspaceName }) else {
+            return CommandResponse(success: false, error: "Workspace not found")
+        }
+
+        let visibleApps = NSWorkspace.shared.runningApplications
+            .filter {
+                $0.activationPolicy == .regular &&
+                    !$0.isHidden &&
+                    !floatingAppsSettings.floatingApps.containsApp($0) &&
+                    $0.isOnTheSameScreen(as: workspace)
+            }
+
+        guard !visibleApps.isEmpty else {
+            return CommandResponse(
+                success: false,
+                error: "No visible apps found on the current display"
+            )
+        }
+
+        workspaceManager.assignApps(visibleApps.map(\.toMacApp), to: workspace)
+
+        if showNotification {
+            Toast.showWith(
+                icon: "square.stack.3d.up",
+                message: "Assigned \(visibleApps.count) Apps(s) To \(workspace.name)",
+                textColor: .positive
             )
         }
 

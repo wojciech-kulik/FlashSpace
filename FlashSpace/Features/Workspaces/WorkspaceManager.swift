@@ -283,6 +283,15 @@ extension WorkspaceManager {
         NotificationCenter.default.post(name: .workspaceChanged, object: workspace)
     }
 
+    func assignApps(_ apps: [MacApp], to workspace: Workspace) {
+        for app in apps {
+            workspaceRepository.deleteAppFromAllWorkspaces(app: app)
+            workspaceRepository.addApp(to: workspace.id, app: app)
+        }
+
+        NotificationCenter.default.post(name: .appsListChanged, object: nil)
+    }
+
     func assignApp(_ app: MacApp, to workspace: Workspace) {
         workspaceRepository.deleteAppFromAllWorkspaces(app: app)
         workspaceRepository.addApp(to: workspace.id, app: app)
