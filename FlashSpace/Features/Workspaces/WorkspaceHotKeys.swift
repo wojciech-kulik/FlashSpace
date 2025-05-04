@@ -11,6 +11,7 @@ final class WorkspaceHotKeys {
     private let workspaceManager: WorkspaceManager
     private let workspaceRepository: WorkspaceRepository
     private let workspaceSettings: WorkspaceSettings
+    private let floatingAppsSettings: FloatingAppsSettings
 
     init(
         workspaceManager: WorkspaceManager,
@@ -20,10 +21,12 @@ final class WorkspaceHotKeys {
         self.workspaceManager = workspaceManager
         self.workspaceRepository = workspaceRepository
         self.workspaceSettings = settingsRepository.workspaceSettings
+        self.floatingAppsSettings = settingsRepository.floatingAppsSettings
     }
 
     func getHotKeys() -> [(AppHotKey, () -> ())] {
         let hotKeys = [
+            getAssignVisibleAppsHotKey(),
             getAssignAppHotKey(for: nil),
             getUnassignAppHotKey(),
             getToggleAssignmentHotKey(),
@@ -48,6 +51,12 @@ final class WorkspaceHotKeys {
         }
 
         return (shortcut, action)
+    }
+
+    private func getAssignVisibleAppsHotKey() -> (AppHotKey, () -> ())? {
+        guard let shortcut = workspaceSettings.assignVisibleApps else { return nil }
+
+        return (shortcut, { [weak self] in self?.assignVisibleApps() })
     }
 
     private func getAssignAppHotKey(for workspace: Workspace?) -> (AppHotKey, () -> ())? {
@@ -139,6 +148,33 @@ extension WorkspaceHotKeys {
         Toast.showWith(
             icon: "square.stack.3d.up",
             message: "\(appName) - Assigned To \(workspace.name)",
+            textColor: .positive
+        )
+    }
+
+    private func assignVisibleApps() {
+        guard let display = NSScreen.main?.localizedName else { return }
+        guard let workspace = workspaceManager.activeWorkspace[display] else {
+            Alert.showOkAlert(
+                title: "Error",
+                message: "No workspace is active on the current display."
+            )
+            return
+        }
+
+        let visibleApps = NSWorkspace.shared.runningApplications
+            .filter {
+                $0.activationPolicy == .regular &&
+                    !$0.isHidden &&
+                    !floatingAppsSettings.floatingApps.containsApp($0) &&
+                    $0.isOnTheSameScreen(as: workspace)
+            }
+
+        workspaceManager.assignApps(visibleApps.map(\.toMacApp), to: workspace)
+
+        Toast.showWith(
+            icon: "square.stack.3d.up",
+            message: "Assigned \(visibleApps.count) App(s) To \(workspace.name)",
             textColor: .positive
         )
     }
