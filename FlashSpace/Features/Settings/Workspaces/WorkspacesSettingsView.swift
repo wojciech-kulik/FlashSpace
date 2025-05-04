@@ -15,12 +15,14 @@ struct WorkspacesSettingsView: View {
         Form {
             Section("Behaviors") {
                 Toggle("Center Cursor In Focused App On Workspace Change", isOn: $settings.centerCursorOnWorkspaceChange)
-                Toggle("Change Workspace On App Assign", isOn: $settings.changeWorkspaceOnAppAssign)
+                Toggle("Automatically Change Workspace On App Assignment", isOn: $settings.changeWorkspaceOnAppAssign)
                 Toggle(
-                    "Skip Empty Workspaces On Switch (affects previous/next)",
+                    "Skip Empty Workspaces On Switch (previous & next hotkeys)",
                     isOn: $settings.skipEmptyWorkspacesOnSwitch
                 )
-                Toggle("Keep Unassigned Apps On Switch", isOn: $settings.keepUnassignedAppsOnSwitch)
+                Toggle("Keep Unassigned Apps On Workspace Change", isOn: $settings.keepUnassignedAppsOnSwitch)
+                Toggle("Show Hidden Apps On Workspace Activation", isOn: $settings.restoreHiddenAppsOnSwitch)
+                    .help("Restores hidden apps, even if they were hidden manually")
                 Toggle("Enable Workspace Transition Animation", isOn: $settings.enableWorkspaceTransitions)
                     .help("Show a brief visual transition effect when switching between workspaces")
 
