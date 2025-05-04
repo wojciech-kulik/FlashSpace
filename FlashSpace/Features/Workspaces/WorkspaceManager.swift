@@ -112,10 +112,10 @@ final class WorkspaceManager: ObservableObject {
         let floatingApps = floatingAppsSettings.floatingApps
         let hiddenApps = appsHiddenManually[workspace.id] ?? []
         var appsToShow = regularApps
+            .filter { !hiddenApps.containsApp($0) }
             .filter {
-                !hiddenApps.containsApp($0) &&
-                    (workspace.apps + floatingApps).containsApp($0) &&
-                    $0.isOnTheSameScreen(as: workspace)
+                workspace.apps.containsApp($0) ||
+                    floatingApps.containsApp($0) && $0.isOnTheSameScreen(as: workspace)
             }
 
         observeFocusCancellable = nil
