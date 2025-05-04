@@ -29,6 +29,7 @@ final class WorkspaceManager: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     private var observeFocusCancellable: AnyCancellable?
     private var lastFocusedFloatingApp: [DisplayName: MacApp] = [:]
+    private var appsHiddenManually: [WorkspaceID: [MacApp]] = [:]
     private let hideAgainSubject = PassthroughSubject<Workspace, Never>()
 
     private let workspaceRepository: WorkspaceRepository
@@ -109,10 +110,11 @@ final class WorkspaceManager: ObservableObject {
         let regularApps = NSWorkspace.shared.runningApplications
             .filter { $0.activationPolicy == .regular }
         let floatingApps = floatingAppsSettings.floatingApps
+        let hiddenApps = appsHiddenManually[workspace.id] ?? []
         var appsToShow = regularApps
             .filter {
-                workspace.apps.containsApp($0) ||
-                    floatingApps.containsApp($0) &&
+                !hiddenApps.containsApp($0) &&
+                    (workspace.apps + floatingApps).containsApp($0) &&
                     $0.isOnTheSameScreen(as: workspace)
             }
 
@@ -238,6 +240,22 @@ final class WorkspaceManager: ObservableObject {
             .first { NSMouseInRect(cursorLocation, $0.frame, false) }?
             .localizedName
     }
+
+    private func rememberHiddenApps(display: DisplayName) {
+        guard !workspaceSettings.restoreHiddenAppsOnSwitch else {
+            appsHiddenManually = [:]
+            return
+        }
+
+        guard let activeWorkspace = activeWorkspace[display] else { return }
+
+        let regularApps = NSWorkspace.shared.runningApplications
+            .filter { $0.activationPolicy == .regular }
+
+        appsHiddenManually[activeWorkspace.id] = regularApps
+            .filter { ($0.isHidden || $0.isMinimized) && activeWorkspace.apps.containsApp($0) }
+            .map(\.toMacApp)
+    }
 }
 
 // MARK: - Workspace Actions
@@ -253,6 +271,7 @@ extension WorkspaceManager {
             workspaceTransitionManager.showTransitionIfNeeded(for: workspace)
         }
 
+        rememberHiddenApps(display: workspace.displayWithFallback)
         updateActiveWorkspace(workspace)
         showApps(in: workspace, setFocus: setFocus)
         hideApps(in: workspace)

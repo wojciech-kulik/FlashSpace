@@ -47,6 +47,7 @@ struct AppSettings: Codable {
     var changeWorkspaceOnAppAssign: Bool?
     var skipEmptyWorkspacesOnSwitch: Bool?
     var keepUnassignedAppsOnSwitch: Bool?
+    var restoreHiddenAppsOnSwitch: Bool?
     var switchToPreviousWorkspace: AppHotKey?
     var switchToNextWorkspace: AppHotKey?
     var switchToRecentWorkspace: AppHotKey?

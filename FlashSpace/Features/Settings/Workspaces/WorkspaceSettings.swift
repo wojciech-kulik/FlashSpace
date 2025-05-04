@@ -13,6 +13,7 @@ final class WorkspaceSettings: ObservableObject {
     @Published var changeWorkspaceOnAppAssign = true
     @Published var skipEmptyWorkspacesOnSwitch = false
     @Published var keepUnassignedAppsOnSwitch = false
+    @Published var restoreHiddenAppsOnSwitch = true
     @Published var enableWorkspaceTransitions = false
     @Published var workspaceTransitionDuration = 0.3
     @Published var workspaceTransitionDimming = 0.2
@@ -49,6 +50,7 @@ final class WorkspaceSettings: ObservableObject {
             $changeWorkspaceOnAppAssign.settingsPublisher(),
             $skipEmptyWorkspacesOnSwitch.settingsPublisher(),
             $keepUnassignedAppsOnSwitch.settingsPublisher(),
+            $restoreHiddenAppsOnSwitch.settingsPublisher(),
             $enableWorkspaceTransitions.settingsPublisher(),
             $workspaceTransitionDuration.settingsPublisher(debounce: true),
             $workspaceTransitionDimming.settingsPublisher(debounce: true),
@@ -81,6 +83,7 @@ extension WorkspaceSettings: SettingsProtocol {
         changeWorkspaceOnAppAssign = appSettings.changeWorkspaceOnAppAssign ?? true
         skipEmptyWorkspacesOnSwitch = appSettings.skipEmptyWorkspacesOnSwitch ?? false
         keepUnassignedAppsOnSwitch = appSettings.keepUnassignedAppsOnSwitch ?? false
+        restoreHiddenAppsOnSwitch = appSettings.restoreHiddenAppsOnSwitch ?? true
         enableWorkspaceTransitions = appSettings.enableWorkspaceTransitions ?? false
         workspaceTransitionDuration = min(appSettings.workspaceTransitionDuration ?? 0.3, 0.5)
         workspaceTransitionDimming = min(appSettings.workspaceTransitionDimming ?? 0.2, 0.5)
@@ -104,6 +107,7 @@ extension WorkspaceSettings: SettingsProtocol {
         appSettings.changeWorkspaceOnAppAssign = changeWorkspaceOnAppAssign
         appSettings.skipEmptyWorkspacesOnSwitch = skipEmptyWorkspacesOnSwitch
         appSettings.keepUnassignedAppsOnSwitch = keepUnassignedAppsOnSwitch
+        appSettings.restoreHiddenAppsOnSwitch = restoreHiddenAppsOnSwitch
         appSettings.enableWorkspaceTransitions = enableWorkspaceTransitions
         appSettings.workspaceTransitionDuration = workspaceTransitionDuration
         appSettings.workspaceTransitionDimming = workspaceTransitionDimming
