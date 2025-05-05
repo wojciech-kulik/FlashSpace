@@ -35,7 +35,7 @@ targets:
       path: FlashSpace/Info.plist
       properties:
         SUPublicEDKey: hbvsYKL66p7w+2WUBbAqOvUcUNckSstWcrwTaCBwZJM=
-        SUFeedURL: https://raw.githubusercontent.com/wojciech-kulik/FlashSpace/refs/heads/main/sparkle/appcast.xml
+        SUFeedURL: https://wojciechkulik.pl/FlashSpace/appcast.xml
 
     settings:
       base:
