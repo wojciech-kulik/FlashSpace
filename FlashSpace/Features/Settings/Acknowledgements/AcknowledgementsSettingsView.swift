@@ -14,6 +14,7 @@ struct AcknowledgementsSettingsView: View {
         "Kentzo/ShortcutRecorder",
         "LebJe/TOMLKit",
         "jpsim/Yams",
+        "sparkle-project/Sparkle",
         "apple/swift-argument-parser",
         "SwiftFormat",
         "SwiftLint"
@@ -41,6 +42,8 @@ struct AcknowledgementsSettingsView: View {
                             Text(Licenses.tomlKit)
                         case "jpsim/Yams":
                             Text(Licenses.yams)
+                        case "sparkle-project/Sparkle":
+                            Text(Licenses.sparkle)
                         case "apple/swift-argument-parser":
                             Text(Licenses.swiftArgumentParser)
                         case "SwiftFormat":
