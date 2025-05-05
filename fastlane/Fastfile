@@ -13,6 +13,7 @@ lane :clean_build_folder do
   sh("rm -f ../.build/FlashSpace.app.dSYM.zip")
   sh("rm -f ../.build/FlashSpace.app.zip")
   sh("rm -rf ../.build/FlashSpace.app")
+  sh("rm -rf ../.build/__MACOSX")
 end
 
 lane :notarize_app do
