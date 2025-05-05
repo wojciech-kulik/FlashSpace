@@ -10,8 +10,10 @@ import Foundation
 
 final class GeneralSettings: ObservableObject {
     @Published var showFlashSpace: AppHotKey?
-    @Published var checkForUpdatesAutomatically = false
     @Published var showFloatingNotifications = true
+    @Published var checkForUpdatesAutomatically = false {
+        didSet { UpdatesManager.shared.autoCheckForUpdates = checkForUpdatesAutomatically }
+    }
 
     private var observer: AnyCancellable?
     private let updateSubject = PassthroughSubject<(), Never>()

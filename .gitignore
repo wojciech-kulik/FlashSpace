@@ -18,3 +18,4 @@ playground.xcworkspace
 .vscode
 fastlane/report.xml
 fastlane/README.md
+FlashSpace/Info.plist

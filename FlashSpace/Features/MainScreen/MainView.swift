@@ -21,24 +21,11 @@ struct MainView: View {
         }
         .padding()
         .fixedSize()
-        .onAppear {
-            Task { await UpdatesManager.shared.autoCheckForUpdates() }
-            viewModel.showWhatsNewIfNeeded()
-        }
         .sheet(isPresented: $viewModel.isInputDialogPresented) {
             InputDialog(
                 title: "Enter workspace name:",
                 userInput: $viewModel.userInput,
                 isPresented: $viewModel.isInputDialogPresented
-            )
-        }
-        .alert("New Feature!", isPresented: $viewModel.isWhatsNewPresented) {
-            Button("OK", role: .cancel) {}
-        } message: {
-            Text(
-                "FlashSpace introduces the new feature: command-line integration.\n\n" +
-                    "It allows you to integrate FlashSpace with other apps and services.\n\n" +
-                    "Go to App Settings -> CLI to learn more."
             )
         }
         .sheet(isPresented: $viewModel.isSymbolPickerPresented) {

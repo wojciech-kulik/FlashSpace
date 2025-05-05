@@ -65,7 +65,7 @@ struct FlashSpaceMenuBar: Scene {
             }
 
             Button("Check for Updates") {
-                Task { await UpdatesManager.shared.showIfNewReleaseAvailable() }
+                UpdatesManager.shared.checkForUpdates()
             }
 
             Divider()
