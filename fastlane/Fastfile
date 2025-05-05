@@ -5,7 +5,7 @@ lane :release do
   build_mac_app
   notarize_app
   zip_and_validate
-  sparkle_sign
+  sparkle
   print_version
 end
 
@@ -37,8 +37,8 @@ lane :zip_and_validate do
   sh("codesign", "-vvv", "--deep", "--strict", "../.build/FlashSpace.app")
 end
 
-lane :sparkle_sign do
-  sh("../.build/derivedData/SourcePackages/artifacts/sparkle/Sparkle/bin/sign_update ../.build/FlashSpace.app.zip")
+lane :sparkle do
+  sh("../sparkle/generate_appcast.sh")
 end
 
 lane :print_version do
