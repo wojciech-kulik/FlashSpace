@@ -13,7 +13,7 @@
             <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
             <enclosure 
                url="https://github.com/wojciech-kulik/FlashSpace/releases/download/v3.6.44/FlashSpace.app.zip"
-               sparkle:edSignature="lDRD1LEqZ41UwgqGmGoHu0jmzRrIjW891GqLnnxo8wEksk0pfCfT4eTjr417AASIQf0W+L0Z4YvJk/0j+voZBA==" length="4179337"
+               sparkle:edSignature="9BYLzoVh83m5sAU791UJ/S1xgjr3awZ30xCZ6fVpDGv58Z6NvDnMJ9OrrMWJltCC/+Vj/f10EZzZGxAmLWWoCQ==" length="4175863"
                type="application/octet-stream"/>
         </item>
     </channel>
