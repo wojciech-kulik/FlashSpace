@@ -3,17 +3,17 @@
     <channel>
         <title>FlashSpace</title>
         <item>
-            <title>3.6.44</title>
-            <pubDate>Mon, 05 May 2025 18:00:00 +0200</pubDate>
-            <link>https://github.com/wojciech-kulik/FlashSpace/releases/tag/v3.6.44</link>
+            <title>#version#</title>
+            <pubDate>#date#</pubDate>
+            <link>https://github.com/wojciech-kulik/FlashSpace/releases/tag/v#version#</link>
             <sparkle:releaseNotesLink>https://wojciechkulik.pl/FlashSpace/release-notes.html</sparkle:releaseNotesLink>
             <sparkle:fullReleaseNotesLink>https://github.com/wojciech-kulik/FlashSpace/releases</sparkle:fullReleaseNotesLink>
-            <sparkle:version>44</sparkle:version>
-            <sparkle:shortVersionString>3.6.44</sparkle:shortVersionString>
+            <sparkle:version>#build#</sparkle:version>
+            <sparkle:shortVersionString>#version#</sparkle:shortVersionString>
             <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
             <enclosure 
-               url="https://github.com/wojciech-kulik/FlashSpace/releases/download/v3.6.44/FlashSpace.app.zip"
-               sparkle:edSignature="F7vO5qJkIvN48U2yGnbTmqmumtsU4UrIdVJQZ3QPP2QVtEJRDKtoDi517dyh8AGLym0lRkNkAKE+RPxXyVxOAA==" length="4175817"
+               url="https://github.com/wojciech-kulik/FlashSpace/releases/download/v#version#/FlashSpace.app.zip"
+               #signature#
                type="application/octet-stream"/>
         </item>
     </channel>
