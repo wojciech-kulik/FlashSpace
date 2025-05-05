@@ -86,14 +86,24 @@ final class WorkspaceManager: ObservableObject {
         observeFocusCancellable = NSWorkspace.shared.notificationCenter
             .publisher(for: NSWorkspace.didActivateApplicationNotification)
             .compactMap { $0.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication }
-            .delay(for: .milliseconds(200), scheduler: RunLoop.main)
             .sink { [weak self] application in
-                self?.rememberLastFocusedApp(application)
+                self?.rememberLastFocusedApp(application, retry: true)
             }
     }
 
-    private func rememberLastFocusedApp(_ application: NSRunningApplication) {
-        guard let display = application.display else { return }
+    private func rememberLastFocusedApp(_ application: NSRunningApplication, retry: Bool) {
+        guard let display = application.display else {
+            if retry {
+                Logger.log("Retrying to get display for \(application.localizedName ?? "")")
+                return DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+                    if let frontmostApp = NSWorkspace.shared.frontmostApplication {
+                        self.rememberLastFocusedApp(frontmostApp, retry: false)
+                    }
+                }
+            } else {
+                return Logger.log("Unable to get display for \(application.localizedName ?? "")")
+            }
+        }
 
         if let activeWorkspace = activeWorkspace[display], activeWorkspace.apps.containsApp(application) {
             lastFocusedApp[activeWorkspace.id] = application.toMacApp
