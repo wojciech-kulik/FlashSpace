@@ -6,7 +6,7 @@
             <title>3.6.44</title>
             <pubDate>Mon, 05 May 2025 18:00:00 +0200</pubDate>
             <link>https://github.com/wojciech-kulik/FlashSpace/releases/tag/v3.6.44</link>
-            <sparkle:releaseNotesLink>https://github.com/wojciech-kulik/FlashSpace/blob/main/sparkle/release-notes.html</sparkle:releaseNotesLink>
+            <sparkle:releaseNotesLink>https://raw.githubusercontent.com/wojciech-kulik/FlashSpace/refs/heads/main/sparkle/release-notes.html</sparkle:releaseNotesLink>
             <sparkle:fullReleaseNotesLink>https://github.com/wojciech-kulik/FlashSpace/releases</sparkle:fullReleaseNotesLink>
             <sparkle:version>44</sparkle:version>
             <sparkle:shortVersionString>3.6.44</sparkle:shortVersionString>
