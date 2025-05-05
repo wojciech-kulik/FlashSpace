@@ -1,0 +1,20 @@
+<?xml version="1.0" standalone="yes"?>
+<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
+    <channel>
+        <title>FlashSpace</title>
+        <item>
+            <title>3.6.44</title>
+            <pubDate>Mon, 05 May 2025 18:00:00 +0200</pubDate>
+            <link>https://github.com/wojciech-kulik/FlashSpace/releases/tag/v3.6.44</link>
+            <sparkle:releaseNotesLink>https://github.com/wojciech-kulik/FlashSpace/blob/main/sparkle/release-notes.html</sparkle:releaseNotesLink>
+            <sparkle:fullReleaseNotesLink>https://github.com/wojciech-kulik/FlashSpace/releases</sparkle:fullReleaseNotesLink>
+            <sparkle:version>44</sparkle:version>
+            <sparkle:shortVersionString>3.6.44</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+            <enclosure 
+               url="https://github.com/wojciech-kulik/FlashSpace/releases/download/v3.6.44/FlashSpace.app.zip"
+               sparkle:edSignature="lDRD1LEqZ41UwgqGmGoHu0jmzRrIjW891GqLnnxo8wEksk0pfCfT4eTjr417AASIQf0W+L0Z4YvJk/0j+voZBA==" length="4179337"
+               type="application/octet-stream"/>
+        </item>
+    </channel>
+</rss>

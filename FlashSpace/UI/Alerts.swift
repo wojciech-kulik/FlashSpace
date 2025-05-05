@@ -16,19 +16,4 @@ enum Alert {
         alert.addButton(withTitle: "OK")
         alert.runModal()
     }
-
-    static func showNewReleaseAlert(release: ReleaseInfo) {
-        let alert = NSAlert()
-        alert.messageText = "New version available"
-        alert.informativeText = "Version \(release.version) is available. Would you like to download it?"
-        alert.alertStyle = .informational
-        alert.addButton(withTitle: "Download")
-        alert.addButton(withTitle: "Cancel")
-
-        if alert.runModal() == .alertFirstButtonReturn {
-            DispatchQueue.main.async {
-                NSWorkspace.shared.open(release.release.htmlUrl)
-            }
-        }
-    }
 }
