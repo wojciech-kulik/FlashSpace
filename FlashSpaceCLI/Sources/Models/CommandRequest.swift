@@ -12,10 +12,11 @@ enum CommandRequest: Codable {
     case createWorkspace(CreateWorkspaceRequest)
     case deleteWorkspace(name: String)
     case updateWorkspace(UpdateWorkspaceRequest)
-    case activateWorkspace(name: String?, number: Int?)
-    case nextWorkspace(skipEmpty: Bool)
-    case previousWorkspace(skipEmpty: Bool)
-    case recentWorkspace
+    case activateWorkspace(name: String?, number: Int?, clean: Bool)
+    case nextWorkspace(skipEmpty: Bool, clean: Bool)
+    case previousWorkspace(skipEmpty: Bool, clean: Bool)
+    case hideUnassignedApps
+    case recentWorkspace(clean: Bool)
 
     case assignVisibleApps(workspaceName: String?, showNotification: Bool)
     case assignApp(app: String?, workspaceName: String?, activate: Bool?, showNotification: Bool)

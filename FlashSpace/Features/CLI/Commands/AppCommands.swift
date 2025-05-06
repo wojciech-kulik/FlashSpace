@@ -30,6 +30,10 @@ final class AppCommands: CommandExecutor {
         case .unassignApp(let app, let showNotification):
             return unassignApp(app: app, showNotification: showNotification)
 
+        case .hideUnassignedApps:
+            workspaceManager.hideUnassignedApps()
+            return CommandResponse(success: true)
+
         case .floatApp(let app, let showNotification):
             return floatApp(app: app, showNotification: showNotification)
 

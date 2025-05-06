@@ -35,17 +35,20 @@ struct WorkspaceCommand: ParsableCommand {
     @Flag(help: "Skip empty workspaces (works only with --next or --prev)")
     var skipEmpty = false
 
+    @Flag(help: "Hide all apps that are not assigned to the selected workspace")
+    var clean = false
+
     func run() throws {
         if let name {
-            sendCommand(.activateWorkspace(name: name, number: nil))
+            sendCommand(.activateWorkspace(name: name, number: nil, clean: clean))
         } else if let number {
-            sendCommand(.activateWorkspace(name: nil, number: number))
+            sendCommand(.activateWorkspace(name: nil, number: number, clean: clean))
         } else if next {
-            sendCommand(.nextWorkspace(skipEmpty: skipEmpty))
+            sendCommand(.nextWorkspace(skipEmpty: skipEmpty, clean: clean))
         } else if prev {
-            sendCommand(.previousWorkspace(skipEmpty: skipEmpty))
+            sendCommand(.previousWorkspace(skipEmpty: skipEmpty, clean: clean))
         } else if recent {
-            sendCommand(.recentWorkspace)
+            sendCommand(.recentWorkspace(clean: clean))
         } else {
             fallbackToHelp()
         }

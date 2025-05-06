@@ -12,22 +12,24 @@ final class WorkspaceCommands: CommandExecutor {
     var workspaceManager: WorkspaceManager { AppDependencies.shared.workspaceManager }
     var workspaceRepository: WorkspaceRepository { AppDependencies.shared.workspaceRepository }
 
-    // swiftlint:disable:next cyclomatic_complexity
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     func execute(command: CommandRequest) -> CommandResponse? {
         switch command {
-        case .activateWorkspace(.some(let name), _):
+        case .activateWorkspace(.some(let name), _, let clean):
             let workspace = workspaceRepository.workspaces.first { $0.name == name }
             if let workspace {
                 workspaceManager.activateWorkspace(workspace, setFocus: true)
+                if clean { workspaceManager.hideUnassignedApps() }
                 return CommandResponse(success: true)
             } else {
                 return CommandResponse(success: false, error: "Workspace not found")
             }
 
-        case .activateWorkspace(_, .some(let number)):
+        case .activateWorkspace(_, .some(let number), let clean):
             let workspace = workspaceRepository.workspaces[safe: number - 1]
             if let workspace {
                 workspaceManager.activateWorkspace(workspace, setFocus: true)
+                if clean { workspaceManager.hideUnassignedApps() }
                 return CommandResponse(success: true)
             } else {
                 return CommandResponse(success: false, error: "Workspace not found")
@@ -36,16 +38,19 @@ final class WorkspaceCommands: CommandExecutor {
         case .updateWorkspace(let request):
             return updateWorkspace(request)
 
-        case .nextWorkspace(let skipEmpty):
+        case .nextWorkspace(let skipEmpty, let clean):
             workspaceManager.activateWorkspace(next: true, skipEmpty: skipEmpty)
+            if clean { workspaceManager.hideUnassignedApps() }
             return CommandResponse(success: true)
 
-        case .previousWorkspace(let skipEmpty):
+        case .previousWorkspace(let skipEmpty, let clean):
             workspaceManager.activateWorkspace(next: false, skipEmpty: skipEmpty)
+            if clean { workspaceManager.hideUnassignedApps() }
             return CommandResponse(success: true)
 
-        case .recentWorkspace:
+        case .recentWorkspace(let clean):
             workspaceManager.activateRecentWorkspace()
+            if clean { workspaceManager.hideUnassignedApps() }
             return CommandResponse(success: true)
 
         case .createWorkspace(let request):
