@@ -22,6 +22,7 @@ final class WorkspaceSettings: ObservableObject {
     @Published var unassignFocusedApp: AppHotKey?
     @Published var toggleFocusedAppAssignment: AppHotKey?
     @Published var assignVisibleApps: AppHotKey?
+    @Published var hideUnassignedApps: AppHotKey?
     @Published var switchToRecentWorkspace: AppHotKey?
     @Published var switchToPreviousWorkspace: AppHotKey?
     @Published var switchToNextWorkspace: AppHotKey?
@@ -60,6 +61,7 @@ final class WorkspaceSettings: ObservableObject {
             $unassignFocusedApp.settingsPublisher(),
             $toggleFocusedAppAssignment.settingsPublisher(),
             $assignVisibleApps.settingsPublisher(),
+            $hideUnassignedApps.settingsPublisher(),
             $switchToRecentWorkspace.settingsPublisher(),
             $switchToPreviousWorkspace.settingsPublisher(),
             $switchToNextWorkspace.settingsPublisher(),
@@ -94,6 +96,7 @@ extension WorkspaceSettings: SettingsProtocol {
         unassignFocusedApp = appSettings.unassignFocusedApp
         toggleFocusedAppAssignment = appSettings.toggleFocusedAppAssignment
         assignVisibleApps = appSettings.assignVisibleApps
+        hideUnassignedApps = appSettings.hideUnassignedApps
         switchToRecentWorkspace = appSettings.switchToRecentWorkspace
         switchToPreviousWorkspace = appSettings.switchToPreviousWorkspace
         switchToNextWorkspace = appSettings.switchToNextWorkspace
@@ -119,6 +122,7 @@ extension WorkspaceSettings: SettingsProtocol {
         appSettings.unassignFocusedApp = unassignFocusedApp
         appSettings.toggleFocusedAppAssignment = toggleFocusedAppAssignment
         appSettings.assignVisibleApps = assignVisibleApps
+        appSettings.hideUnassignedApps = hideUnassignedApps
         appSettings.switchToRecentWorkspace = switchToRecentWorkspace
         appSettings.switchToPreviousWorkspace = switchToPreviousWorkspace
         appSettings.switchToNextWorkspace = switchToNextWorkspace

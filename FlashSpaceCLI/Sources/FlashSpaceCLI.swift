@@ -38,6 +38,7 @@ struct FlashSpaceCLI: ParsableCommand {
                     AssignVisibleAppsCommand.self,
                     AssignAppCommand.self,
                     UnassignAppCommand.self,
+                    HideUnassignedAppsCommand.self,
                     FocusCommand.self,
                     FloatingAppsCommand.self
                 ]

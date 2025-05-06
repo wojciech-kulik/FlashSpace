@@ -326,6 +326,30 @@ extension WorkspaceManager {
         NotificationCenter.default.post(name: .appsListChanged, object: nil)
     }
 
+    func hideUnassignedApps() {
+        let activeWorkspace = workspaceRepository.workspaces
+            .first(where: { $0.id == activeWorkspaceDetails?.id })
+
+        guard let activeWorkspace else { return }
+
+        let workspaceApps = activeWorkspace.apps
+        let appsToHide = NSWorkspace.shared.runningApplications
+            .filter {
+                $0.activationPolicy == .regular &&
+                    !$0.isHidden &&
+                    !workspaceApps.containsApp($0) &&
+                    $0.isOnTheSameScreen(as: activeWorkspace)
+            }
+
+        for app in appsToHide {
+            Logger.log("CLEAN UP: \(app.localizedName ?? "")")
+
+            if !pictureInPictureManager.hidePipAppIfNeeded(app: app) {
+                app.hide()
+            }
+        }
+    }
+
     func activateWorkspace(next: Bool, skipEmpty: Bool) {
         guard let screen = getCursorScreen() else { return }
 

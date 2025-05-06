@@ -55,6 +55,7 @@ struct AppSettings: Codable {
     var unassignFocusedApp: AppHotKey?
     var toggleFocusedAppAssignment: AppHotKey?
     var assignVisibleApps: AppHotKey?
+    var hideUnassignedApps: AppHotKey?
     var alternativeDisplays: String?
     var enablePictureInPictureSupport: Bool?
     var pipApps: [PipApp]?
