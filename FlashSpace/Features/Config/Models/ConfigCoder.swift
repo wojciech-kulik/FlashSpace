@@ -8,7 +8,7 @@
 import Foundation
 
 protocol ConfigEncoder {
-    func encode<T>(_ value: T) throws -> Data where T: Encodable
+    func encode(_ value: some Encodable) throws -> Data
 }
 
 protocol ConfigDecoder {
