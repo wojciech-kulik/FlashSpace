@@ -36,7 +36,7 @@ See: [Build From Source](#%EF%B8%8F-build-from-source).
 The video shows a sample configuration where I use 3 workspaces and switch
 between them using hotkeys.
 
-https://github.com/user-attachments/assets/03498386-7c3d-4d9e-8fbd-cd49dea36661
+https://github.com/user-attachments/assets/09c574c5-512f-47b5-b644-feac0e1de4b0
 
 ## 💬 How to use
 
@@ -73,7 +73,7 @@ The app allows workspaces to be switched independently on each display.
 - [x] Cursor manager - auto-center the cursor in the active window
 - [x] Profiles - quickly switch between different configurations
 - [x] Menu bar - configurable icon & text (per workspace)
-- [x] Swipe Gesture - switch between workspaces using trackpad swipe gesture
+- [x] Swipe Gestures - customize swipe gesture actions for your trackpad
 - [x] Floating apps - keep apps visible across all workspaces
 - [x] Configuration through GUI and config file
 - [x] Support for multiple config file formats: JSON, YAML, and TOML
@@ -279,7 +279,16 @@ You can also set this variable globally in your shell.
 
 ## 💡 Tips & Tricks
 
-### Move & Resize Windows
+### 👉 Apps Appear On The Wrong Display After Sleep
+
+macOS has a bug that causes apps to appear on the wrong display after sleep.
+This happens if the app is hidden while the Mac is in sleep mode.
+
+There is one workaround that can help with this issue. When you wake up
+your Mac, make sure to turn on all displays before logging in. This way,
+all apps should be shown on the correct display.
+
+### 👉 Move & Resize Windows
 
 macOS 15 introduced new features that allow you to move & resize windows
 without 3rd party apps. To see all available options, select "Window" from the
@@ -290,11 +299,11 @@ here](https://discussions.apple.com/thread/255773494?sortBy=rank). However, the
 most flexible approach would be to use Raycast, Magnet, or other window
 management apps.
 
-### Switch Between Windows
+### 👉 Switch Between Windows
 
 macOS allows you to switch focus between windows of the same app using the `` Cmd + ` `` shortcut.
 
-### SKHD
+### 👉 SKHD
 
 There is a great command-line tool called [SKHD] that allows you to define
 custom global shortcuts. You can use it also with FlashSpace through the CLI.
@@ -320,6 +329,8 @@ Big thanks to all the sponsors who support this project 🍻!
 <a href="https://github.com/sinan-guler"><img src="https://avatars.githubusercontent.com/u/37443512" width="40" height="40" alt="@sinan-guler" title="sinan-guler"></a>
 <a href="https://github.com/maxschipper"><img src="https://avatars.githubusercontent.com/u/150921823" width="40" height="40" alt="@maxschipper" title="maxschipper"></a>
 <a href="https://github.com/sergiopatino"><img src="https://avatars.githubusercontent.com/u/868839" width="40" height="40" alt="@sergiopatino" title="sergiopatino"></a>
+<a href="https://github.com/ashaney"><img src="https://avatars.githubusercontent.com/u/25646923" width="40" height="40" alt="@ashaney" title="ashaney"></a>
+<a href="https://github.com/exsesx"><img src="https://avatars.githubusercontent.com/u/20399517" width="40" height="40" alt="@exsesx" title="exsesx"></a>
 
 &nbsp;
 

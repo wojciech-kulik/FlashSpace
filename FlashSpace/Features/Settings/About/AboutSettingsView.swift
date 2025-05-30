@@ -15,9 +15,7 @@ struct AboutSettingsView: View {
                     Text("Version \(AppConstants.version)")
                     Spacer()
                     Button("GitHub") { openGitHub("wojciech-kulik/FlashSpace") }
-                    Button("Check for Updates") {
-                        Task { await UpdatesManager.shared.showIfNewReleaseAvailable() }
-                    }
+                    Button("Check for Updates") { UpdatesManager.shared.checkForUpdates() }
                 }
             }
 

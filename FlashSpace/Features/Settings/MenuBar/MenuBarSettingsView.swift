@@ -14,6 +14,8 @@ struct MenuBarSettingsView: View {
         Form {
             Section {
                 Toggle("Show Title", isOn: $settings.showMenuBarTitle)
+                Toggle("Show Icon", isOn: $settings.showMenuBarIcon)
+                    .disabled(!settings.showMenuBarTitle)
 
                 HStack {
                     Text("Title Template")

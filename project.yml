@@ -21,6 +21,9 @@ packages:
   Yams:
     github: jpsim/Yams
     from: 5.2.0
+  Sparkle:
+    github: sparkle-project/Sparkle
+    from: 2.7.0
 
 targets:
   FlashSpace:
@@ -28,10 +31,16 @@ targets:
     platform: macOS
     deploymentTarget: "14.0"
     sources: [FlashSpace]
+    info:
+      path: FlashSpace/Info.plist
+      properties:
+        SUPublicEDKey: hbvsYKL66p7w+2WUBbAqOvUcUNckSstWcrwTaCBwZJM=
+        SUFeedURL: https://wojciechkulik.pl/FlashSpace/appcast.xml
+
     settings:
       base:
-        MARKETING_VERSION: 2.9.36
-        CURRENT_PROJECT_VERSION: 36
+        MARKETING_VERSION: 3.8.46
+        CURRENT_PROJECT_VERSION: 46
         CODE_SIGN_ENTITLEMENTS: FlashSpace/FlashSpace.entitlements
         DEVELOPMENT_TEAM: "${XCODE_DEVELOPMENT_TEAM}"
         ENABLE_HARDENED_RUNTIME: true
@@ -55,6 +64,7 @@ targets:
       - package: SymbolPicker
       - package: TOMLKit
       - package: Yams
+      - package: Sparkle
 
     preBuildScripts:
       - name: Run SwiftLint

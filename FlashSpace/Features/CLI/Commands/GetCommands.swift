@@ -27,9 +27,13 @@ final class GetCommands: CommandExecutor {
                 return CommandResponse(success: false, error: "No active workspace")
             }
 
-        case .getApp:
-            if let app = NSWorkspace.shared.frontmostApplication?.localizedName {
-                return CommandResponse(success: true, message: app)
+        case .getApp(let withWindowsCount):
+            if let app = NSWorkspace.shared.frontmostApplication, let appName = app.localizedName {
+                if withWindowsCount {
+                    return CommandResponse(success: true, message: "\(appName)\n\(app.allWindows.count)")
+                } else {
+                    return CommandResponse(success: true, message: appName)
+                }
             } else {
                 return CommandResponse(success: false, error: "No active app")
             }

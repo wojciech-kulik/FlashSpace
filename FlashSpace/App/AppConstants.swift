@@ -8,6 +8,10 @@
 import AppKit
 
 enum AppConstants {
+    enum UserDefaultsKey {
+        static let selectedProfileId = "selectedProfileId"
+    }
+
     static let lastFocusedOption = MacApp(
         name: "(Last Focused)",
         bundleIdentifier: "flashspace.last-focused",

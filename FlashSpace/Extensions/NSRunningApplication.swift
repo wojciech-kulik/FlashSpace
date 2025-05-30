@@ -24,4 +24,13 @@ extension [NSRunningApplication] {
 
         return first { bundleIdentifiers.contains($0.bundleIdentifier ?? "") }
     }
+
+    func excludeFloatingAppsOnDifferentScreen() -> [NSRunningApplication] {
+        let activeWorkspace = AppDependencies.shared.workspaceManager.activeWorkspace[NSScreen.main?.localizedName ?? ""]
+        let floatingApps = AppDependencies.shared.floatingAppsSettings.floatingApps
+
+        guard let activeWorkspace else { return self }
+
+        return filter { !floatingApps.containsApp($0) || $0.isOnTheSameScreen(as: activeWorkspace) }
+    }
 }

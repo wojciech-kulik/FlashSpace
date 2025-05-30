@@ -7,14 +7,16 @@
 
 import AppKit
 
+typealias BundleId = String
+
 struct MacApp: Codable, Hashable, Equatable {
     var name: String
-    var bundleIdentifier: String
+    var bundleIdentifier: BundleId
     var iconPath: String?
 
     init(
         name: String,
-        bundleIdentifier: String,
+        bundleIdentifier: BundleId,
         iconPath: String?
     ) {
         self.name = name

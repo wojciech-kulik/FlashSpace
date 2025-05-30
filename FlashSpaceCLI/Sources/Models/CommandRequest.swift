@@ -12,13 +12,19 @@ enum CommandRequest: Codable {
     case createWorkspace(CreateWorkspaceRequest)
     case deleteWorkspace(name: String)
     case updateWorkspace(UpdateWorkspaceRequest)
-    case activateWorkspace(name: String?, number: Int?)
-    case nextWorkspace
-    case previousWorkspace
-    case recentWorkspace
+    case activateWorkspace(name: String?, number: Int?, clean: Bool)
+    case nextWorkspace(skipEmpty: Bool, clean: Bool)
+    case previousWorkspace(skipEmpty: Bool, clean: Bool)
+    case hideUnassignedApps
+    case recentWorkspace(clean: Bool)
 
+    case assignVisibleApps(workspaceName: String?, showNotification: Bool)
     case assignApp(app: String?, workspaceName: String?, activate: Bool?, showNotification: Bool)
     case unassignApp(app: String?, showNotification: Bool)
+
+    case floatApp(app: String?, showNotification: Bool)
+    case unfloatApp(app: String?, showNotification: Bool)
+    case toggleFloatApp(app: String?, showNotification: Bool)
 
     case focusWindow(direction: FocusDirection)
     case focusNextWindow
@@ -41,10 +47,11 @@ enum CommandRequest: Codable {
         withIcon: Bool,
         onlyRunning: Bool
     )
+    case listFloatingApps(withBundleId: Bool)
 
     case getProfile
     case getWorkspace(display: String?)
-    case getApp
+    case getApp(withWindowsCount: Bool)
     case getDisplay
 }
 

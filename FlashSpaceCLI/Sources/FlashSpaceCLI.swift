@@ -35,9 +35,12 @@ struct FlashSpaceCLI: ParsableCommand {
             .init(
                 name: "App",
                 subcommands: [
+                    AssignVisibleAppsCommand.self,
                     AssignAppCommand.self,
                     UnassignAppCommand.self,
-                    FocusCommand.self
+                    HideUnassignedAppsCommand.self,
+                    FocusCommand.self,
+                    FloatingAppsCommand.self
                 ]
             ),
             .init(
@@ -46,6 +49,7 @@ struct FlashSpaceCLI: ParsableCommand {
                     ListProfilesCommand.self,
                     ListWorkspacesCommand.self,
                     ListAppsCommand.self,
+                    ListFloatingAppsCommand.self,
                     ListRunningAppsCommand.self,
                     ListDisplaysCommand.self
                 ]

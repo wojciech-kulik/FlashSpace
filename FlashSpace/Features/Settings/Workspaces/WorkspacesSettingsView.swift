@@ -15,7 +15,14 @@ struct WorkspacesSettingsView: View {
         Form {
             Section("Behaviors") {
                 Toggle("Center Cursor In Focused App On Workspace Change", isOn: $settings.centerCursorOnWorkspaceChange)
-                Toggle("Change Workspace On App Assign", isOn: $settings.changeWorkspaceOnAppAssign)
+                Toggle("Automatically Change Workspace On App Assignment", isOn: $settings.changeWorkspaceOnAppAssign)
+                Toggle(
+                    "Skip Empty Workspaces On Switch (previous & next hotkeys)",
+                    isOn: $settings.skipEmptyWorkspacesOnSwitch
+                )
+                Toggle("Keep Unassigned Apps On Workspace Change", isOn: $settings.keepUnassignedAppsOnSwitch)
+                Toggle("Show Hidden Apps On Workspace Activation", isOn: $settings.restoreHiddenAppsOnSwitch)
+                    .help("Restores hidden apps, even if they were hidden manually")
                 Toggle("Enable Workspace Transition Animation", isOn: $settings.enableWorkspaceTransitions)
                     .help("Show a brief visual transition effect when switching between workspaces")
 
@@ -55,9 +62,11 @@ struct WorkspacesSettingsView: View {
             }
 
             Section("Shortcuts") {
+                hotkey("Assign Visible Apps (to active workspace)", for: $settings.assignVisibleApps)
                 hotkey("Assign Focused App (to active workspace)", for: $settings.assignFocusedApp)
                 hotkey("Unassign Focused App", for: $settings.unassignFocusedApp)
                 hotkey("Toggle Focused App Assignment", for: $settings.toggleFocusedAppAssignment)
+                hotkey("Hide Unassigned Apps", for: $settings.hideUnassignedApps)
             }
 
             Section {
@@ -95,6 +104,19 @@ struct WorkspacesSettingsView: View {
 
             Section("Picture-in-Picture") {
                 Toggle("Enable Picture-in-Picture Support", isOn: $settings.enablePictureInPictureSupport)
+
+                HStack {
+                    Text("Screen Corner Offset")
+                    Spacer()
+                    Text("\(settings.pipScreenCornerOffset)")
+                    Stepper(
+                        "",
+                        value: $settings.pipScreenCornerOffset,
+                        in: 1...50,
+                        step: 1
+                    ).labelsHidden()
+                }
+
                 Text(
                     "If a supported browser has Picture-in-Picture active, other " +
                         "windows will be hidden in a screen corner to keep PiP visible."

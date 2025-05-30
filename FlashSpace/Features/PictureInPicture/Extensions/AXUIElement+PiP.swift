@@ -14,6 +14,11 @@ extension AXUIElement {
 
     func isPictureInPicture(bundleId: String?) -> Bool {
         if let browser = PipBrowser(rawValue: bundleId ?? "") {
+            if let partialTitle = browser.partialTitle,
+               title?.contains(partialTitle) == true {
+                return true
+            }
+
             if let pipWindowTitle = browser.title {
                 return title == pipWindowTitle
             } else if let pipWindowSubrole = browser.subrole {

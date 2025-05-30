@@ -1,0 +1,20 @@
+<?xml version="1.0" standalone="yes"?>
+<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
+    <channel>
+        <title>FlashSpace</title>
+        <item>
+            <title>#version#</title>
+            <pubDate>#date#</pubDate>
+            <link>https://github.com/wojciech-kulik/FlashSpace/releases/tag/v#version#</link>
+            <sparkle:releaseNotesLink>https://wojciechkulik.pl/FlashSpace/release-notes.html</sparkle:releaseNotesLink>
+            <sparkle:fullReleaseNotesLink>https://github.com/wojciech-kulik/FlashSpace/releases</sparkle:fullReleaseNotesLink>
+            <sparkle:version>#build#</sparkle:version>
+            <sparkle:shortVersionString>#version#</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+            <enclosure 
+               url="https://github.com/wojciech-kulik/FlashSpace/releases/download/v#version#/FlashSpace.app.zip"
+               #signature#
+               type="application/octet-stream"/>
+        </item>
+    </channel>
+</rss>

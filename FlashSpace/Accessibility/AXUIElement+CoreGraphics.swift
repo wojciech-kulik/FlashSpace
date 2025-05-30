@@ -10,8 +10,7 @@ import AppKit
 extension AXUIElement {
     var cgWindowId: CGWindowID? {
         let title = title
-        var pid: pid_t = 0
-        AXUIElementGetPid(self, &pid)
+        let pid = processId
 
         if let windowList = CGWindowListCopyWindowInfo(.optionOnScreenOnly, kCGNullWindowID) as? [[String: Any]] {
             for window in windowList {

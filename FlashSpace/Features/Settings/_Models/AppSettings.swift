@@ -13,6 +13,7 @@ struct AppSettings: Codable {
 
     // Menu Bar
     var showMenuBarTitle: Bool?
+    var showMenuBarIcon: Bool?
     var menuBarTitleTemplate: String?
     var menuBarDisplayAliases: String?
 
@@ -30,23 +31,35 @@ struct AppSettings: Codable {
     var focusFrontmostWindow: Bool?
 
     // Gestures
-    var enableSwipeGesture: Bool?
-    var swipeFingerCount: Int?
-    var swipeNaturalDirection: Bool?
+    var enableSwipeGestures: Bool?
     var swipeThreshold: Double?
+    var swipeLeft3FingerAction: GestureAction?
+    var swipeRight3FingerAction: GestureAction?
+    var swipeUp3FingerAction: GestureAction?
+    var swipeDown3FingerAction: GestureAction?
+    var swipeLeft4FingerAction: GestureAction?
+    var swipeRight4FingerAction: GestureAction?
+    var swipeUp4FingerAction: GestureAction?
+    var swipeDown4FingerAction: GestureAction?
 
     // Workspaces
     var centerCursorOnWorkspaceChange: Bool?
     var changeWorkspaceOnAppAssign: Bool?
-    var enablePictureInPictureSupport: Bool?
+    var skipEmptyWorkspacesOnSwitch: Bool?
+    var keepUnassignedAppsOnSwitch: Bool?
+    var restoreHiddenAppsOnSwitch: Bool?
     var switchToPreviousWorkspace: AppHotKey?
     var switchToNextWorkspace: AppHotKey?
     var switchToRecentWorkspace: AppHotKey?
     var assignFocusedApp: AppHotKey?
     var unassignFocusedApp: AppHotKey?
     var toggleFocusedAppAssignment: AppHotKey?
+    var assignVisibleApps: AppHotKey?
+    var hideUnassignedApps: AppHotKey?
     var alternativeDisplays: String?
+    var enablePictureInPictureSupport: Bool?
     var pipApps: [PipApp]?
+    var pipScreenCornerOffset: Int?
 
     // Floating apps
     var floatingApps: [MacApp]?

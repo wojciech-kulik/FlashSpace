@@ -12,9 +12,13 @@ final class AppCommands: CommandExecutor {
     var workspaceManager: WorkspaceManager { AppDependencies.shared.workspaceManager }
     var workspaceRepository: WorkspaceRepository { AppDependencies.shared.workspaceRepository }
     var settings: WorkspaceSettings { AppDependencies.shared.workspaceSettings }
+    var floatingAppsSettings: FloatingAppsSettings { AppDependencies.shared.floatingAppsSettings }
 
     func execute(command: CommandRequest) -> CommandResponse? {
         switch command {
+        case .assignVisibleApps(let workspaceName, let showNotification):
+            return assignVisibleApps(workspaceName: workspaceName, showNotification: showNotification)
+
         case .assignApp(let app, let workspaceName, let activate, let showNotification):
             return assignApp(
                 app: app,
@@ -25,6 +29,19 @@ final class AppCommands: CommandExecutor {
 
         case .unassignApp(let app, let showNotification):
             return unassignApp(app: app, showNotification: showNotification)
+
+        case .hideUnassignedApps:
+            workspaceManager.hideUnassignedApps()
+            return CommandResponse(success: true)
+
+        case .floatApp(let app, let showNotification):
+            return floatApp(app: app, showNotification: showNotification)
+
+        case .unfloatApp(let app, let showNotification):
+            return unfloatApp(app: app, showNotification: showNotification)
+
+        case .toggleFloatApp(let app, let showNotification):
+            return toggleFloatApp(app: app, showNotification: showNotification)
 
         default:
             return nil
@@ -53,7 +70,7 @@ final class AppCommands: CommandExecutor {
         guard let app = findApp(app: app) else {
             return CommandResponse(
                 success: false,
-                error: "App not found or not running. For not running apps use --unassign-app <bundle id>."
+                error: "App not found or not running. For not running apps use `unassign-app --name <bundle id>`."
             )
         }
 
@@ -66,6 +83,43 @@ final class AppCommands: CommandExecutor {
                 icon: "square.stack.3d.up.slash",
                 message: "\(app.name) - Removed From Workspaces",
                 textColor: .negative
+            )
+        }
+
+        return CommandResponse(success: true)
+    }
+
+    private func assignVisibleApps(workspaceName: String?, showNotification: Bool) -> CommandResponse {
+        guard let workspaceName = workspaceName ?? workspaceManager.activeWorkspaceDetails?.name else {
+            return CommandResponse(success: false, error: "No workspace selected")
+        }
+
+        guard let workspace = workspaceRepository.workspaces.first(where: { $0.name == workspaceName }) else {
+            return CommandResponse(success: false, error: "Workspace not found")
+        }
+
+        let visibleApps = NSWorkspace.shared.runningApplications
+            .filter {
+                $0.activationPolicy == .regular &&
+                    !$0.isHidden &&
+                    !floatingAppsSettings.floatingApps.containsApp($0) &&
+                    $0.isOnTheSameScreen(as: workspace)
+            }
+
+        guard !visibleApps.isEmpty else {
+            return CommandResponse(
+                success: false,
+                error: "No visible apps found on the current display"
+            )
+        }
+
+        workspaceManager.assignApps(visibleApps.map(\.toMacApp), to: workspace)
+
+        if showNotification {
+            Toast.showWith(
+                icon: "square.stack.3d.up",
+                message: "Assigned \(visibleApps.count) Apps(s) To \(workspace.name)",
+                textColor: .positive
             )
         }
 
@@ -89,7 +143,7 @@ final class AppCommands: CommandExecutor {
         guard let app = findApp(app: app) else {
             return CommandResponse(
                 success: false,
-                error: "App not found or not running. For not running apps use --assign-app <bundle id>."
+                error: "App not found or not running. For not running apps use `assign-app --name <bundle id>`."
             )
         }
 
@@ -111,5 +165,72 @@ final class AppCommands: CommandExecutor {
         }
 
         return CommandResponse(success: true)
+    }
+
+    private func floatApp(app: String?, showNotification: Bool) -> CommandResponse {
+        guard let app = findApp(app: app) else {
+            return CommandResponse(
+                success: false,
+                error: "App not found or not running. For not running apps use `float-app --name <bundle id>`."
+            )
+        }
+
+        floatingAppsSettings.addFloatingAppIfNeeded(app: app)
+
+        if showNotification {
+            Toast.showWith(
+                icon: "macwindow.on.rectangle",
+                message: "\(app.name) - Added To Floating Apps",
+                textColor: .positive
+            )
+        }
+
+        return CommandResponse(success: true)
+    }
+
+    private func unfloatApp(app: String?, showNotification: Bool) -> CommandResponse {
+        guard let app = findApp(app: app) else {
+            return CommandResponse(
+                success: false,
+                error: "App not found or not running. For not running apps use `unfloat-app --name <bundle id>`."
+            )
+        }
+
+        guard floatingAppsSettings.floatingApps.containsApp(with: app.bundleIdentifier) else {
+            return CommandResponse(success: true)
+        }
+
+        floatingAppsSettings.deleteFloatingApp(app: app)
+
+        if let runningApp = NSWorkspace.shared.runningApplications.find(app),
+           let screen = runningApp.display,
+           workspaceManager.activeWorkspace[screen]?.apps.containsApp(runningApp) != true {
+            runningApp.hide()
+        }
+
+        if showNotification {
+            Toast.showWith(
+                icon: "macwindow",
+                message: "\(app.name) - Removed From Floating Apps",
+                textColor: .negative
+            )
+        }
+
+        return CommandResponse(success: true)
+    }
+
+    private func toggleFloatApp(app: String?, showNotification: Bool) -> CommandResponse {
+        guard let macApp = findApp(app: app) else {
+            return CommandResponse(
+                success: false,
+                error: "App not found or not running. For not running apps use `toggle-float-app --name <bundle id>`."
+            )
+        }
+
+        let isFloating = floatingAppsSettings.floatingApps.containsApp(with: macApp.bundleIdentifier)
+
+        return isFloating
+            ? unfloatApp(app: app, showNotification: showNotification)
+            : floatApp(app: app, showNotification: showNotification)
     }
 }

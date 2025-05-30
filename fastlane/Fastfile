@@ -1,8 +1,22 @@
 lane :release do
   sh("[ -n \"$XCODE_DEVELOPMENT_TEAM\" ] || (echo 'Missing environment variable XCODE_DEVELOPMENT_TEAM' && exit 1)")
 
+  clean_build_folder
   build_mac_app
+  notarize_app
+  zip_and_validate
+  sparkle
+  print_version
+end
 
+lane :clean_build_folder do
+  sh("rm -f ../.build/FlashSpace.app.dSYM.zip")
+  sh("rm -f ../.build/FlashSpace.app.zip")
+  sh("rm -rf ../.build/FlashSpace.app")
+  sh("rm -rf ../.build/__MACOSX")
+end
+
+lane :notarize_app do
   sh("codesign --force --sign \"Developer ID Application: Wojciech Kulik ($XCODE_DEVELOPMENT_TEAM)\" --options runtime ../.build/FlashSpace.app/Contents/Resources/flashspace")
   sh("codesign --force --deep --sign \"Developer ID Application: Wojciech Kulik ($XCODE_DEVELOPMENT_TEAM)\" --options runtime ../.build/FlashSpace.app")
 
@@ -11,13 +25,22 @@ lane :release do
     api_key_path: "../appstore.json",
     print_log: true
   )
+  sh("rm -f ../.build/FlashSpace.app.zip")
+end
 
-  zip(
-    path: ".build/FlashSpace.app",
-    output_path: ".build/FlashSpace.app.zip",
-    verbose: false
-  )
+lane :zip_and_validate do
+  sh("ditto -c -k --sequesterRsrc --keepParent ../.build/FlashSpace.app ../.build/FlashSpace.app.zip")
+  sh("rm -rf ../.build/FlashSpace.app")
+  sh("unzip -q ../.build/FlashSpace.app.zip -d ../.build")
 
   sh("spctl", "-a", "-vvv", "-t", "install", "../.build/FlashSpace.app")
   sh("codesign", "-vvv", "--deep", "--strict", "../.build/FlashSpace.app")
+end
+
+lane :sparkle do
+  sh("../sparkle/generate_appcast.sh")
+end
+
+lane :print_version do
+  sh('echo "Released Version: $(/usr/libexec/PlistBuddy -c "Print CFBundleShortVersionString" ../.build/FlashSpace.app/Contents/Info.plist)"')
 end

@@ -44,7 +44,6 @@ final class MainViewModel: ObservableObject {
 
     @Published var isSymbolPickerPresented = false
     @Published var isInputDialogPresented = false
-    @Published var isWhatsNewPresented = false
     @Published var userInput = ""
 
     var focusAppOptions: [MacApp] {
@@ -261,19 +260,5 @@ extension MainViewModel {
     func resetWorkspaceSymbolIcon() {
         workspaceSymbolIconName = nil
         saveWorkspace()
-    }
-
-    func showWhatsNewIfNeeded() {
-        @AppStorage("v2.0.23-whats-new") var whatsNewShown = false
-
-        if workspaceRepository.workspaces.isEmpty {
-            whatsNewShown = true
-            return
-        }
-
-        guard !whatsNewShown else { return }
-
-        whatsNewShown = true
-        isWhatsNewPresented = true
     }
 }
