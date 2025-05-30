@@ -50,7 +50,7 @@ struct FlashSpaceMenuBar: Scene {
                     )
                 }
             }.hidden(profilesRepository.profiles.count < 2)
-            
+
             Menu("Workspaces") {
                 ForEach(workspaceRepository.workspaces.sorted(by: { $0.name < $1.name })) { workspace in
                     Button(action: {
