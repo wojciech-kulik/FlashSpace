@@ -13,6 +13,7 @@ final class ListCommands: CommandExecutor {
     var profilesRepository: ProfilesRepository { AppDependencies.shared.profilesRepository }
     var settingsRepository: SettingsRepository { AppDependencies.shared.settingsRepository }
 
+    // swiftlint:disable:next function_body_length
     func execute(command: CommandRequest) -> CommandResponse? {
         switch command {
         case .listWorkspaces(let withDisplay, let profileName):

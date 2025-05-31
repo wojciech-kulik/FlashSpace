@@ -52,22 +52,15 @@ struct FlashSpaceMenuBar: Scene {
             }.hidden(profilesRepository.profiles.count < 2)
 
             Menu("Workspaces") {
-                ForEach(workspaceRepository.workspaces.sorted(by: { $0.name < $1.name })) { workspace in
-                    Button(action: {
+                ForEach(workspaceRepository.workspaces) { workspace in
+                    Button {
                         workspaceManager.activateWorkspace(workspace, setFocus: true)
-                    }) {
-                        HStack {
-                            Text(workspace.name)
-                            Spacer()
-                            if let shortcut = workspace.activateShortcut?.value, !shortcut.isEmpty {
-                                Text(shortcut)
-                                    .foregroundColor(.secondary)
-                                    .font(.caption)
-                            }
-                        }
+                    } label: {
+                        Text(workspace.name)
                     }
+                    .keyboardShortcut(workspace.activateShortcut?.keyboardShortcut)
                 }
-            }.hidden(workspaceRepository.workspaces.isEmpty)
+            }.hidden(workspaceRepository.workspaces.count < 2)
 
             Divider()
 
