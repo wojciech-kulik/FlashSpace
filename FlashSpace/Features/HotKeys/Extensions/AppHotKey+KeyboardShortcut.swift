@@ -8,16 +8,37 @@
 import SwiftUI
 
 extension AppHotKey {
-    var keyboardShortcut: KeyboardShortcut? {
+    var toKeyboardShortcut: KeyboardShortcut? {
         let components = value.components(separatedBy: "+")
         let modifiers = toEventModifiers(value)
 
-        guard let key = components.last else { return nil }
+        guard let key = components.last,
+              let keyEquivalent = stringToKeyEquivalent(key) else { return nil }
 
         return KeyboardShortcut(
-            KeyEquivalent(Character(key)),
+            keyEquivalent,
             modifiers: modifiers
         )
+    }
+
+    // swiftlint:disable:next cyclomatic_complexity
+    private func stringToKeyEquivalent(_ value: String) -> KeyEquivalent? {
+        guard value.count > 1 else { return KeyEquivalent(Character(value)) }
+
+        switch value {
+        case "esc", "escape": return KeyEquivalent.escape
+        case "return", "enter": return KeyEquivalent.return
+        case "tab": return KeyEquivalent.tab
+        case "space": return KeyEquivalent.space
+        case "delete", "backspace": return KeyEquivalent.delete
+        case "up": return KeyEquivalent.upArrow
+        case "down": return KeyEquivalent.downArrow
+        case "left": return KeyEquivalent.leftArrow
+        case "right": return KeyEquivalent.rightArrow
+        case "home": return KeyEquivalent.home
+        case "end": return KeyEquivalent.end
+        default: return nil
+        }
     }
 
     private func toEventModifiers(_ value: String) -> EventModifiers {

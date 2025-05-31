@@ -58,7 +58,7 @@ struct FlashSpaceMenuBar: Scene {
                     } label: {
                         Text(workspace.name)
                     }
-                    .keyboardShortcut(workspace.activateShortcut?.keyboardShortcut)
+                    .keyboardShortcut(workspace.activateShortcut?.toKeyboardShortcut)
                 }
             }.hidden(workspaceRepository.workspaces.count < 2)
 
