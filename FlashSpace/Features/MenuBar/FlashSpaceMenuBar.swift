@@ -13,6 +13,7 @@ struct FlashSpaceMenuBar: Scene {
     @StateObject private var workspaceManager = AppDependencies.shared.workspaceManager
     @StateObject private var settingsRepository = AppDependencies.shared.settingsRepository
     @StateObject private var profilesRepository = AppDependencies.shared.profilesRepository
+    @StateObject private var workspaceRepository = AppDependencies.shared.workspaceRepository
 
     var body: some Scene {
         MenuBarExtra {
@@ -49,6 +50,17 @@ struct FlashSpaceMenuBar: Scene {
                     )
                 }
             }.hidden(profilesRepository.profiles.count < 2)
+
+            Menu("Workspaces") {
+                ForEach(workspaceRepository.workspaces) { workspace in
+                    Button {
+                        workspaceManager.activateWorkspace(workspace, setFocus: true)
+                    } label: {
+                        Text(workspace.name)
+                    }
+                    .keyboardShortcut(workspace.activateShortcut?.toKeyboardShortcut)
+                }
+            }.hidden(workspaceRepository.workspaces.count < 2)
 
             Divider()
 

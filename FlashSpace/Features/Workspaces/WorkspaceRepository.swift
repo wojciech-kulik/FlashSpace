@@ -6,10 +6,11 @@
 //
 
 import AppKit
+import Combine
 import Foundation
 
-final class WorkspaceRepository {
-    private(set) var workspaces: [Workspace] = []
+final class WorkspaceRepository: ObservableObject {
+    @Published private(set) var workspaces: [Workspace] = []
 
     private let profilesRepository: ProfilesRepository
 
