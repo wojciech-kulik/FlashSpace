@@ -33,8 +33,14 @@ struct Workspace: Identifiable, Codable, Hashable {
 }
 
 extension Workspace {
+    static let dynamicDisplayName = "Dynamic"
+
     /// Returns the assigned display name or fallback if not connected
     var displayWithFallback: DisplayName {
+        guard display != Self.dynamicDisplayName else {
+            return display
+        }
+
         guard !NSScreen.isConnected(display) else {
             return display
         }
@@ -59,6 +65,18 @@ extension Workspace {
             .target
 
         return alternative ?? NSScreen.main?.localizedName ?? ""
+    }
+
+    /// Returns all displays this workspace effectively covers
+    var effectiveDisplays: Set<DisplayName> {
+        if display == Self.dynamicDisplayName {
+            let activeAppDisplays = NSWorkspace.shared.runningApplications
+                .filter { $0.activationPolicy == .regular && apps.containsApp($0) }
+                .compactMap(\.display)
+            return Set(activeAppDisplays)
+        } else {
+            return Set([displayWithFallback])
+        }
     }
 
     var isOnTheCurrentScreen: Bool {

@@ -55,6 +55,7 @@ extension NSRunningApplication {
     }
 
     func isOnTheSameScreen(as workspace: Workspace) -> Bool {
-        display == workspace.displayWithFallback
+        guard let appDisplay = display else { return false }
+        return workspace.effectiveDisplays.contains(appDisplay)
     }
 }

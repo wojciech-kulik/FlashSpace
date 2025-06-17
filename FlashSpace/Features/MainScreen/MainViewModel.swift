@@ -92,9 +92,10 @@ final class MainViewModel: ObservableObject {
     var screens: [String] {
         let set = Set<String>(NSScreen.screens.compactMap(\.localizedName))
         let otherScreens = workspaces.map(\.display)
-        return Array(set.union(otherScreens))
-            .filter { !$0.isEmpty }
+        let staticDisplays = Array(set.union(otherScreens))
+            .filter { !$0.isEmpty && $0 != Workspace.dynamicDisplayName }
             .sorted()
+        return [Workspace.dynamicDisplayName] + staticDisplays
     }
 
     private var cancellables: Set<AnyCancellable> = []

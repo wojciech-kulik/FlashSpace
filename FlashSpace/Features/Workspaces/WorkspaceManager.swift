@@ -223,12 +223,12 @@ final class WorkspaceManager: ObservableObject {
         lastWorkspaceActivation = Date()
 
         // Save the most recent workspace if it's not the current one
-        let display = workspace.displayWithFallback
-        if activeWorkspace[display]?.id != workspace.id {
-            mostRecentWorkspace[display] = activeWorkspace[display]
+        for display in workspace.effectiveDisplays {
+            if activeWorkspace[display]?.id != workspace.id {
+                mostRecentWorkspace[display] = activeWorkspace[display]
+            }
+            activeWorkspace[display] = workspace
         }
-
-        activeWorkspace[display] = workspace
 
         activeWorkspaceDetails = .init(
             id: workspace.id,
@@ -237,7 +237,7 @@ final class WorkspaceManager: ObservableObject {
                 .firstIndex { $0.id == workspace.id }
                 .map { "\($0 + 1)" },
             symbolIconName: workspace.symbolIconName,
-            display: display
+            display: workspace.displayWithFallback
         )
 
         Integrations.runOnActivateIfNeeded(workspace: activeWorkspaceDetails!)
@@ -354,7 +354,7 @@ extension WorkspaceManager {
         guard let screen = getCursorScreen() else { return }
 
         var screenWorkspaces = workspaceRepository.workspaces
-            .filter { $0.displayWithFallback == screen }
+            .filter { $0.effectiveDisplays.contains(screen) }
 
         if !next {
             screenWorkspaces = screenWorkspaces.reversed()
