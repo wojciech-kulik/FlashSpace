@@ -28,7 +28,7 @@ final class WorkspaceManager: ObservableObject {
 
     private var cancellables = Set<AnyCancellable>()
     private var observeFocusCancellable: AnyCancellable?
-    private var lastFocusedFloatingApp: [(display: DisplayName, app: MacApp)] = []
+    private var lastFocusedAppByDisplay: [(display: DisplayName, app: MacApp)] = []
     private var appsHiddenManually: [WorkspaceID: [MacApp]] = [:]
     private let hideAgainSubject = PassthroughSubject<Workspace, Never>()
 
@@ -105,14 +105,14 @@ final class WorkspaceManager: ObservableObject {
             }
         }
 
-        lastFocusedFloatingApp.removeAll { $0.display == display }
         if let activeWorkspace = activeWorkspace[display], activeWorkspace.apps.containsApp(application) {
             lastFocusedApp[activeWorkspace.id] = application.toMacApp
             updateActiveWorkspace(activeWorkspace)
-        } else if floatingAppsSettings.floatingApps.containsApp(application) ||
-            workspaceSettings.keepUnassignedAppsOnSwitch,
-            application.bundleIdentifier != "com.apple.finder" || application.allWindows.count > 0 {
-            lastFocusedFloatingApp.append((display: display, app: application.toMacApp))
+        }
+
+        if application.bundleIdentifier != "com.apple.finder" || application.allWindows.count > 0 {
+            lastFocusedAppByDisplay.removeAll { $0.display == display }
+            lastFocusedAppByDisplay.append((display: display, app: application.toMacApp))
         }
     }
 
@@ -193,9 +193,12 @@ final class WorkspaceManager: ObservableObject {
     ) -> NSRunningApplication? {
         if workspace.appToFocus == nil {
             let effectiveDisplays = workspace.effectiveDisplays
-            if let floatingEntry = lastFocusedFloatingApp
+            if let floatingEntry = lastFocusedAppByDisplay
                 .reversed()
-                .first(where: { effectiveDisplays.contains($0.display) }),
+                .first(where: {
+                    (floatingAppsSettings.floatingApps.contains($0.app) || workspaceSettings.keepUnassignedAppsOnSwitch)
+                        && effectiveDisplays.contains($0.display)
+                }),
                 let runningApp = NSWorkspace.shared.runningApplications.find(floatingEntry.app) {
                 return runningApp
             }
