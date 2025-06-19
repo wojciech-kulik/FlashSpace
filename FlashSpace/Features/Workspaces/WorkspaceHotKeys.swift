@@ -187,7 +187,7 @@ extension WorkspaceHotKeys {
         }
 
         let visibleApps = NSWorkspace.shared.runningApplications
-            .regularVisibleApps(onDisplays: workspace.displays)
+            .regularVisibleApps(in: workspace)
 
         workspaceManager.assignApps(visibleApps.map(\.toMacApp), to: workspace)
 

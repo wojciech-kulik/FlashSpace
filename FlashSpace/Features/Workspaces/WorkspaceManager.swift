@@ -112,7 +112,8 @@ final class WorkspaceManager: ObservableObject {
         AppDependencies.shared.displayManager.trackDisplayFocus(on: display, for: application)
     }
 
-    private func showApps(in workspace: Workspace, setFocus: Bool, on displays: Set<DisplayName>) {
+    private func showApps(in workspace: Workspace, setFocus: Bool, on targetDisplays: Set<DisplayName>? = nil) {
+        let displays = targetDisplays ?? workspace.displays
         let regularApps = NSWorkspace.shared.runningApplications
             .filter { $0.activationPolicy == .regular }
         let floatingApps = floatingAppsSettings.floatingApps
@@ -158,7 +159,8 @@ final class WorkspaceManager: ObservableObject {
         }
     }
 
-    private func hideApps(in workspace: Workspace, on displays: Set<DisplayName>) {
+    private func hideApps(in workspace: Workspace, on targetDisplays: Set<DisplayName>? = nil) {
+        let displays = targetDisplays ?? workspace.displays
         let regularApps = NSWorkspace.shared.runningApplications
             .filter { $0.activationPolicy == .regular }
         let workspaceApps = workspace.apps + floatingAppsSettings.floatingApps
@@ -188,10 +190,10 @@ final class WorkspaceManager: ObservableObject {
         apps: [NSRunningApplication]
     ) -> NSRunningApplication? {
         if workspace.appToFocus == nil {
-            let allDisplays = workspace.displays
+            let displays = workspace.displays
             if let floatingEntry = AppDependencies.shared.displayManager.lastFocusedDisplay(where: {
                 (floatingAppsSettings.floatingApps.contains($0.app) || workspaceSettings.keepUnassignedAppsOnSwitch)
-                    && allDisplays.contains($0.display)
+                    && displays.contains($0.display)
             }),
                 let runningApp = NSWorkspace.shared.runningApplications.find(floatingEntry.app) {
                 return runningApp
@@ -220,11 +222,11 @@ final class WorkspaceManager: ObservableObject {
         CGWarpMouseCursorPosition(CGPoint(x: frame.midX, y: frame.midY))
     }
 
-    private func updateActiveWorkspace(_ workspace: Workspace, on displays: Set<DisplayName>) {
+    private func updateActiveWorkspace(_ workspace: Workspace, on displays: Set<DisplayName>? = nil) {
         lastWorkspaceActivation = Date()
 
         // Save the most recent workspace if it's not the current one
-        for display in displays {
+        for display in displays ?? workspace.displays {
             if activeWorkspace[display]?.id != workspace.id {
                 mostRecentWorkspace[display] = activeWorkspace[display]
             }
@@ -330,7 +332,7 @@ extension WorkspaceManager {
 
         let workspaceApps = activeWorkspace.apps
         let appsToHide = NSWorkspace.shared.runningApplications
-            .regularVisibleApps(onDisplays: activeWorkspace.displays)
+            .regularVisibleApps(in: activeWorkspace)
             .filter { !workspaceApps.containsApp($0) }
 
         for app in appsToHide {
