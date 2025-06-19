@@ -18,6 +18,10 @@ final class DisplayManager: ObservableObject {
         self.workspaceSettings = settingsRepository.workspaceSettings
     }
 
+    func lastDisplayFocus(where condition: (Focus) -> Bool) -> Focus? {
+        displayFocusHistory.last(where: condition)
+    }
+
     func trackDisplayFocus(on display: DisplayName, for application: NSRunningApplication) {
         if application.bundleIdentifier == "com.apple.finder", application.allWindows.count == 0 { return }
         displayFocusHistory.removeAll { $0.display == display }
@@ -50,12 +54,8 @@ final class DisplayManager: ObservableObject {
         return alternative ?? NSScreen.main?.localizedName ?? ""
     }
 
-    func lastFocusedDisplay(where condition: (Focus) -> Bool) -> Focus? {
-        displayFocusHistory.reversed().first(where: condition)
-    }
-
     func selectDisplay(from candidates: Set<DisplayName>) -> DisplayName {
-        if let recentDisplay = lastFocusedDisplay(where: { candidates.contains($0.display) })?.display {
+        if let recentDisplay = lastDisplayFocus(where: { candidates.contains($0.display) })?.display {
             return recentDisplay
         }
         if let cursorDisplay = getCursorScreen(), candidates.contains(cursorDisplay) {
