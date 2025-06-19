@@ -192,8 +192,10 @@ final class WorkspaceManager: ObservableObject {
         if workspace.appToFocus == nil {
             let displays = workspace.displays
             if let floatingEntry = AppDependencies.shared.displayManager.lastFocusedDisplay(where: {
-                (floatingAppsSettings.floatingApps.contains($0.app) || workspaceSettings.keepUnassignedAppsOnSwitch)
-                    && displays.contains($0.display)
+                let isFloating = floatingAppsSettings.floatingApps.contains($0.app)
+                let isUnassigned = workspaceSettings.keepUnassignedAppsOnSwitch &&
+                    !workspaceRepository.workspaces.flatMap(\.apps).contains($0.app)
+                return (isFloating || isUnassigned) && displays.contains($0.display)
             }),
                 let runningApp = NSWorkspace.shared.runningApplications.find(floatingEntry.app) {
                 return runningApp
