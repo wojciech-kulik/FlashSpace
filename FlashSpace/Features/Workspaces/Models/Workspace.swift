@@ -42,7 +42,7 @@ extension Workspace {
         if display == Self.dynamicDisplayName {
             return Set(NSWorkspace.shared.runningApplications
                 .filter { $0.activationPolicy == .regular && apps.containsApp($0) }
-                .compactMap(\.display)
+                .flatMap(\.allDisplays)
             )
         }
         return Set([AppDependencies.shared.displayManager.resolveDisplay(display)])
