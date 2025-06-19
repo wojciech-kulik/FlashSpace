@@ -331,6 +331,7 @@ Big thanks to all the sponsors who support this project 🍻!
 <a href="https://github.com/sergiopatino"><img src="https://avatars.githubusercontent.com/u/868839" width="40" height="40" alt="@sergiopatino" title="sergiopatino"></a>
 <a href="https://github.com/ashaney"><img src="https://avatars.githubusercontent.com/u/25646923" width="40" height="40" alt="@ashaney" title="ashaney"></a>
 <a href="https://github.com/exsesx"><img src="https://avatars.githubusercontent.com/u/20399517" width="40" height="40" alt="@exsesx" title="exsesx"></a>
+<a href="https://github.com/konpa"><img src="https://avatars.githubusercontent.com/u/778731" width="40" height="40" alt="@konpa" title="konpa"></a>
 
 &nbsp;
 
