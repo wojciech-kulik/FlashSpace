@@ -19,9 +19,7 @@ final class DisplayManager: ObservableObject {
     }
 
     func trackDisplayFocus(on display: DisplayName, for application: NSRunningApplication) {
-        if application.bundleIdentifier == "com.apple.finder", application.allWindows.count == 0 {
-            return
-        }
+        if application.bundleIdentifier == "com.apple.finder", application.allWindows.count == 0 { return }
         displayFocusHistory.removeAll { $0.display == display }
         displayFocusHistory.append((display: display, app: application.toMacApp))
     }

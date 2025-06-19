@@ -15,7 +15,7 @@ final class WorkspaceTransitionManager {
         self.settings = workspaceSettings
     }
 
-    func showTransitionIfNeeded(for workspace: Workspace) {
+    func showTransitionIfNeeded(for workspace: Workspace, on displays: Set<DisplayName>) {
         guard settings.enableWorkspaceTransitions else {
             // Small delay to allow workspace to be activated
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
@@ -25,8 +25,7 @@ final class WorkspaceTransitionManager {
         }
         guard windows.isEmpty, !SpaceControl.isVisible else { return }
 
-        let allDisplays = workspace.allDisplays
-        let screens = NSScreen.screens.filter { allDisplays.contains($0.localizedName) }
+        let screens = NSScreen.screens.filter { displays.contains($0.localizedName) }
 
         guard !screens.isEmpty else { return }
 

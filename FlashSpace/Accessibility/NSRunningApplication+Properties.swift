@@ -54,8 +54,8 @@ extension NSRunningApplication {
             ?? []
     }
 
-    func isOnTheSameScreen(as workspace: Workspace) -> Bool {
+    func isOnDisplays(_ displays: Set<DisplayName>) -> Bool {
         guard let appDisplay = display else { return false }
-        return workspace.allDisplays.contains(appDisplay)
+        return displays.contains(appDisplay)
     }
 }
