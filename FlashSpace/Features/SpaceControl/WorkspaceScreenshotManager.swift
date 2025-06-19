@@ -34,9 +34,9 @@ final class WorkspaceScreenshotManager {
 
         do {
             let availableContent = try await SCShareableContent.excludingDesktopWindows(false, onScreenWindowsOnly: false)
+            let primaryDisplayName = await MainActor.run { workspace.singleDisplay }
             let display = await MainActor.run {
-                availableContent.displays
-                    .first { $0.frame.getDisplay() == workspace.displayWithFallback }
+                availableContent.displays.first { $0.frame.getDisplay() == primaryDisplayName }
             }
 
             guard let display else { return }

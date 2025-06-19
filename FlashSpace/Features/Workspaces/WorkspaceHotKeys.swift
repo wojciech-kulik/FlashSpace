@@ -156,7 +156,14 @@ extension WorkspaceHotKeys {
         guard let updatedWorkspace = workspaceRepository.workspaces
             .first(where: { $0.id == workspace.id }) else { return }
 
-        activeApp.centerApp(display: updatedWorkspace.displayWithFallback)
+        let targetDisplay: DisplayName
+        if workspace.display == Workspace.dynamicDisplayName, let appDisplay = activeApp.display {
+            targetDisplay = appDisplay
+        } else {
+            targetDisplay = workspace.singleDisplay
+        }
+        activeApp.centerApp(display: targetDisplay)
+
         workspaceManager.assignApp(activeApp.toMacApp, to: updatedWorkspace)
         Toast.showWith(
             icon: "square.stack.3d.up",
