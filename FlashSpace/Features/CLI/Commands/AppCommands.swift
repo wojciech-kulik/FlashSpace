@@ -99,12 +99,7 @@ final class AppCommands: CommandExecutor {
         }
 
         let visibleApps = NSWorkspace.shared.runningApplications
-            .filter {
-                $0.activationPolicy == .regular &&
-                    !$0.isHidden &&
-                    !floatingAppsSettings.floatingApps.containsApp($0) &&
-                    $0.isOnTheSameScreen(as: workspace)
-            }
+            .regularVisibleApps(coveredBy: workspace, excluding: floatingAppsSettings.floatingApps)
 
         guard !visibleApps.isEmpty else {
             return CommandResponse(
