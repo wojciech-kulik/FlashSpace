@@ -332,10 +332,8 @@ extension WorkspaceManager {
 
         guard let activeWorkspace else { return }
 
-        let workspaceApps = activeWorkspace.apps
         let appsToHide = NSWorkspace.shared.runningApplications
-            .regularVisibleApps(in: activeWorkspace)
-            .filter { !workspaceApps.containsApp($0) }
+            .regularVisibleApps(coveredBy: activeWorkspace, excluding: activeWorkspace.apps)
 
         for app in appsToHide {
             Logger.log("CLEAN UP: \(app.localizedName ?? "")")

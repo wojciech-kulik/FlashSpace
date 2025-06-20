@@ -36,14 +36,12 @@ extension [NSRunningApplication] {
         }
     }
 
-    func regularVisibleApps(in workspace: Workspace, excludingFloating: Bool = true) -> [NSRunningApplication] {
-        let floatingApps = AppDependencies.shared.floatingAppsSettings.floatingApps
-        let displays = workspace.displays
-        return filter { app in
+    func regularVisibleApps(coveredBy workspace: Workspace, excluding apps: [MacApp]) -> [NSRunningApplication] {
+        filter { app in
             app.activationPolicy == .regular &&
                 !app.isHidden &&
-                (!excludingFloating || !floatingApps.containsApp(app)) &&
-                app.isOnDisplays(displays)
+                !apps.containsApp(app) &&
+                app.isOnDisplays(workspace.displays)
         }
     }
 }
