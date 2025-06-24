@@ -28,7 +28,6 @@ final class WorkspaceManager: ObservableObject {
 
     private var cancellables = Set<AnyCancellable>()
     private var observeFocusCancellable: AnyCancellable?
-    private var lastFocusedFloatingApp: [DisplayName: MacApp] = [:]
     private var appsHiddenManually: [WorkspaceID: [MacApp]] = [:]
     private let hideAgainSubject = PassthroughSubject<Workspace, Never>()
 
@@ -107,16 +106,14 @@ final class WorkspaceManager: ObservableObject {
 
         if let activeWorkspace = activeWorkspace[display], activeWorkspace.apps.containsApp(application) {
             lastFocusedApp[activeWorkspace.id] = application.toMacApp
-            lastFocusedFloatingApp[display] = nil
             updateActiveWorkspace(activeWorkspace)
-        } else if floatingAppsSettings.floatingApps.containsApp(application) ||
-            workspaceSettings.keepUnassignedAppsOnSwitch,
-            application.bundleIdentifier != "com.apple.finder" || application.allWindows.count > 0 {
-            lastFocusedFloatingApp[display] = application.toMacApp
         }
+
+        AppDependencies.shared.displayManager.trackDisplayFocus(on: display, for: application)
     }
 
-    private func showApps(in workspace: Workspace, setFocus: Bool) {
+    private func showApps(in workspace: Workspace, setFocus: Bool, on targetDisplays: Set<DisplayName>? = nil) {
+        let displays = targetDisplays ?? workspace.displays
         let regularApps = NSWorkspace.shared.runningApplications
             .filter { $0.activationPolicy == .regular }
         let floatingApps = floatingAppsSettings.floatingApps
@@ -125,7 +122,7 @@ final class WorkspaceManager: ObservableObject {
             .filter { !hiddenApps.containsApp($0) }
             .filter {
                 workspace.apps.containsApp($0) ||
-                    floatingApps.containsApp($0) && $0.isOnTheSameScreen(as: workspace)
+                    floatingApps.containsApp($0) && $0.isOnDisplays(displays)
             }
 
         observeFocusCancellable = nil
@@ -162,7 +159,8 @@ final class WorkspaceManager: ObservableObject {
         }
     }
 
-    private func hideApps(in workspace: Workspace) {
+    private func hideApps(in workspace: Workspace, on targetDisplays: Set<DisplayName>? = nil) {
+        let displays = targetDisplays ?? workspace.displays
         let regularApps = NSWorkspace.shared.runningApplications
             .filter { $0.activationPolicy == .regular }
         let workspaceApps = workspace.apps + floatingAppsSettings.floatingApps
@@ -176,7 +174,7 @@ final class WorkspaceManager: ObservableObject {
                     (!workspaceSettings.keepUnassignedAppsOnSwitch || allAssignedApps.contains($0.bundleIdentifier ?? ""))
             }
             .filter { isAnyWorkspaceAppRunning || $0.bundleURL?.fileName != "Finder" }
-            .filter { $0.isOnTheSameScreen(as: workspace) }
+            .filter { $0.isOnDisplays(displays) }
 
         for app in appsToHide {
             Logger.log("HIDE: \(app.localizedName ?? "")")
@@ -191,10 +189,17 @@ final class WorkspaceManager: ObservableObject {
         in workspace: Workspace,
         apps: [NSRunningApplication]
     ) -> NSRunningApplication? {
-        if workspace.appToFocus == nil,
-           let floatingApp = lastFocusedFloatingApp[workspace.displayWithFallback],
-           let runningApp = NSWorkspace.shared.runningApplications.find(floatingApp) {
-            return runningApp
+        if workspace.appToFocus == nil {
+            let displays = workspace.displays
+            if let floatingEntry = AppDependencies.shared.displayManager.lastDisplayFocus(where: {
+                let isFloating = floatingAppsSettings.floatingApps.contains($0.app)
+                let isUnassigned = workspaceSettings.keepUnassignedAppsOnSwitch &&
+                    !workspaceRepository.workspaces.flatMap(\.apps).contains($0.app)
+                return (isFloating || isUnassigned) && displays.contains($0.display)
+            }),
+                let runningApp = NSWorkspace.shared.runningApplications.find(floatingEntry.app) {
+                return runningApp
+            }
         }
 
         var appToFocus: NSRunningApplication?
@@ -219,16 +224,16 @@ final class WorkspaceManager: ObservableObject {
         CGWarpMouseCursorPosition(CGPoint(x: frame.midX, y: frame.midY))
     }
 
-    private func updateActiveWorkspace(_ workspace: Workspace) {
+    private func updateActiveWorkspace(_ workspace: Workspace, on displays: Set<DisplayName>? = nil) {
         lastWorkspaceActivation = Date()
 
         // Save the most recent workspace if it's not the current one
-        let display = workspace.displayWithFallback
-        if activeWorkspace[display]?.id != workspace.id {
-            mostRecentWorkspace[display] = activeWorkspace[display]
+        for display in displays ?? workspace.displays {
+            if activeWorkspace[display]?.id != workspace.id {
+                mostRecentWorkspace[display] = activeWorkspace[display]
+            }
+            activeWorkspace[display] = workspace
         }
-
-        activeWorkspace[display] = workspace
 
         activeWorkspaceDetails = .init(
             id: workspace.id,
@@ -237,33 +242,25 @@ final class WorkspaceManager: ObservableObject {
                 .firstIndex { $0.id == workspace.id }
                 .map { "\($0 + 1)" },
             symbolIconName: workspace.symbolIconName,
-            display: display
+            display: workspace.displayForPrint
         )
 
         Integrations.runOnActivateIfNeeded(workspace: activeWorkspaceDetails!)
     }
 
-    private func getCursorScreen() -> DisplayName? {
-        let cursorLocation = NSEvent.mouseLocation
-
-        return NSScreen.screens
-            .first { NSMouseInRect(cursorLocation, $0.frame, false) }?
-            .localizedName
-    }
-
-    private func rememberHiddenApps(display: DisplayName) {
+    private func rememberHiddenApps(for workspace: Workspace) {
         guard !workspaceSettings.restoreHiddenAppsOnSwitch else {
             appsHiddenManually = [:]
             return
         }
 
-        guard let activeWorkspace = activeWorkspace[display] else { return }
-
         let regularApps = NSWorkspace.shared.runningApplications
             .filter { $0.activationPolicy == .regular }
 
-        appsHiddenManually[activeWorkspace.id] = regularApps
-            .filter { ($0.isHidden || $0.isMinimized) && activeWorkspace.apps.containsApp($0) }
+        appsHiddenManually[workspace.id] = regularApps
+            .filter { app in
+                (app.isHidden || app.isMinimized) && workspace.apps.containsApp(app) && app.isOnDisplays(workspace.displays)
+            }
             .map(\.toMacApp)
     }
 }
@@ -277,20 +274,23 @@ extension WorkspaceManager {
         Logger.log("----")
         SpaceControl.hide()
 
-        if !activeWorkspace.values.contains(where: { $0.id == workspace.id }) {
-            workspaceTransitionManager.showTransitionIfNeeded(for: workspace)
-        }
+        let newDisplays = workspace.displays.filter { activeWorkspace[$0]?.id != workspace.id }
+        activateWorkspaceDisplays(workspace, on: newDisplays, setFocus: setFocus)
 
-        rememberHiddenApps(display: workspace.displayWithFallback)
-        updateActiveWorkspace(workspace)
-        showApps(in: workspace, setFocus: setFocus)
-        hideApps(in: workspace)
+        NotificationCenter.default.post(name: .workspaceChanged, object: workspace)
+    }
+
+    func activateWorkspaceDisplays(_ workspace: Workspace, on displays: Set<DisplayName>, setFocus: Bool) {
+        workspaceTransitionManager.showTransitionIfNeeded(for: workspace, on: displays)
+
+        rememberHiddenApps(for: workspace)
+        updateActiveWorkspace(workspace, on: displays)
+        showApps(in: workspace, setFocus: setFocus, on: displays)
+        hideApps(in: workspace, on: displays)
 
         // Some apps may not hide properly,
         // so we hide apps in the workspace after a short delay
         hideAgainSubject.send(workspace)
-
-        NotificationCenter.default.post(name: .workspaceChanged, object: workspace)
     }
 
     func assignApps(_ apps: [MacApp], to workspace: Workspace) {
@@ -332,14 +332,8 @@ extension WorkspaceManager {
 
         guard let activeWorkspace else { return }
 
-        let workspaceApps = activeWorkspace.apps
         let appsToHide = NSWorkspace.shared.runningApplications
-            .filter {
-                $0.activationPolicy == .regular &&
-                    !$0.isHidden &&
-                    !workspaceApps.containsApp($0) &&
-                    $0.isOnTheSameScreen(as: activeWorkspace)
-            }
+            .regularVisibleApps(coveredBy: activeWorkspace, excluding: activeWorkspace.apps)
 
         for app in appsToHide {
             Logger.log("CLEAN UP: \(app.localizedName ?? "")")
@@ -351,10 +345,10 @@ extension WorkspaceManager {
     }
 
     func activateWorkspace(next: Bool, skipEmpty: Bool) {
-        guard let screen = getCursorScreen() else { return }
+        guard let screen = AppDependencies.shared.displayManager.getCursorScreen() else { return }
 
         var screenWorkspaces = workspaceRepository.workspaces
-            .filter { $0.displayWithFallback == screen }
+            .filter { $0.displays.contains(screen) }
 
         if !next {
             screenWorkspaces = screenWorkspaces.reversed()
@@ -386,7 +380,7 @@ extension WorkspaceManager {
     }
 
     func activateRecentWorkspace() {
-        guard let screen = getCursorScreen(),
+        guard let screen = AppDependencies.shared.displayManager.getCursorScreen(),
               let mostRecentWorkspace = mostRecentWorkspace[screen]
         else { return }
 

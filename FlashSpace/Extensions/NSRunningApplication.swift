@@ -31,6 +31,17 @@ extension [NSRunningApplication] {
 
         guard let activeWorkspace else { return self }
 
-        return filter { !floatingApps.containsApp($0) || $0.isOnTheSameScreen(as: activeWorkspace) }
+        return filter { app in
+            !floatingApps.containsApp(app) || app.isOnDisplays(activeWorkspace.displays)
+        }
+    }
+
+    func regularVisibleApps(coveredBy workspace: Workspace, excluding apps: [MacApp]) -> [NSRunningApplication] {
+        filter { app in
+            app.activationPolicy == .regular &&
+                !app.isHidden &&
+                !apps.containsApp(app) &&
+                app.isOnDisplays(workspace.displays)
+        }
     }
 }

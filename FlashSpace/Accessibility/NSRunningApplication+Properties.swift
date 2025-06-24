@@ -21,6 +21,10 @@ extension NSRunningApplication {
         }
     }
 
+    var allDisplays: Set<DisplayName> {
+        Set(allWindows.compactMap { $0.frame.getDisplay() })
+    }
+
     var frame: CGRect? { mainWindow?.frame }
     var isMinimized: Bool { mainWindow?.isMinimized == true }
 
@@ -54,7 +58,7 @@ extension NSRunningApplication {
             ?? []
     }
 
-    func isOnTheSameScreen(as workspace: Workspace) -> Bool {
-        display == workspace.displayWithFallback
+    func isOnDisplays(_ displays: Set<DisplayName>) -> Bool {
+        !allDisplays.isDisjoint(with: displays)
     }
 }

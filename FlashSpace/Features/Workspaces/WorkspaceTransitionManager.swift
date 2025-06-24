@@ -8,14 +8,14 @@
 import AppKit
 
 final class WorkspaceTransitionManager {
-    private var window: NSWindow?
+    private var windows: [NSWindow] = []
     private let settings: WorkspaceSettings
 
     init(workspaceSettings: WorkspaceSettings) {
         self.settings = workspaceSettings
     }
 
-    func showTransitionIfNeeded(for workspace: Workspace) {
+    func showTransitionIfNeeded(for workspace: Workspace, on displays: Set<DisplayName>) {
         guard settings.enableWorkspaceTransitions else {
             // Small delay to allow workspace to be activated
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
@@ -23,24 +23,29 @@ final class WorkspaceTransitionManager {
             }
             return
         }
-        guard window == nil, !SpaceControl.isVisible else { return }
-        guard let screen = NSScreen.screen(workspace.displayWithFallback) else { return }
+        guard windows.isEmpty, !SpaceControl.isVisible else { return }
 
-        let window = NSWindow(
-            contentRect: screen.frame,
-            styleMask: [.borderless],
-            backing: .buffered,
-            defer: false
-        )
-        window.isOpaque = false
-        window.backgroundColor = .clear
-        window.level = .screenSaver
-        window.alphaValue = CGFloat(settings.workspaceTransitionDimming)
-        window.contentView?.wantsLayer = true
-        window.contentView?.layer?.backgroundColor = NSColor.black.cgColor
+        let screens = NSScreen.screens.filter { displays.contains($0.localizedName) }
 
-        window.orderFrontRegardless()
-        self.window = window
+        guard !screens.isEmpty else { return }
+
+        for screen in screens {
+            let window = NSWindow(
+                contentRect: screen.frame,
+                styleMask: [.borderless],
+                backing: .buffered,
+                defer: false
+            )
+            window.isOpaque = false
+            window.backgroundColor = .clear
+            window.level = .screenSaver
+            window.alphaValue = CGFloat(settings.workspaceTransitionDimming)
+            window.contentView?.wantsLayer = true
+            window.contentView?.layer?.backgroundColor = NSColor.black.cgColor
+
+            window.orderFrontRegardless()
+            windows.append(window)
+        }
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
             self?.hideTransition(for: workspace)
@@ -48,15 +53,19 @@ final class WorkspaceTransitionManager {
     }
 
     private func hideTransition(for workspace: Workspace) {
-        guard let window else { return }
+        guard !windows.isEmpty else { return }
 
-        NSAnimationContext.runAnimationGroup({ context in
-            context.duration = settings.workspaceTransitionDuration
+        NSAnimationContext.runAnimationGroup({ [weak self] context in
+            context.duration = self?.settings.workspaceTransitionDuration ?? 0.3
             context.timingFunction = CAMediaTimingFunction(name: .easeIn)
-            window.animator().alphaValue = 0.0
+            self?.windows.forEach { window in
+                window.animator().alphaValue = 0.0
+            }
         }, completionHandler: { [weak self] in
-            window.orderOut(nil)
-            self?.window = nil
+            self?.windows.forEach { window in
+                window.orderOut(nil)
+            }
+            self?.windows.removeAll()
             NotificationCenter.default.post(name: .workspaceTransitionFinished, object: workspace)
         })
     }
