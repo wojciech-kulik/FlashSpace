@@ -248,19 +248,19 @@ final class WorkspaceManager: ObservableObject {
         Integrations.runOnActivateIfNeeded(workspace: activeWorkspaceDetails!)
     }
 
-    private func rememberHiddenApps(for workspace: Workspace) {
+    private func rememberHiddenApps(display: DisplayName) {
         guard !workspaceSettings.restoreHiddenAppsOnSwitch else {
             appsHiddenManually = [:]
             return
         }
 
+        guard let activeWorkspace = activeWorkspace[display] else { return }
+
         let regularApps = NSWorkspace.shared.runningApplications
             .filter { $0.activationPolicy == .regular }
 
-        appsHiddenManually[workspace.id] = regularApps
-            .filter { app in
-                (app.isHidden || app.isMinimized) && workspace.apps.containsApp(app) && app.isOnDisplays(workspace.displays)
-            }
+        appsHiddenManually[activeWorkspace.id] = regularApps
+            .filter { ($0.isHidden || $0.isMinimized) && activeWorkspace.apps.containsApp($0) }
             .map(\.toMacApp)
     }
 }
@@ -283,7 +283,10 @@ extension WorkspaceManager {
     func activateWorkspaceDisplays(_ workspace: Workspace, on displays: Set<DisplayName>, setFocus: Bool) {
         workspaceTransitionManager.showTransitionIfNeeded(for: workspace, on: displays)
 
-        rememberHiddenApps(for: workspace)
+        for display in workspace.displays {
+            rememberHiddenApps(display: display)
+        }
+
         updateActiveWorkspace(workspace, on: displays)
         showApps(in: workspace, setFocus: setFocus, on: displays)
         hideApps(in: workspace, on: displays)
