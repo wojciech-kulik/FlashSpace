@@ -59,7 +59,7 @@ final class WorkspaceManager: ObservableObject {
     private func observe() {
         hideAgainSubject
             .debounce(for: 0.2, scheduler: RunLoop.main)
-            .sink { [weak self] in self?.hideApps(in: $0, on: $0.displays) }
+            .sink { [weak self] in self?.hideApps(in: $0) }
             .store(in: &cancellables)
 
         NotificationCenter.default
@@ -161,7 +161,7 @@ final class WorkspaceManager: ObservableObject {
         }
     }
 
-    private func hideApps(in workspace: Workspace, on displays: Set<DisplayName>) {
+    private func hideApps(in workspace: Workspace) {
         let regularApps = NSWorkspace.shared.runningApplications
             .filter { $0.activationPolicy == .regular }
         let workspaceApps = workspace.apps + floatingAppsSettings.floatingApps
@@ -171,6 +171,7 @@ final class WorkspaceManager: ObservableObject {
             .flatMap(\.apps)
             .map(\.bundleIdentifier)
             .asSet
+        let displays = workspace.displays
 
         let appsToHide = regularApps
             .filter {
@@ -250,52 +251,65 @@ final class WorkspaceManager: ObservableObject {
         Integrations.runOnActivateIfNeeded(workspace: activeWorkspaceDetails!)
     }
 
-    private func rememberHiddenApps(display: DisplayName) {
+    private func rememberHiddenApps(workspaceToActivate: Workspace) {
         guard !workspaceSettings.restoreHiddenAppsOnSwitch else {
             appsHiddenManually = [:]
             return
         }
 
-        guard let activeWorkspace = activeWorkspace[display] else { return }
-
-        let regularApps = NSWorkspace.shared.runningApplications
+        let hiddenApps = NSWorkspace.shared.runningApplications
             .filter { $0.activationPolicy == .regular }
+            .filter { $0.isHidden || $0.isMinimized }
 
-        appsHiddenManually[activeWorkspace.id] = regularApps
-            .filter { ($0.isHidden || $0.isMinimized) && activeWorkspace.apps.containsApp($0) }
-            .map(\.toMacApp)
+        for activeWorkspace in activeWorkspace.values {
+            guard activeWorkspace.id != workspaceToActivate.id else { continue }
+
+            appsHiddenManually[activeWorkspace.id] = []
+        }
+
+        for (display, activeWorkspace) in activeWorkspace {
+            guard activeWorkspace.id != workspaceToActivate.id else { continue }
+
+            let activeWorkspaceOtherDisplays = activeWorkspace.displays.subtracting([display])
+            appsHiddenManually[activeWorkspace.id, default: []] += hiddenApps
+                .filter {
+                    activeWorkspace.apps.containsApp($0) &&
+                        $0.isOnAnyDisplay([display]) && !$0.isOnAnyDisplay(activeWorkspaceOtherDisplays)
+                }
+                .map(\.toMacApp)
+        }
     }
 }
 
 // MARK: - Workspace Actions
 extension WorkspaceManager {
     func activateWorkspace(_ workspace: Workspace, setFocus: Bool) {
+        let displays = workspace.displays
+
         Logger.log("")
         Logger.log("")
         Logger.log("WORKSPACE: \(workspace.name)")
+        Logger.log("DISPLAYS: \(displays.joined(separator: ", "))")
         Logger.log("----")
         SpaceControl.hide()
 
-        activateWorkspaceDisplays(workspace, setFocus: setFocus)
-
-        NotificationCenter.default.post(name: .workspaceChanged, object: workspace)
-    }
-
-    func activateWorkspaceDisplays(_ workspace: Workspace, setFocus: Bool) {
-        let displays = workspace.displays
-        workspaceTransitionManager.showTransitionIfNeeded(for: workspace, on: displays)
-
-        for display in workspace.displays {
-            rememberHiddenApps(display: display)
+        guard displays.isNotEmpty else {
+            Logger.log("No displays found for workspace: \(workspace.name) - skipping")
+            return
         }
 
+        workspaceTransitionManager.showTransitionIfNeeded(for: workspace, on: displays)
+
+        rememberHiddenApps(workspaceToActivate: workspace)
         updateActiveWorkspace(workspace, on: displays)
         showApps(in: workspace, setFocus: setFocus, on: displays)
-        hideApps(in: workspace, on: displays)
+        hideApps(in: workspace)
 
         // Some apps may not hide properly,
         // so we hide apps in the workspace after a short delay
         hideAgainSubject.send(workspace)
+
+        NotificationCenter.default.post(name: .workspaceChanged, object: workspace)
     }
 
     func assignApps(_ apps: [MacApp], to workspace: Workspace) {
