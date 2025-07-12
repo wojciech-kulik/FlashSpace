@@ -192,7 +192,7 @@ extension MainViewModel {
     func deleteSelectedWorkspaces() {
         guard !selectedWorkspaces.isEmpty else { return }
 
-        workspaceRepository.deleteWorkspaces(ids: Set(selectedWorkspaces.map(\.id)))
+        workspaceRepository.deleteWorkspaces(ids: selectedWorkspaces.map(\.id).asSet)
         workspaces = workspaceRepository.workspaces
         selectedWorkspaces = []
     }

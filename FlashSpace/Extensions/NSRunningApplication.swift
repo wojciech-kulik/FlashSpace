@@ -20,7 +20,7 @@ extension [NSRunningApplication] {
     }
 
     func findFirstMatch(with apps: [MacApp]) -> NSRunningApplication? {
-        let bundleIdentifiers = Set(apps.map(\.bundleIdentifier))
+        let bundleIdentifiers = apps.map(\.bundleIdentifier).asSet
 
         return first { bundleIdentifiers.contains($0.bundleIdentifier ?? "") }
     }

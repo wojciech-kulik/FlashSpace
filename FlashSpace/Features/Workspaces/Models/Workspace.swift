@@ -37,7 +37,7 @@ extension Workspace {
 
     var displays: Set<DisplayName> {
         guard NSScreen.screens.count > 1 else {
-            return Set([NSScreen.main?.localizedName ?? ""])
+            return [NSScreen.main?.localizedName ?? ""]
         }
 
         guard display == Self.dynamicDisplayName else {

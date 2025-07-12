@@ -167,7 +167,10 @@ final class WorkspaceManager: ObservableObject {
         let workspaceApps = workspace.apps + floatingAppsSettings.floatingApps
         let isAnyWorkspaceAppRunning = regularApps
             .contains { workspaceApps.containsApp($0) }
-        let allAssignedApps = Set(workspaceRepository.workspaces.flatMap(\.apps).map(\.bundleIdentifier))
+        let allAssignedApps = workspaceRepository.workspaces
+            .flatMap(\.apps)
+            .map(\.bundleIdentifier)
+            .asSet
 
         let appsToHide = regularApps
             .filter {
@@ -365,11 +368,10 @@ extension WorkspaceManager {
         var selectedWorkspace = nextWorkspaces.first ?? screenWorkspaces.first
 
         if skipEmpty {
-            let runningApps = Set(
-                NSWorkspace.shared.runningApplications
-                    .filter { $0.activationPolicy == .regular }
-                    .compactMap(\.bundleIdentifier)
-            )
+            let runningApps = NSWorkspace.shared.runningApplications
+                .filter { $0.activationPolicy == .regular }
+                .compactMap(\.bundleIdentifier)
+                .asSet
 
             selectedWorkspace = (nextWorkspaces + screenWorkspaces)
                 .drop(while: { $0.apps.allSatisfy { !runningApps.contains($0.bundleIdentifier) } })
