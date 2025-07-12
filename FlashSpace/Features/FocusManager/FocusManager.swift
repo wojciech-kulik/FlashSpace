@@ -114,11 +114,10 @@ final class FocusManager {
         guard let (index, apps) = getFocusedAppIndex() else { return }
 
         let appsQueue = apps.dropFirst(index + 1) + apps.prefix(index)
-        let runningApps = Set(
-            NSWorkspace.shared.runningApplications
-                .excludeFloatingAppsOnDifferentScreen()
-                .compactMap(\.bundleIdentifier)
-        )
+        let runningApps = NSWorkspace.shared.runningApplications
+            .excludeFloatingAppsOnDifferentScreen()
+            .compactMap(\.bundleIdentifier)
+            .asSet
         let nextApp = appsQueue.first { app in runningApps.contains(app.bundleIdentifier) }
 
         NSWorkspace.shared.runningApplications
@@ -129,11 +128,10 @@ final class FocusManager {
     func previousWorkspaceApp() {
         guard let (index, apps) = getFocusedAppIndex() else { return }
 
-        let runningApps = Set(
-            NSWorkspace.shared.runningApplications
-                .excludeFloatingAppsOnDifferentScreen()
-                .compactMap(\.bundleIdentifier)
-        )
+        let runningApps = NSWorkspace.shared.runningApplications
+            .excludeFloatingAppsOnDifferentScreen()
+            .compactMap(\.bundleIdentifier)
+            .asSet
         let prefixApps = apps.prefix(index).reversed()
         let suffixApps = apps.suffix(apps.count - index - 1).reversed()
         let appsQueue = prefixApps + Array(suffixApps)
@@ -217,7 +215,7 @@ final class FocusManager {
         guard let workspace else { return nil }
 
         let apps = workspace.apps + floatingAppsSettings.floatingApps
-            .filter { $0.bundleIdentifier != "com.apple.finder" }
+            .filter { !$0.isFinder }
 
         let index = apps.firstIndex(of: focusedApp) ?? 0
 

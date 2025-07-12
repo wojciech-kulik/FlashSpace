@@ -20,7 +20,7 @@ extension [NSRunningApplication] {
     }
 
     func findFirstMatch(with apps: [MacApp]) -> NSRunningApplication? {
-        let bundleIdentifiers = Set(apps.map(\.bundleIdentifier))
+        let bundleIdentifiers = apps.map(\.bundleIdentifier).asSet
 
         return first { bundleIdentifiers.contains($0.bundleIdentifier ?? "") }
     }
@@ -31,6 +31,17 @@ extension [NSRunningApplication] {
 
         guard let activeWorkspace else { return self }
 
-        return filter { !floatingApps.containsApp($0) || $0.isOnTheSameScreen(as: activeWorkspace) }
+        return filter { app in
+            !floatingApps.containsApp(app) || app.isOnAnyDisplay(activeWorkspace.displays)
+        }
+    }
+
+    func regularVisibleApps(onDisplays displays: Set<DisplayName>, excluding apps: [MacApp]) -> [NSRunningApplication] {
+        filter { app in
+            app.activationPolicy == .regular &&
+                !app.isHidden &&
+                !apps.containsApp(app) &&
+                app.isOnAnyDisplay(displays)
+        }
     }
 }

@@ -10,6 +10,7 @@ import ShortcutRecorder
 struct AppDependencies {
     static let shared = AppDependencies()
 
+    let displayManager: DisplayManager
     let workspaceRepository: WorkspaceRepository
     let workspaceManager: WorkspaceManager
     let workspaceHotKeys: WorkspaceHotKeys
@@ -51,6 +52,7 @@ struct AppDependencies {
             spaceControlSettings: spaceControlSettings,
             integrationsSettings: integrationsSettings
         )
+        self.displayManager = DisplayManager(settingsRepository: settingsRepository)
         self.workspaceTransitionManager = WorkspaceTransitionManager(
             workspaceSettings: workspaceSettings
         )
@@ -65,7 +67,8 @@ struct AppDependencies {
             workspaceRepository: workspaceRepository,
             settingsRepository: settingsRepository,
             pictureInPictureManager: pictureInPictureManager,
-            workspaceTransitionManager: workspaceTransitionManager
+            workspaceTransitionManager: workspaceTransitionManager,
+            displayManager: displayManager
         )
         self.workspaceHotKeys = WorkspaceHotKeys(
             workspaceManager: workspaceManager,

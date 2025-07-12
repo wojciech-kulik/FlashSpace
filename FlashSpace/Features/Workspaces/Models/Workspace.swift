@@ -33,35 +33,42 @@ struct Workspace: Identifiable, Codable, Hashable {
 }
 
 extension Workspace {
-    /// Returns the assigned display name or fallback if not connected
-    var displayWithFallback: DisplayName {
-        guard !NSScreen.isConnected(display) else {
-            return display
-        }
+    static let dynamicDisplayName = "Dynamic"
 
+    var displays: Set<DisplayName> {
         guard NSScreen.screens.count > 1 else {
-            return NSScreen.main?.localizedName ?? ""
+            return [NSScreen.main?.localizedName ?? ""]
         }
 
-        let settings = AppDependencies.shared.workspaceSettings
-        let alternativeDisplays = settings.alternativeDisplays
-            .split(separator: ";")
-            .map { $0.split(separator: "=") }
-            .compactMap { pair -> (source: String, target: String)? in
-                guard pair.count == 2 else { return nil }
+        guard display == Self.dynamicDisplayName else {
+            return [displayManager.resolveDisplay(display)]
+        }
 
-                return (String(pair[0]).trimmed, String(pair[1]).trimmed)
-            }
+        return NSWorkspace.shared.runningApplications
+            .filter { $0.activationPolicy == .regular && apps.containsApp($0) }
+            .flatMap(\.allDisplays)
+            .asSet
+    }
 
-        let alternative = alternativeDisplays
-            .filter { $0.source == display }
-            .first { NSScreen.isConnected($0.target) }?
-            .target
+    var mainDisplay: DisplayName {
+        let workspaceDisplays = displays
 
-        return alternative ?? NSScreen.main?.localizedName ?? ""
+        return workspaceDisplays.count == 1
+            ? workspaceDisplays.first!
+            : displayManager.lastActiveDisplay(from: workspaceDisplays)
+    }
+
+    /// Returns display name for user-facing contexts (shows "Dynamic" for dynamic workspaces)
+    var displayForPrint: DisplayName {
+        display == Self.dynamicDisplayName ? display : displayManager.resolveDisplay(display)
     }
 
     var isOnTheCurrentScreen: Bool {
-        displayWithFallback == NSScreen.main?.localizedName
+        guard let currentScreen = NSScreen.main?.localizedName else { return false }
+        return displays.contains(currentScreen)
+    }
+
+    private var displayManager: DisplayManager {
+        AppDependencies.shared.displayManager
     }
 }

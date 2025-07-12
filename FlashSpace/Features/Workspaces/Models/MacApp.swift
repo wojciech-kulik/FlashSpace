@@ -70,3 +70,9 @@ struct MacApp: Codable, Hashable, Equatable {
         }
     }
 }
+
+extension MacApp {
+    var isFinder: Bool {
+        bundleIdentifier == "com.apple.finder"
+    }
+}
