@@ -92,9 +92,11 @@ final class MainViewModel: ObservableObject {
     var screens: [String] {
         let set = Set<String>(NSScreen.screens.compactMap(\.localizedName))
         let otherScreens = workspaces.map(\.display)
-        return Array(set.union(otherScreens))
+            .filter { $0 != Workspace.dynamicDisplayName }
+        let staticScreens = Array(set.union(otherScreens))
             .filter { !$0.isEmpty }
             .sorted()
+        return [Workspace.dynamicDisplayName] + staticScreens
     }
 
     private var cancellables: Set<AnyCancellable> = []
@@ -190,7 +192,7 @@ extension MainViewModel {
     func deleteSelectedWorkspaces() {
         guard !selectedWorkspaces.isEmpty else { return }
 
-        workspaceRepository.deleteWorkspaces(ids: Set(selectedWorkspaces.map(\.id)))
+        workspaceRepository.deleteWorkspaces(ids: selectedWorkspaces.map(\.id).asSet)
         workspaces = workspaceRepository.workspaces
         selectedWorkspaces = []
     }

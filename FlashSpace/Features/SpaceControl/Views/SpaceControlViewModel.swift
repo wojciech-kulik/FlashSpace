@@ -44,7 +44,7 @@ final class SpaceControlViewModel: ObservableObject {
     }
 
     func refresh() {
-        let activeWorkspaceIds = Set(workspaceManager.activeWorkspace.map(\.value.id))
+        let activeWorkspaceIds = workspaceManager.activeWorkspace.map(\.value.id).asSet
 
         workspaces = Array(
             workspaceRepository.workspaces

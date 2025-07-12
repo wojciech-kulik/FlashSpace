@@ -23,7 +23,7 @@ final class ListCommands: CommandExecutor {
 
             if let profile {
                 let result = withDisplay
-                    ? profile.workspaces.map { "\($0.name),\($0.displayWithFallback)" }.joined(separator: "\n")
+                    ? profile.workspaces.map { "\($0.name),\($0.displayForPrint)" }.joined(separator: "\n")
                     : profile.workspaces.map(\.name).joined(separator: "\n")
                 return CommandResponse(success: true, message: result)
             } else {
@@ -47,7 +47,7 @@ final class ListCommands: CommandExecutor {
                 return CommandResponse(success: false, error: "Workspace not found")
             }
 
-            let runningApps = Set(NSWorkspace.shared.runningApplications.map(\.bundleIdentifier))
+            let runningApps = NSWorkspace.shared.runningApplications.map(\.bundleIdentifier).asSet
 
             let result = workspace.apps
                 .filter { !onlyRunning || runningApps.contains($0.bundleIdentifier) }

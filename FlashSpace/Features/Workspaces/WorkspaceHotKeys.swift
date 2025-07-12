@@ -156,8 +156,12 @@ extension WorkspaceHotKeys {
         guard let updatedWorkspace = workspaceRepository.workspaces
             .first(where: { $0.id == workspace.id }) else { return }
 
-        activeApp.centerApp(display: updatedWorkspace.displayWithFallback)
         workspaceManager.assignApp(activeApp.toMacApp, to: updatedWorkspace)
+
+        if workspace.display != Workspace.dynamicDisplayName {
+            activeApp.centerApp(display: workspace.mainDisplay)
+        }
+
         Toast.showWith(
             icon: "square.stack.3d.up",
             message: "\(appName) - Assigned To \(workspace.name)",
@@ -176,12 +180,7 @@ extension WorkspaceHotKeys {
         }
 
         let visibleApps = NSWorkspace.shared.runningApplications
-            .filter {
-                $0.activationPolicy == .regular &&
-                    !$0.isHidden &&
-                    !floatingAppsSettings.floatingApps.containsApp($0) &&
-                    $0.isOnTheSameScreen(as: workspace)
-            }
+            .regularVisibleApps(onDisplays: workspace.displays, excluding: floatingAppsSettings.floatingApps)
 
         workspaceManager.assignApps(visibleApps.map(\.toMacApp), to: workspace)
 

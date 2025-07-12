@@ -8,10 +8,13 @@
 import AppKit
 
 extension NSRunningApplication {
+    var frame: CGRect? { mainWindow?.frame }
+    var isMinimized: Bool { mainWindow?.isMinimized == true }
+
     var display: DisplayName? {
         // HACK: Workaround for Orion Browser which puts
         // the main window on the main screen with size (1,1)
-        if bundleIdentifier == "com.kagi.kagimacOS" {
+        if isOrion {
             allWindows
                 .first { $0.frame.width > 10 && $0.frame.height > 10 }?
                 .frame
@@ -21,29 +24,32 @@ extension NSRunningApplication {
         }
     }
 
-    var frame: CGRect? { mainWindow?.frame }
-    var isMinimized: Bool { mainWindow?.isMinimized == true }
+    var allDisplays: Set<DisplayName> {
+        allWindows
+            .compactMap { $0.frame.getDisplay() }
+            .asSet
+    }
 
     var mainWindow: AXUIElement? {
         // HACK: Python app with running pygame module is causing
         // huge lags when other apps attempt to access its window
         // through the accessibility API.
         // A workaround is to simply skip this app.
-        guard bundleIdentifier != "org.python.python" else { return nil }
+        guard !isPython else { return nil }
 
         let appElement = AXUIElementCreateApplication(processIdentifier)
         return appElement.getAttribute(.mainWindow)
     }
 
     var focusedWindow: AXUIElement? {
-        guard bundleIdentifier != "org.python.python" else { return nil }
+        guard !isPython else { return nil }
 
         let appElement = AXUIElementCreateApplication(processIdentifier)
         return appElement.getAttribute(.focusedWindow)
     }
 
     var allWindows: [(window: AXUIElement, frame: CGRect)] {
-        guard bundleIdentifier != "org.python.python" else { return [] }
+        guard !isPython else { return [] }
 
         let appElement = AXUIElementCreateApplication(processIdentifier)
         let windows: [AXUIElement]? = appElement.getAttribute(.windows)
@@ -54,7 +60,7 @@ extension NSRunningApplication {
             ?? []
     }
 
-    func isOnTheSameScreen(as workspace: Workspace) -> Bool {
-        display == workspace.displayWithFallback
+    func isOnAnyDisplay(_ displays: Set<DisplayName>) -> Bool {
+        !allDisplays.isDisjoint(with: displays)
     }
 }

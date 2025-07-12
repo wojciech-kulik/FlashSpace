@@ -104,7 +104,7 @@ final class WorkspaceRepository: ObservableObject {
             workspaces[sourceWorkspaceIndex].appToFocus = nil
         }
 
-        let targetAppBundleIds = Set(workspaces[targetWorkspaceIndex].apps.map(\.bundleIdentifier))
+        let targetAppBundleIds = workspaces[targetWorkspaceIndex].apps.map(\.bundleIdentifier).asSet
         let appsToAdd = apps.filter { !targetAppBundleIds.contains($0.bundleIdentifier) }
 
         workspaces[sourceWorkspaceIndex].apps.removeAll { apps.contains($0) }
