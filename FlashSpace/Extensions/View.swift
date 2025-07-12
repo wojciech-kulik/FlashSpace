@@ -18,9 +18,7 @@ extension View {
 
     @ViewBuilder
     func hidden(_ isHidden: Bool) -> some View {
-        if isHidden {
-            hidden()
-        } else {
+        if !isHidden {
             self
         }
     }

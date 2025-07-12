@@ -33,14 +33,12 @@ struct Workspace: Identifiable, Codable, Hashable {
 }
 
 extension Workspace {
-    static let dynamicDisplayName = "Dynamic"
-
     var displays: Set<DisplayName> {
         guard NSScreen.screens.count > 1 else {
             return [NSScreen.main?.localizedName ?? ""]
         }
 
-        guard display == Self.dynamicDisplayName else {
+        guard isDynamic else {
             return [displayManager.resolveDisplay(display)]
         }
 
@@ -50,22 +48,25 @@ extension Workspace {
             .asSet
     }
 
-    var mainDisplay: DisplayName {
-        let workspaceDisplays = displays
-
-        return workspaceDisplays.count == 1
-            ? workspaceDisplays.first!
-            : displayManager.lastActiveDisplay(from: workspaceDisplays)
-    }
-
-    /// Returns display name for user-facing contexts (shows "Dynamic" for dynamic workspaces)
     var displayForPrint: DisplayName {
-        display == Self.dynamicDisplayName ? display : displayManager.resolveDisplay(display)
+        if isDynamic,
+           let mainDisplay = NSScreen.main?.localizedName,
+           displays.contains(mainDisplay) {
+            return mainDisplay
+        }
+
+        return isDynamic
+            ? displayManager.lastActiveDisplay(from: displays)
+            : displayManager.resolveDisplay(display)
     }
 
     var isOnTheCurrentScreen: Bool {
         guard let currentScreen = NSScreen.main?.localizedName else { return false }
         return displays.contains(currentScreen)
+    }
+
+    var isDynamic: Bool {
+        AppDependencies.shared.workspaceSettings.displayMode == .dynamic
     }
 
     private var displayManager: DisplayManager {
