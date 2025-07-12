@@ -67,7 +67,8 @@ struct AppDependencies {
             workspaceRepository: workspaceRepository,
             settingsRepository: settingsRepository,
             pictureInPictureManager: pictureInPictureManager,
-            workspaceTransitionManager: workspaceTransitionManager
+            workspaceTransitionManager: workspaceTransitionManager,
+            displayManager: displayManager
         )
         self.workspaceHotKeys = WorkspaceHotKeys(
             workspaceManager: workspaceManager,

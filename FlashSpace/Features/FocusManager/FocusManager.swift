@@ -217,7 +217,7 @@ final class FocusManager {
         guard let workspace else { return nil }
 
         let apps = workspace.apps + floatingAppsSettings.floatingApps
-            .filter { $0.bundleIdentifier != "com.apple.finder" }
+            .filter { !$0.isFinder }
 
         let index = apps.firstIndex(of: focusedApp) ?? 0
 

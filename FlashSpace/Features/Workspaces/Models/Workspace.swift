@@ -36,32 +36,39 @@ extension Workspace {
     static let dynamicDisplayName = "Dynamic"
 
     var displays: Set<DisplayName> {
-        if NSScreen.screens.count == 1 {
+        guard NSScreen.screens.count > 1 else {
             return Set([NSScreen.main?.localizedName ?? ""])
         }
-        if display == Self.dynamicDisplayName {
-            return Set(NSWorkspace.shared.runningApplications
-                .filter { $0.activationPolicy == .regular && apps.containsApp($0) }
-                .flatMap(\.allDisplays)
-            )
+
+        guard display == Self.dynamicDisplayName else {
+            return [displayManager.resolveDisplay(display)]
         }
-        return Set([AppDependencies.shared.displayManager.resolveDisplay(display)])
+
+        return NSWorkspace.shared.runningApplications
+            .filter { $0.activationPolicy == .regular && apps.containsApp($0) }
+            .flatMap(\.allDisplays)
+            .asSet
     }
 
-    // mainly for space control
-    var singleDisplay: DisplayName {
-        let allDisplays = displays
-        if allDisplays.count == 1 { return allDisplays.first! }
-        return AppDependencies.shared.displayManager.selectDisplay(from: allDisplays)
+    var mainDisplay: DisplayName {
+        let workspaceDisplays = displays
+
+        return workspaceDisplays.count == 1
+            ? workspaceDisplays.first!
+            : displayManager.lastActiveDisplay(from: workspaceDisplays)
     }
 
     /// Returns display name for user-facing contexts (shows "Dynamic" for dynamic workspaces)
     var displayForPrint: DisplayName {
-        display == Self.dynamicDisplayName ? display : AppDependencies.shared.displayManager.resolveDisplay(display)
+        display == Self.dynamicDisplayName ? display : displayManager.resolveDisplay(display)
     }
 
     var isOnTheCurrentScreen: Bool {
         guard let currentScreen = NSScreen.main?.localizedName else { return false }
         return displays.contains(currentScreen)
+    }
+
+    private var displayManager: DisplayManager {
+        AppDependencies.shared.displayManager
     }
 }

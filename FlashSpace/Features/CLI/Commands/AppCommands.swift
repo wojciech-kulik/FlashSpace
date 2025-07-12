@@ -99,7 +99,7 @@ final class AppCommands: CommandExecutor {
         }
 
         let visibleApps = NSWorkspace.shared.runningApplications
-            .regularVisibleApps(coveredBy: workspace, excluding: floatingAppsSettings.floatingApps)
+            .regularVisibleApps(onDisplays: workspace.displays, excluding: floatingAppsSettings.floatingApps)
 
         guard !visibleApps.isEmpty else {
             return CommandResponse(
