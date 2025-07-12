@@ -43,6 +43,7 @@ struct AppSettings: Codable {
     var swipeDown4FingerAction: GestureAction?
 
     // Workspaces
+    var displayMode: DisplayMode?
     var centerCursorOnWorkspaceChange: Bool?
     var changeWorkspaceOnAppAssign: Bool?
     var skipEmptyWorkspacesOnSwitch: Bool?

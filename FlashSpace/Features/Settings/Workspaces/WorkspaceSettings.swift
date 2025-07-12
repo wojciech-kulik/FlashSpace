@@ -9,6 +9,8 @@ import Combine
 import Foundation
 
 final class WorkspaceSettings: ObservableObject {
+    @Published var displayMode: DisplayMode = .static
+
     @Published var centerCursorOnWorkspaceChange = false
     @Published var changeWorkspaceOnAppAssign = true
     @Published var skipEmptyWorkspacesOnSwitch = false
@@ -48,6 +50,8 @@ final class WorkspaceSettings: ObservableObject {
 
     private func observe() {
         observer = Publishers.MergeMany(
+            $displayMode.settingsPublisher(),
+
             $centerCursorOnWorkspaceChange.settingsPublisher(),
             $changeWorkspaceOnAppAssign.settingsPublisher(),
             $skipEmptyWorkspacesOnSwitch.settingsPublisher(),
@@ -83,6 +87,8 @@ extension WorkspaceSettings: SettingsProtocol {
 
     func load(from appSettings: AppSettings) {
         observer = nil
+        displayMode = appSettings.displayMode ?? .static
+
         centerCursorOnWorkspaceChange = appSettings.centerCursorOnWorkspaceChange ?? false
         changeWorkspaceOnAppAssign = appSettings.changeWorkspaceOnAppAssign ?? true
         skipEmptyWorkspacesOnSwitch = appSettings.skipEmptyWorkspacesOnSwitch ?? false
@@ -109,6 +115,8 @@ extension WorkspaceSettings: SettingsProtocol {
     }
 
     func update(_ appSettings: inout AppSettings) {
+        appSettings.displayMode = displayMode
+
         appSettings.centerCursorOnWorkspaceChange = centerCursorOnWorkspaceChange
         appSettings.changeWorkspaceOnAppAssign = changeWorkspaceOnAppAssign
         appSettings.skipEmptyWorkspacesOnSwitch = skipEmptyWorkspacesOnSwitch

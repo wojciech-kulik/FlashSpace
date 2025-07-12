@@ -13,6 +13,21 @@ struct WorkspacesSettingsView: View {
 
     var body: some View {
         Form {
+            Section("Displays") {
+                Picker("Display Assignment Mode", selection: $settings.displayMode) {
+                    ForEach(DisplayMode.allCases) { action in
+                        Text(action.description).tag(action)
+                    }
+                }
+
+                Text("Static Mode - manually assign workspaces to displays.\n\n" +
+                    "Dynamic Mode - automatically assigns workspaces to displays based on the positions of your applications. " +
+                    "In this mode, a single workspace can span multiple displays."
+                )
+                .font(.callout)
+                .foregroundStyle(.secondary)
+            }
+
             Section("Behaviors") {
                 Toggle("Center Cursor In Focused App On Workspace Change", isOn: $settings.centerCursorOnWorkspaceChange)
                 Toggle("Automatically Change Workspace On App Assignment", isOn: $settings.changeWorkspaceOnAppAssign)
@@ -101,6 +116,7 @@ struct WorkspacesSettingsView: View {
                 .foregroundStyle(.secondary)
                 .font(.callout)
             }
+            .hidden(settings.displayMode == .dynamic)
 
             Section("Picture-in-Picture") {
                 Toggle("Enable Picture-in-Picture Support", isOn: $settings.enablePictureInPictureSupport)

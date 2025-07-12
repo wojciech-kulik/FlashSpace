@@ -158,8 +158,8 @@ extension WorkspaceHotKeys {
 
         workspaceManager.assignApp(activeApp.toMacApp, to: updatedWorkspace)
 
-        if workspace.display != Workspace.dynamicDisplayName {
-            activeApp.centerApp(display: workspace.mainDisplay)
+        if !workspace.isDynamic {
+            activeApp.centerApp(display: workspace.display)
         }
 
         Toast.showWith(

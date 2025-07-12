@@ -42,7 +42,9 @@ struct WorkspaceConfigurationView: View {
                 ForEach(viewModel.screens, id: \.self) {
                     Text($0).tag($0)
                 }
-            }.padding(.bottom)
+            }
+            .padding(.bottom)
+            .hidden(viewModel.displayMode == .dynamic)
 
             Picker("Focus App:", selection: $viewModel.workspaceAppToFocus) {
                 ForEach(viewModel.focusAppOptions, id: \.self) {
