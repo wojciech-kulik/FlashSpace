@@ -18,8 +18,11 @@ final class WorkspaceScreenshotManager {
     private var cancellables = Set<AnyCancellable>()
 
     private let lock = NSLock()
+    private let displayManager: DisplayManager
 
-    init() {
+    init(displayManaer: DisplayManager) {
+        self.displayManager = displayManaer
+
         observe()
     }
 
@@ -35,7 +38,7 @@ final class WorkspaceScreenshotManager {
         do {
             let availableContent = try await SCShareableContent.excludingDesktopWindows(false, onScreenWindowsOnly: false)
             let display = await MainActor.run {
-                let workspaceDisplay = workspace.mainDisplay
+                let workspaceDisplay = mainDisplay(for: workspace)
                 return availableContent.displays
                     .first { $0.frame.getDisplay() == workspaceDisplay }
             }
@@ -60,6 +63,14 @@ final class WorkspaceScreenshotManager {
         } catch {
             Logger.log(error)
         }
+    }
+
+    private func mainDisplay(for workspace: Workspace) -> DisplayName {
+        let workspaceDisplays = workspace.displays
+
+        return workspaceDisplays.count == 1
+            ? workspaceDisplays.first!
+            : displayManager.lastActiveDisplay(from: workspaceDisplays)
     }
 
     private func imageFromSampleBuffer(_ buffer: CMSampleBuffer) -> NSImage? {
