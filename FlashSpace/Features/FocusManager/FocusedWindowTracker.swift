@@ -57,7 +57,7 @@ final class FocusedWindowTracker {
             .first(where: { $0.apps.containsApp(app) }) else { return }
 
         // Skip if the workspace is already active
-        guard !activeWorkspaces.map(\.id).contains(workspace.id) else { return }
+        guard activeWorkspaces.count(where: { $0.id == workspace.id }) < workspace.displays.count else { return }
 
         // Skip if the focused window is in Picture in Picture mode
         guard !settingsRepository.workspaceSettings.enablePictureInPictureSupport ||
