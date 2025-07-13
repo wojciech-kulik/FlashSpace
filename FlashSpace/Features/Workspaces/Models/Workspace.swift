@@ -34,18 +34,21 @@ struct Workspace: Identifiable, Codable, Hashable {
 
 extension Workspace {
     var displays: Set<DisplayName> {
-        guard NSScreen.screens.count > 1 else {
+        if NSScreen.screens.count == 1 {
             return [NSScreen.main?.localizedName ?? ""]
-        }
-
-        guard isDynamic else {
+        } else if isDynamic {
+            // TODO: After disconnecting a display, the detection may not work correctly.
+            // The app will have the old coordinates until it is shown again, which
+            // prevents from detecting the correct display.
+            //
+            // The workaround is to activate the app manually to update its frame.
+            return NSWorkspace.shared.runningApplications
+                .filter { $0.activationPolicy == .regular && apps.containsApp($0) }
+                .flatMap(\.allDisplays)
+                .asSet
+        } else {
             return [displayManager.resolveDisplay(display)]
         }
-
-        return NSWorkspace.shared.runningApplications
-            .filter { $0.activationPolicy == .regular && apps.containsApp($0) }
-            .flatMap(\.allDisplays)
-            .asSet
     }
 
     var displayForPrint: DisplayName {
