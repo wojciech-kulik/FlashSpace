@@ -28,6 +28,7 @@ final class SpaceControlViewModel: ObservableObject {
     private let workspaceRepository = AppDependencies.shared.workspaceRepository
     private let workspaceManager = AppDependencies.shared.workspaceManager
     private let screenshotManager = AppDependencies.shared.workspaceScreenshotManager
+    private let displayManager = AppDependencies.shared.displayManager
 
     init() {
         refresh()
@@ -45,6 +46,7 @@ final class SpaceControlViewModel: ObservableObject {
 
     func refresh() {
         let activeWorkspaceIds = workspaceManager.activeWorkspace.map(\.value.id).asSet
+        let mainDisplay = NSScreen.main?.localizedName ?? ""
 
         workspaces = Array(
             workspaceRepository.workspaces
@@ -52,17 +54,33 @@ final class SpaceControlViewModel: ObservableObject {
                 .prefix(15)
                 .enumerated()
                 .map {
-                    SpaceControlWorkspace(
+                    let workspace = $0.element
+                    let displayName = settings.spaceControlCurrentDisplayWorkspaces
+                        ? mainDisplay
+                        : self.mainDisplay(for: workspace)
+                    let key = WorkspaceScreenshotManager.ScreenshotKey(
+                        displayName: displayName,
+                        workspaceID: workspace.id
+                    )
+                    return SpaceControlWorkspace(
                         index: $0.offset,
-                        name: $0.element.name,
-                        symbol: $0.element.symbolIconName ?? .defaultIconSymbol,
-                        screenshotData: screenshotManager.screenshots[$0.element.id],
-                        isActive: activeWorkspaceIds.contains($0.element.id),
-                        originalWorkspace: $0.element
+                        name: workspace.name,
+                        symbol: workspace.symbolIconName ?? .defaultIconSymbol,
+                        screenshotData: screenshotManager.screenshots[key],
+                        isActive: activeWorkspaceIds.contains(workspace.id),
+                        originalWorkspace: workspace
                     )
                 }
         )
         calculateColsAndRows(workspaces.count)
+    }
+
+    private func mainDisplay(for workspace: Workspace) -> DisplayName {
+        let workspaceDisplays = workspace.displays
+
+        return workspaceDisplays.count == 1
+            ? workspaceDisplays.first!
+            : displayManager.lastActiveDisplay(from: workspaceDisplays)
     }
 
     private func calculateColsAndRows(_ workspaceCount: Int) {
