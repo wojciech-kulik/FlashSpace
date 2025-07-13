@@ -49,6 +49,11 @@ final class PictureInPictureManager {
 
         guard hiddenWindows[app] == nil else { return true }
 
+        guard settings.displayMode == .static || app.allDisplays.count <= 1 else {
+            // pip is not supported for multi-display apps
+            return false
+        }
+
         return hideInCornerNonPipWindows(app: app)
     }
 
