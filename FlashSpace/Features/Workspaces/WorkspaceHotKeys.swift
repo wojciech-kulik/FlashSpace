@@ -45,10 +45,19 @@ final class WorkspaceHotKeys {
         guard let shortcut = workspace.activateShortcut else { return nil }
 
         let action = { [weak self] in
-            guard let updatedWorkspace = self?.workspaceRepository.workspaces
+            guard let self, let updatedWorkspace = workspaceRepository.workspaces
                 .first(where: { $0.id == workspace.id }) else { return }
 
-            self?.workspaceManager.activateWorkspace(updatedWorkspace, setFocus: true)
+            if updatedWorkspace.isDynamic, updatedWorkspace.displays.isEmpty {
+                Toast.showWith(
+                    icon: "square.stack.3d.up",
+                    message: "\(workspace.name) - No Running Apps To Show",
+                    textColor: .gray
+                )
+                return
+            }
+
+            workspaceManager.activateWorkspace(updatedWorkspace, setFocus: true)
         }
 
         return (shortcut, action)
