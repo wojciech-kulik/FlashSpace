@@ -1,7 +1,27 @@
 <h3>🤩 Features</h3>
+<p>FlashSpace supports now two modes of display assignment:</p>
+
 <ul>
+  <li style="margin-bottom: 1em">
+    <strong>Static (default)</strong> - Each workspace is assigned to a specific
+    display. This is perfect for users who want to have a dedicated workspace
+    for each display, similar to how macOS Spaces work. This mode can be
+    challenging if you use multiple displays and change their arrangement
+    frequently.
+  </li>
   <li>
-    <strong>feat(workspaces):</strong> add Workspaces menubar item
-    <a href="https://github.com/wojciech-kulik/FlashSpace/pull/317">#317</a>
+    <strong>Dynamic</strong> - Each workspace is automatically assigned to the
+    displays where its apps are located. In this mode, one workspace can be
+    shown on multiple displays at the same time. This is useful for users who
+    want to rearrange workspaces by moving apps between displays without
+    changing the configuration. You can't show empty workspaces with this mode.
   </li>
 </ul>
+
+<p>
+  The display assignment mode can be changed in the App Settings -> Workspaces.
+</p>
+
+<a href="https://github.com/wojciech-kulik/FlashSpace/pull/348"
+  >Implemented by @brodmo and @wojciech-kulik</a
+>
