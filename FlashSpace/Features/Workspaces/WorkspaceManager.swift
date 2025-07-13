@@ -94,7 +94,7 @@ final class WorkspaceManager: ObservableObject {
     }
 
     private func rememberLastFocusedApp(_ application: NSRunningApplication, retry: Bool) {
-        guard let display = application.display else {
+        guard application.display != nil else {
             if retry {
                 Logger.log("Retrying to get display for \(application.localizedName ?? "")")
                 return DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
@@ -107,12 +107,14 @@ final class WorkspaceManager: ObservableObject {
             }
         }
 
-        if let activeWorkspace = activeWorkspace[display], activeWorkspace.apps.containsApp(application) {
+        let focusedDisplay = NSScreen.main?.localizedName ?? ""
+
+        if let activeWorkspace = activeWorkspace[focusedDisplay], activeWorkspace.apps.containsApp(application) {
             lastFocusedApp[activeWorkspace.id] = application.toMacApp
-            updateActiveWorkspace(activeWorkspace, on: activeWorkspace.displays)
+            updateActiveWorkspace(activeWorkspace, on: [focusedDisplay])
         }
 
-        displayManager.trackDisplayFocus(on: display, for: application)
+        displayManager.trackDisplayFocus(on: focusedDisplay, for: application)
     }
 
     private func showApps(in workspace: Workspace, setFocus: Bool, on displays: Set<DisplayName>) {
