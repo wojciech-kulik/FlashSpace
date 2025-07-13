@@ -43,7 +43,7 @@ https://github.com/user-attachments/assets/09c574c5-512f-47b5-b644-feac0e1de4b0
 1. Move all your apps to a single macOS space (per display).
 1. Create a workspace.
 1. Assign apps to it.
-1. Assign a display to the workspace.
+1. Assign a display to the workspace (or use [dynamic mode](#%EF%B8%8F-display-assignment-modes)).
 1. Set a hotkey for quick workspace activation.
 1. Follow the same steps for other workspaces.
 1. Switch between configured workspaces using hotkeys.
@@ -77,6 +77,7 @@ The app allows workspaces to be switched independently on each display.
 - [x] Floating apps - keep apps visible across all workspaces
 - [x] Configuration through GUI and config file
 - [x] Support for multiple config file formats: JSON, YAML, and TOML
+- [x] [Dynamic display assignment](#%EF%B8%8F-display-assignment-modes)
 - [x] [CLI](#-command-line-interface) - interact with the app using the command line interface
 - [x] [Picture-in-Picture](#-picture-in-picture-support) support
 - [x] [SketchyBar] integration
@@ -118,6 +119,23 @@ PiP window.
 If the PiP window is not visible, the standard behavior is applied.
 
 Supported browsers: Safari, Zen Browser, Chrome, Firefox, Brave, Vivaldi, Arc, Opera.
+
+## 🖥️ Display Assignment Modes
+
+FlashSpace supports two modes of display assignment:
+
+- **Static (default)** - Each workspace is assigned to a specific display. This is
+  perfect for users who want to have a dedicated workspace for each display,
+  similar to how macOS Spaces work. This mode can be challenging if you use
+  multiple displays and change their arrangement frequently.
+
+- **Dynamic** - Each workspace is automatically assigned to the displays where
+  its apps are located. In this mode, one workspace can be shown on multiple
+  displays at the same time. This is useful for users who want to rearrange
+  workspaces by moving apps between displays without changing the configuration.
+  You can't show empty workspaces with this mode.
+
+The display assignment mode can be changed in the App Settings -> Workspaces.
 
 ## 🖥️ SketchyBar Integration
 
@@ -319,7 +337,6 @@ Big thanks to all the sponsors who support this project 🍻!
 
 <a href="https://github.com/bjrmatos"><img src="https://avatars.githubusercontent.com/u/4262050" width="40" height="40" alt="@bjrmatos" title="bjrmatos"></a>
 <a href="https://github.com/notlus"><img src="https://avatars.githubusercontent.com/u/828989" width="40" height="40" alt="@notlus" title="notlus"></a>
-<a href="https://github.com/frankroeder"><img src="https://avatars.githubusercontent.com/u/19746932" width="40" height="40" alt="@frankroeder" title="frankroeder"></a>
 <a href="https://github.com/Cyberax"><img src="https://avatars.githubusercontent.com/u/1136550" width="40" height="40" alt="@Cyberax" title="Cyberax"></a>
 
 ### One Time Sponsors
@@ -332,6 +349,10 @@ Big thanks to all the sponsors who support this project 🍻!
 <a href="https://github.com/ashaney"><img src="https://avatars.githubusercontent.com/u/25646923" width="40" height="40" alt="@ashaney" title="ashaney"></a>
 <a href="https://github.com/exsesx"><img src="https://avatars.githubusercontent.com/u/20399517" width="40" height="40" alt="@exsesx" title="exsesx"></a>
 <a href="https://github.com/konpa"><img src="https://avatars.githubusercontent.com/u/778731" width="40" height="40" alt="@konpa" title="konpa"></a>
+
+### Past Monthly Sponsors
+
+<a href="https://github.com/frankroeder"><img src="https://avatars.githubusercontent.com/u/19746932" width="40" height="40" alt="@frankroeder" title="frankroeder"></a>
 
 &nbsp;
 
