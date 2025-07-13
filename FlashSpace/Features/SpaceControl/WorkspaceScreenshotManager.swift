@@ -14,19 +14,21 @@ import SwiftUI
 final class WorkspaceScreenshotManager {
     typealias ImageData = Data
 
-    private(set) var screenshots: [WorkspaceID: ImageData] = [:]
+    struct ScreenshotKey: Hashable {
+        let displayName: DisplayName
+        let workspaceID: WorkspaceID
+    }
+
+    private(set) var screenshots: [ScreenshotKey: ImageData] = [:]
     private var cancellables = Set<AnyCancellable>()
 
     private let lock = NSLock()
-    private let displayManager: DisplayManager
 
-    init(displayManaer: DisplayManager) {
-        self.displayManager = displayManaer
-
+    init() {
         observe()
     }
 
-    func captureWorkspace(_ workspace: Workspace) async {
+    func captureWorkspace(_ workspace: Workspace, displayName: DisplayName) async {
         let shouldCapture = await MainActor.run {
             !SpaceControl.isVisible &&
                 SpaceControl.isEnabled &&
@@ -38,9 +40,7 @@ final class WorkspaceScreenshotManager {
         do {
             let availableContent = try await SCShareableContent.excludingDesktopWindows(false, onScreenWindowsOnly: false)
             let display = await MainActor.run {
-                let workspaceDisplay = mainDisplay(for: workspace)
-                return availableContent.displays
-                    .first { $0.frame.getDisplay() == workspaceDisplay }
+                availableContent.displays.first { $0.frame.getDisplay() == displayName }
             }
 
             guard let display else { return }
@@ -58,19 +58,15 @@ final class WorkspaceScreenshotManager {
             )
 
             if let image = imageFromSampleBuffer(screenshot) {
-                saveScreenshot(image, workspace: workspace)
+                let key = ScreenshotKey(
+                    displayName: displayName,
+                    workspaceID: workspace.id
+                )
+                saveScreenshot(image, workspace: workspace, key: key)
             }
         } catch {
             Logger.log(error)
         }
-    }
-
-    private func mainDisplay(for workspace: Workspace) -> DisplayName {
-        let workspaceDisplays = workspace.displays
-
-        return workspaceDisplays.count == 1
-            ? workspaceDisplays.first!
-            : displayManager.lastActiveDisplay(from: workspaceDisplays)
     }
 
     private func imageFromSampleBuffer(_ buffer: CMSampleBuffer) -> NSImage? {
@@ -84,7 +80,7 @@ final class WorkspaceScreenshotManager {
         return nsImage
     }
 
-    private func saveScreenshot(_ image: NSImage, workspace: Workspace) {
+    private func saveScreenshot(_ image: NSImage, workspace: Workspace, key: ScreenshotKey) {
         let newSize = CGSize(
             width: 1400.0,
             height: (1400.0 / image.size.width) * image.size.height
@@ -102,7 +98,7 @@ final class WorkspaceScreenshotManager {
         else { return }
 
         lock.lock()
-        screenshots[workspace.id] = jpegData
+        screenshots[key] = jpegData
         lock.unlock()
     }
 
@@ -111,8 +107,10 @@ final class WorkspaceScreenshotManager {
             .publisher(for: .workspaceTransitionFinished)
             .compactMap { $0.object as? Workspace }
             .sink { [weak self] workspace in
-                Task.detached { [weak self] in
-                    await self?.captureWorkspace(workspace)
+                for display in workspace.displays {
+                    Task.detached { [weak self] in
+                        await self?.captureWorkspace(workspace, displayName: display)
+                    }
                 }
             }
             .store(in: &cancellables)
