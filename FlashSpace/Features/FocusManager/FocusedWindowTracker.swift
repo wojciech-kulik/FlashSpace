@@ -64,16 +64,26 @@ final class FocusedWindowTracker {
             !app.supportsPictureInPicture ||
             app.focusedWindow?.isPictureInPicture(bundleId: app.bundleIdentifier) != true else { return }
 
-        Logger.log("")
-        Logger.log("")
-        Logger.log("Activating workspace for app: \(workspace.name)")
-        workspaceManager.updateLastFocusedApp(app.toMacApp, in: workspace)
-        workspaceManager.activateWorkspace(workspace, setFocus: false)
-        app.activate()
+        let activate = { [self] in
+            Logger.log("")
+            Logger.log("")
+            Logger.log("Activating workspace for app: \(workspace.name)")
+            workspaceManager.updateLastFocusedApp(app.toMacApp, in: workspace)
+            workspaceManager.activateWorkspace(workspace, setFocus: false)
+            app.activate()
 
-        // Restore the app if it was hidden
-        if settingsRepository.workspaceSettings.enablePictureInPictureSupport, app.supportsPictureInPicture {
-            pictureInPictureManager.restoreAppIfNeeded(app: app)
+            // Restore the app if it was hidden
+            if settingsRepository.workspaceSettings.enablePictureInPictureSupport, app.supportsPictureInPicture {
+                pictureInPictureManager.restoreAppIfNeeded(app: app)
+            }
+        }
+
+        if workspace.isDynamic, workspace.displays.isEmpty {
+            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) {
+                activate()
+            }
+        } else {
+            activate()
         }
     }
 }
