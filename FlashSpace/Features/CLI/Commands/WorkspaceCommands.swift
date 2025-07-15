@@ -44,13 +44,13 @@ final class WorkspaceCommands: CommandExecutor {
         case .updateWorkspace(let request):
             return updateWorkspace(request)
 
-        case .nextWorkspace(let skipEmpty, let clean):
-            workspaceManager.activateWorkspace(next: true, skipEmpty: skipEmpty)
+        case .nextWorkspace(let skipEmpty, let clean, let loop):
+            workspaceManager.activateWorkspace(next: true, skipEmpty: skipEmpty, loop: loop)
             if clean { workspaceManager.hideUnassignedApps() }
             return CommandResponse(success: true)
 
-        case .previousWorkspace(let skipEmpty, let clean):
-            workspaceManager.activateWorkspace(next: false, skipEmpty: skipEmpty)
+        case .previousWorkspace(let skipEmpty, let clean, let loop):
+            workspaceManager.activateWorkspace(next: false, skipEmpty: skipEmpty, loop: loop)
             if clean { workspaceManager.hideUnassignedApps() }
             return CommandResponse(success: true)
 

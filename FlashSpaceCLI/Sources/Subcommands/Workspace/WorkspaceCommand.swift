@@ -35,6 +35,9 @@ struct WorkspaceCommand: ParsableCommand {
     @Flag(help: "Skip empty workspaces (works only with --next or --prev)")
     var skipEmpty = false
 
+    @Flag(help: "Loop back to the first workspace when reaching the last one and vice versa (works only with --next or --prev)")
+    var loop = false
+
     @Flag(help: "Hide all apps that are not assigned to the selected workspace")
     var clean = false
 
@@ -44,9 +47,9 @@ struct WorkspaceCommand: ParsableCommand {
         } else if let number {
             sendCommand(.activateWorkspace(name: nil, number: number, clean: clean))
         } else if next {
-            sendCommand(.nextWorkspace(skipEmpty: skipEmpty, clean: clean))
+            sendCommand(.nextWorkspace(skipEmpty: skipEmpty, clean: clean, loop: loop))
         } else if prev {
-            sendCommand(.previousWorkspace(skipEmpty: skipEmpty, clean: clean))
+            sendCommand(.previousWorkspace(skipEmpty: skipEmpty, clean: clean, loop: loop))
         } else if recent {
             sendCommand(.recentWorkspace(clean: clean))
         } else {

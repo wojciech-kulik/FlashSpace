@@ -365,7 +365,7 @@ extension WorkspaceManager {
         }
     }
 
-    func activateWorkspace(next: Bool, skipEmpty: Bool) {
+    func activateWorkspace(next: Bool, skipEmpty: Bool, loop: Bool) {
         guard let screen = displayManager.getCursorScreen() else { return }
 
         var screenWorkspaces = workspaceRepository.workspaces
@@ -381,7 +381,7 @@ extension WorkspaceManager {
             .drop(while: { $0.id != activeWorkspace.id })
             .dropFirst()
 
-        var selectedWorkspace = nextWorkspaces.first ?? screenWorkspaces.first
+        var selectedWorkspace = nextWorkspaces.first ?? (loop ? screenWorkspaces.first : nil)
 
         if skipEmpty {
             let runningApps = NSWorkspace.shared.runningApplications
@@ -389,7 +389,7 @@ extension WorkspaceManager {
                 .compactMap(\.bundleIdentifier)
                 .asSet
 
-            selectedWorkspace = (nextWorkspaces + screenWorkspaces)
+            selectedWorkspace = (nextWorkspaces + (loop ? screenWorkspaces : []))
                 .drop(while: { $0.apps.allSatisfy { !runningApps.contains($0.bundleIdentifier) } })
                 .first
         }

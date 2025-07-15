@@ -124,7 +124,8 @@ final class WorkspaceHotKeys {
 
             workspaceManager.activateWorkspace(
                 next: next,
-                skipEmpty: workspaceSettings.skipEmptyWorkspacesOnSwitch
+                skipEmpty: workspaceSettings.skipEmptyWorkspacesOnSwitch,
+                loop: workspaceSettings.loopWorkspaces
             )
         }
 
