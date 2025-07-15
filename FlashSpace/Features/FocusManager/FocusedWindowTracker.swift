@@ -42,6 +42,8 @@ final class FocusedWindowTracker {
     }
 
     private func activeApplicationChanged(_ app: NSRunningApplication) {
+        guard settingsRepository.workspaceSettings.activeWorkspaceOnFocusChange else { return }
+
         let activeWorkspaces = workspaceManager.activeWorkspace.values
 
         // Skip if the workspace was activated recently

@@ -13,6 +13,7 @@ final class WorkspaceSettings: ObservableObject {
 
     @Published var centerCursorOnWorkspaceChange = false
     @Published var changeWorkspaceOnAppAssign = true
+    @Published var activeWorkspaceOnFocusChange = true
     @Published var skipEmptyWorkspacesOnSwitch = false
     @Published var keepUnassignedAppsOnSwitch = false
     @Published var restoreHiddenAppsOnSwitch = true
@@ -54,6 +55,7 @@ final class WorkspaceSettings: ObservableObject {
 
             $centerCursorOnWorkspaceChange.settingsPublisher(),
             $changeWorkspaceOnAppAssign.settingsPublisher(),
+            $activeWorkspaceOnFocusChange.settingsPublisher(),
             $skipEmptyWorkspacesOnSwitch.settingsPublisher(),
             $keepUnassignedAppsOnSwitch.settingsPublisher(),
             $restoreHiddenAppsOnSwitch.settingsPublisher(),
@@ -91,6 +93,7 @@ extension WorkspaceSettings: SettingsProtocol {
 
         centerCursorOnWorkspaceChange = appSettings.centerCursorOnWorkspaceChange ?? false
         changeWorkspaceOnAppAssign = appSettings.changeWorkspaceOnAppAssign ?? true
+        activeWorkspaceOnFocusChange = appSettings.activeWorkspaceOnFocusChange ?? true
         skipEmptyWorkspacesOnSwitch = appSettings.skipEmptyWorkspacesOnSwitch ?? false
         keepUnassignedAppsOnSwitch = appSettings.keepUnassignedAppsOnSwitch ?? false
         restoreHiddenAppsOnSwitch = appSettings.restoreHiddenAppsOnSwitch ?? true
@@ -119,6 +122,7 @@ extension WorkspaceSettings: SettingsProtocol {
 
         appSettings.centerCursorOnWorkspaceChange = centerCursorOnWorkspaceChange
         appSettings.changeWorkspaceOnAppAssign = changeWorkspaceOnAppAssign
+        appSettings.activeWorkspaceOnFocusChange = activeWorkspaceOnFocusChange
         appSettings.skipEmptyWorkspacesOnSwitch = skipEmptyWorkspacesOnSwitch
         appSettings.keepUnassignedAppsOnSwitch = keepUnassignedAppsOnSwitch
         appSettings.restoreHiddenAppsOnSwitch = restoreHiddenAppsOnSwitch
