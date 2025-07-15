@@ -221,14 +221,15 @@ final class SwipeManager {
     // swiftlint:disable:next cyclomatic_complexity
     private func callAction(_ action: GestureAction) {
         let skipEmpty = workspaceSettings.skipEmptyWorkspacesOnSwitch
+        let loop = workspaceSettings.loopWorkspaces
 
         switch action {
         case .none: break
         case .toggleSpaceControl: SpaceControl.toggle()
         case .showSpaceControl: SpaceControl.show()
         case .hideSpaceControl: SpaceControl.hide()
-        case .nextWorkspace: workspaceManager.activateWorkspace(next: true, skipEmpty: skipEmpty)
-        case .previousWorkspace: workspaceManager.activateWorkspace(next: false, skipEmpty: skipEmpty)
+        case .nextWorkspace: workspaceManager.activateWorkspace(next: true, skipEmpty: skipEmpty, loop: loop)
+        case .previousWorkspace: workspaceManager.activateWorkspace(next: false, skipEmpty: skipEmpty, loop: loop)
         case .mostRecentWorkspace: workspaceManager.activateRecentWorkspace()
         case .focusLeft: focusManager.focusLeft()
         case .focusRight: focusManager.focusRight()
