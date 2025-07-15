@@ -6,18 +6,22 @@
 //
 
 import AppKit
+import Combine
 
 final class PictureInPictureManager {
     typealias AXWindow = AXUIElement
 
     private var hiddenWindows: [NSRunningApplication: [AXWindow]] = [:]
     private var capturedFrame: [AXWindow: CGRect] = [:]
+    private var cancellables: Set<AnyCancellable> = []
+    private var windowFocusObserver: AXObserver?
 
     private let settings: WorkspaceSettings
 
     init(settingsRepository: SettingsRepository) {
         self.settings = settingsRepository.workspaceSettings
         setupSignalHandlers()
+        observePipFocusChangeNotification()
     }
 
     func restoreAppIfNeeded(app: NSRunningApplication) {
@@ -57,7 +61,31 @@ final class PictureInPictureManager {
         return hideInCornerNonPipWindows(app: app)
     }
 
+    private func observePipFocusChangeNotification() {
+        NotificationCenter.default
+            .publisher(for: .pipFocusChanged)
+            .sink { [weak self] _ in self?.restorePipWorkspace() }
+            .store(in: &cancellables)
+    }
+
+    private func restorePipWorkspace() {
+        guard let app = hiddenWindows.keys.first(where: { !$0.isPictureInPictureActive }) else { return }
+
+        restoreAllWindows()
+
+        let workspaceRepository = AppDependencies.shared.workspaceRepository
+        let workspaceManager = AppDependencies.shared.workspaceManager
+        let workspace = workspaceRepository.workspaces.first { $0.apps.containsApp(app) }
+
+        guard let workspace else { return }
+
+        windowFocusObserver = nil
+        workspaceManager.activateWorkspace(workspace, setFocus: false)
+    }
+
     private func restoreFromCornerNonPipWindows(app: NSRunningApplication) {
+        windowFocusObserver = nil
+
         app.runWithoutAnimations {
             for window in hiddenWindows[app] ?? [] {
                 if let previousFrame = capturedFrame[window] {
@@ -76,6 +104,8 @@ final class PictureInPictureManager {
         let nonPipWindows = app.allWindows
             .map(\.window)
             .filter { !$0.isPictureInPicture(bundleId: app.bundleIdentifier) }
+
+        if nonPipWindows.isNotEmpty { observePipApp(app) }
 
         app.runWithoutAnimations {
             for window in nonPipWindows {
@@ -147,6 +177,22 @@ final class PictureInPictureManager {
                 exit($0)
             }
         }
+    }
+
+    private func observePipApp(_ app: NSRunningApplication) {
+        guard settings.switchWorkspaceWhenPipCloses else { return }
+
+        let callback: AXObserverCallback = { _, _, _, _ in
+            NotificationCenter.default.post(name: .pipFocusChanged, object: nil)
+        }
+
+        let result = AXObserverCreate(app.processIdentifier, callback, &windowFocusObserver)
+
+        guard result == .success, let observer = windowFocusObserver else { return }
+
+        let appRef = AXUIElementCreateApplication(app.processIdentifier)
+        AXObserverAddNotification(observer, appRef, kAXFocusedWindowChangedNotification as CFString, nil)
+        CFRunLoopAddSource(CFRunLoopGetCurrent(), AXObserverGetRunLoopSource(observer), .defaultMode)
     }
 
     // MARK: - Alternative solution by minimizing windows (animation)

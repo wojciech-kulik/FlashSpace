@@ -35,6 +35,7 @@ final class WorkspaceSettings: ObservableObject {
     @Published var alternativeDisplays = ""
 
     @Published var enablePictureInPictureSupport = true
+    @Published var switchWorkspaceWhenPipCloses = true
     @Published var pipScreenCornerOffset = 15
     @Published var pipApps: [PipApp] = []
 
@@ -78,6 +79,7 @@ final class WorkspaceSettings: ObservableObject {
 
             $alternativeDisplays.settingsPublisher(debounce: true),
             $enablePictureInPictureSupport.settingsPublisher(),
+            $switchWorkspaceWhenPipCloses.settingsPublisher(),
             $pipApps.settingsPublisher(),
             $pipScreenCornerOffset.settingsPublisher(debounce: true)
         )
@@ -118,6 +120,7 @@ extension WorkspaceSettings: SettingsProtocol {
 
         alternativeDisplays = appSettings.alternativeDisplays ?? ""
         enablePictureInPictureSupport = appSettings.enablePictureInPictureSupport ?? true
+        switchWorkspaceWhenPipCloses = appSettings.switchWorkspaceWhenPipCloses ?? true
         pipApps = appSettings.pipApps ?? []
         pipScreenCornerOffset = appSettings.pipScreenCornerOffset ?? 15
         observe()
@@ -149,6 +152,7 @@ extension WorkspaceSettings: SettingsProtocol {
 
         appSettings.alternativeDisplays = alternativeDisplays
         appSettings.enablePictureInPictureSupport = enablePictureInPictureSupport
+        appSettings.switchWorkspaceWhenPipCloses = switchWorkspaceWhenPipCloses
         appSettings.pipApps = pipApps
         appSettings.pipScreenCornerOffset = pipScreenCornerOffset
     }
