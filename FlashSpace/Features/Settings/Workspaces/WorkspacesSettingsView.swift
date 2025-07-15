@@ -20,15 +20,16 @@ struct WorkspacesSettingsView: View {
                     }
                 }
 
-                Text("Static Mode - manually assign workspaces to displays.\n\n" +
-                    "Dynamic Mode - automatically assigns workspaces to displays based on the positions of your applications. " +
-                    "In this mode, a single workspace can span multiple displays."
+                Text("Static Mode requires you to manually assign workspaces to displays.\n\n" +
+                    "Dynamic Mode automatically assigns workspaces to displays " +
+                    "based on where your applications are located. In this mode, a single workspace can span across multiple displays."
                 )
                 .font(.callout)
                 .foregroundStyle(.secondary)
             }
 
             Section("Behaviors") {
+                Toggle("Activate Workspace On Focus Change", isOn: $settings.activeWorkspaceOnFocusChange)
                 Toggle("Center Cursor In Focused App On Workspace Change", isOn: $settings.centerCursorOnWorkspaceChange)
                 Toggle("Automatically Change Workspace On App Assignment", isOn: $settings.changeWorkspaceOnAppAssign)
                 Toggle(
