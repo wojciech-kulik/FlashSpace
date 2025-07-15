@@ -16,6 +16,7 @@ enum PipBrowser: String, CaseIterable {
     case firefox = "org.mozilla.firefox"
     case zen = "app.zen-browser.zen"
     case arc = "company.thebrowser.Browser"
+    case dia = "company.thebrowser.dia"
 
     var bundleId: String { rawValue }
 
@@ -25,7 +26,7 @@ enum PipBrowser: String, CaseIterable {
             return "Picture in Picture"
         case .zen, .firefox:
             return "Picture-in-Picture"
-        case .arc:
+        case .arc, .dia:
             return nil
         }
     }
@@ -41,7 +42,7 @@ enum PipBrowser: String, CaseIterable {
 
     var subrole: String? {
         switch self {
-        case .arc:
+        case .arc, .dia:
             return (NSAccessibility.Subrole.systemDialog as CFString) as String
         default:
             return nil
