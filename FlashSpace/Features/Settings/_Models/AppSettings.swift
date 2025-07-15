@@ -61,6 +61,7 @@ struct AppSettings: Codable {
     var hideUnassignedApps: AppHotKey?
     var alternativeDisplays: String?
     var enablePictureInPictureSupport: Bool?
+    var switchWorkspaceWhenPipCloses: Bool?
     var pipApps: [PipApp]?
     var pipScreenCornerOffset: Int?
 

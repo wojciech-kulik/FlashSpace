@@ -119,6 +119,7 @@ struct WorkspacesSettingsView: View {
 
             Section("Picture-in-Picture") {
                 Toggle("Enable Picture-in-Picture Support", isOn: $settings.enablePictureInPictureSupport)
+                Toggle("Switch Workspace When Picture-in-Picture Closes", isOn: $settings.switchWorkspaceWhenPipCloses)
 
                 HStack {
                     Text("Screen Corner Offset")
