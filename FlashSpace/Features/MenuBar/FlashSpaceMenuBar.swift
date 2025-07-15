@@ -54,7 +54,15 @@ struct FlashSpaceMenuBar: Scene {
             Menu("Workspaces") {
                 ForEach(workspaceRepository.workspaces) { workspace in
                     Button {
-                        workspaceManager.activateWorkspace(workspace, setFocus: true)
+                        if workspace.isDynamic, workspace.displays.isEmpty {
+                            Toast.showWith(
+                                icon: "square.stack.3d.up",
+                                message: "\(workspace.name) - No Running Apps To Show",
+                                textColor: .gray
+                            )
+                        } else {
+                            workspaceManager.activateWorkspace(workspace, setFocus: true)
+                        }
                     } label: {
                         Text(workspace.name)
                     }
