@@ -7,6 +7,7 @@
 //  Based on: https://github.com/MediosZ/SwipeAeroSpace
 
 import AppKit
+import Combine
 
 final class SwipeManager {
     typealias TouchId = ObjectIdentifier
@@ -32,6 +33,7 @@ final class SwipeManager {
     private var prevTouchPositions: [TouchId: NSPoint] = [:]
     private var lastTouchDate = Date.distantPast
     private var state: GestureState = .ended
+    private var systemWakeUpObserver: AnyCancellable?
 
     private lazy var gesturesSettings = AppDependencies.shared.gesturesSettings
     private lazy var workspaceSettings = AppDependencies.shared.workspaceSettings
@@ -73,6 +75,8 @@ final class SwipeManager {
             CFRunLoopMode.commonModes
         )
         CGEvent.tapEnable(tap: eventTap, enable: true)
+
+        observeSystemWakeUp()
     }
 
     func stop() {
@@ -86,6 +90,9 @@ final class SwipeManager {
         )
         CFMachPortInvalidate(eventTap)
         self.eventTap = nil
+
+        systemWakeUpObserver?.cancel()
+        systemWakeUpObserver = nil
 
         Logger.log("SwipeManager stopped")
     }
@@ -244,5 +251,25 @@ final class SwipeManager {
                 workspaceManager.activateWorkspace(workspace, setFocus: true)
             }
         }
+    }
+}
+
+extension SwipeManager {
+    func restartAppIfNeeded() {
+        guard gesturesSettings.restartAppOnWakeUp else { return }
+
+        let task = Process()
+        task.launchPath = "/bin/sh"
+        task.arguments = ["-c", "sleep 1; open '\(Bundle.main.bundlePath)'"]
+        task.launch()
+
+        NSApp.terminate(self)
+        exit(0)
+    }
+
+    private func observeSystemWakeUp() {
+        systemWakeUpObserver = NSWorkspace.shared.notificationCenter
+            .publisher(for: NSWorkspace.didWakeNotification)
+            .sink { [weak self] _ in self?.restartAppIfNeeded() }
     }
 }

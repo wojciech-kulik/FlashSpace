@@ -14,6 +14,8 @@ final class GesturesSettings: ObservableObject {
         didSet { updateSwipeManager() }
     }
 
+    @Published var restartAppOnWakeUp = false
+
     @Published var swipeRight3FingerAction: GestureAction = .nextWorkspace
     @Published var swipeLeft3FingerAction: GestureAction = .previousWorkspace
     @Published var swipeRight4FingerAction: GestureAction = .none
@@ -46,6 +48,7 @@ final class GesturesSettings: ObservableObject {
         observer = Publishers.MergeMany(
             $enableSwipeGestures.settingsPublisher(),
             $swipeThreshold.settingsPublisher(),
+            $restartAppOnWakeUp.settingsPublisher(),
 
             $swipeLeft3FingerAction.settingsPublisher(),
             $swipeRight3FingerAction.settingsPublisher(),
@@ -79,6 +82,7 @@ extension GesturesSettings: SettingsProtocol {
         observer = nil
         enableSwipeGestures = appSettings.enableSwipeGestures ?? false
         swipeThreshold = appSettings.swipeThreshold ?? 0.2
+        restartAppOnWakeUp = appSettings.restartAppOnWakeUp ?? false
 
         swipeLeft3FingerAction = appSettings.swipeLeft3FingerAction ?? .previousWorkspace
         swipeRight3FingerAction = appSettings.swipeRight3FingerAction ?? .nextWorkspace
@@ -96,6 +100,7 @@ extension GesturesSettings: SettingsProtocol {
     func update(_ appSettings: inout AppSettings) {
         appSettings.enableSwipeGestures = enableSwipeGestures
         appSettings.swipeThreshold = swipeThreshold
+        appSettings.restartAppOnWakeUp = restartAppOnWakeUp
 
         appSettings.swipeLeft3FingerAction = swipeLeft3FingerAction
         appSettings.swipeRight3FingerAction = swipeRight3FingerAction

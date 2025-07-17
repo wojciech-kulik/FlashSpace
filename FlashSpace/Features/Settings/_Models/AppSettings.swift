@@ -33,6 +33,7 @@ struct AppSettings: Codable {
     // Gestures
     var enableSwipeGestures: Bool?
     var swipeThreshold: Double?
+    var restartAppOnWakeUp: Bool?
     var swipeLeft3FingerAction: GestureAction?
     var swipeRight3FingerAction: GestureAction?
     var swipeUp3FingerAction: GestureAction?
