@@ -85,6 +85,17 @@ struct GesturesSettingsView: View {
             }
             .disabled(!settings.enableSwipeGestures)
             .opacity(settings.enableSwipeGestures ? 1 : 0.5)
+
+            Section("System") {
+                Toggle("Restart App On Wake Up", isOn: $settings.restartAppOnWakeUp)
+                Text(
+                    "Restarts the app when your Mac wakes up from sleep. This can help with gesture recognition issues after waking."
+                )
+                .font(.callout)
+                .foregroundStyle(.secondary)
+            }
+            .disabled(!settings.enableSwipeGestures)
+            .opacity(settings.enableSwipeGestures ? 1 : 0.5)
         }
         .formStyle(.grouped)
         .navigationTitle("Gestures")
