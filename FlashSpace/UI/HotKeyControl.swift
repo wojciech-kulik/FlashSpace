@@ -15,11 +15,6 @@ struct HotKeyControl: NSViewRepresentable {
     func makeNSView(context: Context) -> RecorderControl {
         let control = RecorderControl(frame: .zero)
         control.delegate = context.coordinator
-        control.set(
-            allowedModifierFlags: [.command, .control, .option, .shift],
-            requiredModifierFlags: [],
-            allowsEmptyModifierFlags: true
-        )
         control.objectValue = shortcut.flatMap { $0.toShortcut() }
 
         return control
