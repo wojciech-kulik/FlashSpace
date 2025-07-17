@@ -1,6 +1,8 @@
 name: Xcode Build Check
 on:
   push:
+    branches:
+      - main
   pull_request:
 
 jobs:
