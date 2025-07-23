@@ -43,7 +43,7 @@ enum Toast {
         )
         window.isOpaque = false
         window.backgroundColor = .clear
-        window.level = .floating
+        window.level = .screenSaver
         toastWindow = window
 
         let visualEffectView = contentView.addVisualEffect(material: .sidebar, border: true)
