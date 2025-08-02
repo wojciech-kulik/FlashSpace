@@ -21,7 +21,7 @@ struct ActiveWorkspace {
 final class WorkspaceManager: ObservableObject {
     @Published private(set) var activeWorkspaceDetails: ActiveWorkspace?
 
-    private(set) var lastFocusedApp: [WorkspaceID: MacApp] = [:]
+    private(set) var lastFocusedApp: [ProfileId: [WorkspaceID: MacApp]] = [:]
     private(set) var activeWorkspace: [DisplayName: Workspace] = [:]
     private(set) var mostRecentWorkspace: [DisplayName: Workspace] = [:]
     private(set) var lastWorkspaceActivation = Date.distantPast
@@ -33,6 +33,7 @@ final class WorkspaceManager: ObservableObject {
 
     private let workspaceRepository: WorkspaceRepository
     private let workspaceSettings: WorkspaceSettings
+    private let profilesRepository: ProfilesRepository
     private let floatingAppsSettings: FloatingAppsSettings
     private let pictureInPictureManager: PictureInPictureManager
     private let workspaceTransitionManager: WorkspaceTransitionManager
@@ -41,11 +42,13 @@ final class WorkspaceManager: ObservableObject {
     init(
         workspaceRepository: WorkspaceRepository,
         settingsRepository: SettingsRepository,
+        profilesRepository: ProfilesRepository,
         pictureInPictureManager: PictureInPictureManager,
         workspaceTransitionManager: WorkspaceTransitionManager,
         displayManager: DisplayManager
     ) {
         self.workspaceRepository = workspaceRepository
+        self.profilesRepository = profilesRepository
         self.workspaceSettings = settingsRepository.workspaceSettings
         self.floatingAppsSettings = settingsRepository.floatingAppsSettings
         self.pictureInPictureManager = pictureInPictureManager
@@ -65,7 +68,6 @@ final class WorkspaceManager: ObservableObject {
         NotificationCenter.default
             .publisher(for: .profileChanged)
             .sink { [weak self] _ in
-                self?.lastFocusedApp = [:]
                 self?.activeWorkspace = [:]
                 self?.mostRecentWorkspace = [:]
                 self?.activeWorkspaceDetails = nil
@@ -110,7 +112,7 @@ final class WorkspaceManager: ObservableObject {
         let focusedDisplay = NSScreen.main?.localizedName ?? ""
 
         if let activeWorkspace = activeWorkspace[focusedDisplay], activeWorkspace.apps.containsApp(application) {
-            lastFocusedApp[activeWorkspace.id] = application.toMacApp
+            updateLastFocusedApp(application.toMacApp, in: activeWorkspace)
             updateActiveWorkspace(activeWorkspace, on: [focusedDisplay])
         }
 
@@ -212,7 +214,7 @@ final class WorkspaceManager: ObservableObject {
         var appToFocus: NSRunningApplication?
 
         if workspace.appToFocus == nil {
-            appToFocus = apps.find(lastFocusedApp[workspace.id])
+            appToFocus = apps.find(lastFocusedApp[profilesRepository.selectedProfile.id, default: [:]][workspace.id])
         } else {
             appToFocus = apps.find(workspace.appToFocus)
         }
@@ -415,6 +417,6 @@ extension WorkspaceManager {
     }
 
     func updateLastFocusedApp(_ app: MacApp, in workspace: Workspace) {
-        lastFocusedApp[workspace.id] = app
+        lastFocusedApp[profilesRepository.selectedProfile.id, default: [:]][workspace.id] = app
     }
 }
