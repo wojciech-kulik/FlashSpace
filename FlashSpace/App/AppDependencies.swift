@@ -66,6 +66,7 @@ struct AppDependencies {
         self.workspaceManager = WorkspaceManager(
             workspaceRepository: workspaceRepository,
             settingsRepository: settingsRepository,
+            profilesRepository: profilesRepository,
             pictureInPictureManager: pictureInPictureManager,
             workspaceTransitionManager: workspaceTransitionManager,
             displayManager: displayManager
