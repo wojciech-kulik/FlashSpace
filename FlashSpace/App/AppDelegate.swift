@@ -12,6 +12,7 @@ import SwiftUI
 final class AppDelegate: NSObject, NSApplicationDelegate {
     @Environment(\.openWindow) private var openWindow
     @Environment(\.dismissWindow) private var dismissWindow
+    @AppStorage("firstLaunch") private var firstLaunch = true
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -26,9 +27,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             }
             .store(in: &cancellables)
 
-        #if DEBUG
-        dismissWindow(id: "main")
-        #endif
+        if firstLaunch {
+            firstLaunch = false
+        } else {
+            dismissWindow(id: "main")
+        }
     }
 
     func applicationWillTerminate(_ notification: Notification) {
