@@ -259,8 +259,8 @@ extension SwipeManager {
         guard gesturesSettings.restartAppOnWakeUp else { return }
 
         let task = Process()
-        task.launchPath = "/bin/sh"
-        task.arguments = ["-c", "sleep 1; open '\(Bundle.main.bundlePath)'"]
+        task.launchPath = "/usr/bin/open"
+        task.arguments = ["-n", Bundle.main.bundlePath]
         task.launch()
 
         NSApp.terminate(self)
