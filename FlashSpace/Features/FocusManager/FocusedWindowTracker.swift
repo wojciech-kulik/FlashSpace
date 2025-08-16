@@ -49,6 +49,8 @@ final class FocusedWindowTracker {
     }
 
     private func activeApplicationChanged(_ app: NSRunningApplication, appLaunch: Bool) {
+        Logger.log("\n\nFouced app changed: \(app.localizedName ?? "Unknown")")
+
         guard appLaunch || settingsRepository.workspaceSettings.activeWorkspaceOnFocusChange else { return }
 
         let activeWorkspaces = workspaceManager.activeWorkspace.values
@@ -74,9 +76,7 @@ final class FocusedWindowTracker {
             app.focusedWindow?.isPictureInPicture(bundleId: app.bundleIdentifier) != true else { return }
 
         let activate = { [self] in
-            Logger.log("")
-            Logger.log("")
-            Logger.log("Activating workspace for app: \(workspace.name)")
+            Logger.log("\n\nActivating workspace for app: \(workspace.name)")
             workspaceManager.updateLastFocusedApp(app.toMacApp, in: workspace)
             workspaceManager.activateWorkspace(workspace, setFocus: false)
             app.activate()
@@ -86,6 +86,8 @@ final class FocusedWindowTracker {
                 pictureInPictureManager.restoreAppIfNeeded(app: app)
             }
         }
+
+        Logger.log("Activating workspace based on focuse change for app: \(app.localizedName ?? "Unknown")")
 
         if workspace.isDynamic, workspace.displays.isEmpty {
             DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) {

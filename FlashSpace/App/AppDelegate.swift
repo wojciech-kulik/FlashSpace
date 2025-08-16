@@ -32,6 +32,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         } else {
             dismissWindow(id: "main")
         }
+
+        Logger.startLogging()
     }
 
     func applicationWillTerminate(_ notification: Notification) {
