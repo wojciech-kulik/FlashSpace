@@ -50,7 +50,8 @@ struct SpaceControlSettingsView: View {
                 }
 
                 Section("Appearance") {
-                    Toggle("Enable Animations", isOn: $settings.enableSpaceControlAnimations)
+                    Toggle("Enable Transition Animation", isOn: $settings.enableSpaceControlAnimations)
+                    Toggle("Enable Tiles Animation", isOn: $settings.enableSpaceControlTilesAnimations)
                     Toggle(
                         "Show Workspaces For Current Display Only",
                         isOn: $settings.spaceControlCurrentDisplayWorkspaces

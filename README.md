@@ -96,7 +96,7 @@ Space Control allows you to preview all workspaces on a grid and switch between 
 
 Use 0-9 and arrow keys to switch between workspaces.
 
-![FlashSpace-Space Control](https://github.com/user-attachments/assets/97d8f94a-00c3-47c1-af82-5934bcba4d13)
+![FlashSpace-Space Control](https://github.com/user-attachments/assets/eef5e7f6-e0e9-4fea-9490-8506d7bb76ec)
 
 ## 🪟 Focus Manager
 

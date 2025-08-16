@@ -5,6 +5,7 @@
 //  Copyright © 2025 Wojciech Kulik. All rights reserved.
 //
 
+import AppKit
 import Combine
 import SwiftUI
 
@@ -18,9 +19,21 @@ struct SpaceControlWorkspace {
 }
 
 final class SpaceControlViewModel: ObservableObject {
+    @Published var isVisible = false
+
     @Published private(set) var workspaces: [SpaceControlWorkspace] = []
     @Published private(set) var numberOfRows = 0
     @Published private(set) var numberOfColumns = 0
+    @Published private(set) var tileSize: CGSize = .zero
+
+    var wallpaperImage: NSImage? {
+        if let screen = NSScreen.main,
+           let wallpaperURL = NSWorkspace.shared.desktopImageURL(for: screen) {
+            return NSImage(contentsOf: wallpaperURL)
+        }
+
+        return nil
+    }
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -32,6 +45,8 @@ final class SpaceControlViewModel: ObservableObject {
 
     init() {
         refresh()
+
+        self.isVisible = !settings.enableSpaceControlTilesAnimations
 
         NotificationCenter.default
             .publisher(for: .spaceControlArrowDown)
@@ -73,6 +88,7 @@ final class SpaceControlViewModel: ObservableObject {
                 }
         )
         calculateColsAndRows(workspaces.count)
+        calculateTileSize()
     }
 
     private func mainDisplay(for workspace: Workspace) -> DisplayName {
@@ -92,6 +108,36 @@ final class SpaceControlViewModel: ObservableObject {
         numberOfColumns = min(numberOfColumns, settings.spaceControlMaxColumns)
 
         numberOfRows = Int(ceil(Double(workspaceCount) / Double(numberOfColumns)))
+    }
+
+    private func calculateTileSize() {
+        let screenFrame = NSScreen.main?.frame ?? .init(x: 0, y: 0, width: 1200, height: 800)
+
+        let width = screenFrame.width / CGFloat(numberOfColumns) - 120.0
+        let height = screenFrame.height / CGFloat(numberOfRows) - 120.0
+
+        let firstScreenshot = workspaces
+            .lazy
+            .compactMap { $0.screenshotData.flatMap(NSImage.init(data:)) }
+            .first
+
+        guard let firstScreenshot else {
+            tileSize = CGSize(width: width, height: height)
+            return
+        }
+
+        let tileRatio = width / height
+        let screenshotRatio = firstScreenshot.size.width / firstScreenshot.size.height
+
+        if tileRatio > screenshotRatio {
+            // Tile is wider than screenshot, adjust width
+            let scaledWidth = height * screenshotRatio
+            tileSize = CGSize(width: scaledWidth, height: height)
+        } else {
+            // Tile is taller than screenshot, adjust height
+            let scaledHeight = width / screenshotRatio
+            tileSize = CGSize(width: width, height: scaledHeight)
+        }
     }
 
     private func handleArrowKey(_ keyCode: RawKeyCode) {
