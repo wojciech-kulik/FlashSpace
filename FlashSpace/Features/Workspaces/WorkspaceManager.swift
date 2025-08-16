@@ -31,6 +31,8 @@ final class WorkspaceManager: ObservableObject {
     private var appsHiddenManually: [WorkspaceID: [MacApp]] = [:]
     private let hideAgainSubject = PassthroughSubject<Workspace, Never>()
 
+    private lazy var focusedWindowTracker = AppDependencies.shared.focusedWindowTracker
+
     private let workspaceRepository: WorkspaceRepository
     private let workspaceSettings: WorkspaceSettings
     private let profilesRepository: ProfilesRepository
@@ -301,6 +303,9 @@ extension WorkspaceManager {
             Logger.log("No displays found for workspace: \(workspace.name) - skipping")
             return
         }
+
+        focusedWindowTracker.stopTracking()
+        defer { focusedWindowTracker.startTracking() }
 
         workspaceTransitionManager.showTransitionIfNeeded(for: workspace, on: displays)
 
