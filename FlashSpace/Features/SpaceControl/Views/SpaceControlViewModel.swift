@@ -111,7 +111,7 @@ final class SpaceControlViewModel: ObservableObject {
     }
 
     private func calculateTileSize() {
-        let screenFrame = NSScreen.main?.frame ?? .init(x: 0, y: 0, width: 1200, height: 800)
+        let screenFrame = NSScreen.main?.frame ?? .init(x: 0, y: 0, width: 3024, height: 1964)
 
         let width = screenFrame.width / CGFloat(numberOfColumns) - 120.0
         let height = screenFrame.height / CGFloat(numberOfRows) - 120.0
@@ -122,7 +122,7 @@ final class SpaceControlViewModel: ObservableObject {
             .first
 
         guard let firstScreenshot else {
-            tileSize = CGSize(width: width, height: height)
+            tileSize = CGSize(width: width, height: min(height, width * 10.0 / 16.0))
             return
         }
 
