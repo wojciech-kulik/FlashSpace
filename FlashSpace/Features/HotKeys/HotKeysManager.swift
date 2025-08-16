@@ -112,10 +112,12 @@ final class HotKeysManager {
             hotKeysMonitor.addAction(action, forKeyEvent: .down)
             addShortcut("Space Control", shortcut)
         }
+        Logger.log("Enabling all hotkeys...")
     }
 
     func disableAll() {
         hotKeysMonitor.removeAllActions()
+        Logger.log("Disabling all hotkeys...")
     }
 
     private func observe() {

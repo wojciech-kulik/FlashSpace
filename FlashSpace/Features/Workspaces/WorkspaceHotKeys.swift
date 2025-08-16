@@ -46,7 +46,11 @@ final class WorkspaceHotKeys {
     private func getActivateHotKey(for workspace: Workspace) -> (AppHotKey, () -> ())? {
         guard let shortcut = workspace.activateShortcut else { return nil }
 
+        Logger.log("Setting up hotkey for activating workspace: \(workspace.name) - \(shortcut.value)")
+
         let action = { [weak self] in
+            Logger.log("\n\n >> Activating hotkey \(shortcut.value) for workspace: \(workspace.name)")
+
             guard let self, let updatedWorkspace = workspaceRepository.workspaces
                 .first(where: { $0.id == workspace.id }) else { return }
 
@@ -60,6 +64,7 @@ final class WorkspaceHotKeys {
             }
 
             workspaceManager.activateWorkspace(updatedWorkspace, setFocus: true)
+            Logger.log("Activated workspace: \(workspace.name), hotkey: \(shortcut.value)")
         }
 
         return (shortcut, action)
