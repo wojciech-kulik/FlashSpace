@@ -12,6 +12,7 @@ final class SpaceControlSettings: ObservableObject {
     @Published var enableSpaceControl = false
     @Published var showSpaceControl: AppHotKey?
     @Published var enableSpaceControlAnimations = true
+    @Published var enableSpaceControlTilesAnimations = true
     @Published var spaceControlCurrentDisplayWorkspaces = false
     @Published var spaceControlMaxColumns = 6
 
@@ -25,6 +26,7 @@ final class SpaceControlSettings: ObservableObject {
             $enableSpaceControl.settingsPublisher(),
             $showSpaceControl.settingsPublisher(),
             $enableSpaceControlAnimations.settingsPublisher(),
+            $enableSpaceControlTilesAnimations.settingsPublisher(),
             $spaceControlCurrentDisplayWorkspaces.settingsPublisher(),
             $spaceControlMaxColumns.settingsPublisher(debounce: true)
         )
@@ -43,6 +45,7 @@ extension SpaceControlSettings: SettingsProtocol {
         enableSpaceControl = appSettings.enableSpaceControl ?? false
         showSpaceControl = appSettings.showSpaceControl
         enableSpaceControlAnimations = appSettings.enableSpaceControlAnimations ?? true
+        enableSpaceControlTilesAnimations = appSettings.enableSpaceControlTilesAnimations ?? true
         spaceControlCurrentDisplayWorkspaces = appSettings.spaceControlCurrentDisplayWorkspaces ?? false
         spaceControlMaxColumns = appSettings.spaceControlMaxColumns ?? 6
         observe()
@@ -52,6 +55,7 @@ extension SpaceControlSettings: SettingsProtocol {
         appSettings.enableSpaceControl = enableSpaceControl
         appSettings.showSpaceControl = showSpaceControl
         appSettings.enableSpaceControlAnimations = enableSpaceControlAnimations
+        appSettings.enableSpaceControlTilesAnimations = enableSpaceControlTilesAnimations
         appSettings.spaceControlCurrentDisplayWorkspaces = spaceControlCurrentDisplayWorkspaces
         appSettings.spaceControlMaxColumns = spaceControlMaxColumns
     }

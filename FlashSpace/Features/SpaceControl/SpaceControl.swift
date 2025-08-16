@@ -63,15 +63,16 @@ enum SpaceControl {
             backing: .buffered,
             defer: false
         )
-        window.isOpaque = false
-        window.backgroundColor = .clear
         window.level = .screenSaver
         window.delegate = window
         Self.window = window
 
         let animations = settings.enableSpaceControlAnimations
 
+        window.isOpaque = false
+        window.backgroundColor = .clear
         window.contentView = contentView.addVisualEffect(material: .fullScreenUI)
+
         window.alphaValue = animations ? 0 : 1
 
         focusedAppBeforeShow = NSWorkspace.shared.frontmostApplication
@@ -80,7 +81,11 @@ enum SpaceControl {
         window.makeKeyAndOrderFront(nil)
 
         if animations {
-            window.animator().alphaValue = 1
+            NSAnimationContext.runAnimationGroup { context in
+                context.duration = 0.16
+                context.timingFunction = CAMediaTimingFunction(name: .easeIn)
+                window.animator().alphaValue = 1
+            }
         }
     }
 
