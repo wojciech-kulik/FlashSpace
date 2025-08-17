@@ -10,7 +10,7 @@ import SwiftUI
 struct SpaceControlView: View {
     let cornerRadius: CGFloat = 12.0
 
-    @StateObject var viewModel = SpaceControlViewModel()
+    @ObservedObject var viewModel: SpaceControlViewModel
 
     var body: some View {
         let columns = Array(repeating: GridItem(.flexible()), count: viewModel.numberOfColumns)
