@@ -355,6 +355,12 @@ Big thanks to all the sponsors who support this project 🍻!
 
 <a href="https://github.com/frankroeder"><img src="https://avatars.githubusercontent.com/u/19746932" width="40" height="40" alt="@frankroeder" title="frankroeder"></a>
 
+## 🤓 My Other Projects
+
+- [Snippety](https://snippety.app) - Snippets manager for macOS & iOS
+- [xcodebuild.nvim](https://github.com/wojciech-kulik/xcodebuild.nvim) - Neovim plugin
+- [Smog Poland](https://smog-polska.pl) - Air quality monitoring app for Poland.
+
 &nbsp;
 
 [SketchyBar]: https://github.com/FelixKratz/SketchyBar
