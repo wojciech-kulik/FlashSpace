@@ -317,8 +317,6 @@ extension WorkspaceManager {
         // Some apps may not hide properly,
         // so we hide apps in the workspace after a short delay
         hideAgainSubject.send(workspace)
-
-        NotificationCenter.default.post(name: .workspaceChanged, object: workspace)
     }
 
     func assignApps(_ apps: [MacApp], to workspace: Workspace) {
@@ -390,6 +388,8 @@ extension WorkspaceManager {
 
         focusedWindowTracker.stopTracking()
         defer { focusedWindowTracker.startTracking() }
+
+        workspaceTransitionManager.showTransitionIfNeeded(for: nil, on: activeWorkspace.displays)
 
         rememberHiddenApps(workspaceToActivate: nil)
 
