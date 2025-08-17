@@ -48,6 +48,8 @@ final class FocusedWindowTracker {
     }
 
     private func activeApplicationChanged(_ app: NSRunningApplication, appLaunch: Bool) {
+        Logger.log("Fouced app changed: \(app.localizedName ?? "Unknown")")
+
         guard appLaunch || settingsRepository.workspaceSettings.activeWorkspaceOnFocusChange else { return }
 
         let activeWorkspaces = workspaceManager.activeWorkspace.values
@@ -85,6 +87,8 @@ final class FocusedWindowTracker {
                 pictureInPictureManager.restoreAppIfNeeded(app: app)
             }
         }
+
+        Logger.log("Activating workspace based on focuse change for app: \(app.localizedName ?? "Unknown")")
 
         if workspace.isDynamic, workspace.displays.isEmpty {
             DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) {

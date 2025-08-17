@@ -168,6 +168,7 @@ final class WorkspaceManager: ObservableObject {
     }
 
     private func hideApps(in workspace: Workspace) {
+        Logger.log("Hiding apps for workspace: \(workspace.name)")
         let regularApps = NSWorkspace.shared.runningApplications
             .filter { $0.activationPolicy == .regular }
         let workspaceApps = workspace.apps + floatingAppsSettings.floatingApps
@@ -373,6 +374,8 @@ extension WorkspaceManager {
     }
 
     func activateWorkspace(next: Bool, skipEmpty: Bool, loop: Bool) {
+        Logger.log("Cycle: Requested to activate \(next ? "next" : "previous") workspace")
+
         guard let screen = displayManager.getCursorScreen() else { return }
 
         var screenWorkspaces = workspaceRepository.workspaces
@@ -403,6 +406,7 @@ extension WorkspaceManager {
 
         guard let selectedWorkspace, selectedWorkspace.id != activeWorkspace.id else { return }
 
+        Logger.log("Cycle: activating workspace \(selectedWorkspace.name)")
         activateWorkspace(selectedWorkspace, setFocus: true)
     }
 
@@ -411,6 +415,7 @@ extension WorkspaceManager {
               let mostRecentWorkspace = mostRecentWorkspace[screen]
         else { return }
 
+        Logger.log("activateRecentWorkspace \(mostRecentWorkspace.name)")
         activateWorkspace(mostRecentWorkspace, setFocus: true)
     }
 
@@ -418,6 +423,7 @@ extension WorkspaceManager {
         guard activeWorkspace.values.contains(where: { $0.id == workspaceId }) else { return }
         guard let updatedWorkspace = workspaceRepository.workspaces.first(where: { $0.id == workspaceId }) else { return }
 
+        Logger.log("activateWorkspaceIfActive \(updatedWorkspace.name)")
         activateWorkspace(updatedWorkspace, setFocus: false)
     }
 
