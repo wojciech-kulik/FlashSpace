@@ -359,7 +359,7 @@ Big thanks to all the sponsors who support this project 🍻!
 
 - [Snippety](https://snippety.app) - Snippets manager for macOS & iOS
 - [xcodebuild.nvim](https://github.com/wojciech-kulik/xcodebuild.nvim) - Neovim plugin
-- [Smog Poland](https://smog-polska.pl) - Air quality monitoring app for Poland.
+- [Smog Poland](https://smog-polska.pl) - Air quality monitoring app for Poland
 
 &nbsp;
 
