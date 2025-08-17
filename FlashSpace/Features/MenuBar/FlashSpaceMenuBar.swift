@@ -84,6 +84,12 @@ struct FlashSpaceMenuBar: Scene {
                 }
             }
 
+            Button("Release Notes") {
+                if let url = URL(string: "https://github.com/wojciech-kulik/FlashSpace/releases") {
+                    NSWorkspace.shared.open(url)
+                }
+            }
+
             Button("Check for Updates") {
                 UpdatesManager.shared.checkForUpdates()
             }
