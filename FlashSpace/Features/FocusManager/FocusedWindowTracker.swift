@@ -26,6 +26,12 @@ final class FocusedWindowTracker {
         self.workspaceManager = workspaceManager
         self.settingsRepository = settingsRepository
         self.pictureInPictureManager = pictureInPictureManager
+
+        DispatchQueue.main.async {
+            guard let activeApp = NSWorkspace.shared.frontmostApplication else { return }
+
+            self.activeApplicationChanged(activeApp, appLaunch: true)
+        }
     }
 
     func startTracking() {
@@ -33,7 +39,7 @@ final class FocusedWindowTracker {
             .publisher(for: NSWorkspace.didActivateApplicationNotification)
             .compactMap { $0.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication }
             .removeDuplicates()
-            .sink { [weak self] app in self?.activeApplicationChanged(app) }
+            .sink { [weak self] app in self?.activeApplicationChanged(app, appLaunch: false) }
             .store(in: &cancellables)
     }
 
@@ -41,8 +47,8 @@ final class FocusedWindowTracker {
         cancellables.removeAll()
     }
 
-    private func activeApplicationChanged(_ app: NSRunningApplication) {
-        guard settingsRepository.workspaceSettings.activeWorkspaceOnFocusChange else { return }
+    private func activeApplicationChanged(_ app: NSRunningApplication, appLaunch: Bool) {
+        guard appLaunch || settingsRepository.workspaceSettings.activeWorkspaceOnFocusChange else { return }
 
         let activeWorkspaces = workspaceManager.activeWorkspace.values
 
