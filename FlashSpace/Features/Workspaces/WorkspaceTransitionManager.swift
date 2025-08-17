@@ -15,7 +15,7 @@ final class WorkspaceTransitionManager {
         self.settings = workspaceSettings
     }
 
-    func showTransitionIfNeeded(for workspace: Workspace, on displays: Set<DisplayName>) {
+    func showTransitionIfNeeded(for workspace: Workspace?, on displays: Set<DisplayName>) {
         guard settings.enableWorkspaceTransitions else {
             // Small delay to allow workspace to be activated
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
@@ -52,7 +52,7 @@ final class WorkspaceTransitionManager {
         }
     }
 
-    private func hideTransition(for workspace: Workspace) {
+    private func hideTransition(for workspace: Workspace?) {
         guard !windows.isEmpty else { return }
 
         NSAnimationContext.runAnimationGroup({ [weak self] context in
