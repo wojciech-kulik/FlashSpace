@@ -14,7 +14,7 @@ struct AppDependencies {
     let workspaceRepository: WorkspaceRepository
     let workspaceManager: WorkspaceManager
     let workspaceHotKeys: WorkspaceHotKeys
-    let workspaceScreenshotManager = WorkspaceScreenshotManager()
+    let workspaceScreenshotManager: WorkspaceScreenshotManager
     let workspaceTransitionManager: WorkspaceTransitionManager
     let pictureInPictureManager: PictureInPictureManager
 
@@ -98,6 +98,10 @@ struct AppDependencies {
             workspaceManager: workspaceManager,
             settingsRepository: settingsRepository,
             pictureInPictureManager: pictureInPictureManager
+        )
+        self.workspaceScreenshotManager = WorkspaceScreenshotManager(
+            spaceControlSettings: spaceControlSettings,
+            workspaceManager: workspaceManager
         )
 
         Migrations.migrateIfNeeded(

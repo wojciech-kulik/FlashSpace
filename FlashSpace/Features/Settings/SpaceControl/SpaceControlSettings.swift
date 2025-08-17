@@ -14,6 +14,7 @@ final class SpaceControlSettings: ObservableObject {
     @Published var enableSpaceControlAnimations = true
     @Published var enableSpaceControlTilesAnimations = true
     @Published var spaceControlCurrentDisplayWorkspaces = false
+    @Published var spaceControlUpdateScreenshotsOnOpen = false
     @Published var spaceControlMaxColumns = 6
 
     private var observer: AnyCancellable?
@@ -28,6 +29,7 @@ final class SpaceControlSettings: ObservableObject {
             $enableSpaceControlAnimations.settingsPublisher(),
             $enableSpaceControlTilesAnimations.settingsPublisher(),
             $spaceControlCurrentDisplayWorkspaces.settingsPublisher(),
+            $spaceControlUpdateScreenshotsOnOpen.settingsPublisher(),
             $spaceControlMaxColumns.settingsPublisher(debounce: true)
         )
         .receive(on: DispatchQueue.main)
@@ -47,6 +49,7 @@ extension SpaceControlSettings: SettingsProtocol {
         enableSpaceControlAnimations = appSettings.enableSpaceControlAnimations ?? true
         enableSpaceControlTilesAnimations = appSettings.enableSpaceControlTilesAnimations ?? true
         spaceControlCurrentDisplayWorkspaces = appSettings.spaceControlCurrentDisplayWorkspaces ?? false
+        spaceControlUpdateScreenshotsOnOpen = appSettings.spaceControlUpdateScreenshotsOnOpen ?? false
         spaceControlMaxColumns = appSettings.spaceControlMaxColumns ?? 6
         observe()
     }
@@ -57,6 +60,7 @@ extension SpaceControlSettings: SettingsProtocol {
         appSettings.enableSpaceControlAnimations = enableSpaceControlAnimations
         appSettings.enableSpaceControlTilesAnimations = enableSpaceControlTilesAnimations
         appSettings.spaceControlCurrentDisplayWorkspaces = spaceControlCurrentDisplayWorkspaces
+        appSettings.spaceControlUpdateScreenshotsOnOpen = spaceControlUpdateScreenshotsOnOpen
         appSettings.spaceControlMaxColumns = spaceControlMaxColumns
     }
 }
