@@ -15,6 +15,7 @@ struct AboutSettingsView: View {
                     Text("Version \(AppConstants.version)")
                     Spacer()
                     Button("GitHub") { openGitHub("wojciech-kulik/FlashSpace") }
+                    Button("Release Notes") { openUrl("https://github.com/wojciech-kulik/FlashSpace/releases") }
                     Button("Check for Updates") { UpdatesManager.shared.checkForUpdates() }
                 }
             }
