@@ -15,6 +15,9 @@ enum GestureAction {
     case nextWorkspace
     case previousWorkspace
     case mostRecentWorkspace
+    case hideAllApps
+    case hideUnassignedApps
+    case showUnassignedApps
     case focusLeft
     case focusRight
     case focusUp
@@ -38,6 +41,9 @@ extension GestureAction: CaseIterable, Equatable, Hashable, Identifiable {
         case .nextWorkspace: return "Next Workspace"
         case .previousWorkspace: return "Previous Workspace"
         case .mostRecentWorkspace: return "Most Recent Workspace"
+        case .hideAllApps: return "Hide All Apps"
+        case .hideUnassignedApps: return "Hide Unassigned Apps"
+        case .showUnassignedApps: return "Show Unassigned Apps"
         case .focusLeft: return "Focus Left"
         case .focusRight: return "Focus Right"
         case .focusUp: return "Focus Up"
@@ -65,6 +71,9 @@ extension GestureAction: CaseIterable, Equatable, Hashable, Identifiable {
             .nextWorkspace,
             .previousWorkspace,
             .mostRecentWorkspace,
+            .hideAllApps,
+            .hideUnassignedApps,
+            .showUnassignedApps,
             .focusLeft,
             .focusRight,
             .focusUp,
