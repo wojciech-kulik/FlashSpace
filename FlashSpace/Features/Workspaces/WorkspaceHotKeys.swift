@@ -32,6 +32,7 @@ final class WorkspaceHotKeys {
             getToggleAssignmentHotKey(),
             getShowUnassignedAppsHotKey(),
             getHideUnassignedAppsHotKey(),
+            getHideAllAppsHotKey(),
             getRecentWorkspaceHotKey(),
             getCycleWorkspacesHotKey(next: false),
             getCycleWorkspacesHotKey(next: true)
@@ -121,6 +122,18 @@ final class WorkspaceHotKeys {
             guard let self else { return }
 
             workspaceManager.hideUnassignedApps()
+        }
+
+        return (shortcut, action)
+    }
+
+    private func getHideAllAppsHotKey() -> (AppHotKey, () -> ())? {
+        guard let shortcut = workspaceSettings.hideAllApps else { return nil }
+
+        let action = { [weak self] in
+            guard let self else { return }
+
+            workspaceManager.hideAll()
         }
 
         return (shortcut, action)

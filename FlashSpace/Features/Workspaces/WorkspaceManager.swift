@@ -352,6 +352,36 @@ extension WorkspaceManager {
         NotificationCenter.default.post(name: .appsListChanged, object: nil)
     }
 
+    func hideAll() {
+        guard let display = NSScreen.main?.localizedName else { return }
+
+        focusedWindowTracker.stopTracking()
+        defer { focusedWindowTracker.startTracking() }
+
+        workspaceTransitionManager.showTransitionIfNeeded(for: nil, on: [display])
+        rememberHiddenApps(workspaceToActivate: nil)
+        if let activeWorkspace = activeWorkspace[display] {
+            mostRecentWorkspace[display] = activeWorkspace
+        }
+
+        lastWorkspaceActivation = Date()
+        activeWorkspaceDetails = nil
+        activeWorkspace.removeValue(forKey: display)
+
+        let appsToHide = NSWorkspace.shared.runningApplications
+            .regularVisibleApps(onDisplays: [display], excluding: [])
+            .filter { !$0.isFinder }
+
+        for app in appsToHide {
+            Logger.log("CLEAN UP: \(app.localizedName ?? "")")
+            app.hide()
+        }
+
+        if let finder = NSWorkspace.shared.runningApplications.first(where: \.isFinder) {
+            finder.activate()
+        }
+    }
+
     func hideUnassignedApps() {
         let activeWorkspace = workspaceRepository.workspaces
             .first(where: { $0.id == activeWorkspaceDetails?.id })
