@@ -257,7 +257,7 @@ final class WorkspaceManager: ObservableObject {
         Integrations.runOnActivateIfNeeded(workspace: activeWorkspaceDetails!)
     }
 
-    private func rememberHiddenApps(workspaceToActivate: Workspace) {
+    private func rememberHiddenApps(workspaceToActivate: WorkspaceID?) {
         guard !workspaceSettings.restoreHiddenAppsOnSwitch else {
             appsHiddenManually = [:]
             return
@@ -268,13 +268,13 @@ final class WorkspaceManager: ObservableObject {
             .filter { $0.isHidden || $0.isMinimized }
 
         for activeWorkspace in activeWorkspace.values {
-            guard activeWorkspace.id != workspaceToActivate.id else { continue }
+            guard activeWorkspace.id != workspaceToActivate else { continue }
 
             appsHiddenManually[activeWorkspace.id] = []
         }
 
         for (display, activeWorkspace) in activeWorkspace {
-            guard activeWorkspace.id != workspaceToActivate.id else { continue }
+            guard activeWorkspace.id != workspaceToActivate else { continue }
 
             let activeWorkspaceOtherDisplays = activeWorkspace.displays.subtracting([display])
             appsHiddenManually[activeWorkspace.id, default: []] += hiddenApps
@@ -309,7 +309,7 @@ extension WorkspaceManager {
 
         workspaceTransitionManager.showTransitionIfNeeded(for: workspace, on: displays)
 
-        rememberHiddenApps(workspaceToActivate: workspace)
+        rememberHiddenApps(workspaceToActivate: workspace.id)
         updateActiveWorkspace(workspace, on: displays)
         showApps(in: workspace, setFocus: setFocus, on: displays)
         hideApps(in: workspace)
@@ -370,6 +370,49 @@ extension WorkspaceManager {
                 app.hide()
             }
         }
+    }
+
+    func showUnassignedApps() {
+        let activeWorkspace = workspaceRepository.workspaces
+            .first { $0.id == activeWorkspaceDetails?.id }
+
+        guard let activeWorkspace else { return }
+
+        Logger.log("")
+        Logger.log("")
+        Logger.log("SHOW UNASSIGNED APPS")
+
+        let allWorkspacesApps = workspaceRepository.workspaces.flatMap(\.apps)
+        let unassignedApps = NSWorkspace.shared.runningApplications
+            .regularApps(onDisplays: activeWorkspace.displays, excluding: allWorkspacesApps)
+        let appsToHide = NSWorkspace.shared.runningApplications
+            .regularVisibleApps(onDisplays: activeWorkspace.displays, excluding: unassignedApps.map(\.toMacApp))
+
+        focusedWindowTracker.stopTracking()
+        defer { focusedWindowTracker.startTracking() }
+
+        rememberHiddenApps(workspaceToActivate: nil)
+
+        lastWorkspaceActivation = Date()
+        activeWorkspaceDetails = nil
+        for display in activeWorkspace.displays {
+            self.activeWorkspace.removeValue(forKey: display)
+        }
+
+        for app in appsToHide {
+            Logger.log("HIDE ASSIGNED: \(app.localizedName ?? "")")
+
+            if !pictureInPictureManager.hidePipAppIfNeeded(app: app) {
+                app.hide()
+            }
+        }
+
+        for app in unassignedApps {
+            Logger.log("SHOW UNASSIGNED: \(app.localizedName ?? "")")
+            app.raise()
+        }
+
+        unassignedApps.first?.activate()
     }
 
     func activateWorkspace(next: Bool, skipEmpty: Bool, loop: Bool) {

@@ -44,4 +44,12 @@ extension [NSRunningApplication] {
                 app.isOnAnyDisplay(displays)
         }
     }
+
+    func regularApps(onDisplays displays: Set<DisplayName>, excluding apps: [MacApp]) -> [NSRunningApplication] {
+        filter { app in
+            app.activationPolicy == .regular &&
+                !apps.containsApp(app) &&
+                app.isOnAnyDisplay(displays)
+        }
+    }
 }
