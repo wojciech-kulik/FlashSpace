@@ -61,6 +61,7 @@ struct AppSettings: Codable {
     var switchToRecentWorkspace: AppHotKey?
     var assignFocusedApp: AppHotKey?
     var unassignFocusedApp: AppHotKey?
+    var showUnassignedApps: AppHotKey?
     var toggleFocusedAppAssignment: AppHotKey?
     var assignVisibleApps: AppHotKey?
     var hideUnassignedApps: AppHotKey?
