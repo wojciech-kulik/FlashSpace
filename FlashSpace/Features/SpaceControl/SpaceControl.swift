@@ -13,6 +13,9 @@ enum SpaceControl {
     static var isVisible: Bool { window != nil }
     static var window: NSWindow?
 
+    private weak static var viewModel: SpaceControlViewModel?
+    private static var transitionInProgress = false
+
     private static var settings: SpaceControlSettings { AppDependencies.shared.spaceControlSettings }
     private static var focusedAppBeforeShow: NSRunningApplication?
 
@@ -35,12 +38,24 @@ enum SpaceControl {
     }
 
     static func hide(restoreFocus: Bool = false) {
-        window?.orderOut(nil)
-        window = nil
+        guard !transitionInProgress else { return }
 
-        if restoreFocus {
-            focusedAppBeforeShow?.activate()
-            focusedAppBeforeShow = nil
+        let hideAction = {
+            window?.orderOut(nil)
+            window = nil
+
+            if restoreFocus {
+                focusedAppBeforeShow?.activate()
+                focusedAppBeforeShow = nil
+            }
+            viewModel = nil
+            transitionInProgress = false
+        }
+
+        if settings.enableSpaceControlAnimations {
+            fadeOutWindow(completion: hideAction)
+        } else {
+            hideAction()
         }
     }
 
@@ -60,8 +75,12 @@ enum SpaceControl {
     }
 
     private static func showWindow() {
+        guard !transitionInProgress else { return }
+
+        let animations = settings.enableSpaceControlAnimations
+        let viewModel = SpaceControlViewModel()
         let contentView = NSHostingView(
-            rootView: SpaceControlView()
+            rootView: SpaceControlView(viewModel: viewModel)
         )
 
         // contentRect is in screen coordinates where (0,0) is bottom-left corner
@@ -74,28 +93,49 @@ enum SpaceControl {
         )
         window.level = .screenSaver
         window.delegate = window
-        Self.window = window
-
-        let animations = settings.enableSpaceControlAnimations
-
         window.isOpaque = false
         window.backgroundColor = .clear
         window.contentView = contentView.addVisualEffect(material: .fullScreenUI)
-
         window.alphaValue = animations ? 0 : 1
+
+        Self.window = window
+        Self.viewModel = viewModel
 
         focusedAppBeforeShow = NSWorkspace.shared.frontmostApplication
         NSApp.activate(ignoringOtherApps: true)
         window.orderFrontRegardless()
         window.makeKeyAndOrderFront(nil)
 
-        if animations {
-            NSAnimationContext.runAnimationGroup { context in
-                context.duration = 0.16
-                context.timingFunction = CAMediaTimingFunction(name: .easeIn)
-                window.animator().alphaValue = 1
-            }
+        if animations { fadeInWindow() }
+    }
+
+    private static func fadeInWindow() {
+        transitionInProgress = true
+
+        NSAnimationContext.runAnimationGroup({ context in
+            context.duration = 0.16
+            context.timingFunction = CAMediaTimingFunction(name: .easeIn)
+            window?.animator().alphaValue = 1
+        }, completionHandler: {
+            transitionInProgress = false
+        })
+    }
+
+    private static func fadeOutWindow(completion: @escaping () -> ()) {
+        transitionInProgress = true
+
+        if settings.enableSpaceControlTilesAnimations {
+            viewModel?.isVisible = false
         }
+
+        NSAnimationContext.runAnimationGroup({ context in
+            context.duration = 0.16
+            context.timingFunction = CAMediaTimingFunction(name: .easeIn)
+            window?.animator().alphaValue = 0
+        }, completionHandler: {
+            completion()
+            transitionInProgress = false
+        })
     }
 
     private static func validate() -> Bool {
