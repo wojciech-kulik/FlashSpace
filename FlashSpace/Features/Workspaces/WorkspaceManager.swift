@@ -285,6 +285,19 @@ final class WorkspaceManager: ObservableObject {
                 .map(\.toMacApp)
         }
     }
+
+    private func deactivateActiveWorkspace(on display: DisplayName) {
+        workspaceTransitionManager.showTransitionIfNeeded(for: nil, on: [display])
+        rememberHiddenApps(workspaceToActivate: nil)
+
+        if let activeWorkspace = activeWorkspace[display] {
+            mostRecentWorkspace[display] = activeWorkspace
+        }
+
+        lastWorkspaceActivation = Date()
+        activeWorkspaceDetails = nil
+        activeWorkspace.removeValue(forKey: display)
+    }
 }
 
 // MARK: - Workspace Actions
@@ -358,15 +371,7 @@ extension WorkspaceManager {
         focusedWindowTracker.stopTracking()
         defer { focusedWindowTracker.startTracking() }
 
-        workspaceTransitionManager.showTransitionIfNeeded(for: nil, on: [display])
-        rememberHiddenApps(workspaceToActivate: nil)
-        if let activeWorkspace = activeWorkspace[display] {
-            mostRecentWorkspace[display] = activeWorkspace
-        }
-
-        lastWorkspaceActivation = Date()
-        activeWorkspaceDetails = nil
-        activeWorkspace.removeValue(forKey: display)
+        deactivateActiveWorkspace(on: display)
 
         let appsToHide = NSWorkspace.shared.runningApplications
             .regularVisibleApps(onDisplays: [display], excluding: [])
@@ -401,10 +406,7 @@ extension WorkspaceManager {
     }
 
     func showUnassignedApps() {
-        let activeWorkspace = workspaceRepository.workspaces
-            .first { $0.id == activeWorkspaceDetails?.id }
-
-        guard let activeWorkspace else { return }
+        guard let display = NSScreen.main?.localizedName else { return }
 
         Logger.log("")
         Logger.log("")
@@ -412,37 +414,32 @@ extension WorkspaceManager {
 
         let allWorkspacesApps = workspaceRepository.workspaces.flatMap(\.apps)
         let unassignedApps = NSWorkspace.shared.runningApplications
-            .regularApps(onDisplays: activeWorkspace.displays, excluding: allWorkspacesApps)
+            .regularApps(onDisplays: [display], excluding: allWorkspacesApps)
         let appsToHide = NSWorkspace.shared.runningApplications
-            .regularVisibleApps(onDisplays: activeWorkspace.displays, excluding: unassignedApps.map(\.toMacApp))
+            .regularVisibleApps(onDisplays: [display], excluding: unassignedApps.map(\.toMacApp))
 
         focusedWindowTracker.stopTracking()
         defer { focusedWindowTracker.startTracking() }
 
-        workspaceTransitionManager.showTransitionIfNeeded(for: nil, on: activeWorkspace.displays)
-
-        rememberHiddenApps(workspaceToActivate: nil)
-
-        lastWorkspaceActivation = Date()
-        activeWorkspaceDetails = nil
-        for display in activeWorkspace.displays {
-            self.activeWorkspace.removeValue(forKey: display)
-        }
-
-        for app in appsToHide {
-            Logger.log("HIDE ASSIGNED: \(app.localizedName ?? "")")
-
-            if !pictureInPictureManager.hidePipAppIfNeeded(app: app) {
-                app.hide()
-            }
-        }
+        deactivateActiveWorkspace(on: display)
 
         for app in unassignedApps {
             Logger.log("SHOW UNASSIGNED: \(app.localizedName ?? "")")
             app.raise()
         }
 
-        unassignedApps.first?.activate()
+        for app in appsToHide {
+            if unassignedApps.isNotEmpty || !app.isFinder {
+                Logger.log("HIDE ASSIGNED: \(app.localizedName ?? "")")
+
+                if !pictureInPictureManager.hidePipAppIfNeeded(app: app) {
+                    app.hide()
+                }
+            }
+        }
+
+        (unassignedApps.first ?? NSWorkspace.shared.runningApplications.first(where: \.isFinder))?
+            .activate()
     }
 
     func activateWorkspace(next: Bool, skipEmpty: Bool, loop: Bool) {
