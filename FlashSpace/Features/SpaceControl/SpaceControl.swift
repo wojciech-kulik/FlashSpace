@@ -49,8 +49,17 @@ enum SpaceControl {
 
         PermissionsManager.shared.askForScreenRecordingPermissions()
 
-        if Self.window != nil { hide() }
+        if window != nil { hide() }
 
+        Task { @MainActor in
+            if settings.spaceControlUpdateScreenshotsOnOpen {
+                await AppDependencies.shared.workspaceScreenshotManager.updateScreenshots()
+            }
+            showWindow()
+        }
+    }
+
+    private static func showWindow() {
         let contentView = NSHostingView(
             rootView: SpaceControlView()
         )

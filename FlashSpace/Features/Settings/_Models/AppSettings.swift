@@ -51,6 +51,10 @@ struct AppSettings: Codable {
     var skipEmptyWorkspacesOnSwitch: Bool?
     var keepUnassignedAppsOnSwitch: Bool?
     var restoreHiddenAppsOnSwitch: Bool?
+    var enableWorkspaceTransitions: Bool?
+    var workspaceTransitionDuration: Double?
+    var workspaceTransitionDimming: Double?
+
     var loopWorkspaces: Bool?
     var switchToPreviousWorkspace: AppHotKey?
     var switchToNextWorkspace: AppHotKey?
@@ -78,10 +82,8 @@ struct AppSettings: Codable {
     var enableSpaceControlAnimations: Bool?
     var enableSpaceControlTilesAnimations: Bool?
     var spaceControlCurrentDisplayWorkspaces: Bool?
+    var spaceControlUpdateScreenshotsOnOpen: Bool?
     var spaceControlMaxColumns: Int?
-    var enableWorkspaceTransitions: Bool?
-    var workspaceTransitionDuration: Double?
-    var workspaceTransitionDimming: Double?
 
     // Integrations
     var enableIntegrations: Bool?

@@ -22,10 +22,28 @@ final class WorkspaceScreenshotManager {
     private(set) var screenshots: [ScreenshotKey: ImageData] = [:]
     private var cancellables = Set<AnyCancellable>()
 
+    private let spaceControlSettings: SpaceControlSettings
+    private let workspaceManager: WorkspaceManager
     private let lock = NSLock()
 
-    init() {
+    init(
+        spaceControlSettings: SpaceControlSettings,
+        workspaceManager: WorkspaceManager
+    ) {
+        self.spaceControlSettings = spaceControlSettings
+        self.workspaceManager = workspaceManager
+
         observe()
+    }
+
+    @MainActor
+    func updateScreenshots() async {
+        let activeWorkspaces = workspaceManager.activeWorkspace
+            .filter { !spaceControlSettings.spaceControlCurrentDisplayWorkspaces || $0.value.isOnTheCurrentScreen }
+
+        for (display, workspace) in activeWorkspaces {
+            await captureWorkspace(workspace, displayName: display)
+        }
     }
 
     func captureWorkspace(_ workspace: Workspace, displayName: DisplayName) async {

@@ -56,6 +56,10 @@ struct SpaceControlSettingsView: View {
                         "Show Workspaces For Current Display Only",
                         isOn: $settings.spaceControlCurrentDisplayWorkspaces
                     )
+                    Toggle(
+                        "Update Screenshots On Open (slower)",
+                        isOn: $settings.spaceControlUpdateScreenshotsOnOpen
+                    )
 
                     HStack {
                         Text("Max Number Of Columns")
