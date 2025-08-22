@@ -118,7 +118,7 @@ PiP window.
 
 If the PiP window is not visible, the standard behavior is applied.
 
-Supported browsers: Safari, Zen Browser, Chrome, Firefox, Brave, Vivaldi, Arc, Opera.
+Supported browsers: Safari, Zen Browser, Chrome, Firefox, Brave, Vivaldi, Arc, Dia, Opera, Microsoft Edge, Comet.
 
 ## 🖥️ Display Assignment Modes
 

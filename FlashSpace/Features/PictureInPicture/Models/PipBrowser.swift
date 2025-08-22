@@ -18,12 +18,13 @@ enum PipBrowser: String, CaseIterable {
     case arc = "company.thebrowser.Browser"
     case dia = "company.thebrowser.dia"
     case comet = "ai.perplexity.comet"
+    case edge = "com.microsoft.edgemac"
 
     var bundleId: String { rawValue }
 
     var title: String? {
         switch self {
-        case .chrome, .vivaldi, .brave, .opera, .comet:
+        case .chrome, .vivaldi, .brave, .opera, .comet, .edge:
             return "Picture in Picture"
         case .zen, .firefox:
             return "Picture-in-Picture"
