@@ -14,6 +14,7 @@ extension AXUIElement {
     var isMinimized: Bool { getAttribute(.minimized) == true }
     var role: String? { getAttribute(.role) }
     var subrole: String? { getAttribute(.subrole) }
+    var document: String? { getAttribute(.document) }
     var enhancedUserInterface: Bool {
         get { getAttribute(.enchancedUserInterface) == true }
         set { setAttribute(.enchancedUserInterface, value: newValue) }
