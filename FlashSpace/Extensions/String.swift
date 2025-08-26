@@ -13,4 +13,8 @@ extension String {
     var isNotEmpty: Bool { !isEmpty }
     var nilIfEmpty: String? { isEmpty ? nil : self }
     var trimmed: String { trimmingCharacters(in: .whitespacesAndNewlines) }
+
+    func matches(_ regex: String) -> Bool {
+        range(of: regex, options: .regularExpression) != nil
+    }
 }

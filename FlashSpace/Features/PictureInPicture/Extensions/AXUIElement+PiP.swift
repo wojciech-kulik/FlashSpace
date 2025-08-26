@@ -14,6 +14,7 @@ extension AXUIElement {
 
     func isPictureInPicture(bundleId: String?) -> Bool {
         let browser = PipBrowser(rawValue: bundleId ?? "")
+        let googleMeetApp = PipGoogleMeet(rawValue: bundleId ?? "")
         let windowTitle = title
 
         if let browser {
@@ -29,10 +30,16 @@ extension AXUIElement {
             if let pipWindowSubrole = browser.subrole, subrole == pipWindowSubrole {
                 return true
             }
+        }
 
-            if browser == .chrome,
-               windowTitle?.range(of: "^Meet[^a-z]*[a-z-]{8,}", options: .regularExpression) != nil,
-               document == nil || document == "about:blank" {
+        if let googleMeetApp {
+            let titleMatch = googleMeetApp.titlePattern == nil ||
+                windowTitle?.matches(googleMeetApp.titlePattern ?? "") == true
+
+            let documentMatch = googleMeetApp.document == nil ||
+                googleMeetApp.document == document
+
+            if titleMatch, documentMatch {
                 return true
             }
         }
