@@ -14,7 +14,7 @@ enum PipGoogleMeet: String, CaseIterable {
     var titlePattern: String? {
         switch self {
         case .chrome:
-            return "^Meet – .*"
+            return "^Meet . .*"
         }
     }
 
