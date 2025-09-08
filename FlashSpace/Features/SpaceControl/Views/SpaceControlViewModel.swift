@@ -66,7 +66,7 @@ final class SpaceControlViewModel: ObservableObject {
         workspaces = Array(
             workspaceRepository.workspaces
                 .filter { !settings.spaceControlCurrentDisplayWorkspaces || $0.isOnTheCurrentScreen }
-                .prefix(15)
+                .prefix(25)
                 .enumerated()
                 .map {
                     let workspace = $0.element
@@ -100,14 +100,16 @@ final class SpaceControlViewModel: ObservableObject {
     }
 
     private func calculateColsAndRows(_ workspaceCount: Int) {
-        let maxNumberOfRows = 3.0
+        var numberOfColumns = min(4, workspaceCount, settings.spaceControlMaxColumns)
+        var numberOfRows = Int(ceil(Double(workspaceCount) / Double(numberOfColumns)))
 
-        numberOfColumns = workspaceCount <= 3
-            ? workspaceCount
-            : max(3, Int(ceil(Double(workspaceCount) / maxNumberOfRows)))
-        numberOfColumns = min(numberOfColumns, settings.spaceControlMaxColumns)
+        while numberOfRows > 5 {
+            numberOfColumns += 1
+            numberOfRows = Int(ceil(Double(workspaceCount) / Double(numberOfColumns)))
+        }
 
-        numberOfRows = Int(ceil(Double(workspaceCount) / Double(numberOfColumns)))
+        self.numberOfColumns = numberOfColumns
+        self.numberOfRows = numberOfRows
     }
 
     private func calculateTileSize() {

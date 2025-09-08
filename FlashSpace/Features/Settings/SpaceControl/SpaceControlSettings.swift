@@ -15,7 +15,7 @@ final class SpaceControlSettings: ObservableObject {
     @Published var enableSpaceControlTilesAnimations = true
     @Published var spaceControlCurrentDisplayWorkspaces = false
     @Published var spaceControlUpdateScreenshotsOnOpen = false
-    @Published var spaceControlMaxColumns = 6
+    @Published var spaceControlMaxColumns = 3
 
     private var observer: AnyCancellable?
     private let updateSubject = PassthroughSubject<(), Never>()
