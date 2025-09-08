@@ -77,6 +77,7 @@ struct SpaceControlView: View {
             .overlay {
                 Text("Preview Not Available")
                     .font(.title)
+                    .minimumScaleFactor(0.5)
                     .foregroundColor(.white)
                     .padding()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
