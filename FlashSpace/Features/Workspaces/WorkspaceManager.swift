@@ -98,6 +98,7 @@ final class WorkspaceManager: ObservableObject {
         observeFocusCancellable = NSWorkspace.shared.notificationCenter
             .publisher(for: NSWorkspace.didActivateApplicationNotification)
             .compactMap { $0.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication }
+            .filter { $0.activationPolicy == .regular }
             .sink { [weak self] application in
                 self?.rememberLastFocusedApp(application, retry: true)
             }
