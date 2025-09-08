@@ -88,7 +88,7 @@ final class WorkspaceCommands: CommandExecutor {
         if let workspaceName = request.name {
             workspace = workspaceRepository.workspaces.first { $0.name == workspaceName }
         } else if let workspaceId = workspaceManager.activeWorkspaceDetails?.id {
-            workspace = workspaceRepository.workspaces.first { $0.id == workspaceId }
+            workspace = workspaceRepository.findWorkspace(with: workspaceId)
         } else {
             return CommandResponse(success: false, error: "Workspace not found")
         }
