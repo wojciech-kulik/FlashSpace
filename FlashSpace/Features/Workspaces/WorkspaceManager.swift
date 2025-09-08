@@ -85,6 +85,12 @@ final class WorkspaceManager: ObservableObject {
             }
             .store(in: &cancellables)
 
+        workspaceRepository.workspacesPublisher
+            .sink { [weak self] workspaces in
+                self?.updateWorkspaces(workspaces)
+            }
+            .store(in: &cancellables)
+
         observeFocus()
     }
 
@@ -119,6 +125,18 @@ final class WorkspaceManager: ObservableObject {
         }
 
         displayManager.trackDisplayFocus(on: focusedDisplay, for: application)
+    }
+
+    private func updateWorkspaces(_ workspaces: [Workspace]) {
+        let updatedWorkspaces = workspaces.reduce(into: [WorkspaceID: Workspace]()) { $0[$1.id] = $1 }
+
+        for (display, workspace) in activeWorkspace {
+            activeWorkspace[display] = updatedWorkspaces[workspace.id]
+        }
+
+        for (display, workspace) in mostRecentWorkspace {
+            mostRecentWorkspace[display] = updatedWorkspaces[workspace.id]
+        }
     }
 
     private func showApps(in workspace: Workspace, setFocus: Bool, on displays: Set<DisplayName>) {
@@ -345,8 +363,7 @@ extension WorkspaceManager {
         workspaceRepository.deleteAppFromAllWorkspaces(app: app)
         workspaceRepository.addApp(to: workspace.id, app: app)
 
-        guard let targetWorkspace = workspaceRepository.workspaces
-            .first(where: { $0.id == workspace.id }) else { return }
+        guard let targetWorkspace = workspaceRepository.findWorkspace(with: workspace.id) else { return }
 
         let isTargetWorkspaceActive = activeWorkspace.values
             .contains(where: { $0.id == workspace.id })
@@ -388,10 +405,8 @@ extension WorkspaceManager {
     }
 
     func hideUnassignedApps() {
-        let activeWorkspace = workspaceRepository.workspaces
-            .first(where: { $0.id == activeWorkspaceDetails?.id })
-
-        guard let activeWorkspace else { return }
+        guard let id = activeWorkspaceDetails?.id,
+              let activeWorkspace = workspaceRepository.findWorkspace(with: id) else { return }
 
         let appsToHide = NSWorkspace.shared.runningApplications
             .regularVisibleApps(onDisplays: activeWorkspace.displays, excluding: activeWorkspace.apps)
@@ -486,7 +501,7 @@ extension WorkspaceManager {
 
     func activateWorkspaceIfActive(_ workspaceId: WorkspaceID) {
         guard activeWorkspace.values.contains(where: { $0.id == workspaceId }) else { return }
-        guard let updatedWorkspace = workspaceRepository.workspaces.first(where: { $0.id == workspaceId }) else { return }
+        guard let updatedWorkspace = workspaceRepository.findWorkspace(with: workspaceId) else { return }
 
         activateWorkspace(updatedWorkspace, setFocus: false)
     }

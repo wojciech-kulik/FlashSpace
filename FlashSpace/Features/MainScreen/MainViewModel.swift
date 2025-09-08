@@ -148,7 +148,7 @@ final class MainViewModel: ObservableObject {
 
     private func reloadWorkspaces() {
         workspaces = workspaceRepository.workspaces
-        if let selectedWorkspace, let workspace = workspaces.first(where: { $0.id == selectedWorkspace.id }) {
+        if let selectedWorkspace, let workspace = workspaceRepository.findWorkspace(with: selectedWorkspace.id) {
             selectedWorkspaces = [workspace]
         } else {
             selectedWorkspaces = []
@@ -178,7 +178,7 @@ extension MainViewModel {
 
         workspaceRepository.updateWorkspace(updatedWorkspace)
         workspaces = workspaceRepository.workspaces
-        self.selectedWorkspace = workspaces.first { $0.id == selectedWorkspace.id }
+        self.selectedWorkspace = workspaceRepository.findWorkspace(with: selectedWorkspace.id)
     }
 
     func addWorkspace() {
@@ -241,7 +241,7 @@ extension MainViewModel {
         )
 
         workspaces = workspaceRepository.workspaces
-        self.selectedWorkspace = workspaces.first { $0.id == selectedWorkspace.id }
+        self.selectedWorkspace = workspaceRepository.findWorkspace(with: selectedWorkspace.id)
 
         workspaceManager.activateWorkspaceIfActive(selectedWorkspace.id)
     }
@@ -260,7 +260,7 @@ extension MainViewModel {
         }
 
         workspaces = workspaceRepository.workspaces
-        self.selectedWorkspace = workspaces.first { $0.id == selectedWorkspace.id }
+        self.selectedWorkspace = workspaceRepository.findWorkspace(with: selectedWorkspace.id)
         workspaceApps = self.selectedWorkspace?.apps
         self.selectedApps = []
 

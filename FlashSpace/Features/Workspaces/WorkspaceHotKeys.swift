@@ -47,8 +47,7 @@ final class WorkspaceHotKeys {
         guard let shortcut = workspace.activateShortcut else { return nil }
 
         let action = { [weak self] in
-            guard let self, let updatedWorkspace = workspaceRepository.workspaces
-                .first(where: { $0.id == workspace.id }) else { return }
+            guard let self, let updatedWorkspace = workspaceRepository.findWorkspace(with: workspace.id) else { return }
 
             if updatedWorkspace.isDynamic, updatedWorkspace.displays.isEmpty {
                 Toast.showWith(
@@ -189,8 +188,7 @@ extension WorkspaceHotKeys {
             return
         }
 
-        guard let updatedWorkspace = workspaceRepository.workspaces
-            .first(where: { $0.id == workspace.id }) else { return }
+        guard let updatedWorkspace = workspaceRepository.findWorkspace(with: workspace.id) else { return }
 
         workspaceManager.assignApp(activeApp.toMacApp, to: updatedWorkspace)
 
