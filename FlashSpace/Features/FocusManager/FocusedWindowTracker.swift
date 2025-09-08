@@ -38,6 +38,7 @@ final class FocusedWindowTracker {
         NSWorkspace.shared.notificationCenter
             .publisher(for: NSWorkspace.didActivateApplicationNotification)
             .compactMap { $0.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication }
+            .filter { $0.activationPolicy == .regular }
             .removeDuplicates()
             .sink { [weak self] app in self?.activeApplicationChanged(app, appLaunch: false) }
             .store(in: &cancellables)
