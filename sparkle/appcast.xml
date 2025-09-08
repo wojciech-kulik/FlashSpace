@@ -3,17 +3,17 @@
     <channel>
         <title>FlashSpace</title>
         <item>
-            <title>4.5.56</title>
-            <pubDate>Tue, 26 Aug 2025 16:49:18 +0200</pubDate>
-            <link>https://github.com/wojciech-kulik/FlashSpace/releases/tag/v4.5.56</link>
+            <title>4.6.57</title>
+            <pubDate>Mon, 08 Sep 2025 22:26:20 +0200</pubDate>
+            <link>https://github.com/wojciech-kulik/FlashSpace/releases/tag/v4.6.57</link>
             <sparkle:releaseNotesLink>https://wojciechkulik.pl/FlashSpace/release-notes.html</sparkle:releaseNotesLink>
             <sparkle:fullReleaseNotesLink>https://github.com/wojciech-kulik/FlashSpace/releases</sparkle:fullReleaseNotesLink>
-            <sparkle:version>56</sparkle:version>
-            <sparkle:shortVersionString>4.5.56</sparkle:shortVersionString>
+            <sparkle:version>57</sparkle:version>
+            <sparkle:shortVersionString>4.6.57</sparkle:shortVersionString>
             <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
             <enclosure 
-               url="https://github.com/wojciech-kulik/FlashSpace/releases/download/v4.5.56/FlashSpace.app.zip"
-               sparkle:edSignature="Wm4Df5O8BI7uOOKNRwnOb1z3gn+iW8nW1VmEGIAVC0jYZBkwD8mQIsnuKuv5I4XHB4rX0poUiiVYrF4CmxcvBQ==" length="4288388"
+               url="https://github.com/wojciech-kulik/FlashSpace/releases/download/v4.6.57/FlashSpace.app.zip"
+               sparkle:edSignature="gJ1yxP+cWUWVFGkiVqEA2shR0V7j9EbymxKPW4/eTfyBOpCWv9nyouUPQuiUHDs7r4Iu0IUGd8/uxMDXKXBPBQ==" length="4303300"
                type="application/octet-stream"/>
         </item>
     </channel>
