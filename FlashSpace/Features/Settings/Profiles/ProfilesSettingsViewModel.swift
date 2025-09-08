@@ -51,6 +51,10 @@ final class ProfilesSettingsViewModel: ObservableObject {
         isDeleteConfirmationPresented = true
     }
 
+    func updateShortcut(_ profile: Profile, hotKey: AppHotKey?) {
+        profilesRepository.updateShortcut(for: profile.id, to: hotKey)
+    }
+
     func inputDialogDismissed() {
         let input = userInput.trimmingCharacters(in: .whitespacesAndNewlines)
         guard let action, !input.isEmpty else { return }
