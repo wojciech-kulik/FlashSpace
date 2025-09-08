@@ -42,6 +42,15 @@ struct ProfilesSettingsView: View {
                             }
                             .buttonStyle(.borderless)
                             .tint(.primary)
+
+                            Spacer()
+
+                            HotKeyControl(
+                                shortcut: .init(
+                                    get: { profile.shortcut },
+                                    set: { viewModel.updateShortcut(profile, hotKey: $0) }
+                                )
+                            ).fixedSize()
                         }
                     }
                 }

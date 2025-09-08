@@ -19,19 +19,22 @@ final class HotKeysManager {
     private let floatingAppsHotKeys: FloatingAppsHotKeys
     private let focusManager: FocusManager
     private let settingsRepository: SettingsRepository
+    private let profilesRepository: ProfilesRepository
 
     init(
         hotKeysMonitor: HotKeysMonitorProtocol,
         workspaceHotKeys: WorkspaceHotKeys,
         floatingAppsHotKeys: FloatingAppsHotKeys,
         focusManager: FocusManager,
-        settingsRepository: SettingsRepository
+        settingsRepository: SettingsRepository,
+        profilesRepository: ProfilesRepository
     ) {
         self.hotKeysMonitor = hotKeysMonitor
         self.workspaceHotKeys = workspaceHotKeys
         self.floatingAppsHotKeys = floatingAppsHotKeys
         self.focusManager = focusManager
         self.settingsRepository = settingsRepository
+        self.profilesRepository = profilesRepository
 
         observe()
     }
@@ -60,6 +63,17 @@ final class HotKeysManager {
 
             hotKeysMonitor.addAction(action, forKeyEvent: .down)
             addShortcut("Workspace", shortcut)
+        }
+
+        // Profiles
+        for (shortcut, action) in profilesRepository.getHotKeys().toShortcutPairs() {
+            let action = ShortcutAction(shortcut: shortcut) { _ in
+                action()
+                return true
+            }
+
+            hotKeysMonitor.addAction(action, forKeyEvent: .down)
+            addShortcut("Profile", shortcut)
         }
 
         // Floating Apps

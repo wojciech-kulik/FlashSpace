@@ -91,7 +91,8 @@ struct AppDependencies {
             workspaceHotKeys: workspaceHotKeys,
             floatingAppsHotKeys: floatingAppsHotKeys,
             focusManager: focusManager,
-            settingsRepository: settingsRepository
+            settingsRepository: settingsRepository,
+            profilesRepository: profilesRepository
         )
         self.focusedWindowTracker = FocusedWindowTracker(
             workspaceRepository: workspaceRepository,

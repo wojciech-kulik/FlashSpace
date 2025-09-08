@@ -143,6 +143,20 @@ extension ProfilesRepository {
         }
     }
 
+    func updateShortcut(for profileId: ProfileId, to newShortcut: AppHotKey?) {
+        guard let index = profiles.firstIndex(where: { $0.id == profileId }) else { return }
+
+        profiles[index].shortcut = newShortcut
+
+        if selectedProfile.id == profileId {
+            shouldTrackProfileChange = false
+            selectedProfile = profiles[index]
+            shouldTrackProfileChange = true
+        }
+
+        saveToDisk()
+    }
+
     func updateWorkspaces(_ workspaces: [Workspace]) {
         guard let profileIndex = profiles.firstIndex(where: { $0.id == selectedProfile.id }) else { return }
 
@@ -156,5 +170,23 @@ extension ProfilesRepository {
         try? ConfigSerializer.serialize(filename: "profiles", config)
 
         selectedProfileId = selectedProfile.id
+        AppDependencies.shared.hotKeysManager.refresh()
+    }
+
+    func getHotKeys() -> [(AppHotKey, () -> ())] {
+        profiles
+            .compactMap { profile in
+                profile.shortcut.flatMap {
+                    ($0, { [weak self] in
+                        self?.selectedProfile = profile
+
+                        Toast.showWith(
+                            icon: "person.crop.circle",
+                            message: "\(profile.name) - Profile Activated",
+                            textColor: .positive
+                        )
+                    })
+                }
+            }
     }
 }

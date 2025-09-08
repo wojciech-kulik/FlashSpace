@@ -17,12 +17,14 @@ struct Profile: Identifiable, Codable, Hashable {
     let id: ProfileId
     var name: String
     var workspaces: [Workspace]
+    var shortcut: AppHotKey?
 }
 
 extension Profile {
     static let `default` = Profile(
         id: UUID(),
         name: "Default",
-        workspaces: []
+        workspaces: [],
+        shortcut: nil
     )
 }
