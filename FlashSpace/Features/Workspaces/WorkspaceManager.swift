@@ -283,26 +283,19 @@ final class WorkspaceManager: ObservableObject {
             .compactMap(\.bundleIdentifier)
             .asSet
 
-        let appsToOpen = workspace.apps
+        workspace.apps
             .filter { !runningBundleIds.contains($0.bundleIdentifier) }
+            .compactMap { NSWorkspace.shared.urlForApplication(withBundleIdentifier: $0.bundleIdentifier) }
+            .forEach { appUrl in
+                Logger.log("Open App: \(appUrl)")
 
-        guard appsToOpen.isNotEmpty else { return }
-
-        for app in appsToOpen {
-            if let url = NSWorkspace.shared.urlForApplication(withBundleIdentifier: app.bundleIdentifier) {
                 let config = NSWorkspace.OpenConfiguration()
-                config.activates = false
-
-                Logger.log("OPEN: \(app.name)")
-                NSWorkspace.shared.openApplication(at: url, configuration: config) { _, error in
+                NSWorkspace.shared.openApplication(at: appUrl, configuration: config) { _, error in
                     if let error {
-                        Logger.log("Failed to open \(app.name): \(error.localizedDescription)")
+                        Logger.log("Failed to open \(appUrl): \(error.localizedDescription)")
                     }
                 }
-            } else {
-                Logger.log("App not installed: \(app.name) [\(app.bundleIdentifier)]")
             }
-        }
     }
 
     private func rememberHiddenApps(workspaceToActivate: WorkspaceID?) {
@@ -359,6 +352,18 @@ extension WorkspaceManager {
         Logger.log("DISPLAYS: \(displays.joined(separator: ", "))")
         Logger.log("----")
         SpaceControl.hide()
+
+        if workspace.isDynamic, workspace.displays.isEmpty, workspace.openAppsOnActivation == true {
+            Logger.log("No running apps in the workspace - launching apps")
+            openAppsIfNeeded(in: workspace)
+
+            if !workspaceSettings.activeWorkspaceOnFocusChange {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                    self.activateWorkspace(workspace, setFocus: setFocus)
+                }
+            }
+            return
+        }
 
         guard displays.isNotEmpty else {
             Logger.log("No displays found for workspace: \(workspace.name) - skipping")

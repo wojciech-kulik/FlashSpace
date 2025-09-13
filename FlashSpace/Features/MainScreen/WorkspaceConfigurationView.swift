@@ -62,18 +62,13 @@ struct WorkspaceConfigurationView: View {
                 }
             }.padding(.bottom)
 
-            HStack {
-                Text("Open apps on activation:")
-                Toggle("", isOn: $viewModel.isOpenAppsOnActivationEnabled)
-                    .labelsHidden()
-            }
-            .padding(.bottom)
-
             Text("Activate Shortcut:")
             HotKeyControl(shortcut: $viewModel.workspaceShortcut).padding(.bottom)
 
             Text("Assign App Shortcut:")
             HotKeyControl(shortcut: $viewModel.workspaceAssignShortcut).padding(.bottom)
+
+            Toggle("Open apps on activation", isOn: $viewModel.isOpenAppsOnActivationEnabled).padding(.bottom)
         }
         .disabled(viewModel.selectedWorkspace == nil)
     }
