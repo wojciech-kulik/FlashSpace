@@ -63,19 +63,23 @@ struct SpaceControlSettingsView: View {
 
                     VStack(alignment: .leading) {
                         HStack {
-                            Text("Max Number Of Columns")
+                            Text("Number Of Columns")
                             Spacer()
-                            Text("\(settings.spaceControlMaxColumns)")
+                            Text(settings.spaceControlNumberOfColumns > 0
+                                ? "\(settings.spaceControlNumberOfColumns)"
+                                : "Auto"
+                            )
                             Stepper(
                                 "",
-                                value: $settings.spaceControlMaxColumns,
-                                in: 2...6,
+                                value: $settings.spaceControlNumberOfColumns,
+                                in: 0...7,
                                 step: 1
-                            ).labelsHidden()
+                            )
+                            .labelsHidden()
                         }
 
                         Text(
-                            "This setting will be ignored if it results in more than 5 rows of workspaces."
+                            "This setting will be ignored if it results in more than 6 rows of workspaces."
                         )
                         .foregroundColor(.secondary)
                         .font(.callout)
