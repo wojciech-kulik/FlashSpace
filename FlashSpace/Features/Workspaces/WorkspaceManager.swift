@@ -353,7 +353,8 @@ extension WorkspaceManager {
         Logger.log("----")
         SpaceControl.hide()
 
-        if workspace.isDynamic, workspace.displays.isEmpty, workspace.openAppsOnActivation == true {
+        if workspace.isDynamic, workspace.displays.isEmpty,
+           workspace.apps.isNotEmpty, workspace.openAppsOnActivation == true {
             Logger.log("No running apps in the workspace - launching apps")
             openAppsIfNeeded(in: workspace)
 
