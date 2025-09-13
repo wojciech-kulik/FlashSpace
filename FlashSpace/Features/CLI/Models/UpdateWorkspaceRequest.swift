@@ -15,4 +15,5 @@ struct UpdateWorkspaceRequest: Codable {
 
     let name: String?
     let display: Display?
+    let openApps: Bool?
 }

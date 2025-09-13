@@ -110,6 +110,10 @@ final class WorkspaceCommands: CommandExecutor {
             }
         }
 
+        if let openApps = request.openApps {
+            workspace.openAppsOnActivation = openApps
+        }
+
         workspaceRepository.updateWorkspace(workspace)
         NotificationCenter.default.post(name: .appsListChanged, object: nil)
 

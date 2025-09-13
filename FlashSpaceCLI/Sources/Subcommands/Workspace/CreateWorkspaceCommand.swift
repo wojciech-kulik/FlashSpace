@@ -14,6 +14,7 @@ struct CreateWorkspaceRequest: Codable {
     let icon: String?
     let activateKey: String?
     let assignKey: String?
+    let openApps: Bool
     let activate: Bool
 }
 
@@ -38,6 +39,9 @@ struct CreateWorkspaceCommand: ParsableCommand {
     @Option(help: "The hotkey to assign the app")
     var assignKey: String?
 
+    @Flag(help: "Open apps on workspace activation")
+    var openApps = false
+
     @Flag(help: "Activate the new workspace")
     var activate = false
 
@@ -48,6 +52,7 @@ struct CreateWorkspaceCommand: ParsableCommand {
             icon: icon,
             activateKey: activateKey,
             assignKey: assignKey,
+            openApps: openApps,
             activate: activate
         )
         sendCommand(.createWorkspace(request))
