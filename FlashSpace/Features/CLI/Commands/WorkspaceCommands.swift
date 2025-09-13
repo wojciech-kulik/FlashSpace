@@ -18,7 +18,8 @@ final class WorkspaceCommands: CommandExecutor {
         case .activateWorkspace(.some(let name), _, let clean):
             let workspace = workspaceRepository.workspaces.first { $0.name == name }
             if let workspace {
-                if workspace.isDynamic, workspace.displays.isEmpty {
+                if workspace.isDynamic, workspace.displays.isEmpty,
+                   workspace.apps.isEmpty || workspace.openAppsOnActivation != true {
                     return CommandResponse(success: false, error: "\(workspace.name) - No Running Apps To Show")
                 }
                 workspaceManager.activateWorkspace(workspace, setFocus: true)
@@ -31,7 +32,8 @@ final class WorkspaceCommands: CommandExecutor {
         case .activateWorkspace(_, .some(let number), let clean):
             let workspace = workspaceRepository.workspaces[safe: number - 1]
             if let workspace {
-                if workspace.isDynamic, workspace.displays.isEmpty {
+                if workspace.isDynamic, workspace.displays.isEmpty,
+                   workspace.apps.isEmpty || workspace.openAppsOnActivation != true {
                     return CommandResponse(success: false, error: "\(workspace.name) - No Running Apps To Show")
                 }
                 workspaceManager.activateWorkspace(workspace, setFocus: true)
@@ -108,6 +110,10 @@ final class WorkspaceCommands: CommandExecutor {
             case .name(let name):
                 workspace.display = name
             }
+        }
+
+        if let openApps = request.openApps {
+            workspace.openAppsOnActivation = openApps
         }
 
         workspaceRepository.updateWorkspace(workspace)

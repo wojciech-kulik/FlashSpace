@@ -14,6 +14,7 @@ struct CreateWorkspaceRequest: Codable {
     let icon: String?
     let activateKey: String?
     let assignKey: String?
+    let openApps: Bool
     let activate: Bool
 }
 
@@ -27,7 +28,8 @@ extension CreateWorkspaceRequest {
             assignAppShortcut: assignKey.flatMap { .init(value: $0) },
             apps: [],
             appToFocus: nil,
-            symbolIconName: icon
+            symbolIconName: icon,
+            openAppsOnActivation: openApps
         )
     }
 }

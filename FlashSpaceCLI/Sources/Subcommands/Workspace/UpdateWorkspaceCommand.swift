@@ -17,6 +17,7 @@ struct UpdateWorkspaceRequest: Codable {
 
     let name: String?
     let display: Display?
+    let openApps: Bool?
 }
 
 struct UpdateWorkspaceCommand: ParsableCommand {
@@ -34,14 +35,17 @@ struct UpdateWorkspaceCommand: ParsableCommand {
     @Option(help: "The name of the display to be assigned.")
     var display: String?
 
+    @Option(help: .init("Open apps on workspace activation (default: false)", valueName: "true|false"))
+    var openApps: Bool?
+
     @Flag(help: "Assign active display.")
     var activeDisplay = false
 
     func run() throws {
         if let display {
-            sendCommand(.updateWorkspace(.init(name: workspace, display: .name(display))))
+            sendCommand(.updateWorkspace(.init(name: workspace, display: .name(display), openApps: openApps)))
         } else if activeDisplay {
-            sendCommand(.updateWorkspace(.init(name: workspace, display: .active)))
+            sendCommand(.updateWorkspace(.init(name: workspace, display: .active, openApps: openApps)))
         } else {
             throw CommandError.operationFailed("Invalid command")
         }

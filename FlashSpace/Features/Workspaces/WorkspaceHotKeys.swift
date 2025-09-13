@@ -49,7 +49,8 @@ final class WorkspaceHotKeys {
         let action = { [weak self] in
             guard let self, let updatedWorkspace = workspaceRepository.findWorkspace(with: workspace.id) else { return }
 
-            if updatedWorkspace.isDynamic, updatedWorkspace.displays.isEmpty {
+            if updatedWorkspace.isDynamic, updatedWorkspace.displays.isEmpty,
+               workspace.apps.isEmpty || updatedWorkspace.openAppsOnActivation != true {
                 Toast.showWith(
                     icon: "square.stack.3d.up",
                     message: "\(workspace.name) - No Running Apps To Show",

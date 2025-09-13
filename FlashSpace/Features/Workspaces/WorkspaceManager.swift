@@ -276,6 +276,28 @@ final class WorkspaceManager: ObservableObject {
         Integrations.runOnActivateIfNeeded(workspace: activeWorkspaceDetails!)
     }
 
+    private func openAppsIfNeeded(in workspace: Workspace) {
+        guard workspace.openAppsOnActivation == true else { return }
+
+        let runningBundleIds = NSWorkspace.shared.runningApplications
+            .compactMap(\.bundleIdentifier)
+            .asSet
+
+        workspace.apps
+            .filter { !runningBundleIds.contains($0.bundleIdentifier) }
+            .compactMap { NSWorkspace.shared.urlForApplication(withBundleIdentifier: $0.bundleIdentifier) }
+            .forEach { appUrl in
+                Logger.log("Open App: \(appUrl)")
+
+                let config = NSWorkspace.OpenConfiguration()
+                NSWorkspace.shared.openApplication(at: appUrl, configuration: config) { _, error in
+                    if let error {
+                        Logger.log("Failed to open \(appUrl): \(error.localizedDescription)")
+                    }
+                }
+            }
+    }
+
     private func rememberHiddenApps(workspaceToActivate: WorkspaceID?) {
         guard !workspaceSettings.restoreHiddenAppsOnSwitch else {
             appsHiddenManually = [:]
@@ -331,6 +353,19 @@ extension WorkspaceManager {
         Logger.log("----")
         SpaceControl.hide()
 
+        if workspace.isDynamic, workspace.displays.isEmpty,
+           workspace.apps.isNotEmpty, workspace.openAppsOnActivation == true {
+            Logger.log("No running apps in the workspace - launching apps")
+            openAppsIfNeeded(in: workspace)
+
+            if !workspaceSettings.activeWorkspaceOnFocusChange {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                    self.activateWorkspace(workspace, setFocus: setFocus)
+                }
+            }
+            return
+        }
+
         guard displays.isNotEmpty else {
             Logger.log("No displays found for workspace: \(workspace.name) - skipping")
             return
@@ -343,6 +378,7 @@ extension WorkspaceManager {
 
         rememberHiddenApps(workspaceToActivate: workspace.id)
         updateActiveWorkspace(workspace, on: displays)
+        openAppsIfNeeded(in: workspace)
         showApps(in: workspace, setFocus: setFocus, on: displays)
         hideApps(in: workspace)
 
