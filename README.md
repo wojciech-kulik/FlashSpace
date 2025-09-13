@@ -120,6 +120,9 @@ If the PiP window is not visible, the standard behavior is applied.
 
 Supported browsers: Safari, Zen Browser, Chrome, Firefox, Brave, Vivaldi, Arc, Dia, Opera, Microsoft Edge, Comet.
 
+**Please note that this feature may not work if your browser language is not set to
+English.**
+
 ## 🖥️ Display Assignment Modes
 
 FlashSpace supports two modes of display assignment:
