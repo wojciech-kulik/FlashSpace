@@ -42,6 +42,10 @@ final class MainViewModel: ObservableObject {
         didSet { saveWorkspace() }
     }
 
+    @Published var isOpenAppsOnActivationEnabled = false {
+        didSet { saveWorkspace() }
+    }
+
     @Published var isSymbolPickerPresented = false
     @Published var isInputDialogPresented = false
     @Published var userInput = ""
@@ -143,6 +147,7 @@ final class MainViewModel: ObservableObject {
         workspaceApps = selectedWorkspace?.apps
         workspaceAppToFocus = selectedWorkspace?.appToFocus ?? AppConstants.lastFocusedOption
         workspaceSymbolIconName = selectedWorkspace?.symbolIconName
+        isOpenAppsOnActivationEnabled = selectedWorkspace?.openAppsOnActivation ?? false
         selectedWorkspace.flatMap { selectedWorkspaces = [$0] }
     }
 
@@ -173,7 +178,8 @@ extension MainViewModel {
             assignAppShortcut: workspaceAssignShortcut,
             apps: selectedWorkspace.apps,
             appToFocus: workspaceAppToFocus == AppConstants.lastFocusedOption ? nil : workspaceAppToFocus,
-            symbolIconName: workspaceSymbolIconName
+            symbolIconName: workspaceSymbolIconName,
+            openAppsOnActivation: isOpenAppsOnActivationEnabled
         )
 
         workspaceRepository.updateWorkspace(updatedWorkspace)

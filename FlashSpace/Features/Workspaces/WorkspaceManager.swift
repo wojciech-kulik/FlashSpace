@@ -276,6 +276,35 @@ final class WorkspaceManager: ObservableObject {
         Integrations.runOnActivateIfNeeded(workspace: activeWorkspaceDetails!)
     }
 
+    private func openAppsIfNeeded(in workspace: Workspace) {
+        guard workspace.openAppsOnActivation == true else { return }
+
+        let runningBundleIds = NSWorkspace.shared.runningApplications
+            .compactMap(\.bundleIdentifier)
+            .asSet
+
+        let appsToOpen = workspace.apps
+            .filter { !runningBundleIds.contains($0.bundleIdentifier) }
+
+        guard appsToOpen.isNotEmpty else { return }
+
+        for app in appsToOpen {
+            if let url = NSWorkspace.shared.urlForApplication(withBundleIdentifier: app.bundleIdentifier) {
+                let config = NSWorkspace.OpenConfiguration()
+                config.activates = false
+
+                Logger.log("OPEN: \(app.name)")
+                NSWorkspace.shared.openApplication(at: url, configuration: config) { _, error in
+                    if let error {
+                        Logger.log("Failed to open \(app.name): \(error.localizedDescription)")
+                    }
+                }
+            } else {
+                Logger.log("App not installed: \(app.name) [\(app.bundleIdentifier)]")
+            }
+        }
+    }
+
     private func rememberHiddenApps(workspaceToActivate: WorkspaceID?) {
         guard !workspaceSettings.restoreHiddenAppsOnSwitch else {
             appsHiddenManually = [:]
@@ -343,6 +372,7 @@ extension WorkspaceManager {
 
         rememberHiddenApps(workspaceToActivate: workspace.id)
         updateActiveWorkspace(workspace, on: displays)
+        openAppsIfNeeded(in: workspace)
         showApps(in: workspace, setFocus: setFocus, on: displays)
         hideApps(in: workspace)
 

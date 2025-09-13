@@ -20,6 +20,7 @@ struct Workspace: Identifiable, Codable, Hashable {
         case apps
         case appToFocus
         case symbolIconName
+        case openAppsOnActivation
     }
 
     var id: WorkspaceID
@@ -30,6 +31,7 @@ struct Workspace: Identifiable, Codable, Hashable {
     var apps: [MacApp]
     var appToFocus: MacApp?
     var symbolIconName: String?
+    var openAppsOnActivation: Bool?
 }
 
 extension Workspace {
