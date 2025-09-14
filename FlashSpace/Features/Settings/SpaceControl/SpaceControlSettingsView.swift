@@ -57,6 +57,10 @@ struct SpaceControlSettingsView: View {
                         isOn: $settings.spaceControlCurrentDisplayWorkspaces
                     )
                     Toggle(
+                        "Hide Empty Workspaces",
+                        isOn: $settings.spaceControlHideEmptyWorkspaces
+                    )
+                    Toggle(
                         "Update Screenshots On Open (slower)",
                         isOn: $settings.spaceControlUpdateScreenshotsOnOpen
                     )
