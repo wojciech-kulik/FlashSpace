@@ -44,8 +44,8 @@ extension Workspace {
             // prevents from detecting the correct display.
             //
             // The workaround is to activate the app manually to update its frame.
-            return NSWorkspace.shared.runningApplications
-                .filter { $0.activationPolicy == .regular && apps.containsApp($0) }
+            return NSWorkspace.shared.runningRegularApps
+                .filter { apps.containsApp($0) }
                 .flatMap(\.allDisplays)
                 .asSet
         } else {
@@ -76,5 +76,17 @@ extension Workspace {
 
     private var displayManager: DisplayManager {
         AppDependencies.shared.displayManager
+    }
+}
+
+extension [Workspace] {
+    func skipWithoutRunningApps() -> [Workspace] {
+        let runningBundleIds = NSWorkspace.shared.runningRegularApps
+            .compactMap(\.bundleIdentifier)
+            .asSet
+
+        return filter {
+            $0.apps.contains { runningBundleIds.contains($0.bundleIdentifier) }
+        }
     }
 }

@@ -84,6 +84,7 @@ struct AppSettings: Codable {
     var enableSpaceControlAnimations: Bool?
     var enableSpaceControlTilesAnimations: Bool?
     var spaceControlCurrentDisplayWorkspaces: Bool?
+    var spaceControlHideEmptyWorkspaces: Bool?
     var spaceControlUpdateScreenshotsOnOpen: Bool?
     var spaceControlNumberOfColumns: Int?
 

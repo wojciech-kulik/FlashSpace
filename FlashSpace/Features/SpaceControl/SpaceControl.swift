@@ -139,11 +139,14 @@ enum SpaceControl {
     }
 
     private static func validate() -> Bool {
-        let workspaces = AppDependencies.shared.workspaceRepository.workspaces
-        let nonEmptyWorkspaces = workspaces
+        var workspaces = AppDependencies.shared.workspaceRepository.workspaces
             .filter { !settings.spaceControlCurrentDisplayWorkspaces || $0.isOnTheCurrentScreen }
 
-        if nonEmptyWorkspaces.count < 2 {
+        if settings.spaceControlHideEmptyWorkspaces {
+            workspaces = workspaces.skipWithoutRunningApps()
+        }
+
+        if workspaces.count < 2 {
             Alert.showOkAlert(title: "Space Control", message: "You need at least 2 workspaces to use Space Control.")
             return false
         }

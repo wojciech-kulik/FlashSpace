@@ -141,8 +141,7 @@ final class WorkspaceManager: ObservableObject {
     }
 
     private func showApps(in workspace: Workspace, setFocus: Bool, on displays: Set<DisplayName>) {
-        let regularApps = NSWorkspace.shared.runningApplications
-            .filter { $0.activationPolicy == .regular }
+        let regularApps = NSWorkspace.shared.runningRegularApps
         let floatingApps = floatingAppsSettings.floatingApps
         let hiddenApps = appsHiddenManually[workspace.id] ?? []
         var appsToShow = regularApps
@@ -187,8 +186,7 @@ final class WorkspaceManager: ObservableObject {
     }
 
     private func hideApps(in workspace: Workspace) {
-        let regularApps = NSWorkspace.shared.runningApplications
-            .filter { $0.activationPolicy == .regular }
+        let regularApps = NSWorkspace.shared.runningRegularApps
         let workspaceApps = workspace.apps + floatingAppsSettings.floatingApps
         let isAnyWorkspaceAppRunning = regularApps
             .contains { workspaceApps.containsApp($0) }
@@ -304,8 +302,7 @@ final class WorkspaceManager: ObservableObject {
             return
         }
 
-        let hiddenApps = NSWorkspace.shared.runningApplications
-            .filter { $0.activationPolicy == .regular }
+        let hiddenApps = NSWorkspace.shared.runningRegularApps
             .filter { $0.isHidden || $0.isMinimized }
 
         for activeWorkspace in activeWorkspace.values {
@@ -513,8 +510,7 @@ extension WorkspaceManager {
         var selectedWorkspace = nextWorkspaces.first ?? (loop ? screenWorkspaces.first : nil)
 
         if skipEmpty {
-            let runningApps = NSWorkspace.shared.runningApplications
-                .filter { $0.activationPolicy == .regular }
+            let runningApps = NSWorkspace.shared.runningRegularApps
                 .compactMap(\.bundleIdentifier)
                 .asSet
 

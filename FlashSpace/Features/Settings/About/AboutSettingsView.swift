@@ -51,6 +51,11 @@ struct AboutSettingsView: View {
                     Spacer()
                     Button("GitHub") { openGitHub("mattiacerutti") }
                 }
+                HStack {
+                    Text("Peter (@peterneutron)")
+                    Spacer()
+                    Button("GitHub") { openGitHub("peterneutron") }
+                }
             }
         }
         .buttonStyle(.accessoryBarAction)

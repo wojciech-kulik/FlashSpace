@@ -14,6 +14,7 @@ final class SpaceControlSettings: ObservableObject {
     @Published var enableSpaceControlAnimations = true
     @Published var enableSpaceControlTilesAnimations = true
     @Published var spaceControlCurrentDisplayWorkspaces = false
+    @Published var spaceControlHideEmptyWorkspaces = false
     @Published var spaceControlUpdateScreenshotsOnOpen = false
     @Published var spaceControlNumberOfColumns = 0
 
@@ -29,6 +30,7 @@ final class SpaceControlSettings: ObservableObject {
             $enableSpaceControlAnimations.settingsPublisher(),
             $enableSpaceControlTilesAnimations.settingsPublisher(),
             $spaceControlCurrentDisplayWorkspaces.settingsPublisher(),
+            $spaceControlHideEmptyWorkspaces.settingsPublisher(),
             $spaceControlUpdateScreenshotsOnOpen.settingsPublisher(),
             $spaceControlNumberOfColumns.settingsPublisher(debounce: true)
         )
@@ -49,6 +51,7 @@ extension SpaceControlSettings: SettingsProtocol {
         enableSpaceControlAnimations = appSettings.enableSpaceControlAnimations ?? true
         enableSpaceControlTilesAnimations = appSettings.enableSpaceControlTilesAnimations ?? true
         spaceControlCurrentDisplayWorkspaces = appSettings.spaceControlCurrentDisplayWorkspaces ?? false
+        spaceControlHideEmptyWorkspaces = appSettings.spaceControlHideEmptyWorkspaces ?? false
         spaceControlUpdateScreenshotsOnOpen = appSettings.spaceControlUpdateScreenshotsOnOpen ?? false
         spaceControlNumberOfColumns = appSettings.spaceControlNumberOfColumns ?? 0
         observe()
@@ -60,6 +63,7 @@ extension SpaceControlSettings: SettingsProtocol {
         appSettings.enableSpaceControlAnimations = enableSpaceControlAnimations
         appSettings.enableSpaceControlTilesAnimations = enableSpaceControlTilesAnimations
         appSettings.spaceControlCurrentDisplayWorkspaces = spaceControlCurrentDisplayWorkspaces
+        appSettings.spaceControlHideEmptyWorkspaces = spaceControlHideEmptyWorkspaces
         appSettings.spaceControlUpdateScreenshotsOnOpen = spaceControlUpdateScreenshotsOnOpen
         appSettings.spaceControlNumberOfColumns = spaceControlNumberOfColumns
     }

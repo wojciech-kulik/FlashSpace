@@ -63,9 +63,15 @@ final class SpaceControlViewModel: ObservableObject {
         let activeWorkspaceIds = workspaceManager.activeWorkspace.map(\.value.id).asSet
         let mainDisplay = NSScreen.main?.localizedName ?? ""
 
+        var sourceWorkspaces = workspaceRepository.workspaces
+            .filter { !settings.spaceControlCurrentDisplayWorkspaces || $0.isOnTheCurrentScreen }
+
+        if settings.spaceControlHideEmptyWorkspaces {
+            sourceWorkspaces = sourceWorkspaces.skipWithoutRunningApps()
+        }
+
         workspaces = Array(
-            workspaceRepository.workspaces
-                .filter { !settings.spaceControlCurrentDisplayWorkspaces || $0.isOnTheCurrentScreen }
+            sourceWorkspaces
                 .prefix(35)
                 .enumerated()
                 .map {
