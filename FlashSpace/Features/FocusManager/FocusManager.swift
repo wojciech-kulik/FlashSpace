@@ -10,8 +10,7 @@ import Foundation
 
 final class FocusManager {
     var visibleApps: [NSRunningApplication] {
-        NSWorkspace.shared.runningApplications
-            .filter { $0.activationPolicy == .regular && !$0.isHidden }
+        NSWorkspace.shared.runningRegularApps.filter { !$0.isHidden }
     }
 
     var focusedApp: NSRunningApplication? { NSWorkspace.shared.frontmostApplication }

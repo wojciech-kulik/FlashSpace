@@ -63,20 +63,11 @@ final class SpaceControlViewModel: ObservableObject {
         let activeWorkspaceIds = workspaceManager.activeWorkspace.map(\.value.id).asSet
         let mainDisplay = NSScreen.main?.localizedName ?? ""
 
-        // Base list respecting current-display filter
         var sourceWorkspaces = workspaceRepository.workspaces
             .filter { !settings.spaceControlCurrentDisplayWorkspaces || $0.isOnTheCurrentScreen }
 
-        // Optionally hide empty workspaces (no running assigned apps)
         if settings.spaceControlHideEmptyWorkspaces {
-            let runningBundleIds = NSWorkspace.shared.runningApplications
-                .filter { $0.activationPolicy == .regular }
-                .compactMap(\.bundleIdentifier)
-                .asSet
-
-            sourceWorkspaces = sourceWorkspaces.filter { ws in
-                ws.apps.contains { runningBundleIds.contains($0.bundleIdentifier) }
-            }
+            sourceWorkspaces = sourceWorkspaces.withoutEmpty()
         }
 
         workspaces = Array(
