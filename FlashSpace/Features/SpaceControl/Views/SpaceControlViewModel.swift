@@ -67,7 +67,7 @@ final class SpaceControlViewModel: ObservableObject {
             .filter { !settings.spaceControlCurrentDisplayWorkspaces || $0.isOnTheCurrentScreen }
 
         if settings.spaceControlHideEmptyWorkspaces {
-            sourceWorkspaces = sourceWorkspaces.withoutEmpty()
+            sourceWorkspaces = sourceWorkspaces.skipWithoutRunningApps()
         }
 
         workspaces = Array(

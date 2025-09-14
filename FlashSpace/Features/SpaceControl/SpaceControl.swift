@@ -143,7 +143,7 @@ enum SpaceControl {
             .filter { !settings.spaceControlCurrentDisplayWorkspaces || $0.isOnTheCurrentScreen }
 
         if settings.spaceControlHideEmptyWorkspaces {
-            workspaces = workspaces.withoutEmpty()
+            workspaces = workspaces.skipWithoutRunningApps()
         }
 
         if workspaces.count < 2 {
