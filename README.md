@@ -8,7 +8,7 @@
 FlashSpace is a blazingly-fast virtual workspace manager for macOS, designed to
 enhance and replace native macOS Spaces. No more waiting for macOS animations.
 
-<img width="797" alt="FlashSpace" src="https://github.com/user-attachments/assets/94e8bc2d-f7b3-47b5-94b9-865a192c951b" />
+<img width="806" height="582" alt="FlashSpace" src="https://github.com/user-attachments/assets/8e75e0f5-8f31-44db-9e52-20fdc4c1dec4" />
 
 ## ⚙️ Installation
 
