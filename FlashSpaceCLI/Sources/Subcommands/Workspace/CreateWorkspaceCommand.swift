@@ -42,7 +42,7 @@ struct CreateWorkspaceCommand: ParsableCommand {
     @Flag(help: "Open apps on workspace activation")
     var openApps = false
 
-    @Flag(help: "Activate the new workspace")
+    @Flag(help: "Activate new workspace")
     var activate = false
 
     func run() throws {

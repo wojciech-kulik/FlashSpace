@@ -34,6 +34,7 @@ final class ProfilesRepository: ObservableObject {
     }
 
     private var shouldTrackProfileChange = true
+    private lazy var settings = AppDependencies.shared.profileSettings
 
     init() {
         loadFromDisk()
@@ -188,6 +189,10 @@ extension ProfilesRepository {
     }
 
     func getHotKeys() -> [(AppHotKey, () -> ())] {
+        getProfileHotKeys() + getNextPrevHotKeys()
+    }
+
+    private func getProfileHotKeys() -> [(AppHotKey, () -> ())] {
         profiles
             .compactMap { profile in
                 profile.shortcut.flatMap {
@@ -202,5 +207,19 @@ extension ProfilesRepository {
                     })
                 }
             }
+    }
+
+    private func getNextPrevHotKeys() -> [(AppHotKey, () -> ())] {
+        var shortcuts: [(AppHotKey, () -> ())] = []
+
+        if let nextShortcut = settings.switchToNextProfile {
+            shortcuts.append((nextShortcut, { [weak self] in self?.activateNextProfile() }))
+        }
+
+        if let prevShortcut = settings.switchToPreviousProfile {
+            shortcuts.append((prevShortcut, { [weak self] in self?.activatePreviousProfile() }))
+        }
+
+        return shortcuts
     }
 }

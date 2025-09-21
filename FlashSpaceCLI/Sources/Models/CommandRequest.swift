@@ -35,6 +35,8 @@ enum CommandRequest: Codable {
     case createProfile(name: String, copy: Bool, activate: Bool)
     case deleteProfile(name: String)
     case activateProfile(name: String)
+    case nextProfile
+    case previousProfile
 
     case openSpaceControl
 

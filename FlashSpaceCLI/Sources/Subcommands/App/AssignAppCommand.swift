@@ -27,7 +27,7 @@ struct AssignAppCommand: ParsableCommand {
     var workspace: String?
 
     @Option(help: .init(
-        "Activate the workspace. Default: from app settings.",
+        "Activate workspace. Default: from app settings.",
         valueName: "true|false"
     ))
     var activate: Bool?

@@ -17,6 +17,7 @@ final class SettingsRepository: ObservableObject {
     private(set) var floatingAppsSettings: FloatingAppsSettings
     private(set) var spaceControlSettings: SpaceControlSettings
     private(set) var integrationsSettings: IntegrationsSettings
+    private(set) var profileSettings: ProfileSettings
 
     private lazy var allSettings: [SettingsProtocol] = [
         generalSettings,
@@ -26,7 +27,8 @@ final class SettingsRepository: ObservableObject {
         workspaceSettings,
         floatingAppsSettings,
         spaceControlSettings,
-        integrationsSettings
+        integrationsSettings,
+        profileSettings
     ]
 
     private var currentSettings = AppSettings()
@@ -41,7 +43,8 @@ final class SettingsRepository: ObservableObject {
         workspaceSettings: WorkspaceSettings,
         floatingAppsSettings: FloatingAppsSettings,
         spaceControlSettings: SpaceControlSettings,
-        integrationsSettings: IntegrationsSettings
+        integrationsSettings: IntegrationsSettings,
+        profileSettings: ProfileSettings
     ) {
         self.generalSettings = generalSettings
         self.menuBarSettings = menuBarSettings
@@ -51,6 +54,7 @@ final class SettingsRepository: ObservableObject {
         self.floatingAppsSettings = floatingAppsSettings
         self.spaceControlSettings = spaceControlSettings
         self.integrationsSettings = integrationsSettings
+        self.profileSettings = profileSettings
 
         loadFromDisk()
 

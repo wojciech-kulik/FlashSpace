@@ -23,6 +23,14 @@ final class ProfileCommands: CommandExecutor {
                 return CommandResponse(success: false, error: "Profile not found")
             }
 
+        case .nextProfile:
+            profilesRepository.activateNextProfile()
+            return CommandResponse(success: true)
+
+        case .previousProfile:
+            profilesRepository.activatePreviousProfile()
+            return CommandResponse(success: true)
+
         case .createProfile(let name, let copy, let activate):
             profilesRepository.createProfile(name: name, keepWorkspaces: copy)
             if activate {

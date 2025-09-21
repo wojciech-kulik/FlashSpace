@@ -23,10 +23,10 @@ struct WorkspaceCommand: ParsableCommand {
     ))
     var number: Int?
 
-    @Flag(help: "Activate the next workspace")
+    @Flag(help: "Activate next workspace")
     var next = false
 
-    @Flag(help: "Activate the previous workspace")
+    @Flag(help: "Activate previous workspace")
     var prev = false
 
     @Flag(help: "Activate the most recently used workspace")

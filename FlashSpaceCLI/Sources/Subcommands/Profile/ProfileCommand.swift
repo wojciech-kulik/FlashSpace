@@ -15,10 +15,32 @@ struct ProfileCommand: ParsableCommand {
     )
 
     @Argument(help: "Profile name.")
-    var name: String
+    var name: String?
+
+    @Flag(help: "Activate next profile")
+    var next = false
+
+    @Flag(help: "Activate previous profile")
+    var prev = false
 
     func run() throws {
-        sendCommand(.activateProfile(name: name))
+        if let name {
+            sendCommand(.activateProfile(name: name))
+        } else if next {
+            sendCommand(.nextProfile)
+        } else if prev {
+            sendCommand(.previousProfile)
+        }
         runWithTimeout()
+    }
+
+    func validate() throws {
+        if !next, !prev, name == nil {
+            throw CommandError.operationFailed("You must provide a profile name or use --next or --prev")
+        }
+
+        if next || prev, name != nil {
+            throw CommandError.operationFailed("You cannot provide a profile name and use --next or --prev")
+        }
     }
 }

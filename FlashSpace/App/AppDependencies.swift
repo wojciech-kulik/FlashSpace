@@ -35,6 +35,7 @@ struct AppDependencies {
     let floatingAppsSettings = FloatingAppsSettings()
     let spaceControlSettings = SpaceControlSettings()
     let integrationsSettings = IntegrationsSettings()
+    let profileSettings = ProfileSettings()
 
     let profilesRepository: ProfilesRepository
     let autostartService = AutostartService()
@@ -50,7 +51,8 @@ struct AppDependencies {
             workspaceSettings: workspaceSettings,
             floatingAppsSettings: floatingAppsSettings,
             spaceControlSettings: spaceControlSettings,
-            integrationsSettings: integrationsSettings
+            integrationsSettings: integrationsSettings,
+            profileSettings: profileSettings
         )
         self.displayManager = DisplayManager(settingsRepository: settingsRepository)
         self.workspaceTransitionManager = WorkspaceTransitionManager(
