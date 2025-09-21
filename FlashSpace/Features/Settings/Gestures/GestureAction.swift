@@ -18,6 +18,8 @@ enum GestureAction {
     case hideAllApps
     case hideUnassignedApps
     case showUnassignedApps
+    case nextProfile
+    case previousProfile
     case focusLeft
     case focusRight
     case focusUp
@@ -27,6 +29,7 @@ enum GestureAction {
     case focusNextWindow
     case focusPreviousWindow
     case activateWorkspace(String)
+    case activateProfile(String)
 }
 
 extension GestureAction: CaseIterable, Equatable, Hashable, Identifiable {
@@ -44,6 +47,8 @@ extension GestureAction: CaseIterable, Equatable, Hashable, Identifiable {
         case .hideAllApps: return "Hide All Apps"
         case .hideUnassignedApps: return "Hide Unassigned Apps"
         case .showUnassignedApps: return "Show Unassigned Apps"
+        case .nextProfile: return "Next Profile"
+        case .previousProfile: return "Previous Profile"
         case .focusLeft: return "Focus Left"
         case .focusRight: return "Focus Right"
         case .focusUp: return "Focus Up"
@@ -54,15 +59,21 @@ extension GestureAction: CaseIterable, Equatable, Hashable, Identifiable {
         case .focusPreviousWindow: return "Focus Previous Window"
         case .activateWorkspace(let workspaceName):
             return "Activate Workspace: \(workspaceName)"
+        case .activateProfile(let profile):
+            return "Activate Profile: \(profile)"
         }
     }
 
     static var allCases: [GestureAction] {
         let workspaces = AppDependencies.shared.workspaceRepository.workspaces
-        return allCasesWithoutWorkspaces + workspaces.map { .activateWorkspace($0.name) }
+        let profiles = AppDependencies.shared.profilesRepository.profiles
+
+        return allCasesWithoutWorkspacesAndProfiles
+            + workspaces.map { .activateWorkspace($0.name) }
+            + profiles.map { .activateProfile($0.name) }
     }
 
-    static var allCasesWithoutWorkspaces: [GestureAction] {
+    static var allCasesWithoutWorkspacesAndProfiles: [GestureAction] {
         [
             .none,
             .toggleSpaceControl,
@@ -74,6 +85,8 @@ extension GestureAction: CaseIterable, Equatable, Hashable, Identifiable {
             .hideAllApps,
             .hideUnassignedApps,
             .showUnassignedApps,
+            .nextProfile,
+            .previousProfile,
             .focusLeft,
             .focusRight,
             .focusUp,
@@ -94,7 +107,12 @@ extension GestureAction: Codable {
         if value.hasPrefix("activateWorkspace:") {
             let workspaceName = String(value.dropFirst("activateWorkspace:".count))
             self = .activateWorkspace(workspaceName)
-        } else if let action = GestureAction.allCasesWithoutWorkspaces.first(where: { $0.normalizedDescription == value }) {
+        } else if value.hasPrefix("activateProfile:") {
+            let profile = String(value.dropFirst("activateProfile:".count))
+            self = .activateProfile(profile)
+        } else if let action = GestureAction.allCasesWithoutWorkspacesAndProfiles.first(where: {
+            $0.normalizedDescription == value
+        }) {
             self = action
         } else {
             self = .none
@@ -109,6 +127,10 @@ extension GestureAction: Codable {
     private var normalizedDescription: String {
         if case .activateWorkspace(let workspaceName) = self {
             return "activateWorkspace:\(workspaceName)"
+        }
+
+        if case .activateProfile(let profile) = self {
+            return "activateProfile:\(profile)"
         }
 
         let result = String(description.first?.lowercased() ?? "") + description.dropFirst()

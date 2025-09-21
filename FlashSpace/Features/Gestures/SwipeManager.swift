@@ -39,6 +39,7 @@ final class SwipeManager {
     private lazy var workspaceSettings = AppDependencies.shared.workspaceSettings
     private lazy var workspaceManager = AppDependencies.shared.workspaceManager
     private lazy var workspaceRepository = AppDependencies.shared.workspaceRepository
+    private lazy var profilesRepository = AppDependencies.shared.profilesRepository
     private lazy var focusManager = AppDependencies.shared.focusManager
 
     func start() {
@@ -253,6 +254,14 @@ final class SwipeManager {
             if let workspace = workspaceRepository.workspaces.first(where: { $0.name == workspaceName }) {
                 workspaceManager.activateWorkspace(workspace, setFocus: true)
             }
+        case .activateProfile(let profileName):
+            if let profile = profilesRepository.profiles.first(where: { $0.name == profileName }) {
+                profilesRepository.selectedProfile = profile
+            }
+        case .nextProfile:
+            profilesRepository.activateNextProfile()
+        case .previousProfile:
+            profilesRepository.activatePreviousProfile()
         }
     }
 }
