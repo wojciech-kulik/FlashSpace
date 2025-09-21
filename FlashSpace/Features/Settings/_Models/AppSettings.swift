@@ -93,4 +93,8 @@ struct AppSettings: Codable {
     var runScriptOnLaunch: String?
     var runScriptOnWorkspaceChange: String?
     var runScriptOnProfileChange: String?
+
+    // Profiles
+    var switchToNextProfile: AppHotKey?
+    var switchToPreviousProfile: AppHotKey?
 }

@@ -10,6 +10,7 @@ import SwiftUI
 struct ProfilesSettingsView: View {
     @StateObject var viewModel = ProfilesSettingsViewModel()
     @StateObject var profilesRepository = AppDependencies.shared.profilesRepository
+    @StateObject var settings = AppDependencies.shared.profileSettings
 
     var body: some View {
         Form {
@@ -54,6 +55,11 @@ struct ProfilesSettingsView: View {
                         }
                     }
                 }
+            }
+
+            Section("Shortcuts") {
+                hotkey("Next Profile", for: $settings.switchToNextProfile)
+                hotkey("Previous Profile", for: $settings.switchToPreviousProfile)
             }
         }
         .formStyle(.grouped)

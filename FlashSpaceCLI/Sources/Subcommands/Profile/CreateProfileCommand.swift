@@ -17,10 +17,10 @@ struct CreateProfileCommand: ParsableCommand {
     @Argument(help: "The name of the profile to create.")
     var name: String
 
-    @Flag(help: "Copy the current profile")
+    @Flag(help: "Copy current profile")
     var copy = false
 
-    @Flag(help: "Activate the new profile")
+    @Flag(help: "Activate new profile")
     var activate = false
 
     func run() throws {
