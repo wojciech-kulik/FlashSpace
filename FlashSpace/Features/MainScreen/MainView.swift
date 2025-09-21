@@ -49,15 +49,19 @@ struct MainView: View {
                 )
             }
             .frame(width: 200, height: 350)
+            .tahoeBorder()
 
             HStack {
                 Button(action: viewModel.addWorkspace) {
                     Image(systemName: "plus")
+                        .frame(height: 16)
                 }
 
                 Button(action: viewModel.deleteSelectedWorkspaces) {
                     Image(systemName: "trash")
-                }.disabled(viewModel.selectedWorkspaces.isEmpty)
+                        .frame(height: 16)
+                }
+                .disabled(viewModel.selectedWorkspaces.isEmpty)
 
                 Spacer()
             }
@@ -79,14 +83,17 @@ struct MainView: View {
                 )
             }
             .frame(width: 200, height: 350)
+            .tahoeBorder()
 
             HStack {
                 Button(action: viewModel.addApp) {
                     Image(systemName: "plus")
+                        .frame(height: 16)
                 }.disabled(viewModel.selectedWorkspace == nil)
 
                 Button(action: viewModel.deleteSelectedApps) {
                     Image(systemName: "trash")
+                        .frame(height: 16)
                 }
                 .disabled(viewModel.selectedApps.isEmpty)
                 .keyboardShortcut(.delete)

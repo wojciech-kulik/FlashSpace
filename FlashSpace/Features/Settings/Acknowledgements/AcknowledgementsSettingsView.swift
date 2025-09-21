@@ -28,7 +28,10 @@ struct AcknowledgementsSettingsView: View {
                 selection: $selectedDependency
             ) { dependency in
                 Text(dependency)
-            }.frame(height: 130)
+            }
+            .frame(height: 130)
+            .tahoeBorder()
+            .padding(.horizontal, { if #available(macOS 26.0, *) { 8 } else { 0 } }())
 
             ScrollView([.vertical, .horizontal]) {
                 VStack {

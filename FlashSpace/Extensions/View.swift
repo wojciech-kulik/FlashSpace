@@ -22,4 +22,16 @@ extension View {
             self
         }
     }
+
+    @ViewBuilder
+    func tahoeBorder() -> some View {
+        if #available(macOS 26.0, *) {
+            self.overlay(
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .stroke(Color.gray.opacity(0.3), lineWidth: 1)
+            )
+        } else {
+            self
+        }
+    }
 }
