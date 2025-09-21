@@ -143,6 +143,20 @@ extension ProfilesRepository {
         }
     }
 
+    func activateNextProfile() {
+        guard let currentIndex = profiles.firstIndex(where: { $0.id == selectedProfile.id }) else { return }
+
+        let nextIndex = (currentIndex + 1) % profiles.count
+        selectedProfile = profiles[nextIndex]
+    }
+
+    func activatePreviousProfile() {
+        guard let currentIndex = profiles.firstIndex(where: { $0.id == selectedProfile.id }) else { return }
+
+        let previousIndex = (currentIndex - 1 + profiles.count) % profiles.count
+        selectedProfile = profiles[previousIndex]
+    }
+
     func updateShortcut(for profileId: ProfileId, to newShortcut: AppHotKey?) {
         guard let index = profiles.firstIndex(where: { $0.id == profileId }) else { return }
 
