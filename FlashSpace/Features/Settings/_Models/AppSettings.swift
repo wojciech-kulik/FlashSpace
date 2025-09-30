@@ -91,6 +91,7 @@ struct AppSettings: Codable {
     // Integrations
     var enableIntegrations: Bool?
     var runScriptOnLaunch: String?
+    var runScriptBeforeWorkspaceChange: String?
     var runScriptOnWorkspaceChange: String?
     var runScriptOnProfileChange: String?
 

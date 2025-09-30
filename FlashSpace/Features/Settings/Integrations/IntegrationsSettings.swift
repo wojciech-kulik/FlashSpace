@@ -14,6 +14,7 @@ final class IntegrationsSettings: ObservableObject {
 
     @Published var enableIntegrations = false
     @Published var runScriptOnLaunch = ""
+    @Published var runScriptBeforeWorkspaceChange = ""
     @Published var runScriptOnWorkspaceChange = IntegrationsSettings.defaultWorkspaceChangeScript
     @Published var runScriptOnProfileChange = IntegrationsSettings.defaultProfileChangeScript
 
@@ -31,6 +32,7 @@ final class IntegrationsSettings: ObservableObject {
     private func observe() {
         observer = Publishers.MergeMany(
             $enableIntegrations.settingsPublisher(),
+            $runScriptBeforeWorkspaceChange.settingsPublisher(debounce: true),
             $runScriptOnWorkspaceChange.settingsPublisher(debounce: true),
             $runScriptOnLaunch.settingsPublisher(debounce: true),
             $runScriptOnProfileChange.settingsPublisher(debounce: true)
@@ -49,6 +51,7 @@ extension IntegrationsSettings: SettingsProtocol {
         observer = nil
         enableIntegrations = appSettings.enableIntegrations ?? false
         runScriptOnLaunch = appSettings.runScriptOnLaunch ?? ""
+        runScriptBeforeWorkspaceChange = appSettings.runScriptBeforeWorkspaceChange ?? ""
         runScriptOnWorkspaceChange = appSettings.runScriptOnWorkspaceChange ?? Self.defaultWorkspaceChangeScript
         runScriptOnProfileChange = appSettings.runScriptOnProfileChange ?? Self.defaultProfileChangeScript
         observe()
@@ -57,6 +60,7 @@ extension IntegrationsSettings: SettingsProtocol {
     func update(_ appSettings: inout AppSettings) {
         appSettings.enableIntegrations = enableIntegrations
         appSettings.runScriptOnLaunch = runScriptOnLaunch
+        appSettings.runScriptBeforeWorkspaceChange = runScriptBeforeWorkspaceChange
         appSettings.runScriptOnWorkspaceChange = runScriptOnWorkspaceChange
         appSettings.runScriptOnProfileChange = runScriptOnProfileChange
     }

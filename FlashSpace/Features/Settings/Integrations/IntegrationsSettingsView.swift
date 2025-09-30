@@ -25,6 +25,13 @@ struct IntegrationsSettingsView: View {
                 }
 
                 HStack {
+                    Text("Before Workspace Change")
+                    TextField("", text: $settings.runScriptBeforeWorkspaceChange)
+                        .foregroundColor(.secondary)
+                        .standardPlaceholder(settings.runScriptBeforeWorkspaceChange.isEmpty)
+                }
+
+                HStack {
                     Text("On Workspace Change")
                     TextField("", text: $settings.runScriptOnWorkspaceChange)
                         .foregroundColor(.secondary)

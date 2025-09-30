@@ -373,6 +373,7 @@ extension WorkspaceManager {
 
         workspaceTransitionManager.showTransitionIfNeeded(for: workspace, on: displays)
 
+        runIntegrationBeforeActivation(for: workspace)
         rememberHiddenApps(workspaceToActivate: workspace.id)
         updateActiveWorkspace(workspace, on: displays)
         openAppsIfNeeded(in: workspace)
@@ -382,6 +383,20 @@ extension WorkspaceManager {
         // Some apps may not hide properly,
         // so we hide apps in the workspace after a short delay
         hideAgainSubject.send(workspace)
+    }
+
+    private func runIntegrationBeforeActivation(for workspace: Workspace) {
+        let newWorkspace = ActiveWorkspace(
+            id: workspace.id,
+            name: workspace.name,
+            number: workspaceRepository.workspaces
+                .firstIndex { $0.id == workspace.id }
+                .map { "\($0 + 1)" },
+            symbolIconName: workspace.symbolIconName,
+            display: workspace.displayForPrint
+        )
+
+        Integrations.runBeforeActivationIfNeeded(workspace: newWorkspace)
     }
 
     func assignApps(_ apps: [MacApp], to workspace: Workspace) {
