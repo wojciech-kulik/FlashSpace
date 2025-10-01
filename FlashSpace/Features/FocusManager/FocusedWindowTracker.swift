@@ -27,7 +27,7 @@ final class FocusedWindowTracker {
         self.settingsRepository = settingsRepository
         self.pictureInPictureManager = pictureInPictureManager
 
-        activateWorkspaceForFocusedApp(appLaunch: true)
+        activateWorkspaceForFocusedApp(force: true)
     }
 
     func startTracking() {
@@ -36,12 +36,18 @@ final class FocusedWindowTracker {
             .compactMap { $0.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication }
             .filter { $0.activationPolicy == .regular }
             .removeDuplicates()
-            .sink { [weak self] app in self?.activeApplicationChanged(app, appLaunch: false) }
+            .sink { [weak self] app in self?.activeApplicationChanged(app, force: false) }
             .store(in: &cancellables)
 
         NotificationCenter.default
             .publisher(for: .profileChanged)
             .sink { [weak self] _ in self?.activateWorkspaceForFocusedApp() }
+            .store(in: &cancellables)
+
+        NotificationCenter.default
+            .publisher(for: NSApplication.didChangeScreenParametersNotification)
+            .delay(for: .seconds(1), scheduler: DispatchQueue.main)
+            .sink { [weak self] _ in self?.activateWorkspaceForFocusedApp(force: true) }
             .store(in: &cancellables)
     }
 
@@ -49,16 +55,16 @@ final class FocusedWindowTracker {
         cancellables.removeAll()
     }
 
-    private func activateWorkspaceForFocusedApp(appLaunch: Bool = false) {
+    private func activateWorkspaceForFocusedApp(force: Bool = false) {
         DispatchQueue.main.async {
             guard let activeApp = NSWorkspace.shared.frontmostApplication else { return }
 
-            self.activeApplicationChanged(activeApp, appLaunch: appLaunch)
+            self.activeApplicationChanged(activeApp, force: force)
         }
     }
 
-    private func activeApplicationChanged(_ app: NSRunningApplication, appLaunch: Bool) {
-        guard appLaunch || settingsRepository.workspaceSettings.activeWorkspaceOnFocusChange else { return }
+    private func activeApplicationChanged(_ app: NSRunningApplication, force: Bool) {
+        guard force || settingsRepository.workspaceSettings.activeWorkspaceOnFocusChange else { return }
 
         let activeWorkspaces = workspaceManager.activeWorkspace.values
 
