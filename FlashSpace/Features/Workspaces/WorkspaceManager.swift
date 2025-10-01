@@ -378,10 +378,25 @@ extension WorkspaceManager {
         openAppsIfNeeded(in: workspace)
         showApps(in: workspace, setFocus: setFocus, on: displays)
         hideApps(in: workspace)
+        runIntegrationAfterActivation(for: workspace)
 
         // Some apps may not hide properly,
         // so we hide apps in the workspace after a short delay
         hideAgainSubject.send(workspace)
+    }
+
+    private func runIntegrationAfterActivation(for workspace: Workspace) {
+        let newWorkspace = ActiveWorkspace(
+            id: workspace.id,
+            name: workspace.name,
+            number: workspaceRepository.workspaces
+                .firstIndex { $0.id == workspace.id }
+                .map { "\($0 + 1)" },
+            symbolIconName: workspace.symbolIconName,
+            display: workspace.displayForPrint
+        )
+
+        Integrations.runAfterActivationIfNeeded(workspace: newWorkspace)
     }
 
     func assignApps(_ apps: [MacApp], to workspace: Workspace) {
