@@ -28,7 +28,7 @@
 --selfrequired expectation,wait
 --patternlet inline
 
---disable wrapMultilineStatementBraces, blankLinesAroundMark
+--disable wrapMultilineStatementBraces, blankLinesAroundMark, trailingClosures
 
 --exclude Dangerfile.swift
 
