@@ -56,6 +56,8 @@ struct AppSettings: Codable {
     var workspaceTransitionDimming: Double?
 
     var loopWorkspaces: Bool?
+    var loopWorkspacesOnAllDisplays: Bool?
+    var switchWorkspaceOnCursorScreen: Bool?
     var switchToPreviousWorkspace: AppHotKey?
     var switchToNextWorkspace: AppHotKey?
     var switchToRecentWorkspace: AppHotKey?

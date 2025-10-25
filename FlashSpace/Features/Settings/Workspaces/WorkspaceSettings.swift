@@ -30,6 +30,8 @@ final class WorkspaceSettings: ObservableObject {
     @Published var hideAllApps: AppHotKey?
 
     @Published var loopWorkspaces = true
+    @Published var loopWorkspacesOnAllDisplays = false
+    @Published var switchWorkspaceOnCursorScreen = false
     @Published var switchToRecentWorkspace: AppHotKey?
     @Published var switchToPreviousWorkspace: AppHotKey?
     @Published var switchToNextWorkspace: AppHotKey?
@@ -77,6 +79,8 @@ final class WorkspaceSettings: ObservableObject {
             $hideAllApps.settingsPublisher(),
 
             $loopWorkspaces.settingsPublisher(),
+            $loopWorkspacesOnAllDisplays.settingsPublisher(),
+            $switchWorkspaceOnCursorScreen.settingsPublisher(),
             $switchToRecentWorkspace.settingsPublisher(),
             $switchToPreviousWorkspace.settingsPublisher(),
             $switchToNextWorkspace.settingsPublisher(),
@@ -120,6 +124,8 @@ extension WorkspaceSettings: SettingsProtocol {
         hideAllApps = appSettings.hideAllApps
 
         loopWorkspaces = appSettings.loopWorkspaces ?? true
+        loopWorkspacesOnAllDisplays = appSettings.loopWorkspacesOnAllDisplays ?? false
+        switchWorkspaceOnCursorScreen = appSettings.switchWorkspaceOnCursorScreen ?? false
         switchToRecentWorkspace = appSettings.switchToRecentWorkspace
         switchToPreviousWorkspace = appSettings.switchToPreviousWorkspace
         switchToNextWorkspace = appSettings.switchToNextWorkspace
@@ -154,6 +160,8 @@ extension WorkspaceSettings: SettingsProtocol {
         appSettings.hideAllApps = hideAllApps
 
         appSettings.loopWorkspaces = loopWorkspaces
+        appSettings.loopWorkspacesOnAllDisplays = loopWorkspacesOnAllDisplays
+        appSettings.switchWorkspaceOnCursorScreen = switchWorkspaceOnCursorScreen
         appSettings.switchToRecentWorkspace = switchToRecentWorkspace
         appSettings.switchToPreviousWorkspace = switchToPreviousWorkspace
         appSettings.switchToNextWorkspace = switchToNextWorkspace
