@@ -507,29 +507,37 @@ extension WorkspaceManager {
     }
 
     func activateWorkspace(next: Bool, skipEmpty: Bool, loop: Bool) {
-        guard let screen = displayManager.getCursorScreen() else { return }
+        let screen = workspaceSettings.switchWorkspaceOnCursorScreen
+            ? displayManager.getCursorScreen()
+            : NSScreen.main?.localizedName
 
-        var screenWorkspaces = workspaceRepository.workspaces
-            .filter { $0.displays.contains(screen) }
+        guard let screen else { return }
 
-        if !next {
-            screenWorkspaces = screenWorkspaces.reversed()
+        var workspacesToLoop = workspaceRepository.workspaces
+
+        if !workspaceSettings.loopWorkspacesOnAllDisplays {
+            workspacesToLoop = workspacesToLoop
+                .filter { $0.displays.contains(screen) }
         }
 
-        guard let activeWorkspace = activeWorkspace[screen] ?? screenWorkspaces.first else { return }
+        if !next {
+            workspacesToLoop = workspacesToLoop.reversed()
+        }
 
-        let nextWorkspaces = screenWorkspaces
+        guard let activeWorkspace = activeWorkspace[screen] ?? workspacesToLoop.first else { return }
+
+        let nextWorkspaces = workspacesToLoop
             .drop(while: { $0.id != activeWorkspace.id })
             .dropFirst()
 
-        var selectedWorkspace = nextWorkspaces.first ?? (loop ? screenWorkspaces.first : nil)
+        var selectedWorkspace = nextWorkspaces.first ?? (loop ? workspacesToLoop.first : nil)
 
         if skipEmpty {
             let runningApps = NSWorkspace.shared.runningRegularApps
                 .compactMap(\.bundleIdentifier)
                 .asSet
 
-            selectedWorkspace = (nextWorkspaces + (loop ? screenWorkspaces : []))
+            selectedWorkspace = (nextWorkspaces + (loop ? workspacesToLoop : []))
                 .drop(while: { $0.apps.allSatisfy { !runningApps.contains($0.bundleIdentifier) } })
                 .first
         }

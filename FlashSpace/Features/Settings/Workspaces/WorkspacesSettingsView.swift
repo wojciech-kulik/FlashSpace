@@ -88,7 +88,9 @@ struct WorkspacesSettingsView: View {
                 hotkey("Previous Workspace", for: $settings.switchToPreviousWorkspace)
                 hotkey("Next Workspace", for: $settings.switchToNextWorkspace)
                 Toggle("Loop Workspaces", isOn: $settings.loopWorkspaces)
-                Toggle("Skip Empty Workspaces On Switch", isOn: $settings.skipEmptyWorkspacesOnSwitch)
+                Toggle("Loop On All Displays", isOn: $settings.loopWorkspacesOnAllDisplays)
+                Toggle("Start On Cursor Screen", isOn: $settings.switchWorkspaceOnCursorScreen)
+                Toggle("Skip Empty Workspaces", isOn: $settings.skipEmptyWorkspacesOnSwitch)
                 Text(
                     "These shortcuts allow you to cycle through workspaces on the display where the cursor is currently located."
                 )
