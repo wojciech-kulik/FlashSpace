@@ -39,8 +39,8 @@ targets:
 
     settings:
       base:
-        MARKETING_VERSION: 4.9.60
-        CURRENT_PROJECT_VERSION: 60
+        MARKETING_VERSION: 4.9.61
+        CURRENT_PROJECT_VERSION: 61
         CODE_SIGN_ENTITLEMENTS: FlashSpace/FlashSpace.entitlements
         DEVELOPMENT_TEAM: "${XCODE_DEVELOPMENT_TEAM}"
         ENABLE_HARDENED_RUNTIME: true
@@ -84,12 +84,17 @@ targets:
     postBuildScripts:
       - name: Build & Copy FlashSpace CLI
         script: |
-          SOURCE_PATH="FlashSpaceCLI/.build/release/flashspace"
+          SOURCE_PATH="FlashSpaceCLI/.build/flashspace"
           DESTINATION_PATH="${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Contents/Resources/"
 
           if [ ! -e "$SOURCE_PATH" ] || [ "$CONFIGURATION" == "Release" ]; then
             echo "Building FlashSpace CLI"
-            swift build -c release --package-path FlashSpaceCLI
+            swift build --arch x86_64 -c release --package-path FlashSpaceCLI
+            swift build --arch arm64 -c release --package-path FlashSpaceCLI
+            lipo -create \
+              FlashSpaceCLI/.build/arm64-apple-macosx/release/flashspace \
+              FlashSpaceCLI/.build/x86_64-apple-macosx/release/flashspace \
+              -output FlashSpaceCLI/.build/flashspace
           else
             echo "FlashSpace CLI already built"
           fi
