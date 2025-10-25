@@ -39,7 +39,7 @@ targets:
 
     settings:
       base:
-        MARKETING_VERSION: 4.9.61
+        MARKETING_VERSION: 4.10.61
         CURRENT_PROJECT_VERSION: 61
         CODE_SIGN_ENTITLEMENTS: FlashSpace/FlashSpace.entitlements
         DEVELOPMENT_TEAM: "${XCODE_DEVELOPMENT_TEAM}"
