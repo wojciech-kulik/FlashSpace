@@ -341,7 +341,6 @@ Big thanks to all the sponsors who support this project 🍻!
 <a href="https://github.com/bjrmatos"><img src="https://avatars.githubusercontent.com/u/4262050" width="40" height="40" alt="@bjrmatos" title="bjrmatos"></a>
 <a href="https://github.com/notlus"><img src="https://avatars.githubusercontent.com/u/828989" width="40" height="40" alt="@notlus" title="notlus"></a>
 <a href="https://github.com/Cyberax"><img src="https://avatars.githubusercontent.com/u/1136550" width="40" height="40" alt="@Cyberax" title="Cyberax"></a>
-<a href="https://github.com/aayio"><img src="https://avatars.githubusercontent.com/u/41933025" width="40" height="40" alt="@aayio" title="aayio"></a>
 
 ### One Time Sponsors
 
@@ -358,6 +357,7 @@ Big thanks to all the sponsors who support this project 🍻!
 ### Past Monthly Sponsors
 
 <a href="https://github.com/frankroeder"><img src="https://avatars.githubusercontent.com/u/19746932" width="40" height="40" alt="@frankroeder" title="frankroeder"></a>
+<a href="https://github.com/aayio"><img src="https://avatars.githubusercontent.com/u/41933025" width="40" height="40" alt="@aayio" title="aayio"></a>
 
 ## 🤓 My Other Projects
 
