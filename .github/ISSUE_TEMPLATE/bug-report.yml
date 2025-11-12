@@ -51,7 +51,7 @@ body:
     attributes:
       label: Version
       description: What version of FlashSpace are you running? Please include the version number.
-      placeholder: 1.0.0
+      placeholder: '1.0.0'
     validations:
       required: true
   - type: input
@@ -59,7 +59,7 @@ body:
     attributes:
       label: macOS
       description: What version of macOS are you running? Your version can be found in  -> About This Mac
-      placeholder: 26.0
+      placeholder: '26.0'
     validations:
       required: true
   - type: textarea
