@@ -54,6 +54,14 @@ body:
       placeholder: 1.0.0
     validations:
       required: true
+  - type: input
+    id: macos-version
+    attributes:
+      label: macOS
+      description: What version of macOS are you running? Your version can be found in  -> About This Mac
+      placeholder: 26.0
+    validations:
+      required: true
   - type: textarea
     id: config
     attributes:
