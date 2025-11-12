@@ -39,8 +39,8 @@ targets:
 
     settings:
       base:
-        MARKETING_VERSION: 4.11.62
-        CURRENT_PROJECT_VERSION: 62
+        MARKETING_VERSION: 4.12.63
+        CURRENT_PROJECT_VERSION: 63
         CODE_SIGN_ENTITLEMENTS: FlashSpace/FlashSpace.entitlements
         DEVELOPMENT_TEAM: "${XCODE_DEVELOPMENT_TEAM}"
         ENABLE_HARDENED_RUNTIME: true
