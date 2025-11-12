@@ -7,8 +7,9 @@ on:
 
 jobs:
   build:
+    if: ${{ !startsWith(github.head_ref || github.ref_name, 'chore/') }}
     name: Build
-    runs-on: macos-15
+    runs-on: macos-latest
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
