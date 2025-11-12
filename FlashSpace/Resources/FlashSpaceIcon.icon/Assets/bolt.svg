@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="620px" height="620px" viewBox="0 0 620 620" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Slice</title>
+    <defs>
+        <path d="M0,317.460995 C0,327.439995 7.6758,334.859995 18.4219,334.859995 L162.982,334.859995 L86.7363,542.105995 C76.7578,568.458995 104.135,582.531995 121.277,561.039995 L353.854,270.382995 C358.203,265.009995 360.506,259.892995 360.506,254.007995 C360.506,244.285995 352.83,236.609995 342.084,236.609995 L197.523,236.609995 L273.77,29.363795 C283.748,3.01029503 256.371,-11.062005 239.229,10.685995 L6.6523,301.085995 C2.3027,306.714995 0,311.832995 0,317.460995 Z" id="path-1"></path>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="bolt" transform="translate(130.000000, 24.000000)">
+            <mask id="mask-2" fill="white">
+                <use xlink:href="#path-1"></use>
+            </mask>
+            <g id="Clip-2"></g>
+            <polygon id="Fill-1" fill-opacity="0.85" fill="#FFFFFF" mask="url(#mask-2)" points="-1 -12.062005 361.506 -12.062005 361.506 583.531995 -1 583.531995"></polygon>
+        </g>
+    </g>
+</svg>
