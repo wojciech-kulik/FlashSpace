@@ -7,6 +7,9 @@ options:
   tabWidth: 4
   groupSortPosition: top
   bundleIdPrefix: pl.wojciechkulik
+  fileTypes:
+    icon:
+      file: true
 
 packages:
   ShortcutRecorder:
@@ -31,6 +34,8 @@ targets:
     platform: macOS
     deploymentTarget: "14.0"
     sources: [FlashSpace]
+    resources:
+      - path: FlashSpace/Resources
     info:
       path: FlashSpace/Info.plist
       properties:
@@ -41,6 +46,7 @@ targets:
       base:
         MARKETING_VERSION: 4.12.63
         CURRENT_PROJECT_VERSION: 63
+        ASSETCATALOG_COMPILER_APPICON_NAME: FlashSpaceIcon
         CODE_SIGN_ENTITLEMENTS: FlashSpace/FlashSpace.entitlements
         DEVELOPMENT_TEAM: "${XCODE_DEVELOPMENT_TEAM}"
         ENABLE_HARDENED_RUNTIME: true
