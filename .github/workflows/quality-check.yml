@@ -5,7 +5,7 @@ on:
 jobs:
   quality-check:
     name: SwiftLint & SwiftFormat
-    runs-on: macos-15
+    runs-on: macos-latest
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
