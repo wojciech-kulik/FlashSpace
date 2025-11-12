@@ -16,7 +16,7 @@ struct FlashSpaceMenuBar: Scene {
     @StateObject private var workspaceRepository = AppDependencies.shared.workspaceRepository
 
     var body: some Scene {
-        MenuBarExtra {
+        MenuBarExtra(isInserted: .constant(true)) {
             Text("FlashSpace v\(AppConstants.version)")
 
             Button("Open") {

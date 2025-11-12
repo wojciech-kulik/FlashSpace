@@ -55,7 +55,9 @@ final class ProfilesRepository: ObservableObject {
         let selectedProfileId = selectedProfileId
         selectedProfile = profiles.first { $0.id == selectedProfileId } ?? profiles.first ?? .default
 
-        if migrated { saveToDisk() }
+        DispatchQueue.main.async {
+            if migrated { self.saveToDisk() }
+        }
     }
 
     private func migrateOldConfigIfNeeded() -> Bool {
