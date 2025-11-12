@@ -3,7 +3,13 @@ on:
   push:
     branches:
       - main
+    branches-ignore:
+      - "chore/*"
   pull_request:
+    branches:
+      - main
+    branches-ignore:
+      - "chore/*"
 
 jobs:
   build:
