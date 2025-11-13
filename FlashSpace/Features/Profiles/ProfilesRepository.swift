@@ -55,9 +55,7 @@ final class ProfilesRepository: ObservableObject {
         let selectedProfileId = selectedProfileId
         selectedProfile = profiles.first { $0.id == selectedProfileId } ?? profiles.first ?? .default
 
-        DispatchQueue.main.async {
-            if migrated { self.saveToDisk() }
-        }
+        if migrated { saveToDisk() }
     }
 
     private func migrateOldConfigIfNeeded() -> Bool {
@@ -187,7 +185,9 @@ extension ProfilesRepository {
         try? ConfigSerializer.serialize(filename: "profiles", config)
 
         selectedProfileId = selectedProfile.id
-        AppDependencies.shared.hotKeysManager.refresh()
+        DispatchQueue.main.async {
+            AppDependencies.shared.hotKeysManager.refresh()
+        }
     }
 
     func getHotKeys() -> [(AppHotKey, () -> ())] {
