@@ -51,6 +51,11 @@ final class WorkspaceRepository: ObservableObject {
         notifyAboutChanges()
     }
 
+    func addWorkspaces(contentsOf workspaces: [Workspace]) {
+        self.workspaces.append(contentsOf: workspaces)
+        notifyAboutChanges()
+    }
+
     func updateWorkspace(_ workspace: Workspace) {
         guard let workspaceIndex = workspaces.firstIndex(where: { $0.id == workspace.id }) else { return }
 

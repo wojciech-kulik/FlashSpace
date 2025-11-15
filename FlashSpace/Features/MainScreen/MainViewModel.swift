@@ -203,6 +203,17 @@ extension MainViewModel {
             .store(in: &cancellables)
     }
 
+    func duplicateWorkspaces(_ duplicates: Set<Workspace>) {
+        let newWorkspaces = duplicates.map { duplicate in
+            var newWorkspace = duplicate
+            newWorkspace.id = .init()
+            return newWorkspace
+        }
+        workspaceRepository.addWorkspaces(contentsOf: newWorkspaces)
+        workspaces = workspaceRepository.workspaces
+        selectedWorkspaces = Set(newWorkspaces)
+    }
+
     func deleteSelectedWorkspaces() {
         guard !selectedWorkspaces.isEmpty else { return }
 
