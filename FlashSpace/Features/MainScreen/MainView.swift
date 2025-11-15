@@ -49,8 +49,10 @@ struct MainView: View {
                 )
             }
             .contextMenu(forSelectionType: Workspace.self) { workspaces in
-                Button("Duplicate") {
-                    viewModel.duplicateWorkspaces(workspaces)
+                if !workspaces.isEmpty {
+                    Button("Duplicate") {
+                        viewModel.duplicateWorkspaces(workspaces)
+                    }
                 }
             }
             .frame(width: 200, height: 350)
