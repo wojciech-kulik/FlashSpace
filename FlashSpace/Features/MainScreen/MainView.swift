@@ -49,11 +49,10 @@ struct MainView: View {
                 )
             }
             .contextMenu(forSelectionType: Workspace.self) { workspaces in
-                if !workspaces.isEmpty {
-                    Button("Duplicate") {
-                        viewModel.duplicateWorkspaces(workspaces)
-                    }
+                Button("Duplicate") {
+                    viewModel.duplicateWorkspaces(workspaces)
                 }
+                .hidden(workspaces.isEmpty)
             }
             .frame(width: 200, height: 350)
             .tahoeBorder()
