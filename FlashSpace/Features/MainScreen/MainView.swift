@@ -48,6 +48,12 @@ struct MainView: View {
                     workspace: binding.wrappedValue
                 )
             }
+            .contextMenu(forSelectionType: Workspace.self) { workspaces in
+                Button("Duplicate") {
+                    viewModel.duplicateWorkspaces(workspaces)
+                }
+                .hidden(workspaces.isEmpty)
+            }
             .frame(width: 200, height: 350)
             .tahoeBorder()
 
