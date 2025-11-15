@@ -207,6 +207,8 @@ extension MainViewModel {
         let newWorkspaces = duplicates.map { duplicate in
             var newWorkspace = duplicate
             newWorkspace.id = .init()
+            newWorkspace.activateShortcut = nil
+            newWorkspace.assignAppShortcut = nil
             return newWorkspace
         }
         workspaceRepository.addWorkspaces(contentsOf: newWorkspaces)
