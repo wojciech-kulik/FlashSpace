@@ -1,7 +1,7 @@
-[![GitHub Release](https://img.shields.io/github/v/release/wojciech-kulik/FlashSpace?color=8A2BE2)](https://github.com/wojciech-kulik/FlashSpace/releases)
-[![Homebrew Cask Version](https://img.shields.io/homebrew/cask/v/flashspace)](https://formulae.brew.sh/cask/flashspace)
-[![min macOS](https://img.shields.io/badge/macOS-14.0+-silver)](#)
-[![CI Status](https://img.shields.io/github/actions/workflow/status/wojciech-kulik/FlashSpace/xcode-build-check.yml)](https://github.com/wojciech-kulik/FlashSpace/actions/workflows/xcode-build-check.yml)
+[![Homebrew](https://img.shields.io/homebrew/cask/v/flashspace?color=FBB03F&logo=homebrew&label=homebrew)](https://formulae.brew.sh/cask/flashspace)
+[![GitHub Release](https://img.shields.io/github/v/release/wojciech-kulik/FlashSpace?logo=github)](https://github.com/wojciech-kulik/FlashSpace/releases)
+[![min macOS](https://img.shields.io/badge/macOS-14.0+-silver?logo=apple)](#)
+[![CI Status](https://img.shields.io/github/actions/workflow/status/wojciech-kulik/FlashSpace/xcode-build-check.yml?logo=githubactions&logoColor=white)](https://github.com/wojciech-kulik/FlashSpace/actions/workflows/xcode-build-check.yml)
 
 # ⚡ FlashSpace
 
