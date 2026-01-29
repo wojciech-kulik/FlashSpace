@@ -16,7 +16,7 @@ extension TOMLEncoder: ConfigEncoder {
 }
 
 extension TOMLDecoder: ConfigDecoder {
-    func decode<T>(_ type: T.Type, from data: Data) throws -> T where T: Decodable {
+    func decode<T: Decodable>(_ type: T.Type, from data: Data) throws -> T {
         let toml = String(data: data, encoding: .utf8) ?? ""
         return try decode(T.self, from: toml)
     }

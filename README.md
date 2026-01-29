@@ -355,6 +355,7 @@ Big thanks to all the sponsors who support this project 🍻!
 <a href="https://github.com/konpa"><img src="https://avatars.githubusercontent.com/u/778731" width="40" height="40" alt="@konpa" title="konpa"></a>
 <a href="https://github.com/nbargnesi"><img src="https://avatars.githubusercontent.com/u/1265294" width="40" height="40" alt="@nbargnesi" title="nbargnesi"></a>
 <a href="https://github.com/bchopson"><img src="https://avatars.githubusercontent.com/u/14081421" width="40" height="40" alt="@bchopson" title="bchopson"></a>
+<a href="https://github.com/NextMerge"><img src="https://avatars.githubusercontent.com/u/178944810" width="40" height="40" alt="@NextMerge" title="NextMerge"></a>
 
 ### Past Monthly Sponsors
 
