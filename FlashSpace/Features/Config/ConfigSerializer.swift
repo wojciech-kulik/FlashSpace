@@ -23,7 +23,7 @@ enum ConfigSerializer {
         try data.write(to: url)
     }
 
-    static func deserialize<T>(_ type: T.Type, filename: String) throws -> T? where T: Decodable {
+    static func deserialize<T: Decodable>(_ type: T.Type, filename: String) throws -> T? {
         let url = getUrl(for: filename)
 
         guard FileManager.default.fileExists(atPath: url.path) else { return nil }
