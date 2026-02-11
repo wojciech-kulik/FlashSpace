@@ -54,6 +54,7 @@ struct AppSettings: Codable {
     var keepUnassignedAppsOnSwitch: Bool?
     var restoreHiddenAppsOnSwitch: Bool?
     var enableWorkspaceTransitions: Bool?
+    var showRecentWorkspaceWhenActivatedTwice: Bool?
     var workspaceTransitionDuration: Double?
     var workspaceTransitionDimming: Double?
 
