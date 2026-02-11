@@ -55,14 +55,16 @@ final class HotKeysManager {
         }
 
         // Workspaces
-        for (shortcut, action) in workspaceHotKeys.getHotKeys().toShortcutPairs() {
-            let action = ShortcutAction(shortcut: shortcut) { _ in
-                action()
-                return true
-            }
+        if !settingsRepository.workspaceSettings.isPaused {
+            for (shortcut, action) in workspaceHotKeys.getHotKeys().toShortcutPairs() {
+                let action = ShortcutAction(shortcut: shortcut) { _ in
+                    action()
+                    return true
+                }
 
-            hotKeysMonitor.addAction(action, forKeyEvent: .down)
-            addShortcut("Workspace", shortcut)
+                hotKeysMonitor.addAction(action, forKeyEvent: .down)
+                addShortcut("Workspace", shortcut)
+            }
         }
 
         // Profiles
@@ -117,6 +119,23 @@ final class HotKeysManager {
             addShortcut("General", showHotKey)
         }
 
+        if let pauseResumeHotKey = settingsRepository.generalSettings.pauseResumeFlashSpace?.toShortcut() {
+            let action = ShortcutAction(shortcut: pauseResumeHotKey) { _ in
+                AppDependencies.shared.workspaceManager.togglePauseWorkspaceManagement()
+                let isPaused = AppDependencies.shared.workspaceSettings.isPaused
+
+                Toast.showWith(
+                    icon: isPaused ? "pause.circle" : "play.circle",
+                    message: isPaused ? "FlashSpace Paused" : "FlashSpace Resumed",
+                    textColor: isPaused ? .gray : .positive
+                )
+
+                return true
+            }
+            hotKeysMonitor.addAction(action, forKeyEvent: .down)
+            addShortcut("General", pauseResumeHotKey)
+        }
+
         // SpaceControl
         if let (hotKey, action) = SpaceControl.getHotKey(), let shortcut = hotKey.toShortcut() {
             let action = ShortcutAction(shortcut: shortcut) { _ in
@@ -145,6 +164,12 @@ final class HotKeysManager {
                 self?.disableAll()
                 self?.enableAll()
             }
+            .store(in: &cancellables)
+
+        settingsRepository.workspaceSettings.$isPaused
+            .dropFirst()
+            .delay(for: .seconds(0.1), scheduler: DispatchQueue.main)
+            .sink { [weak self] _ in self?.refresh() }
             .store(in: &cancellables)
     }
 }

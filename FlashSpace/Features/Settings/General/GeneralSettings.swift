@@ -11,6 +11,7 @@ import Foundation
 final class GeneralSettings: ObservableObject {
     @Published var showFlashSpace: AppHotKey?
     @Published var showFloatingNotifications = true
+    @Published var pauseResumeFlashSpace: AppHotKey?
     @Published var checkForUpdatesAutomatically = false {
         didSet { UpdatesManager.shared.autoCheckForUpdates = checkForUpdatesAutomatically }
     }
@@ -24,7 +25,8 @@ final class GeneralSettings: ObservableObject {
         observer = Publishers.MergeMany(
             $showFlashSpace.settingsPublisher(),
             $checkForUpdatesAutomatically.settingsPublisher(),
-            $showFloatingNotifications.settingsPublisher()
+            $showFloatingNotifications.settingsPublisher(),
+            $pauseResumeFlashSpace.settingsPublisher()
         )
         .receive(on: DispatchQueue.main)
         .sink { [weak self] in self?.updateSubject.send() }
@@ -41,6 +43,7 @@ extension GeneralSettings: SettingsProtocol {
         showFlashSpace = appSettings.showFlashSpace
         checkForUpdatesAutomatically = appSettings.checkForUpdatesAutomatically ?? false
         showFloatingNotifications = appSettings.showFloatingNotifications ?? true
+        pauseResumeFlashSpace = appSettings.pauseResumeFlashSpace
         observe()
     }
 
@@ -48,5 +51,6 @@ extension GeneralSettings: SettingsProtocol {
         appSettings.showFlashSpace = showFlashSpace
         appSettings.checkForUpdatesAutomatically = checkForUpdatesAutomatically
         appSettings.showFloatingNotifications = showFloatingNotifications
+        appSettings.pauseResumeFlashSpace = pauseResumeFlashSpace
     }
 }
