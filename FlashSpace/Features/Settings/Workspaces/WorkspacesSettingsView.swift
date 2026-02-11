@@ -36,6 +36,10 @@ struct WorkspacesSettingsView: View {
                 Toggle("Keep Unassigned Apps On Workspace Change", isOn: $settings.keepUnassignedAppsOnSwitch)
                 Toggle("Show Hidden Apps On Workspace Activation", isOn: $settings.restoreHiddenAppsOnSwitch)
                     .help("Restores hidden apps, even if they were hidden manually")
+                Toggle("Switch To Recent Workspace When Activated Twice", isOn: $settings.showRecentWorkspaceWhenActivatedTwice)
+                    .help(
+                        "When enabled, activating the current workspace twice will switch to the most recently used workspace instead"
+                    )
                 Toggle("Enable Workspace Transition Animation", isOn: $settings.enableWorkspaceTransitions)
                     .help("Show a brief visual transition effect when switching between workspaces")
 
