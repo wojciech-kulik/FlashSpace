@@ -32,6 +32,7 @@ struct WorkspacesSettingsView: View {
                 Toggle("Activate Workspace On Focus Change", isOn: $settings.activeWorkspaceOnFocusChange)
                 Toggle("Center Cursor In Focused App On Workspace Change", isOn: $settings.centerCursorOnWorkspaceChange)
                 Toggle("Automatically Change Workspace On App Assignment", isOn: $settings.changeWorkspaceOnAppAssign)
+                Toggle("Automatically Assign Apps To Active Workspace", isOn: $settings.autoAssignAppsToWorkspaces)
                 Toggle("Keep Unassigned Apps On Workspace Change", isOn: $settings.keepUnassignedAppsOnSwitch)
                 Toggle("Show Hidden Apps On Workspace Activation", isOn: $settings.restoreHiddenAppsOnSwitch)
                     .help("Restores hidden apps, even if they were hidden manually")

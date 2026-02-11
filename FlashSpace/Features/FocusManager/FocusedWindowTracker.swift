@@ -36,7 +36,10 @@ final class FocusedWindowTracker {
             .compactMap { $0.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication }
             .filter { $0.activationPolicy == .regular }
             .removeDuplicates()
-            .sink { [weak self] app in self?.activeApplicationChanged(app, force: false) }
+            .sink { [weak self] app in
+                self?.activeApplicationChanged(app, force: false)
+                self?.autoAssignAppToWorkspaceIfNeeded(app)
+            }
             .store(in: &cancellables)
 
         NotificationCenter.default
@@ -108,6 +111,29 @@ final class FocusedWindowTracker {
             }
         } else {
             activate()
+        }
+    }
+
+    private func autoAssignAppToWorkspaceIfNeeded(_ app: NSRunningApplication) {
+        guard settingsRepository.workspaceSettings.autoAssignAppsToWorkspaces else { return }
+
+        let activeWorkspaces = workspaceManager.activeWorkspace.values
+
+        // Skip if the app is floating
+        guard !settingsRepository.floatingAppsSettings.floatingApps.containsApp(app) else { return }
+
+        // Skip if the app is already assigned to a workspace
+        guard !(activeWorkspaces + workspaceRepository.workspaces).contains(where: { $0.apps.containsApp(app) }) else { return }
+
+        // Assign the app to the active workspace on the same display, or to the first active workspace if there is no active
+        // workspace on the same display
+        let display = NSScreen.main?.localizedName ?? ""
+        let activeWorkspace = activeWorkspaces
+            .first { $0.displays.contains(display) }
+            ?? activeWorkspaces.first
+
+        if let activeWorkspace {
+            workspaceManager.assignApp(app.toMacApp, to: activeWorkspace)
         }
     }
 }

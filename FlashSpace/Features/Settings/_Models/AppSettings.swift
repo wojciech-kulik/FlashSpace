@@ -49,6 +49,7 @@ struct AppSettings: Codable {
     var centerCursorOnWorkspaceChange: Bool?
     var changeWorkspaceOnAppAssign: Bool?
     var activeWorkspaceOnFocusChange: Bool?
+    var autoAssignAppsToWorkspaces: Bool?
     var skipEmptyWorkspacesOnSwitch: Bool?
     var keepUnassignedAppsOnSwitch: Bool?
     var restoreHiddenAppsOnSwitch: Bool?
