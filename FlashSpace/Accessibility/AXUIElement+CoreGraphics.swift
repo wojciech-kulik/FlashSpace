@@ -11,20 +11,38 @@ extension AXUIElement {
     var cgWindowId: CGWindowID? {
         let title = title
         let pid = processId
+        let frame = frame
+        var fallbackWindowId: CGWindowID?
+        var frameBasedFallbackWindowId: CGWindowID?
+        let allowedOffset: CGFloat = 0
 
         if let windowList = CGWindowListCopyWindowInfo(.optionOnScreenOnly, kCGNullWindowID) as? [[String: Any]] {
             for window in windowList {
                 let windowOwnerPID = window[kCGWindowOwnerPID as String] as? pid_t
-                let windowName = window[kCGWindowName as String] as? String
-                let windowNumber = window[kCGWindowNumber as String] as? CGWindowID
 
-                if title == windowName, windowOwnerPID == pid {
-                    return windowNumber
+                if windowOwnerPID == pid {
+                    let windowName = window[kCGWindowName as String] as? String
+                    let windowNumber = window[kCGWindowNumber as String] as? CGWindowID
+                    let windowBoundsDict = window[kCGWindowBounds as String] as? [String: Any]
+
+                    if title == windowName {
+                        return windowNumber
+                    } else if let frame,
+                              let windowBoundsDict,
+                              let windowFrame = CGRect(dictionaryRepresentation: windowBoundsDict as CFDictionary),
+                              abs(windowFrame.origin.x - frame.origin.x) <= allowedOffset,
+                              abs(windowFrame.origin.y - frame.origin.y) <= allowedOffset,
+                              abs(windowFrame.size.width - frame.size.width) <= allowedOffset,
+                              abs(windowFrame.size.height - frame.size.height) <= allowedOffset {
+                        frameBasedFallbackWindowId = windowNumber
+                    } else {
+                        fallbackWindowId = windowNumber
+                    }
                 }
             }
         }
 
-        return nil
+        return frameBasedFallbackWindowId ?? fallbackWindowId
     }
 
     func isBelowAnyOf(_ windows: [AXUIElement]) -> Bool {
