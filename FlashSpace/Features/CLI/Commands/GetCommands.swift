@@ -19,7 +19,7 @@ final class GetCommands: CommandExecutor {
             return CommandResponse(success: true, message: result)
 
         case .getWorkspace(let display):
-            let workspace = workspaceManager.activeWorkspace[display ?? NSScreen.main?.localizedName ?? ""]
+            let workspace = workspaceManager.activeWorkspace[display ?? .current]
             if let workspace {
                 let result = workspace.name
                 return CommandResponse(success: true, message: result)
@@ -39,7 +39,7 @@ final class GetCommands: CommandExecutor {
             }
 
         case .getDisplay:
-            if let display = NSScreen.main?.localizedName {
+            if let display = DisplayName.currentOptional {
                 return CommandResponse(success: true, message: display)
             } else {
                 return CommandResponse(success: false, error: "No display found")

@@ -127,7 +127,7 @@ final class FocusedWindowTracker {
 
         // Assign the app to the active workspace on the same display, or to the first active workspace if there is no active
         // workspace on the same display
-        let display = NSScreen.main?.localizedName ?? ""
+        let display = DisplayName.current
         let activeWorkspace = activeWorkspaces
             .first { $0.displays.contains(display) }
             ?? activeWorkspaces.first

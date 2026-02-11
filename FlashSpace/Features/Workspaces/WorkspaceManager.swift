@@ -118,7 +118,7 @@ final class WorkspaceManager: ObservableObject {
             }
         }
 
-        let focusedDisplay = NSScreen.main?.localizedName ?? ""
+        let focusedDisplay = DisplayName.current
 
         if let activeWorkspace = activeWorkspace[focusedDisplay], activeWorkspace.apps.containsApp(application) {
             updateLastFocusedApp(application.toMacApp, in: activeWorkspace)
@@ -437,7 +437,7 @@ extension WorkspaceManager {
     }
 
     func hideAll() {
-        guard let display = NSScreen.main?.localizedName else { return }
+        guard let display = DisplayName.currentOptional else { return }
 
         focusedWindowTracker.stopTracking()
         defer { focusedWindowTracker.startTracking() }
@@ -475,7 +475,7 @@ extension WorkspaceManager {
     }
 
     func showUnassignedApps() {
-        guard let display = NSScreen.main?.localizedName else { return }
+        guard let display = DisplayName.currentOptional else { return }
 
         Logger.log("")
         Logger.log("")
@@ -514,7 +514,7 @@ extension WorkspaceManager {
     func activateWorkspace(next: Bool, skipEmpty: Bool, loop: Bool) {
         let screen = workspaceSettings.switchWorkspaceOnCursorScreen
             ? displayManager.getCursorScreen()
-            : NSScreen.main?.localizedName
+            : DisplayName.currentOptional
 
         guard let screen else { return }
 

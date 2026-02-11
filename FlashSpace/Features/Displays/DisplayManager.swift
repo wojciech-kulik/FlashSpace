@@ -55,7 +55,7 @@ final class DisplayManager: ObservableObject {
             .map(\.target)
             .first(where: NSScreen.isConnected)
 
-        return alternative ?? NSScreen.main?.localizedName ?? ""
+        return alternative ?? .current
     }
 
     func lastActiveDisplay(from candidates: Set<DisplayName>) -> DisplayName {
@@ -67,6 +67,6 @@ final class DisplayManager: ObservableObject {
             return cursorDisplay
         }
 
-        return candidates.first ?? NSScreen.main?.localizedName ?? ""
+        return candidates.first ?? .current
     }
 }

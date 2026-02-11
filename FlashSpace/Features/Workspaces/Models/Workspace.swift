@@ -37,7 +37,7 @@ struct Workspace: Identifiable, Codable, Hashable {
 extension Workspace {
     var displays: Set<DisplayName> {
         if NSScreen.screens.count == 1 {
-            return [NSScreen.main?.localizedName ?? ""]
+            return [.current]
         } else if isDynamic {
             // TODO: After disconnecting a display, the detection may not work correctly.
             // The app will have the old coordinates until it is shown again, which
@@ -55,7 +55,7 @@ extension Workspace {
 
     var displayForPrint: DisplayName {
         if isDynamic,
-           let mainDisplay = NSScreen.main?.localizedName,
+           let mainDisplay = DisplayName.currentOptional,
            displays.contains(mainDisplay) {
             return mainDisplay
         }
@@ -66,7 +66,7 @@ extension Workspace {
     }
 
     var isOnTheCurrentScreen: Bool {
-        guard let currentScreen = NSScreen.main?.localizedName else { return false }
+        guard let currentScreen = DisplayName.currentOptional else { return false }
         return displays.contains(currentScreen)
     }
 

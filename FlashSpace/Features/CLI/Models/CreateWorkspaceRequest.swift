@@ -23,7 +23,7 @@ extension CreateWorkspaceRequest {
         Workspace(
             id: .init(),
             name: name,
-            display: display ?? NSScreen.main?.localizedName ?? "",
+            display: display ?? .current,
             activateShortcut: activateKey.flatMap { .init(value: $0) },
             assignAppShortcut: assignKey.flatMap { .init(value: $0) },
             apps: [],
