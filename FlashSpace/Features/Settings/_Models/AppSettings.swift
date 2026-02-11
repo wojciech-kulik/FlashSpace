@@ -10,6 +10,7 @@ struct AppSettings: Codable {
     var checkForUpdatesAutomatically: Bool?
     var showFlashSpace: AppHotKey?
     var showFloatingNotifications: Bool?
+    var pauseResumeFlashSpace: AppHotKey?
 
     // Menu Bar
     var showMenuBarTitle: Bool?

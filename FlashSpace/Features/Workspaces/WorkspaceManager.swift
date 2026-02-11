@@ -341,6 +341,11 @@ final class WorkspaceManager: ObservableObject {
 // MARK: - Workspace Actions
 extension WorkspaceManager {
     func activateWorkspace(_ workspace: Workspace, setFocus: Bool) {
+        guard !workspaceSettings.isPaused else {
+            Logger.log("Workspace management is paused - skipping activation")
+            return
+        }
+
         let displays = workspace.displays
 
         Logger.log("")
@@ -564,5 +569,29 @@ extension WorkspaceManager {
 
     func updateLastFocusedApp(_ app: MacApp, in workspace: Workspace) {
         lastFocusedApp[profilesRepository.selectedProfile.id, default: [:]][workspace.id] = app
+    }
+
+    func pauseWorkspaceManagement() {
+        guard !workspaceSettings.isPaused else { return }
+
+        Logger.log("Pausing workspace management")
+        workspaceSettings.isPaused = true
+        focusedWindowTracker.stopTracking()
+    }
+
+    func resumeWorkspaceManagement() {
+        guard workspaceSettings.isPaused else { return }
+
+        Logger.log("Resuming workspace management")
+        workspaceSettings.isPaused = false
+        focusedWindowTracker.startTracking()
+    }
+
+    func togglePauseWorkspaceManagement() {
+        if workspaceSettings.isPaused {
+            resumeWorkspaceManagement()
+        } else {
+            pauseWorkspaceManagement()
+        }
     }
 }

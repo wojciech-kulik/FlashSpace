@@ -11,6 +11,7 @@ import Foundation
 final class WorkspaceSettings: ObservableObject {
     @Published var displayMode: DisplayMode = .static
 
+    @Published var isPaused = false
     @Published var centerCursorOnWorkspaceChange = false
     @Published var changeWorkspaceOnAppAssign = true
     @Published var activeWorkspaceOnFocusChange = true
