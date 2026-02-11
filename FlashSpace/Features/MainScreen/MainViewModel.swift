@@ -113,7 +113,7 @@ final class MainViewModel: ObservableObject {
 
     init() {
         self.workspaces = workspaceRepository.workspaces
-        self.workspaceDisplay = NSScreen.main?.localizedName ?? ""
+        self.workspaceDisplay = .current
 
         observe()
     }
@@ -143,7 +143,7 @@ final class MainViewModel: ObservableObject {
         workspaceName = selectedWorkspace?.name ?? ""
         workspaceShortcut = selectedWorkspace?.activateShortcut
         workspaceAssignShortcut = selectedWorkspace?.assignAppShortcut
-        workspaceDisplay = selectedWorkspace?.display ?? NSScreen.main?.localizedName ?? ""
+        workspaceDisplay = selectedWorkspace?.display ?? .current
         workspaceApps = selectedWorkspace?.apps
         workspaceAppToFocus = selectedWorkspace?.appToFocus ?? AppConstants.lastFocusedOption
         workspaceSymbolIconName = selectedWorkspace?.symbolIconName

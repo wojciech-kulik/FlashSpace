@@ -67,7 +67,7 @@ final class SpaceControlViewModel: ObservableObject {
 
     func refresh() {
         let activeWorkspaceIds = workspaceManager.activeWorkspace.map(\.value.id).asSet
-        let mainDisplay = NSScreen.main?.localizedName ?? ""
+        let mainDisplay = DisplayName.current
 
         var sourceWorkspaces = workspaceRepository.workspaces
             .filter { !settings.spaceControlCurrentDisplayWorkspaces || $0.isOnTheCurrentScreen }

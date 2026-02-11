@@ -50,7 +50,7 @@ final class WorkspaceHotKeys {
             guard let self, let updatedWorkspace = workspaceRepository.findWorkspace(with: workspace.id) else { return }
 
             if workspaceSettings.showRecentWorkspaceWhenActivatedTwice,
-               let display = NSScreen.main?.localizedName,
+               let display = DisplayName.currentOptional,
                workspaceManager.activeWorkspace[display]?.id == updatedWorkspace.id,
                let recentWorkspace = workspaceManager.mostRecentWorkspace[display] {
                 return workspaceManager.activateWorkspace(recentWorkspace, setFocus: true)
@@ -212,7 +212,7 @@ extension WorkspaceHotKeys {
     }
 
     private func assignVisibleApps() {
-        guard let display = NSScreen.main?.localizedName else { return }
+        guard let display = DisplayName.currentOptional else { return }
         guard let workspace = workspaceManager.activeWorkspace[display] else {
             Alert.showOkAlert(
                 title: "Error",

@@ -27,6 +27,7 @@ jobs:
             ci
             docs
             chore
+            refactor
           scopes: |
             workspaces
             floating-apps
