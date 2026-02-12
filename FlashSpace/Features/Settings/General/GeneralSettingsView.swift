@@ -45,7 +45,8 @@ struct GeneralSettingsView: View {
             }
 
             Section("Shortcuts") {
-                hotkey("Toggle FlashSpace", for: $settings.showFlashSpace)
+                hotkey("Show FlashSpace", for: $settings.showFlashSpace)
+                hotkey("Show/Hide FlashSpace", for: $settings.toggleFlashSpace)
                 hotkey("Pause/Resume FlashSpace", for: $settings.pauseResumeFlashSpace)
             }
 

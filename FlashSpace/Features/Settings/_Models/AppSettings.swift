@@ -9,6 +9,7 @@ struct AppSettings: Codable {
     // General
     var checkForUpdatesAutomatically: Bool?
     var showFlashSpace: AppHotKey?
+    var toggleFlashSpace: AppHotKey?
     var showFloatingNotifications: Bool?
     var pauseResumeFlashSpace: AppHotKey?
 
