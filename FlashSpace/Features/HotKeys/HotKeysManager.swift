@@ -103,6 +103,16 @@ final class HotKeysManager {
         if let showHotKey = settingsRepository.generalSettings.showFlashSpace?.toShortcut() {
             let action = ShortcutAction(shortcut: showHotKey) { _ in
                 guard !SpaceControl.isVisible else { return true }
+                NotificationCenter.default.post(name: .openMainWindow, object: nil)
+                return true
+            }
+            hotKeysMonitor.addAction(action, forKeyEvent: .down)
+            addShortcut("General", showHotKey)
+        }
+
+        if let toggleHotKey = settingsRepository.generalSettings.toggleFlashSpace?.toShortcut() {
+            let action = ShortcutAction(shortcut: toggleHotKey) { _ in
+                guard !SpaceControl.isVisible else { return true }
 
                 let visibleAppWindows = NSApp.windows
                     .filter(\.isVisible)
@@ -116,7 +126,7 @@ final class HotKeysManager {
                 return true
             }
             hotKeysMonitor.addAction(action, forKeyEvent: .down)
-            addShortcut("General", showHotKey)
+            addShortcut("General", toggleHotKey)
         }
 
         if let pauseResumeHotKey = settingsRepository.generalSettings.pauseResumeFlashSpace?.toShortcut() {
