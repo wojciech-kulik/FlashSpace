@@ -76,6 +76,7 @@ struct AppSettings: Codable {
     var switchWorkspaceWhenPipCloses: Bool?
     var pipApps: [PipApp]?
     var pipScreenCornerOffset: Int?
+    var cornerHiddenApps: [CornerHiddenApp]?
 
     // Floating apps
     var floatingApps: [MacApp]?

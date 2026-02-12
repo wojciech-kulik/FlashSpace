@@ -172,6 +172,7 @@ final class WorkspaceManager: ObservableObject {
                 }
 
                 pictureInPictureManager.showPipAppIfNeeded(app: app)
+                pictureInPictureManager.showCornerHiddenAppIfNeeded(app: app)
             }
 
             Logger.log("FOCUS: \(toFocus?.localizedName ?? "")")
@@ -207,7 +208,8 @@ final class WorkspaceManager: ObservableObject {
         for app in appsToHide {
             Logger.log("HIDE: \(app.localizedName ?? "")")
 
-            if !pictureInPictureManager.hidePipAppIfNeeded(app: app) {
+            if !pictureInPictureManager.hideCornerHiddenAppIfNeeded(app: app),
+               !pictureInPictureManager.hidePipAppIfNeeded(app: app) {
                 app.hide()
             }
         }

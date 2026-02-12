@@ -45,6 +45,7 @@ final class WorkspaceSettings: ObservableObject {
     @Published var switchWorkspaceWhenPipCloses = true
     @Published var pipScreenCornerOffset = 15
     @Published var pipApps: [PipApp] = []
+    @Published var cornerHiddenApps: [CornerHiddenApp] = []
 
     private var observer: AnyCancellable?
     private let updateSubject = PassthroughSubject<(), Never>()
@@ -57,6 +58,14 @@ final class WorkspaceSettings: ObservableObject {
 
     func deletePipApp(_ app: PipApp) {
         pipApps.removeAll { $0 == app }
+    }
+
+    func addCornerHiddenApp(_ app: CornerHiddenApp) {
+        cornerHiddenApps.append(app)
+    }
+
+    func deleteCornerHiddenApp(_ app: CornerHiddenApp) {
+        cornerHiddenApps.removeAll { $0 == app }
     }
 
     private func observe() {
@@ -94,7 +103,8 @@ final class WorkspaceSettings: ObservableObject {
             $enablePictureInPictureSupport.settingsPublisher(),
             $switchWorkspaceWhenPipCloses.settingsPublisher(),
             $pipApps.settingsPublisher(),
-            $pipScreenCornerOffset.settingsPublisher(debounce: true)
+            $pipScreenCornerOffset.settingsPublisher(debounce: true),
+            $cornerHiddenApps.settingsPublisher()
         )
         .receive(on: DispatchQueue.main)
         .sink { [weak self] in self?.updateSubject.send() }
@@ -142,6 +152,7 @@ extension WorkspaceSettings: SettingsProtocol {
         switchWorkspaceWhenPipCloses = appSettings.switchWorkspaceWhenPipCloses ?? true
         pipApps = appSettings.pipApps ?? []
         pipScreenCornerOffset = appSettings.pipScreenCornerOffset ?? 15
+        cornerHiddenApps = appSettings.cornerHiddenApps ?? []
         observe()
     }
 
@@ -180,5 +191,6 @@ extension WorkspaceSettings: SettingsProtocol {
         appSettings.switchWorkspaceWhenPipCloses = switchWorkspaceWhenPipCloses
         appSettings.pipApps = pipApps
         appSettings.pipScreenCornerOffset = pipScreenCornerOffset
+        appSettings.cornerHiddenApps = cornerHiddenApps
     }
 }

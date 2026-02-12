@@ -42,6 +42,27 @@ final class WorkspaceSettingsViewModel: ObservableObject {
         settings.deletePipApp(app)
     }
 
+    func addCornerHiddenApp() {
+        let fileChooser = FileChooser()
+        let appUrl = fileChooser.runModalOpenPanel(
+            allowedFileTypes: [.application],
+            directoryURL: URL(filePath: "/Applications")
+        )
+
+        guard let bundle = appUrl?.bundle else { return }
+
+        settings.addCornerHiddenApp(
+            CornerHiddenApp(
+                name: bundle.localizedAppName,
+                bundleIdentifier: bundle.bundleIdentifier ?? ""
+            )
+        )
+    }
+
+    func deleteCornerHiddenApp(_ app: CornerHiddenApp) {
+        settings.deleteCornerHiddenApp(app)
+    }
+
     private func addPendingPipApp() {
         guard let pendingApp else { return }
 

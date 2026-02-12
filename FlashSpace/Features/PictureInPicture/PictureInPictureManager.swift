@@ -45,6 +45,14 @@ final class PictureInPictureManager {
         restoreFromCornerNonPipWindows(app: app)
     }
 
+    func showCornerHiddenAppIfNeeded(app: NSRunningApplication) {
+        guard app.shouldBeHiddenInCorner else { return }
+
+        if hiddenWindows.keys.contains(app) {
+            restoreFromCornerNonPipWindows(app: app)
+        }
+    }
+
     func hidePipAppIfNeeded(app: NSRunningApplication) -> Bool {
         guard settings.enablePictureInPictureSupport,
               app.supportsPictureInPicture,
@@ -58,7 +66,15 @@ final class PictureInPictureManager {
             return false
         }
 
-        return hideInCornerNonPipWindows(app: app)
+        return hideWindowsInCorner(app: app, onlyNonPipWindows: true)
+    }
+
+    func hideCornerHiddenAppIfNeeded(app: NSRunningApplication) -> Bool {
+        guard app.shouldBeHiddenInCorner else { return false }
+
+        guard hiddenWindows[app] == nil else { return true }
+
+        return hideWindowsInCorner(app: app, onlyNonPipWindows: false)
     }
 
     private func observePipFocusChangeNotification() {
@@ -98,12 +114,12 @@ final class PictureInPictureManager {
         hiddenWindows.removeValue(forKey: app)
     }
 
-    private func hideInCornerNonPipWindows(app: NSRunningApplication) -> Bool {
+    private func hideWindowsInCorner(app: NSRunningApplication, onlyNonPipWindows: Bool) -> Bool {
         guard let screenCorner = findScreenCorner(app: app) else { return false }
 
         let nonPipWindows = app.allWindows
             .map(\.window)
-            .filter { !$0.isPictureInPicture(bundleId: app.bundleIdentifier) }
+            .filter { !onlyNonPipWindows || !$0.isPictureInPicture(bundleId: app.bundleIdentifier) }
 
         if nonPipWindows.isNotEmpty { observePipApp(app) }
 
