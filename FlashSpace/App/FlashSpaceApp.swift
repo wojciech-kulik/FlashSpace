@@ -22,6 +22,12 @@ struct FlashSpaceApp: App {
         }
         .windowResizability(.contentSize)
 
+        Window("FlashSpace - What's New", id: "whats-new") {
+            WhatsNewView()
+        }
+        .windowResizability(.contentSize)
+        .defaultPosition(.center)
+
         FlashSpaceMenuBar()
     }
 }
