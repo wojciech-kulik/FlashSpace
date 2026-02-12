@@ -31,6 +31,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             firstLaunch = false
         } else {
             dismissWindow(id: "main")
+
+            if WhatsNewManager.shared.shouldShowWhatsNew {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
+                    self?.openWindow(id: "whats-new")
+                    NSApp.activate(ignoringOtherApps: true)
+                }
+            }
         }
     }
 
