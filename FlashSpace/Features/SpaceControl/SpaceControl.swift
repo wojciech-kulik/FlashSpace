@@ -146,8 +146,8 @@ enum SpaceControl {
             workspaces = workspaces.skipWithoutRunningApps()
         }
 
-        if workspaces.count < 2 {
-            Alert.showOkAlert(title: "Space Control", message: "You need at least 2 workspaces to use Space Control.")
+        if workspaces.isEmpty {
+            Alert.showOkAlert(title: "Space Control", message: "You need at least 1 workspace to use Space Control.")
             return false
         }
 
