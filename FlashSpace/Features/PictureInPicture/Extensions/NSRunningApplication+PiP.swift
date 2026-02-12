@@ -17,7 +17,15 @@ extension NSRunningApplication {
         allWindows.map(\.window).contains { $0.isPictureInPicture(bundleId: bundleIdentifier) }
     }
 
+    var shouldBeHiddenInCorner: Bool {
+        cornerHiddenApps.contains { $0.bundleIdentifier == bundleIdentifier }
+    }
+
     private var pipApps: [PipApp] {
         AppDependencies.shared.workspaceSettings.pipApps
+    }
+
+    private var cornerHiddenApps: [CornerHiddenApp] {
+        AppDependencies.shared.workspaceSettings.cornerHiddenApps
     }
 }

@@ -160,6 +160,18 @@ struct WorkspacesSettingsView: View {
                 }
             }
             .opacity(settings.enablePictureInPictureSupport ? 1 : 0.5)
+
+            Section(header: cornerHiddenAppsHeader) {
+                if settings.cornerHiddenApps.isEmpty {
+                    Text(
+                        "Apps added here will be hidden in the corner during workspace switches instead of being completely hidden."
+                    )
+                    .foregroundStyle(.secondary)
+                    .font(.callout)
+                } else {
+                    cornerHiddenAppsList
+                }
+            }
         }
         .sheet(isPresented: $viewModel.isInputDialogPresented) {
             InputDialog(
@@ -198,6 +210,35 @@ struct WorkspacesSettingsView: View {
             Spacer()
             Button {
                 viewModel.addPipApp()
+            } label: {
+                Image(systemName: "plus")
+            }
+        }
+    }
+
+    private var cornerHiddenAppsList: some View {
+        VStack(alignment: .leading) {
+            ForEach(settings.cornerHiddenApps, id: \.self) { app in
+                HStack {
+                    Button {
+                        viewModel.deleteCornerHiddenApp(app)
+                    } label: {
+                        Image(systemName: "x.circle.fill").opacity(0.8)
+                    }.buttonStyle(.borderless)
+
+                    Text(app.name)
+                    Spacer()
+                }
+            }
+        }
+    }
+
+    private var cornerHiddenAppsHeader: some View {
+        HStack {
+            Text("Corner Hidden Apps")
+            Spacer()
+            Button {
+                viewModel.addCornerHiddenApp()
             } label: {
                 Image(systemName: "plus")
             }
