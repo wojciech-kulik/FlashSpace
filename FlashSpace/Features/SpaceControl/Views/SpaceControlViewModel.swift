@@ -140,6 +140,11 @@ final class SpaceControlViewModel: ObservableObject {
         let width = screenFrame.width / CGFloat(numberOfColumns) - 120.0
         let height = screenFrame.height / CGFloat(numberOfRows) - 120.0
 
+        guard workspaces.count > 1 else {
+            tileSize = CGSize(width: width / 2.0, height: height / 2.0)
+            return
+        }
+
         let firstScreenshot = workspaces
             .lazy
             .compactMap { $0.screenshotData.flatMap(NSImage.init(data:)) }
