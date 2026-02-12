@@ -17,6 +17,7 @@ struct AppDependencies {
     let workspaceScreenshotManager: WorkspaceScreenshotManager
     let workspaceTransitionManager: WorkspaceTransitionManager
     let pictureInPictureManager: PictureInPictureManager
+    let wallpaperService = WallpaperService()
 
     let floatingAppsHotKeys: FloatingAppsHotKeys
 
