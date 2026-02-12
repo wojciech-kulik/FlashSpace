@@ -88,9 +88,9 @@ struct FlashSpaceMenuBar: Scene {
             Divider()
 
             Button("Donate") {
-                if let url = URL(string: "https://github.com/sponsors/wojciech-kulik") {
-                    NSWorkspace.shared.open(url)
-                }
+                SettingsNavigationManager.shared.selectedTab = "Donate"
+                openWindow(id: "settings")
+                NSApp.activate(ignoringOtherApps: true)
             }
 
             Button("Project Website") {
