@@ -16,6 +16,7 @@ final class WorkspaceSettings: ObservableObject {
     @Published var changeWorkspaceOnAppAssign = true
     @Published var activeWorkspaceOnFocusChange = true
     @Published var autoAssignAppsToWorkspaces = false
+    @Published var autoAssignAlreadyAssignedApps = false
     @Published var skipEmptyWorkspacesOnSwitch = false
     @Published var keepUnassignedAppsOnSwitch = false
     @Published var restoreHiddenAppsOnSwitch = true
@@ -76,6 +77,7 @@ final class WorkspaceSettings: ObservableObject {
             $changeWorkspaceOnAppAssign.settingsPublisher(),
             $activeWorkspaceOnFocusChange.settingsPublisher(),
             $autoAssignAppsToWorkspaces.settingsPublisher(),
+            $autoAssignAlreadyAssignedApps.settingsPublisher(),
             $skipEmptyWorkspacesOnSwitch.settingsPublisher(),
             $keepUnassignedAppsOnSwitch.settingsPublisher(),
             $restoreHiddenAppsOnSwitch.settingsPublisher(),
@@ -124,6 +126,7 @@ extension WorkspaceSettings: SettingsProtocol {
         changeWorkspaceOnAppAssign = appSettings.changeWorkspaceOnAppAssign ?? true
         activeWorkspaceOnFocusChange = appSettings.activeWorkspaceOnFocusChange ?? true
         autoAssignAppsToWorkspaces = appSettings.autoAssignAppsToWorkspaces ?? false
+        autoAssignAlreadyAssignedApps = appSettings.autoAssignAlreadyAssignedApps ?? false
         skipEmptyWorkspacesOnSwitch = appSettings.skipEmptyWorkspacesOnSwitch ?? false
         keepUnassignedAppsOnSwitch = appSettings.keepUnassignedAppsOnSwitch ?? false
         restoreHiddenAppsOnSwitch = appSettings.restoreHiddenAppsOnSwitch ?? true
@@ -163,6 +166,7 @@ extension WorkspaceSettings: SettingsProtocol {
         appSettings.changeWorkspaceOnAppAssign = changeWorkspaceOnAppAssign
         appSettings.activeWorkspaceOnFocusChange = activeWorkspaceOnFocusChange
         appSettings.autoAssignAppsToWorkspaces = autoAssignAppsToWorkspaces
+        appSettings.autoAssignAlreadyAssignedApps = autoAssignAlreadyAssignedApps
         appSettings.skipEmptyWorkspacesOnSwitch = skipEmptyWorkspacesOnSwitch
         appSettings.keepUnassignedAppsOnSwitch = keepUnassignedAppsOnSwitch
         appSettings.restoreHiddenAppsOnSwitch = restoreHiddenAppsOnSwitch
