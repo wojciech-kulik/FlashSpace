@@ -124,18 +124,26 @@ final class FocusedWindowTracker {
         // Skip if the app is floating
         guard !settingsRepository.floatingAppsSettings.floatingApps.containsApp(app) else { return }
 
+        let workspaceWithApp = workspaceRepository.workspaces.first { $0.apps.containsApp(app) }
+
         // Skip if the app is already assigned to a workspace
         guard settingsRepository.workspaceSettings.autoAssignAlreadyAssignedApps ||
-            !workspaceRepository.workspaces.contains(where: { $0.apps.containsApp(app) }) else { return }
+            workspaceWithApp == nil else { return }
 
         // Assign the app to the active workspace on the same display, or to the first active workspace if there is no active
         // workspace on the same display
         let display = DisplayName.current
         let activeWorkspaces = workspaceManager.activeWorkspace.values
-        let activeWorkspace = activeWorkspaces.first { $0.displays.contains(display) }
+        var activeWorkspace = activeWorkspaces.first { $0.displays.contains(display) }
             ?? activeWorkspaces.first
 
-        if let activeWorkspace {
+        if settingsRepository.workspaceSettings.displayMode == .dynamic,
+           workspaceManager.activeWorkspace.isEmpty,
+           activeWorkspace == nil {
+            activeWorkspace = workspaceRepository.workspaces.first
+        }
+
+        if let activeWorkspace, activeWorkspace.id != workspaceWithApp?.id {
             workspaceManager.assignApp(app.toMacApp, to: activeWorkspace)
         }
     }
