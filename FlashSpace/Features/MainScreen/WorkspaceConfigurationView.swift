@@ -63,11 +63,29 @@ struct WorkspaceConfigurationView: View {
                 }
             }.padding(.bottom)
 
-            Text("Activate Shortcut:")
-            HotKeyControl(shortcut: $viewModel.workspaceShortcut).padding(.bottom)
+            if let selectedWorkspace = viewModel.selectedWorkspace {
+                Text("Activate Shortcut:").padding(.bottom, 2.0)
+                HotKeyControl(
+                    name: .activateWorkspace(selectedWorkspace.id),
+                    shortcut: $viewModel.workspaceShortcut
+                ).padding(.bottom)
 
-            Text("Assign App Shortcut:")
-            HotKeyControl(shortcut: $viewModel.workspaceAssignShortcut).padding(.bottom)
+                Text("Assign App Shortcut:").padding(.bottom, 2.0)
+                HotKeyControl(
+                    name: .assignAppToWorkspace(selectedWorkspace.id),
+                    shortcut: $viewModel.workspaceAssignShortcut
+                ).padding(.bottom)
+            } else {
+                Text("Activate Shortcut:").padding(.bottom, 2.0)
+                HotKeyControl(name: .inactiveShortcut, shortcut: .constant(nil))
+                    .disabled(true)
+                    .padding(.bottom)
+
+                Text("Assign App Shortcut:").padding(.bottom, 2.0)
+                HotKeyControl(name: .inactiveShortcut, shortcut: .constant(nil))
+                    .disabled(true)
+                    .padding(.bottom)
+            }
 
             Toggle("Open apps on activation", isOn: $viewModel.isOpenAppsOnActivationEnabled).padding(.bottom)
         }

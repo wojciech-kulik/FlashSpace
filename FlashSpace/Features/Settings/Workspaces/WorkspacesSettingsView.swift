@@ -119,21 +119,21 @@ struct WorkspacesSettingsView: View {
 
     private var shortcuts: some View {
         Section("Shortcuts") {
-            hotkey("Assign Visible Apps (to active workspace)", for: $settings.assignVisibleApps)
-            hotkey("Assign Focused App (to active workspace)", for: $settings.assignFocusedApp)
-            hotkey("Unassign Focused App", for: $settings.unassignFocusedApp)
-            hotkey("Toggle Focused App Assignment", for: $settings.toggleFocusedAppAssignment)
-            hotkey("Show Unassigned Apps", for: $settings.showUnassignedApps)
-            hotkey("Hide Unassigned Apps", for: $settings.hideUnassignedApps)
-            hotkey("Hide All Apps", for: $settings.hideAllApps)
+            hotkey("Assign Visible Apps (to active workspace)", name: .assignVisibleApps, for: $settings.assignVisibleApps)
+            hotkey("Assign Focused App (to active workspace)", name: .assignFocusedApp, for: $settings.assignFocusedApp)
+            hotkey("Unassign Focused App", name: .unassignFocusedApp, for: $settings.unassignFocusedApp)
+            hotkey("Toggle Focused App Assignment", name: .toggleFocusedAppAssignment, for: $settings.toggleFocusedAppAssignment)
+            hotkey("Show Unassigned Apps", name: .showUnassignedApps, for: $settings.showUnassignedApps)
+            hotkey("Hide Unassigned Apps", name: .hideUnassignedApps, for: $settings.hideUnassignedApps)
+            hotkey("Hide All Apps", name: .hideAllApps, for: $settings.hideAllApps)
         }
     }
 
     private var cycleShortcuts: some View {
         Section {
-            hotkey("Recent Workspace", for: $settings.switchToRecentWorkspace)
-            hotkey("Previous Workspace", for: $settings.switchToPreviousWorkspace)
-            hotkey("Next Workspace", for: $settings.switchToNextWorkspace)
+            hotkey("Recent Workspace", name: .recentWorkspace, for: $settings.switchToRecentWorkspace)
+            hotkey("Previous Workspace", name: .previousWorkspace, for: $settings.switchToPreviousWorkspace)
+            hotkey("Next Workspace", name: .nextWorkspace, for: $settings.switchToNextWorkspace)
             Toggle("Loop Workspaces", isOn: $settings.loopWorkspaces)
             Toggle("Loop On All Displays", isOn: $settings.loopWorkspacesOnAllDisplays)
             Toggle("Start On Cursor Screen", isOn: $settings.switchWorkspaceOnCursorScreen)

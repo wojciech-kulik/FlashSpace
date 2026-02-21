@@ -1,13 +1,13 @@
 {
-  "originHash" : "aab86eebcc70452752ef4155d0137239012a2a4898e28e1b222830d75dac9d16",
+  "originHash" : "987998545b80e37b63d4c5588c5155dea18ca7d20f843a0d85747fa774b82a42",
   "pins" : [
     {
-      "identity" : "shortcutrecorder",
+      "identity" : "keyboardshortcuts",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/Kentzo/ShortcutRecorder",
+      "location" : "https://github.com/wojciech-kulik/KeyboardShortcuts",
       "state" : {
-        "revision" : "c86ce0f9be5353ba998966121c7631602a9a36f7",
-        "version" : "3.4.0"
+        "branch" : "main",
+        "revision" : "126c5306ce0246749578d0c5ad3cb36b34af1e4d"
       }
     },
     {
@@ -15,8 +15,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/sparkle-project/Sparkle",
       "state" : {
-        "revision" : "0ca3004e98712ea2b39dd881d28448630cce1c99",
-        "version" : "2.7.0"
+        "revision" : "5581748cef2bae787496fe6d61139aebe0a451f6",
+        "version" : "2.8.1"
       }
     },
     {
@@ -24,8 +24,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/xnth97/SymbolPicker",
       "state" : {
-        "revision" : "da4136a37736de04df11f47ef096efe5557d066a",
-        "version" : "1.6.0"
+        "revision" : "8bb08c982235b8e601bc500a41e770d7e198759b",
+        "version" : "1.6.2"
       }
     },
     {
@@ -42,8 +42,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/jpsim/Yams",
       "state" : {
-        "revision" : "db9ff235cf800bc657c3ed0961078fc231d0f28b",
-        "version" : "5.2.0"
+        "revision" : "3d6871d5b4a5cd519adf233fbb576e0a2af71c17",
+        "version" : "5.4.0"
       }
     }
   ],

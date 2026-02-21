@@ -24,7 +24,7 @@ final class WorkspaceHotKeys {
         self.floatingAppsSettings = settingsRepository.floatingAppsSettings
     }
 
-    func getHotKeys() -> [(AppHotKey, () -> ())] {
+    func getHotKeys() -> [RecordedHotKey] {
         let hotKeys = [
             getAssignVisibleAppsHotKey(),
             getAssignAppHotKey(for: nil),
@@ -43,7 +43,7 @@ final class WorkspaceHotKeys {
         return hotKeys.compactMap(\.self)
     }
 
-    private func getActivateHotKey(for workspace: Workspace) -> (AppHotKey, () -> ())? {
+    private func getActivateHotKey(for workspace: Workspace) -> RecordedHotKey? {
         guard let shortcut = workspace.activateShortcut else { return nil }
 
         let action = { [weak self] in
@@ -69,32 +69,54 @@ final class WorkspaceHotKeys {
             workspaceManager.activateWorkspace(updatedWorkspace, setFocus: true)
         }
 
-        return (shortcut, action)
+        return RecordedHotKey(
+            name: .activateWorkspace(workspace.id),
+            hotKey: shortcut,
+            action: action
+        )
     }
 
-    private func getAssignVisibleAppsHotKey() -> (AppHotKey, () -> ())? {
+    private func getAssignVisibleAppsHotKey() -> RecordedHotKey? {
         guard let shortcut = workspaceSettings.assignVisibleApps else { return nil }
 
-        return (shortcut, { [weak self] in self?.assignVisibleApps() })
+        return RecordedHotKey(
+            name: .assignVisibleApps,
+            hotKey: shortcut,
+            action: { [weak self] in self?.assignVisibleApps() }
+        )
     }
 
-    private func getAssignAppHotKey(for workspace: Workspace?) -> (AppHotKey, () -> ())? {
+    private func getAssignAppHotKey(for workspace: Workspace?) -> RecordedHotKey? {
         let shortcut = workspace == nil
             ? workspaceSettings.assignFocusedApp
             : workspace?.assignAppShortcut
 
         guard let shortcut else { return nil }
 
-        return (shortcut, { [weak self] in self?.assignApp(to: workspace) })
+        let name: HotKeyName = if let workspace {
+            .assignAppToWorkspace(workspace.id)
+        } else {
+            .assignFocusedApp
+        }
+
+        return RecordedHotKey(
+            name: name,
+            hotKey: shortcut,
+            action: { [weak self] in self?.assignApp(to: workspace) }
+        )
     }
 
-    private func getUnassignAppHotKey() -> (AppHotKey, () -> ())? {
+    private func getUnassignAppHotKey() -> RecordedHotKey? {
         guard let shortcut = workspaceSettings.unassignFocusedApp else { return nil }
 
-        return (shortcut, { [weak self] in self?.unassignApp() })
+        return RecordedHotKey(
+            name: .unassignFocusedApp,
+            hotKey: shortcut,
+            action: { [weak self] in self?.unassignApp() }
+        )
     }
 
-    private func getToggleAssignmentHotKey() -> (AppHotKey, () -> ())? {
+    private func getToggleAssignmentHotKey() -> RecordedHotKey? {
         guard let shortcut = workspaceSettings.toggleFocusedAppAssignment else { return nil }
 
         let action = { [weak self] in
@@ -107,10 +129,14 @@ final class WorkspaceHotKeys {
             }
         }
 
-        return (shortcut, action)
+        return RecordedHotKey(
+            name: .toggleFocusedAppAssignment,
+            hotKey: shortcut,
+            action: action
+        )
     }
 
-    private func getShowUnassignedAppsHotKey() -> (AppHotKey, () -> ())? {
+    private func getShowUnassignedAppsHotKey() -> RecordedHotKey? {
         guard let shortcut = workspaceSettings.showUnassignedApps else { return nil }
 
         let action = { [weak self] in
@@ -119,10 +145,14 @@ final class WorkspaceHotKeys {
             workspaceManager.showUnassignedApps()
         }
 
-        return (shortcut, action)
+        return RecordedHotKey(
+            name: .showUnassignedApps,
+            hotKey: shortcut,
+            action: action
+        )
     }
 
-    private func getHideUnassignedAppsHotKey() -> (AppHotKey, () -> ())? {
+    private func getHideUnassignedAppsHotKey() -> RecordedHotKey? {
         guard let shortcut = workspaceSettings.hideUnassignedApps else { return nil }
 
         let action = { [weak self] in
@@ -131,10 +161,14 @@ final class WorkspaceHotKeys {
             workspaceManager.hideUnassignedApps()
         }
 
-        return (shortcut, action)
+        return RecordedHotKey(
+            name: .hideUnassignedApps,
+            hotKey: shortcut,
+            action: action
+        )
     }
 
-    private func getHideAllAppsHotKey() -> (AppHotKey, () -> ())? {
+    private func getHideAllAppsHotKey() -> RecordedHotKey? {
         guard let shortcut = workspaceSettings.hideAllApps else { return nil }
 
         let action = { [weak self] in
@@ -143,10 +177,14 @@ final class WorkspaceHotKeys {
             workspaceManager.hideAll()
         }
 
-        return (shortcut, action)
+        return RecordedHotKey(
+            name: .hideAllApps,
+            hotKey: shortcut,
+            action: action
+        )
     }
 
-    private func getCycleWorkspacesHotKey(next: Bool) -> (AppHotKey, () -> ())? {
+    private func getCycleWorkspacesHotKey(next: Bool) -> RecordedHotKey? {
         guard let shortcut = next
             ? workspaceSettings.switchToNextWorkspace
             : workspaceSettings.switchToPreviousWorkspace
@@ -162,17 +200,25 @@ final class WorkspaceHotKeys {
             )
         }
 
-        return (shortcut, action)
+        return RecordedHotKey(
+            name: next ? .nextWorkspace : .previousWorkspace,
+            hotKey: shortcut,
+            action: action
+        )
     }
 
-    private func getRecentWorkspaceHotKey() -> (AppHotKey, () -> ())? {
+    private func getRecentWorkspaceHotKey() -> RecordedHotKey? {
         guard let shortcut = workspaceSettings.switchToRecentWorkspace else { return nil }
 
         let action: () -> () = { [weak self] in
             self?.workspaceManager.activateRecentWorkspace()
         }
 
-        return (shortcut, action)
+        return RecordedHotKey(
+            name: .recentWorkspace,
+            hotKey: shortcut,
+            action: action
+        )
     }
 }
 

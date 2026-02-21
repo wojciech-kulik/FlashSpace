@@ -11,7 +11,7 @@ struct AcknowledgementsSettingsView: View {
     @State private var selectedDependency: String? = "xnth97/SymbolPicker"
     @State private var dependencies = [
         "xnth97/SymbolPicker",
-        "Kentzo/ShortcutRecorder",
+        "sindresorhus/KeyboardShortcuts",
         "LebJe/TOMLKit",
         "jpsim/Yams",
         "sparkle-project/Sparkle",
@@ -39,8 +39,8 @@ struct AcknowledgementsSettingsView: View {
                         switch selectedDependency {
                         case "xnth97/SymbolPicker":
                             Text(Licenses.symbolPicker)
-                        case "Kentzo/ShortcutRecorder":
-                            Text(Licenses.shortcutRecorder)
+                        case "sindresorhus/KeyboardShortcuts":
+                            Text(Licenses.keyboardShortcuts)
                         case "LebJe/TOMLKit":
                             Text(Licenses.tomlKit)
                         case "jpsim/Yams":

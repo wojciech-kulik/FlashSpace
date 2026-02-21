@@ -14,4 +14,5 @@ extension Notification.Name {
     static let workspaceTransitionFinished = Notification.Name("workspaceTransitionFinished")
     static let spaceControlArrowDown = Notification.Name("spaceControlArrowDown")
     static let pipFocusChanged = Notification.Name("pipFocusChanged")
+    static let shortcutByNameDidChange = Notification.Name("KeyboardShortcuts_shortcutByNameDidChange")
 }

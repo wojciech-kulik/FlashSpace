@@ -22,20 +22,20 @@ struct FocusSettingsView: View {
                 }
 
                 Section("Shortcuts") {
-                    hotkey("Focus Left", for: $settings.focusLeft)
-                    hotkey("Focus Right", for: $settings.focusRight)
-                    hotkey("Focus Up", for: $settings.focusUp)
-                    hotkey("Focus Down", for: $settings.focusDown)
+                    hotkey("Focus Left", name: .focusLeftApp, for: $settings.focusLeft)
+                    hotkey("Focus Right", name: .focusRightApp, for: $settings.focusRight)
+                    hotkey("Focus Up", name: .focusUpApp, for: $settings.focusUp)
+                    hotkey("Focus Down", name: .focusDownApp, for: $settings.focusDown)
                 }
 
                 Section {
-                    hotkey("Focus Next App", for: $settings.focusNextWorkspaceApp)
-                    hotkey("Focus Previous App", for: $settings.focusPreviousWorkspaceApp)
+                    hotkey("Focus Next App", name: .focusNextApp, for: $settings.focusNextWorkspaceApp)
+                    hotkey("Focus Previous App", name: .focusPreviousApp, for: $settings.focusPreviousWorkspaceApp)
                 }
 
                 Section {
-                    hotkey("Focus Next Window", for: $settings.focusNextWorkspaceWindow)
-                    hotkey("Focus Previous Window", for: $settings.focusPreviousWorkspaceWindow)
+                    hotkey("Focus Next Window", name: .focusNextWindow, for: $settings.focusNextWorkspaceWindow)
+                    hotkey("Focus Previous Window", name: .focusPreviousWindow, for: $settings.focusPreviousWorkspaceWindow)
                 }
 
                 Section("Experimental") {

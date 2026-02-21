@@ -13,6 +13,10 @@ enum KeyCodesMap {
     static let toString = toKeyCode.reduce(into: [RawKeyCode: String]()) { result, pair in
         result[pair.value] = pair.key
 
+        if pair.key == "+" {
+            result[pair.value] = "plus"
+        }
+
         for (alias, keyCode) in getAliases() {
             result[keyCode] = alias
         }
@@ -78,6 +82,7 @@ enum KeyCodesMap {
         for (alias, keyCode) in aliases {
             stringToKeyCodes[alias] = keyCode
         }
+        stringToKeyCodes["plus"] = stringToKeyCodes["+"]
 
         return stringToKeyCodes
     }

@@ -37,11 +37,18 @@ struct FlashSpaceMenuBar: Scene {
                 openWindow(id: "main")
                 NSApp.activate(ignoringOtherApps: true)
             }
+            .keyboardShortcut(
+                settingsRepository.generalSettings.showFlashSpace?.toKeyboardShortcut
+                    ?? settingsRepository.generalSettings.toggleFlashSpace?.toKeyboardShortcut
+            )
 
             if settingsRepository.spaceControlSettings.enableSpaceControl {
                 Button("Space Control") {
                     SpaceControl.show()
                 }
+                .keyboardShortcut(
+                    settingsRepository.spaceControlSettings.showSpaceControl?.toKeyboardShortcut
+                )
             }
 
             Divider()

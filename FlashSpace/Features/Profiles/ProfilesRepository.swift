@@ -190,36 +190,52 @@ extension ProfilesRepository {
         }
     }
 
-    func getHotKeys() -> [(AppHotKey, () -> ())] {
+    func getHotKeys() -> [RecordedHotKey] {
         getProfileHotKeys() + getNextPrevHotKeys()
     }
 
-    private func getProfileHotKeys() -> [(AppHotKey, () -> ())] {
+    private func getProfileHotKeys() -> [RecordedHotKey] {
         profiles
             .compactMap { profile in
                 profile.shortcut.flatMap {
-                    ($0, { [weak self] in
-                        self?.selectedProfile = profile
+                    RecordedHotKey(
+                        name: .activateProfile(profile.id),
+                        hotKey: $0,
+                        action: { [weak self] in
+                            self?.selectedProfile = profile
 
-                        Toast.showWith(
-                            icon: "person.crop.circle",
-                            message: "\(profile.name) - Profile Activated",
-                            textColor: .positive
-                        )
-                    })
+                            Toast.showWith(
+                                icon: "person.crop.circle",
+                                message: "\(profile.name) - Profile Activated",
+                                textColor: .positive
+                            )
+                        }
+                    )
                 }
             }
     }
 
-    private func getNextPrevHotKeys() -> [(AppHotKey, () -> ())] {
-        var shortcuts: [(AppHotKey, () -> ())] = []
+    private func getNextPrevHotKeys() -> [RecordedHotKey] {
+        var shortcuts: [RecordedHotKey] = []
 
         if let nextShortcut = settings.switchToNextProfile {
-            shortcuts.append((nextShortcut, { [weak self] in self?.activateNextProfile() }))
+            shortcuts.append(
+                RecordedHotKey(
+                    name: .nextProfile,
+                    hotKey: nextShortcut,
+                    action: { [weak self] in self?.activateNextProfile() }
+                )
+            )
         }
 
         if let prevShortcut = settings.switchToPreviousProfile {
-            shortcuts.append((prevShortcut, { [weak self] in self?.activatePreviousProfile() }))
+            shortcuts.append(
+                RecordedHotKey(
+                    name: .previousProfile,
+                    hotKey: prevShortcut,
+                    action: { [weak self] in self?.activatePreviousProfile() }
+                )
+            )
         }
 
         return shortcuts

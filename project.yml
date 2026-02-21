@@ -12,9 +12,6 @@ options:
       file: true
 
 packages:
-  ShortcutRecorder:
-    github: Kentzo/ShortcutRecorder
-    from: 3.4.0
   SymbolPicker:
     github: xnth97/SymbolPicker
     from: 1.6.0
@@ -27,6 +24,9 @@ packages:
   Sparkle:
     github: sparkle-project/Sparkle
     from: 2.7.0
+  KeyboardShortcuts:
+    github: wojciech-kulik/KeyboardShortcuts
+    branch: main
 
 targets:
   FlashSpace:
@@ -66,11 +66,11 @@ targets:
 
     dependencies:
       - sdk: ServiceManagement.framework
-      - package: ShortcutRecorder
       - package: SymbolPicker
       - package: TOMLKit
       - package: Yams
       - package: Sparkle
+      - package: KeyboardShortcuts
 
     preBuildScripts:
       - name: Run SwiftLint

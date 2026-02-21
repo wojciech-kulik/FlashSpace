@@ -19,11 +19,15 @@ enum SpaceControl {
     private static var settings: SpaceControlSettings { AppDependencies.shared.spaceControlSettings }
     private static var focusedAppBeforeShow: NSRunningApplication?
 
-    static func getHotKey() -> (AppHotKey, () -> ())? {
+    static func getHotKey() -> RecordedHotKey? {
         guard isEnabled else { return nil }
 
         if let spaceControlHotKey = settings.showSpaceControl {
-            return (spaceControlHotKey, toggle)
+            return RecordedHotKey(
+                name: .toggleSpaceControl,
+                hotKey: spaceControlHotKey,
+                action: toggle
+            )
         }
 
         return nil

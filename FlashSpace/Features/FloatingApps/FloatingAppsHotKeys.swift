@@ -19,7 +19,7 @@ final class FloatingAppsHotKeys {
         self.floatingAppsSettings = settingsRepository.floatingAppsSettings
     }
 
-    func getHotKeys() -> [(AppHotKey, () -> ())] {
+    func getHotKeys() -> [RecordedHotKey] {
         let hotKeys = [
             getFloatTheFocusedAppHotKey(),
             getUnfloatTheFocusedAppHotKey(),
@@ -29,19 +29,27 @@ final class FloatingAppsHotKeys {
         return hotKeys.compactMap(\.self)
     }
 
-    private func getFloatTheFocusedAppHotKey() -> (AppHotKey, () -> ())? {
+    private func getFloatTheFocusedAppHotKey() -> RecordedHotKey? {
         guard let shortcut = floatingAppsSettings.floatTheFocusedApp else { return nil }
 
-        return (shortcut, { [weak self] in self?.floatApp() })
+        return RecordedHotKey(
+            name: .floatFocusedApp,
+            hotKey: shortcut,
+            action: { [weak self] in self?.floatApp() }
+        )
     }
 
-    private func getUnfloatTheFocusedAppHotKey() -> (AppHotKey, () -> ())? {
+    private func getUnfloatTheFocusedAppHotKey() -> RecordedHotKey? {
         guard let shortcut = floatingAppsSettings.unfloatTheFocusedApp else { return nil }
 
-        return (shortcut, { [weak self] in self?.unfloatApp() })
+        return RecordedHotKey(
+            name: .unfloatFocusedApp,
+            hotKey: shortcut,
+            action: { [weak self] in self?.unfloatApp() }
+        )
     }
 
-    private func getToggleTheFocusedAppFloatingHotKey() -> (AppHotKey, () -> ())? {
+    private func getToggleTheFocusedAppFloatingHotKey() -> RecordedHotKey? {
         guard let shortcut = floatingAppsSettings.toggleTheFocusedAppFloating else { return nil }
 
         let action = { [weak self] in
@@ -53,7 +61,11 @@ final class FloatingAppsHotKeys {
                 floatApp()
             }
         }
-        return (shortcut, action)
+        return RecordedHotKey(
+            name: .toggleFocusedAppFloating,
+            hotKey: shortcut,
+            action: action
+        )
     }
 }
 

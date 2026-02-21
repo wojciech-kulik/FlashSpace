@@ -6,69 +6,64 @@
 //
 
 import AppKit
-import ShortcutRecorder
+import Combine
+import KeyboardShortcuts
 import SwiftUI
 
 struct HotKeyControl: NSViewRepresentable {
+    static var isListeningForChanges = true
+
+    let name: KeyboardShortcuts.Name
+
     @Binding var shortcut: AppHotKey?
 
-    func makeNSView(context: Context) -> RecorderControl {
-        let control = RecorderControl(frame: .zero)
-        control.delegate = context.coordinator
-        control.objectValue = shortcut.flatMap { $0.toShortcut() }
-        control.set(
-            allowedModifierFlags: [.command, .option, .control, .shift],
-            requiredModifierFlags: [],
-            allowsEmptyModifierFlags: true
-        )
-
-        return control
+    func makeNSView(context: Context) -> KeyboardShortcuts.RecorderCocoa {
+        KeyboardShortcuts.RecorderCocoa(for: name)
     }
 
-    func updateNSView(_ nsView: RecorderControl, context: Context) {
+    func updateNSView(_ nsView: KeyboardShortcuts.RecorderCocoa, context: Context) {
+        nsView.shortcutName = name
         context.coordinator.parent = self
-        nsView.objectValue = shortcut.flatMap { $0.toShortcut() }
+        context.coordinator.observe()
     }
 
-    func makeCoordinator() -> Coordinator { Coordinator(parent: self) }
+    func makeCoordinator() -> Coordinator {
+        Coordinator(parent: self)
+    }
 
-    final class Coordinator: NSObject, RecorderControlDelegate {
+    final class Coordinator {
         var parent: HotKeyControl
 
         private let hotKeysManager = AppDependencies.shared.hotKeysManager
+        private var cancellables = Set<AnyCancellable>()
 
         init(parent: HotKeyControl) {
             self.parent = parent
+            observe()
         }
 
-        func recorderControlDidBeginRecording(_ aControl: RecorderControl) {
-            hotKeysManager.disableAll()
-        }
+        func observe() {
+            cancellables.removeAll()
 
-        func recorderControl(_ aControl: RecorderControl, canRecord aShortcut: Shortcut) -> Bool {
-            if let conflict = hotKeysManager.allHotKeys.first(where: { $0.hotKey.toShortcut() == aShortcut })?.scope {
-                Alert.showOkAlert(
-                    title: "Conflict",
-                    message: "This shortcut is already assigned within the \(conflict) scope."
-                )
-                return false
-            }
+            NotificationCenter.default
+                .publisher(for: .shortcutByNameDidChange)
+                .filter { _ in HotKeyControl.isListeningForChanges }
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] notification in
+                    guard let self,
+                          let name = notification.userInfo?["name"] as? KeyboardShortcuts.Name,
+                          name == self.parent.name else { return }
 
-            return true
-        }
-
-        func recorderControlDidEndRecording(_ aControl: RecorderControl) {
-            guard let shortcut = aControl.objectValue else {
-                parent.shortcut = nil
-                hotKeysManager.enableAll()
-                return
-            }
-
-            parent.shortcut = .init(
-                keyCode: shortcut.keyCode.rawValue,
-                modifiers: shortcut.modifierFlags.rawValue
-            )
-            hotKeysManager.enableAll()
+                    if let shortcut = KeyboardShortcuts.getShortcut(for: name), let key = shortcut.key {
+                        self.parent.shortcut = .init(
+                            keyCode: UInt16(key.rawValue),
+                            modifiers: shortcut.modifiers.rawValue
+                        )
+                    } else {
+                        self.parent.shortcut = nil
+                    }
+                }
+                .store(in: &cancellables)
         }
     }
 }
