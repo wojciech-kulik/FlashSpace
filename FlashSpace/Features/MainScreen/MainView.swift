@@ -49,8 +49,10 @@ struct MainView: View {
                 )
             }
             .contextMenu(forSelectionType: Workspace.self) { workspaces in
-                Button("Duplicate") {
+                Button {
                     viewModel.duplicateWorkspaces(workspaces)
+                } label: {
+                    Label("Duplicate", systemImage: "doc.on.doc")
                 }
                 .hidden(workspaces.isEmpty)
             }

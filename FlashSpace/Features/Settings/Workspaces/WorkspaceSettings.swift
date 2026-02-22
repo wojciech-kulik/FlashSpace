@@ -42,24 +42,12 @@ final class WorkspaceSettings: ObservableObject {
 
     @Published var alternativeDisplays = ""
 
-    @Published var enablePictureInPictureSupport = true
-    @Published var switchWorkspaceWhenPipCloses = true
-    @Published var pipScreenCornerOffset = 15
-    @Published var pipApps: [PipApp] = []
     @Published var cornerHiddenApps: [CornerHiddenApp] = []
 
     private var observer: AnyCancellable?
     private let updateSubject = PassthroughSubject<(), Never>()
 
     init() { observe() }
-
-    func addPipApp(_ app: PipApp) {
-        pipApps.append(app)
-    }
-
-    func deletePipApp(_ app: PipApp) {
-        pipApps.removeAll { $0 == app }
-    }
 
     func addCornerHiddenApp(_ app: CornerHiddenApp) {
         cornerHiddenApps.append(app)
@@ -102,10 +90,6 @@ final class WorkspaceSettings: ObservableObject {
             $switchToNextWorkspace.settingsPublisher(),
 
             $alternativeDisplays.settingsPublisher(debounce: true),
-            $enablePictureInPictureSupport.settingsPublisher(),
-            $switchWorkspaceWhenPipCloses.settingsPublisher(),
-            $pipApps.settingsPublisher(),
-            $pipScreenCornerOffset.settingsPublisher(debounce: true),
             $cornerHiddenApps.settingsPublisher()
         )
         .receive(on: DispatchQueue.main)
@@ -151,10 +135,6 @@ extension WorkspaceSettings: SettingsProtocol {
         switchToNextWorkspace = appSettings.switchToNextWorkspace
 
         alternativeDisplays = appSettings.alternativeDisplays ?? ""
-        enablePictureInPictureSupport = appSettings.enablePictureInPictureSupport ?? true
-        switchWorkspaceWhenPipCloses = appSettings.switchWorkspaceWhenPipCloses ?? true
-        pipApps = appSettings.pipApps ?? []
-        pipScreenCornerOffset = appSettings.pipScreenCornerOffset ?? 15
         cornerHiddenApps = appSettings.cornerHiddenApps ?? []
         observe()
     }
@@ -191,10 +171,6 @@ extension WorkspaceSettings: SettingsProtocol {
         appSettings.switchToNextWorkspace = switchToNextWorkspace
 
         appSettings.alternativeDisplays = alternativeDisplays
-        appSettings.enablePictureInPictureSupport = enablePictureInPictureSupport
-        appSettings.switchWorkspaceWhenPipCloses = switchWorkspaceWhenPipCloses
-        appSettings.pipApps = pipApps
-        appSettings.pipScreenCornerOffset = pipScreenCornerOffset
         appSettings.cornerHiddenApps = cornerHiddenApps
     }
 }

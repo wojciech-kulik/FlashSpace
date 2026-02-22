@@ -20,7 +20,7 @@ struct SettingsView: View {
                 .frame(maxHeight: .infinity, alignment: .top)
                 .navigationSplitViewColumnWidth(min: 440, ideal: 440)
         })
-        .frame(width: 780, height: 520)
+        .frame(width: 780, height: 550)
         .onDisappear {
             navigationManager.selectedTab = "General"
         }
@@ -37,9 +37,11 @@ struct SettingsView: View {
                     .tag("Gestures")
                 Label("Workspaces", systemImage: "square.stack.3d.up")
                     .tag("Workspaces")
-                Label("Floating Apps", systemImage: "pip")
+                Label("Picture-in-Picture", systemImage: "pip")
+                    .tag("Picture-in-Picture")
+                Label("Floating Apps", systemImage: "macwindow.on.rectangle")
                     .tag("FloatingApps")
-                Label("Focus Manager", systemImage: "macwindow.on.rectangle")
+                Label("Focus Manager", systemImage: "rectangle.righthalf.filled")
                     .tag("Focus")
                 Label("Space Control", systemImage: "rectangle.split.2x2")
                     .tag("SpaceControl")
@@ -82,6 +84,8 @@ struct SettingsView: View {
             GesturesSettingsView()
         case "Workspaces":
             WorkspacesSettingsView()
+        case "Picture-in-Picture":
+            PictureInPictureSettingsView()
         case "FloatingApps":
             FloatingAppsSettingsView()
         case "SpaceControl":
