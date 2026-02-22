@@ -8,11 +8,11 @@
 import SwiftUI
 
 extension View {
-    func hotkey(_ title: String, for hotKey: Binding<AppHotKey?>) -> some View {
+    func hotkey(_ title: String, name: HotKeyName, for hotKey: Binding<AppHotKey?>) -> some View {
         HStack {
             Text(title)
             Spacer()
-            HotKeyControl(shortcut: hotKey).fixedSize()
+            HotKeyControl(name: name, shortcut: hotKey).fixedSize()
         }
     }
 

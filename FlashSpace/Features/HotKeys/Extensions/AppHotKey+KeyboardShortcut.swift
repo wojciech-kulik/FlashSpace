@@ -23,7 +23,9 @@ extension AppHotKey {
 
     // swiftlint:disable:next cyclomatic_complexity
     private func stringToKeyEquivalent(_ value: String) -> KeyEquivalent? {
-        guard value.count > 1 else { return KeyEquivalent(Character(value)) }
+        guard value.count > 1 else {
+            return value != "" ? KeyEquivalent(Character(value)) : nil
+        }
 
         switch value {
         case "esc", "escape": return KeyEquivalent.escape

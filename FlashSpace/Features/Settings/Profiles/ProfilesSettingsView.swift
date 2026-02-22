@@ -47,6 +47,7 @@ struct ProfilesSettingsView: View {
                             Spacer()
 
                             HotKeyControl(
+                                name: .activateProfile(profile.id),
                                 shortcut: .init(
                                     get: { profile.shortcut },
                                     set: { viewModel.updateShortcut(profile, hotKey: $0) }
@@ -58,8 +59,8 @@ struct ProfilesSettingsView: View {
             }
 
             Section("Shortcuts") {
-                hotkey("Next Profile", for: $settings.switchToNextProfile)
-                hotkey("Previous Profile", for: $settings.switchToPreviousProfile)
+                hotkey("Next Profile", name: .nextProfile, for: $settings.switchToNextProfile)
+                hotkey("Previous Profile", name: .previousProfile, for: $settings.switchToPreviousProfile)
             }
         }
         .formStyle(.grouped)

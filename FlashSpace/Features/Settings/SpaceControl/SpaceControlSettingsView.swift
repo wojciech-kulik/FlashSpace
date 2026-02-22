@@ -46,7 +46,7 @@ struct SpaceControlSettingsView: View {
                 }
 
                 Section("Shortcuts") {
-                    hotkey("Toggle Space Control", for: $settings.showSpaceControl)
+                    hotkey("Toggle Space Control", name: .toggleSpaceControl, for: $settings.showSpaceControl)
                 }
 
                 Section("Appearance") {

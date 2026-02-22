@@ -28,50 +28,101 @@ struct WorkspaceConfigurationView: View {
     }
 
     private var configuration: some View {
-        VStack(alignment: .leading, spacing: 1.0) {
-            Text("Workspace Configuration:")
-                .padding(.bottom, 16.0)
-                .fixedSize()
+        VStack(alignment: .leading, spacing: 18.0) {
+            header
+            name
+            display
+            focusApp
 
-            Text("Name:").padding(.bottom, 2.0)
-            TextField("Name", text: $viewModel.workspaceName)
-                .onSubmit(viewModel.saveWorkspace)
-                .padding(.bottom)
-
-            Picker("Display:", selection: $viewModel.workspaceDisplay) {
-                ForEach(viewModel.screens, id: \.self) {
-                    Text($0.padEnd(toLength: 20)).tag($0)
-                }
+            if let selectedWorkspace = viewModel.selectedWorkspace {
+                activeShortcuts(for: selectedWorkspace)
+            } else {
+                inactiveShortcut
             }
-            .padding(.bottom)
-            .hidden(viewModel.displayMode == .dynamic)
 
-            Picker("Focus App:", selection: $viewModel.workspaceAppToFocus) {
-                ForEach(viewModel.focusAppOptions, id: \.self) {
-                    Text($0.name.padEnd(toLength: 20)).tag($0)
-                }
-            }.padding(.bottom)
-
-            HStack {
-                Text("Menu Bar Icon:")
-                Button {
-                    viewModel.isSymbolPickerPresented = true
-                } label: {
-                    Image(systemName: viewModel.workspaceSymbolIconName ?? .defaultIconSymbol)
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 16)
-                }
-            }.padding(.bottom)
-
-            Text("Activate Shortcut:")
-            HotKeyControl(shortcut: $viewModel.workspaceShortcut).padding(.bottom)
-
-            Text("Assign App Shortcut:")
-            HotKeyControl(shortcut: $viewModel.workspaceAssignShortcut).padding(.bottom)
-
-            Toggle("Open apps on activation", isOn: $viewModel.isOpenAppsOnActivationEnabled).padding(.bottom)
+            openAppsToggle
         }
         .disabled(viewModel.selectedWorkspace == nil)
+    }
+
+    private var name: some View {
+        HStack {
+            Button {
+                viewModel.isSymbolPickerPresented = true
+            } label: {
+                Image(systemName: viewModel.workspaceSymbolIconName ?? .defaultIconSymbol)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 16)
+            }
+            .frame(width: 32)
+
+            TextField("Name", text: $viewModel.workspaceName)
+                .onSubmit(viewModel.saveWorkspace)
+        }
+    }
+
+    private var display: some View {
+        Picker("Display:", selection: $viewModel.workspaceDisplay) {
+            ForEach(viewModel.screens, id: \.self) {
+                Text($0.padEnd(toLength: 40)).tag($0)
+            }
+        }
+        .frame(width: 270, alignment: .leading)
+        .hidden(viewModel.displayMode == .dynamic)
+    }
+
+    private var focusApp: some View {
+        Picker("Focus App:", selection: $viewModel.workspaceAppToFocus) {
+            ForEach(viewModel.focusAppOptions, id: \.self) {
+                Text($0.name.padEnd(toLength: 40)).tag($0)
+            }
+        }
+        .frame(width: 270, alignment: .leading)
+    }
+
+    private func activeShortcuts(for selectedWorkspace: Workspace) -> some View {
+        HStack {
+            VStack(alignment: .leading) {
+                Text("Activate Workspace:")
+                HotKeyControl(
+                    name: .activateWorkspace(selectedWorkspace.id),
+                    shortcut: $viewModel.workspaceShortcut
+                )
+            }
+
+            VStack(alignment: .leading) {
+                Text("Assign App:")
+                HotKeyControl(
+                    name: .assignAppToWorkspace(selectedWorkspace.id),
+                    shortcut: $viewModel.workspaceAssignShortcut
+                )
+            }
+        }
+    }
+
+    private var inactiveShortcut: some View {
+        HStack {
+            VStack(alignment: .leading) {
+                Text("Activate Workspace:")
+                HotKeyControl(name: .inactiveShortcut, shortcut: .constant(nil))
+                    .disabled(true)
+            }
+
+            VStack(alignment: .leading) {
+                Text("Assign App:")
+                HotKeyControl(name: .inactiveShortcut, shortcut: .constant(nil))
+                    .disabled(true)
+            }
+        }
+    }
+
+    private var openAppsToggle: some View {
+        Toggle("Open apps on activation", isOn: $viewModel.isOpenAppsOnActivationEnabled)
+    }
+
+    private var header: some View {
+        Text("Workspace Configuration:")
+            .fixedSize()
     }
 
     private var profileAndSettings: some View {

@@ -5,8 +5,6 @@
 //  Copyright © 2025 Wojciech Kulik. All rights reserved.
 //
 
-import ShortcutRecorder
-
 struct AppDependencies {
     static let shared = AppDependencies()
 
@@ -21,7 +19,6 @@ struct AppDependencies {
 
     let floatingAppsHotKeys: FloatingAppsHotKeys
 
-    let hotKeysMonitor: HotKeysMonitorProtocol = GlobalShortcutMonitor.shared
     let hotKeysManager: HotKeysManager
 
     let focusManager: FocusManager
@@ -90,7 +87,6 @@ struct AppDependencies {
             floatingAppsSettings: floatingAppsSettings
         )
         self.hotKeysManager = HotKeysManager(
-            hotKeysMonitor: GlobalShortcutMonitor.shared,
             workspaceHotKeys: workspaceHotKeys,
             floatingAppsHotKeys: floatingAppsHotKeys,
             focusManager: focusManager,
