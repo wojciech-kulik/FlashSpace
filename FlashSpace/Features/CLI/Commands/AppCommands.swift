@@ -59,7 +59,8 @@ final class AppCommands: CommandExecutor {
             return MacApp(
                 name: appUrl.bundle?.localizedAppName ?? "",
                 bundleIdentifier: app,
-                iconPath: appUrl.iconPath
+                iconPath: appUrl.iconPath,
+                autoOpen: nil
             )
         }
 

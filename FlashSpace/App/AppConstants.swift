@@ -15,7 +15,8 @@ enum AppConstants {
     static let lastFocusedOption = MacApp(
         name: "(Last Focused)",
         bundleIdentifier: "flashspace.last-focused",
-        iconPath: nil
+        iconPath: nil,
+        autoOpen: nil
     )
 
     static var version: String {

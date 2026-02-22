@@ -17,7 +17,8 @@ final class FloatingAppsSettingsViewModel: ObservableObject {
             app: .init(
                 name: bundle.localizedAppName,
                 bundleIdentifier: bundle.bundleIdentifier ?? "",
-                iconPath: bundle.iconPath
+                iconPath: bundle.iconPath,
+                autoOpen: nil
             )
         )
     }

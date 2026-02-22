@@ -105,6 +105,23 @@ final class WorkspaceRepository: ObservableObject {
         notifyAboutChanges()
     }
 
+    func setAutoOpenForApps(_ enabled: Bool, in workspaceId: WorkspaceID) {
+        guard let workspaceIndex = workspaces.firstIndex(where: { $0.id == workspaceId }) else { return }
+
+        for appIndex in workspaces[workspaceIndex].apps.indices {
+            workspaces[workspaceIndex].apps[appIndex].autoOpen = enabled ? true : nil
+        }
+        notifyAboutChanges()
+    }
+
+    func setAutoOpen(_ enabled: Bool, for app: MacApp, in workspaceId: WorkspaceID) {
+        guard let workspaceIndex = workspaces.firstIndex(where: { $0.id == workspaceId }) else { return }
+        guard let appIndex = workspaces[workspaceIndex].apps.firstIndex(of: app) else { return }
+
+        workspaces[workspaceIndex].apps[appIndex].autoOpen = enabled ? true : nil
+        notifyAboutChanges()
+    }
+
     func reorderWorkspaces(newOrder: [WorkspaceID]) {
         let map = newOrder.enumerated().reduce(into: [WorkspaceID: Int]()) { $0[$1.element] = $1.offset }
         workspaces = workspaces.sorted { map[$0.id] ?? 0 < map[$1.id] ?? 0 }

@@ -284,7 +284,10 @@ final class WorkspaceManager: ObservableObject {
             .asSet
 
         workspace.apps
-            .filter { !runningBundleIds.contains($0.bundleIdentifier) }
+            .filter {
+                !runningBundleIds.contains($0.bundleIdentifier) &&
+                    $0.autoOpen == true
+            }
             .compactMap { NSWorkspace.shared.urlForApplication(withBundleIdentifier: $0.bundleIdentifier) }
             .forEach { appUrl in
                 Logger.log("Open App: \(appUrl)")
