@@ -14,6 +14,7 @@ final class SettingsRepository: ObservableObject {
     private(set) var gesturesSettings: GesturesSettings
     private(set) var focusManagerSettings: FocusManagerSettings
     private(set) var workspaceSettings: WorkspaceSettings
+    private(set) var pictureInPictureSettings: PictureInPictureSettings
     private(set) var floatingAppsSettings: FloatingAppsSettings
     private(set) var spaceControlSettings: SpaceControlSettings
     private(set) var integrationsSettings: IntegrationsSettings
@@ -25,6 +26,7 @@ final class SettingsRepository: ObservableObject {
         gesturesSettings,
         focusManagerSettings,
         workspaceSettings,
+        pictureInPictureSettings,
         floatingAppsSettings,
         spaceControlSettings,
         integrationsSettings,
@@ -41,6 +43,7 @@ final class SettingsRepository: ObservableObject {
         gesturesSettings: GesturesSettings,
         focusManagerSettings: FocusManagerSettings,
         workspaceSettings: WorkspaceSettings,
+        pictureInPictureSettings: PictureInPictureSettings,
         floatingAppsSettings: FloatingAppsSettings,
         spaceControlSettings: SpaceControlSettings,
         integrationsSettings: IntegrationsSettings,
@@ -51,6 +54,7 @@ final class SettingsRepository: ObservableObject {
         self.gesturesSettings = gesturesSettings
         self.focusManagerSettings = focusManagerSettings
         self.workspaceSettings = workspaceSettings
+        self.pictureInPictureSettings = pictureInPictureSettings
         self.floatingAppsSettings = floatingAppsSettings
         self.spaceControlSettings = spaceControlSettings
         self.integrationsSettings = integrationsSettings

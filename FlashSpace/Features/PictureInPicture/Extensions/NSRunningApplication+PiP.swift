@@ -22,7 +22,7 @@ extension NSRunningApplication {
     }
 
     private var pipApps: [PipApp] {
-        AppDependencies.shared.workspaceSettings.pipApps
+        AppDependencies.shared.pictureInPictureSettings.pipApps
     }
 
     private var cornerHiddenApps: [CornerHiddenApp] {

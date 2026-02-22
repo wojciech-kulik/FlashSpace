@@ -16,10 +16,12 @@ final class PictureInPictureManager {
     private var cancellables: Set<AnyCancellable> = []
     private var windowFocusObserver: AXObserver?
 
-    private let settings: WorkspaceSettings
+    private let settings: PictureInPictureSettings
+    private let workspaceSettings: WorkspaceSettings
 
     init(settingsRepository: SettingsRepository) {
-        self.settings = settingsRepository.workspaceSettings
+        self.settings = settingsRepository.pictureInPictureSettings
+        self.workspaceSettings = settingsRepository.workspaceSettings
         setupSignalHandlers()
         observePipFocusChangeNotification()
     }
@@ -61,7 +63,7 @@ final class PictureInPictureManager {
 
         guard hiddenWindows[app] == nil else { return true }
 
-        guard settings.displayMode == .static || app.allDisplays.count <= 1 else {
+        guard workspaceSettings.displayMode == .static || app.allDisplays.count <= 1 else {
             // pip is not supported for multi-display apps
             return false
         }

@@ -30,6 +30,7 @@ struct AppDependencies {
     let gesturesSettings = GesturesSettings()
     let focusManagerSettings = FocusManagerSettings()
     let workspaceSettings = WorkspaceSettings()
+    let pictureInPictureSettings = PictureInPictureSettings()
     let floatingAppsSettings = FloatingAppsSettings()
     let spaceControlSettings = SpaceControlSettings()
     let integrationsSettings = IntegrationsSettings()
@@ -47,6 +48,7 @@ struct AppDependencies {
             gesturesSettings: gesturesSettings,
             focusManagerSettings: focusManagerSettings,
             workspaceSettings: workspaceSettings,
+            pictureInPictureSettings: pictureInPictureSettings,
             floatingAppsSettings: floatingAppsSettings,
             spaceControlSettings: spaceControlSettings,
             integrationsSettings: integrationsSettings,

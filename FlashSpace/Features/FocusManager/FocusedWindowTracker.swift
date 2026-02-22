@@ -68,6 +68,7 @@ final class FocusedWindowTracker {
 
     private func activeApplicationChanged(_ app: NSRunningApplication, force: Bool) {
         let workspaceSettings = settingsRepository.workspaceSettings
+        let pipSettings = settingsRepository.pictureInPictureSettings
         let shouldActivate = workspaceSettings.activeWorkspaceOnFocusChange &&
             (!workspaceSettings.autoAssignAppsToWorkspaces || !workspaceSettings.autoAssignAlreadyAssignedApps)
 
@@ -91,7 +92,7 @@ final class FocusedWindowTracker {
         guard activeWorkspaces.count(where: { $0.id == workspace.id }) < workspace.displays.count else { return }
 
         // Skip if the focused window is in Picture in Picture mode
-        guard !workspaceSettings.enablePictureInPictureSupport ||
+        guard !pipSettings.enablePictureInPictureSupport ||
             !app.supportsPictureInPicture ||
             app.focusedWindow?.isPictureInPicture(bundleId: app.bundleIdentifier) != true else { return }
 
@@ -104,7 +105,7 @@ final class FocusedWindowTracker {
             app.activate()
 
             // Restore the app if it was hidden
-            if workspaceSettings.enablePictureInPictureSupport, app.supportsPictureInPicture {
+            if pipSettings.enablePictureInPictureSupport, app.supportsPictureInPicture {
                 pictureInPictureManager.restoreAppIfNeeded(app: app)
             }
         }

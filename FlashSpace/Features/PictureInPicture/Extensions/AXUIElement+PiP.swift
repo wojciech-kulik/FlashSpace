@@ -9,7 +9,7 @@ import AppKit
 
 extension AXUIElement {
     private var pipApps: [PipApp] {
-        AppDependencies.shared.workspaceSettings.pipApps
+        AppDependencies.shared.pictureInPictureSettings.pipApps
     }
 
     func isPictureInPicture(bundleId: String?) -> Bool {
