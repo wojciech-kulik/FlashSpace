@@ -85,7 +85,8 @@ struct MainView: View {
             ) { app in
                 AppCell(
                     workspaceId: viewModel.selectedWorkspace?.id ?? UUID(),
-                    app: app
+                    app: app,
+                    viewModel: viewModel
                 )
             }
             .frame(width: 200, height: 350)

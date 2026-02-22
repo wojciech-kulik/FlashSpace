@@ -13,15 +13,18 @@ struct MacApp: Codable, Hashable, Equatable {
     var name: String
     var bundleIdentifier: BundleId
     var iconPath: String?
+    var autoOpen: Bool?
 
     init(
         name: String,
         bundleIdentifier: BundleId,
-        iconPath: String?
+        iconPath: String?,
+        autoOpen: Bool?
     ) {
         self.name = name
         self.bundleIdentifier = bundleIdentifier
         self.iconPath = iconPath
+        self.autoOpen = autoOpen
     }
 
     init(app: NSRunningApplication) {
@@ -59,6 +62,7 @@ struct MacApp: Codable, Hashable, Equatable {
             self.name = try container.decode(String.self, forKey: .name)
             self.bundleIdentifier = try container.decode(String.self, forKey: .bundleIdentifier)
             self.iconPath = try container.decodeIfPresent(String.self, forKey: .iconPath)
+            self.autoOpen = try container.decodeIfPresent(Bool.self, forKey: .autoOpen)
         }
     }
 

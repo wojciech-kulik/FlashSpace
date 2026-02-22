@@ -117,7 +117,30 @@ struct WorkspaceConfigurationView: View {
     }
 
     private var openAppsToggle: some View {
-        Toggle("Open apps on activation", isOn: $viewModel.isOpenAppsOnActivationEnabled)
+        HStack {
+            Toggle("Open apps on activation", isOn: $viewModel.isOpenAppsOnActivationEnabled)
+
+            Button {
+                viewModel.isEditingApps = true
+            } label: {
+                Image(systemName: "gearshape")
+                    .foregroundColor(.primary)
+                    .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .hidden(!viewModel.isOpenAppsOnActivationEnabled || viewModel.isEditingApps)
+
+            Button {
+                viewModel.isEditingApps = false
+            } label: {
+                Image(systemName: "checkmark.circle")
+                    .foregroundColor(.green)
+                    .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .hidden(!viewModel.isEditingApps)
+            .offset(y: -0.5)
+        }
     }
 
     private var header: some View {

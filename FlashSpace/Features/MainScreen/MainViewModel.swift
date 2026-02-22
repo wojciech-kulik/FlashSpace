@@ -43,11 +43,23 @@ final class MainViewModel: ObservableObject {
     }
 
     @Published var isOpenAppsOnActivationEnabled = false {
-        didSet { saveWorkspace() }
+        didSet {
+            if isOpenAppsOnActivationEnabled != oldValue, !loadingWorkspace, let selectedWorkspace {
+                workspaceRepository.setAutoOpenForApps(isOpenAppsOnActivationEnabled, in: selectedWorkspace.id)
+                updateApps()
+            }
+
+            if !isOpenAppsOnActivationEnabled {
+                isEditingApps = false
+            }
+
+            saveWorkspace()
+        }
     }
 
     @Published var isSymbolPickerPresented = false
     @Published var isInputDialogPresented = false
+    @Published var isEditingApps = false
     @Published var userInput = ""
 
     var focusAppOptions: [MacApp] {
@@ -144,11 +156,21 @@ final class MainViewModel: ObservableObject {
         workspaceShortcut = selectedWorkspace?.activateShortcut
         workspaceAssignShortcut = selectedWorkspace?.assignAppShortcut
         workspaceDisplay = selectedWorkspace?.display ?? .current
-        workspaceApps = selectedWorkspace?.apps
         workspaceAppToFocus = selectedWorkspace?.appToFocus ?? AppConstants.lastFocusedOption
         workspaceSymbolIconName = selectedWorkspace?.symbolIconName
         isOpenAppsOnActivationEnabled = selectedWorkspace?.openAppsOnActivation ?? false
         selectedWorkspace.flatMap { selectedWorkspaces = [$0] }
+        isEditingApps = false
+
+        updateApps()
+    }
+
+    private func updateApps() {
+        if let selectedWorkspace {
+            workspaceApps = workspaceRepository.findWorkspace(with: selectedWorkspace.id)?.apps
+        } else {
+            workspaceApps = nil
+        }
     }
 
     private func reloadWorkspaces() {
@@ -176,7 +198,7 @@ extension MainViewModel {
             display: workspaceDisplay,
             activateShortcut: workspaceShortcut,
             assignAppShortcut: workspaceAssignShortcut,
-            apps: selectedWorkspace.apps,
+            apps: workspaceApps ?? [],
             appToFocus: workspaceAppToFocus == AppConstants.lastFocusedOption ? nil : workspaceAppToFocus,
             symbolIconName: workspaceSymbolIconName,
             openAppsOnActivation: isOpenAppsOnActivationEnabled
@@ -185,6 +207,7 @@ extension MainViewModel {
         workspaceRepository.updateWorkspace(updatedWorkspace)
         workspaces = workspaceRepository.workspaces
         self.selectedWorkspace = workspaceRepository.findWorkspace(with: selectedWorkspace.id)
+        self.selectedWorkspace.flatMap { selectedWorkspaces = [$0] }
     }
 
     func addWorkspace() {
@@ -199,6 +222,7 @@ extension MainViewModel {
                 self.workspaceRepository.addWorkspace(name: self.userInput)
                 self.workspaces = self.workspaceRepository.workspaces
                 self.selectedWorkspace = self.workspaces.last
+                self.selectedWorkspace.flatMap { self.selectedWorkspaces = [$0] }
             }
             .store(in: &cancellables)
     }
@@ -248,19 +272,21 @@ extension MainViewModel {
             return
         }
 
-        guard !selectedWorkspace.apps.containsApp(with: appBundleId) else { return }
+        guard !(workspaceApps ?? []).containsApp(with: appBundleId) else { return }
 
         workspaceRepository.addApp(
             to: selectedWorkspace.id,
             app: .init(
                 name: appName,
                 bundleIdentifier: appBundleId,
-                iconPath: appUrl.iconPath
+                iconPath: appUrl.iconPath,
+                autoOpen: isOpenAppsOnActivationEnabled ? true : nil
             )
         )
 
         workspaces = workspaceRepository.workspaces
         self.selectedWorkspace = workspaceRepository.findWorkspace(with: selectedWorkspace.id)
+        self.selectedWorkspace.flatMap { selectedWorkspaces = [$0] }
 
         workspaceManager.activateWorkspaceIfActive(selectedWorkspace.id)
     }
@@ -284,6 +310,18 @@ extension MainViewModel {
         self.selectedApps = []
 
         workspaceManager.activateWorkspaceIfActive(selectedWorkspace.id)
+    }
+
+    func setAutoOpen(_ enabled: Bool, for app: MacApp, in workspaceId: WorkspaceID) {
+        workspaceRepository.setAutoOpen(enabled, for: app, in: workspaceId)
+        updateApps()
+    }
+
+    func isAutoOpenEnabled(for app: MacApp) -> Bool {
+        guard let refreshedApp = workspaceApps?.first(where: { $0 == app }) else {
+            return false
+        }
+        return refreshedApp.autoOpen ?? false
     }
 
     func resetWorkspaceSymbolIcon() {
