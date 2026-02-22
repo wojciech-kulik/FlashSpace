@@ -12,11 +12,11 @@ struct WhatsNewView: View {
     @Environment(\.dismissWindow) private var dismissWindow
 
     private let features = [
-        "Improved wallpapers cache to make Space Control transition smooth.",
-        "Separated toggle & show FlashSpace shortcuts.",
-        "Added option to auto-reassign apps on activation. This allows you to maintain your workspace state without having to manually assign apps each time.",
-        "Cleaned up \"Workspaces\" section in settings.",
-        "Allowed showing a single workspace in Space Control."
+        "Added support for auto-opening specific apps.",
+        "Extracted Picture-in-Picture settings to separate menu.",
+        "Improved hotkeys management.",
+        "Redesigned workspace configuration.",
+        "Optimized apps auto-assignment."
     ]
 
     private let bugFixes: [String] = []
