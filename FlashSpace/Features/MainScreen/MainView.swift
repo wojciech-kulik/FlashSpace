@@ -17,7 +17,7 @@ struct MainView: View {
             workspaces
             assignedApps
             WorkspaceConfigurationView(viewModel: viewModel)
-                .frame(maxWidth: 230)
+                .frame(maxWidth: 280)
         }
         .padding()
         .fixedSize()
