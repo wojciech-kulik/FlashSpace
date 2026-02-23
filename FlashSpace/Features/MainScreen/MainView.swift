@@ -86,7 +86,7 @@ struct MainView: View {
                 selection: $viewModel.selectedApps
             ) { app in
                 AppCell(
-                    workspaceId: viewModel.selectedWorkspace?.id ?? UUID(),
+                    workspaceId: viewModel.selectedWorkspaceId ?? UUID(),
                     app: app,
                     viewModel: viewModel
                 )
@@ -98,7 +98,7 @@ struct MainView: View {
                 Button(action: viewModel.addApp) {
                     Image(systemName: "plus")
                         .frame(height: 16)
-                }.disabled(viewModel.selectedWorkspace == nil)
+                }.disabled(viewModel.selectedWorkspaceId == nil)
 
                 Button(action: viewModel.deleteSelectedApps) {
                     Image(systemName: "trash")

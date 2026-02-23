@@ -34,15 +34,15 @@ struct WorkspaceConfigurationView: View {
             display
             focusApp
 
-            if let selectedWorkspace = viewModel.selectedWorkspace {
-                activeShortcuts(for: selectedWorkspace)
+            if let selectedWorkspaceId = viewModel.selectedWorkspaceId {
+                activeShortcuts(for: selectedWorkspaceId)
             } else {
                 inactiveShortcut
             }
 
             openAppsToggle
         }
-        .disabled(viewModel.selectedWorkspace == nil)
+        .disabled(viewModel.selectedWorkspaceId == nil)
     }
 
     private var name: some View {
@@ -80,12 +80,12 @@ struct WorkspaceConfigurationView: View {
         .frame(width: 270, alignment: .leading)
     }
 
-    private func activeShortcuts(for selectedWorkspace: Workspace) -> some View {
+    private func activeShortcuts(for selectedWorkspaceId: WorkspaceID) -> some View {
         HStack {
             VStack(alignment: .leading) {
                 Text("Activate Workspace:")
                 HotKeyControl(
-                    name: .activateWorkspace(selectedWorkspace.id),
+                    name: .activateWorkspace(selectedWorkspaceId),
                     shortcut: $viewModel.workspaceShortcut
                 )
             }
@@ -93,7 +93,7 @@ struct WorkspaceConfigurationView: View {
             VStack(alignment: .leading) {
                 Text("Assign App:")
                 HotKeyControl(
-                    name: .assignAppToWorkspace(selectedWorkspace.id),
+                    name: .assignAppToWorkspace(selectedWorkspaceId),
                     shortcut: $viewModel.workspaceAssignShortcut
                 )
             }
