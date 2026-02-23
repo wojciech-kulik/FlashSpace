@@ -66,6 +66,14 @@ struct MacApp: Codable, Hashable, Equatable {
         }
     }
 
+    func hash(into hasher: inout Hasher) {
+        if bundleIdentifier.isEmpty {
+            hasher.combine(name)
+        } else {
+            hasher.combine(bundleIdentifier)
+        }
+    }
+
     static func == (lhs: MacApp, rhs: MacApp) -> Bool {
         if lhs.bundleIdentifier.isEmpty || rhs.bundleIdentifier.isEmpty {
             return lhs.name == rhs.name

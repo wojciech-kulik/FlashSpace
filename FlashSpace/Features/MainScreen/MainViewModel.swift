@@ -76,6 +76,8 @@ final class MainViewModel: ObservableObject {
 
     var selectedWorkspaces: Set<Workspace> = [] {
         didSet {
+            loadingWorkspace = true
+
             // To avoid warnings
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) { [self] in
                 if (selectedWorkspaces.count == 1 && selectedWorkspaces.first?.id != oldValue.first?.id) ||
