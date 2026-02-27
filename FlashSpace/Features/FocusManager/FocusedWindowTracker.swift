@@ -82,6 +82,8 @@ final class FocusedWindowTracker {
         // Skip if the app is floating
         guard !settingsRepository.floatingAppsSettings.floatingApps.containsApp(app) else { return }
 
+        workspaceManager.invalidateInactiveWorkspaces()
+
         // Find the workspace that contains the app.
         // The same app can be in multiple workspaces, the highest priority has the one
         // from the active workspace.
