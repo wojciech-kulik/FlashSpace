@@ -100,6 +100,7 @@ final class WorkspaceManager: ObservableObject {
             .compactMap { $0.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication }
             .filter { $0.activationPolicy == .regular }
             .sink { [weak self] application in
+                self?.invalidateInactiveWorkspaces()
                 self?.rememberLastFocusedApp(application, retry: true)
             }
     }
@@ -574,6 +575,18 @@ extension WorkspaceManager {
 
     func updateLastFocusedApp(_ app: MacApp, in workspace: Workspace) {
         lastFocusedApp[profilesRepository.selectedProfile.id, default: [:]][workspace.id] = app
+    }
+
+    func invalidateInactiveWorkspaces() {
+        guard workspaceSettings.displayMode == .dynamic else { return }
+
+        activeWorkspace = activeWorkspace.filter { display, workspace in
+            let isValid = workspace.displays.contains(display)
+            if !isValid {
+                Logger.log("Invalidating workspace: \(workspace.name) on display: \(display)")
+            }
+            return isValid
+        }
     }
 
     func pauseWorkspaceManagement() {
