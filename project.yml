@@ -44,8 +44,8 @@ targets:
 
     settings:
       base:
-        MARKETING_VERSION: 4.15.69
-        CURRENT_PROJECT_VERSION: 69
+        MARKETING_VERSION: 4.15.70
+        CURRENT_PROJECT_VERSION: 70
         ASSETCATALOG_COMPILER_APPICON_NAME: FlashSpaceIcon
         CODE_SIGN_ENTITLEMENTS: FlashSpace/FlashSpace.entitlements
         DEVELOPMENT_TEAM: "${XCODE_DEVELOPMENT_TEAM}"
