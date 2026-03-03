@@ -99,21 +99,34 @@ final class WorkspaceScreenshotManager {
     }
 
     private func saveScreenshot(_ image: NSImage, workspace: Workspace, key: ScreenshotKey) {
-        let newSize = CGSize(
-            width: 1400.0,
-            height: (1400.0 / image.size.width) * image.size.height
+        let newWidth: CGFloat = 1900.0
+        let newHeight = (newWidth / image.size.width) * image.size.height
+        let newSize = CGSize(width: newWidth, height: newHeight)
+
+        guard let bitmapRep = NSBitmapImageRep(
+            bitmapDataPlanes: nil,
+            pixelsWide: Int(newWidth),
+            pixelsHigh: Int(newHeight),
+            bitsPerSample: 8,
+            samplesPerPixel: 4,
+            hasAlpha: true,
+            isPlanar: false,
+            colorSpaceName: .deviceRGB,
+            bytesPerRow: 0,
+            bitsPerPixel: 0
+        ) else { return }
+
+        NSGraphicsContext.saveGraphicsState()
+        NSGraphicsContext.current = NSGraphicsContext(bitmapImageRep: bitmapRep)
+        image.draw(
+            in: NSRect(origin: .zero, size: newSize),
+            from: .zero,
+            operation: .copy,
+            fraction: 1.0
         )
-        let newImage = NSImage(size: newSize)
-        let rect = NSRect(origin: .zero, size: newSize)
+        NSGraphicsContext.restoreGraphicsState()
 
-        newImage.lockFocus()
-        image.draw(in: rect)
-        newImage.unlockFocus()
-
-        guard let resizedData = newImage.tiffRepresentation,
-              let imageRepresentation = NSBitmapImageRep(data: resizedData),
-              let jpegData = imageRepresentation.representation(using: .jpeg, properties: [:])
-        else { return }
+        guard let jpegData = bitmapRep.representation(using: .jpeg, properties: [:]) else { return }
 
         lock.lock()
         screenshots[key] = jpegData
