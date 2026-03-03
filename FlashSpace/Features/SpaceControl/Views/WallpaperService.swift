@@ -24,15 +24,37 @@ final class WallpaperService {
         }
 
         if wallpaperURL.lastPathComponent == "DefaultDesktop.heic" {
-            return getVideoWallpaperFromPlist() ?? NSImage(contentsOf: wallpaperURL)
+            return getVideoWallpaperFromPlist() ?? loadDownsampledImage(from: wallpaperURL)
         } else if let cachedWallpaper = getCachedWallpaper(path: wallpaperURL.path) {
             return cachedWallpaper
-        } else if let wallpaper = NSImage(contentsOf: wallpaperURL) {
+        } else if let wallpaper = loadDownsampledImage(from: wallpaperURL) {
             addCachedWallpaper(path: wallpaperURL.path, image: wallpaper)
             return wallpaper
         }
 
         return nil
+    }
+
+    private func loadDownsampledImage(from url: URL) -> NSImage? {
+        let imageSourceOptions = [kCGImageSourceShouldCache: false] as CFDictionary
+
+        guard let imageSource = CGImageSourceCreateWithURL(url as CFURL, imageSourceOptions) else { return nil }
+
+        let pointSize = NSScreen.main?.frame.size ?? CGSize(width: 1920, height: 1080)
+        let maxDimension = max(pointSize.width, pointSize.height) * 0.6
+
+        let downsampleOptions = [
+            kCGImageSourceCreateThumbnailFromImageAlways: true,
+            kCGImageSourceShouldCacheImmediately: true,
+            kCGImageSourceCreateThumbnailWithTransform: true,
+            kCGImageSourceThumbnailMaxPixelSize: maxDimension
+        ] as CFDictionary
+
+        guard let downsampledImage = CGImageSourceCreateThumbnailAtIndex(imageSource, 0, downsampleOptions) else {
+            return nil
+        }
+
+        return NSImage(cgImage: downsampledImage, size: pointSize)
     }
 
     private func getVideoWallpaperFromPlist() -> NSImage? {
