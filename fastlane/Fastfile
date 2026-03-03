@@ -5,6 +5,7 @@ lane :release do
   build_mac_app
   notarize_app
   zip_and_validate
+  copy_dsyms
   sparkle
   print_version
 end
@@ -35,6 +36,10 @@ lane :zip_and_validate do
 
   sh("spctl", "-a", "-vvv", "-t", "install", "../.build/FlashSpace.app")
   sh("codesign", "-vvv", "--deep", "--strict", "../.build/FlashSpace.app")
+end
+
+lane :copy_dsyms do
+  sh("cp ../.build/FlashSpace.app.dSYM.zip ../.dsyms/FlashSpace.app.dSYM_$(/usr/libexec/PlistBuddy -c 'Print CFBundleShortVersionString' ../.build/FlashSpace.app/Contents/Info.plist).zip")
 end
 
 lane :sparkle do
