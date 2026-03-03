@@ -11,15 +11,12 @@ import SwiftUI
 struct WhatsNewView: View {
     @Environment(\.dismissWindow) private var dismissWindow
 
-    private let features = [
-        "Added support for auto-opening specific apps.",
-        "Extracted Picture-in-Picture settings to separate menu.",
-        "Improved hotkeys management.",
-        "Redesigned workspace configuration.",
-        "Optimized apps auto-assignment."
+    private let features: [String] = [
     ]
 
-    private let bugFixes: [String] = []
+    private let bugFixes: [String] = [
+        "Significantly reduced memory usage by SpaceControl."
+    ]
 
     var body: some View {
         VStack(spacing: 0) {
