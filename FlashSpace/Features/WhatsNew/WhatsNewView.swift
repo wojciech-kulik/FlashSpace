@@ -12,10 +12,10 @@ struct WhatsNewView: View {
     @Environment(\.dismissWindow) private var dismissWindow
 
     private let features: [String] = [
+        "Introduced a new Workspace Switcher that allows you to quickly switch between workspaces using Option+Tab and Option+Shift+Tab shortcuts."
     ]
 
     private let bugFixes: [String] = [
-        "Significantly reduced memory usage by SpaceControl."
     ]
 
     var body: some View {
