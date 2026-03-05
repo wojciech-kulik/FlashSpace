@@ -39,7 +39,7 @@ struct SpaceControlSettingsView: View {
                     }
                     Text(
                         "FlashSpace requires screen recording access to show your workspaces in Space Control. " +
-                            "The preview will be displayed upon first activation of the workspace."
+                            "The preview will be displayed after first activation of the workspace."
                     )
                     .foregroundColor(.secondary)
                     .font(.callout)

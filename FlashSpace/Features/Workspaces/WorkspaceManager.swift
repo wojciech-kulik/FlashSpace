@@ -4,6 +4,7 @@
 //  Created by Wojciech Kulik on 19/01/2025.
 //  Copyright © 2025 Wojciech Kulik. All rights reserved.
 //
+// swiftlint:disable file_length
 
 import AppKit
 import Combine
@@ -18,6 +19,7 @@ struct ActiveWorkspace {
     let display: DisplayName
 }
 
+// swiftlint:disable:next type_body_length
 final class WorkspaceManager: ObservableObject {
     @Published private(set) var activeWorkspaceDetails: ActiveWorkspace?
 
@@ -25,6 +27,7 @@ final class WorkspaceManager: ObservableObject {
     private(set) var activeWorkspace: [DisplayName: Workspace] = [:]
     private(set) var mostRecentWorkspace: [DisplayName: Workspace] = [:]
     private(set) var lastWorkspaceActivation = Date.distantPast
+    private(set) var workspaceActivationTimes: [WorkspaceID: Date] = [:]
 
     private var cancellables = Set<AnyCancellable>()
     private var observeFocusCancellable: AnyCancellable?
@@ -277,6 +280,10 @@ final class WorkspaceManager: ObservableObject {
         Integrations.runOnActivateIfNeeded(workspace: activeWorkspaceDetails!)
     }
 
+    private func updateLastActivationTime(for workspace: Workspace) {
+        workspaceActivationTimes[workspace.id] = Date()
+    }
+
     private func openAppsIfNeeded(in workspace: Workspace) {
         guard workspace.openAppsOnActivation == true else { return }
 
@@ -385,6 +392,7 @@ extension WorkspaceManager {
         workspaceTransitionManager.showTransitionIfNeeded(for: workspace, on: displays)
 
         rememberHiddenApps(workspaceToActivate: workspace.id)
+        updateLastActivationTime(for: workspace)
         updateActiveWorkspace(workspace, on: displays)
         openAppsIfNeeded(in: workspace)
         showApps(in: workspace, setFocus: setFocus, on: displays)

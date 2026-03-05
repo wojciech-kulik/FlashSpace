@@ -22,6 +22,8 @@ extension HotKeyName {
     static let showFlashSpace = Self("showFlashSpace")
     static let toggleFlashSpace = Self("toggleFlashSpace")
     static let toggleSpaceControl = Self("toggleSpaceControl")
+    static let workspaceSwitcher = Self("workspaceSwitcher")
+    static let workspaceSwitcherBackward = Self("workspaceSwitcherBackward")
     static let pauseResumeFlashSpace = Self("pauseResumeFlashSpace")
 
     static let assignVisibleApps = Self("assignVisibleApps")

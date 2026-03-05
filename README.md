@@ -66,10 +66,11 @@ The app allows workspaces to be switched independently on each display.
 
 - [x] Blazingly fast workspace switching
 - [x] Multiple displays support
-- [x] Space Control - preview all workspaces and switch between them
+- [x] [Space Control](#-space-control) - preview all workspaces and switch between them
+- [x] [Workspace Switcher](#-workspace-switcher) - quickly switch between workspaces using `Option + Tab`
 - [x] Hotkeys - manage apps and workspaces using keyboard
 - [x] Focus detection - activate workspace on app focus
-- [x] Focus manager - switch focus between apps using keyboard
+- [x] [Focus manager](#-focus-manager) - switch focus between apps using keyboard
 - [x] Cursor manager - auto-center the cursor in the active window
 - [x] Profiles - quickly switch between different configurations
 - [x] Menu bar - configurable icon & text (per workspace)
@@ -97,6 +98,16 @@ Space Control allows you to preview all workspaces on a grid and switch between 
 Use 0-9 and arrow keys to switch between workspaces.
 
 https://github.com/user-attachments/assets/4c801433-2c70-4cb9-85d8-ff75dbbfab7e
+
+## ⚡ Workspace Switcher
+
+Workspace Switcher allows you to quickly switch between workspaces using
+`Option + Tab` (by default).
+
+It shows a list of workspaces and allows you to switch them in a similar way
+to macOS app switcher (`CMD + Tab`).
+
+https://github.com/user-attachments/assets/aa814d3d-55c4-4af8-b1de-ceb7cc41eb7a
 
 ## 🪟 Focus Manager
 

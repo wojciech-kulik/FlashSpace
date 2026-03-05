@@ -152,6 +152,11 @@ final class HotKeysManager {
         if let hotKey = SpaceControl.getHotKey() {
             addShortcut("Space Control", hotKey)
         }
+
+        // Workspace Switcher
+        for hotKey in WorkspaceSwitcher.getHotKeys() {
+            addShortcut("Workspace Switcher", hotKey)
+        }
     }
 
     func disableAll() {
