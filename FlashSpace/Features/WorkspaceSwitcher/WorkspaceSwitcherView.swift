@@ -87,6 +87,7 @@ struct WorkspaceSwitcherView: View {
             RoundedRectangle(cornerRadius: 16, style: .continuous)
                 .stroke(Color.white.opacity(isSelected ? 0.9 : 0.0), lineWidth: 0.8)
                 .fill(Color.white.opacity(isSelected ? 0.14 : 0.0))
+                .padding(1)
         )
     }
 
@@ -133,6 +134,7 @@ struct WorkspaceSwitcherView: View {
             RoundedRectangle(cornerRadius: 16, style: .continuous)
                 .stroke(Color.white.opacity(isSelected ? 0.9 : 0.0), lineWidth: 0.8)
                 .fill(Color.white.opacity(isSelected ? 0.14 : 0.0))
+                .padding(1)
         )
     }
 }
