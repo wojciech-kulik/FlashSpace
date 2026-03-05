@@ -20,7 +20,7 @@ struct SettingsView: View {
                 .frame(maxHeight: .infinity, alignment: .top)
                 .navigationSplitViewColumnWidth(min: 440, ideal: 440)
         })
-        .frame(width: 780, height: 550)
+        .frame(width: 780, height: 580)
         .onDisappear {
             navigationManager.selectedTab = "General"
         }
@@ -45,6 +45,8 @@ struct SettingsView: View {
                     .tag("Focus")
                 Label("Space Control", systemImage: "rectangle.split.2x2")
                     .tag("SpaceControl")
+                Label("Workspace Switcher", systemImage: "rectangle.split.3x1")
+                    .tag("WorkspaceSwitcher")
                 Label("Profiles", systemImage: "person.2")
                     .tag("Profiles")
                 Label("Integrations", systemImage: "link")
@@ -90,6 +92,8 @@ struct SettingsView: View {
             FloatingAppsSettingsView()
         case "SpaceControl":
             SpaceControlSettingsView()
+        case "WorkspaceSwitcher":
+            WorkspaceSwitcherSettingsView()
         case "Integrations":
             IntegrationsSettingsView()
         case "Profiles":

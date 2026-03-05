@@ -96,6 +96,15 @@ struct AppSettings: Codable {
     var spaceControlUpdateScreenshotsOnOpen: Bool?
     var spaceControlNumberOfColumns: Int?
 
+    // Workspace Switcher
+    var enableWorkspaceSwitcher: Bool?
+    var showWorkspaceSwitcher: AppHotKey?
+    var workspaceSwitcherShowScreenshots: Bool?
+    var workspaceSwitcherVisibleWorkspaces: Int?
+    var workspaceSwitcherSortByLastActivation: Bool?
+    // swiftlint:disable:next identifier_name
+    var workspaceSwitcherCurrentDisplayWorkspaces: Bool?
+
     // Integrations
     var enableIntegrations: Bool?
     var runScriptOnLaunch: String?

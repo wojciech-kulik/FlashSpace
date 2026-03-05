@@ -33,6 +33,7 @@ struct AppDependencies {
     let pictureInPictureSettings = PictureInPictureSettings()
     let floatingAppsSettings = FloatingAppsSettings()
     let spaceControlSettings = SpaceControlSettings()
+    let workspaceSwitcherSettings = WorkspaceSwitcherSettings()
     let integrationsSettings = IntegrationsSettings()
     let profileSettings = ProfileSettings()
 
@@ -51,6 +52,7 @@ struct AppDependencies {
             pictureInPictureSettings: pictureInPictureSettings,
             floatingAppsSettings: floatingAppsSettings,
             spaceControlSettings: spaceControlSettings,
+            workspaceSwitcherSettings: workspaceSwitcherSettings,
             integrationsSettings: integrationsSettings,
             profileSettings: profileSettings
         )

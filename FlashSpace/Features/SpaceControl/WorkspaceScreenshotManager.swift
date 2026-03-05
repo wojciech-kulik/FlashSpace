@@ -49,7 +49,7 @@ final class WorkspaceScreenshotManager {
     func captureWorkspace(_ workspace: Workspace, displayName: DisplayName) async {
         let shouldCapture = await MainActor.run {
             !SpaceControl.isVisible &&
-                SpaceControl.isEnabled &&
+                (SpaceControl.isEnabled || WorkspaceSwitcher.isEnabled) &&
                 PermissionsManager.shared.checkForScreenRecordingPermissions()
         }
 

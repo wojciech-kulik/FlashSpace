@@ -17,6 +17,7 @@ final class SettingsRepository: ObservableObject {
     private(set) var pictureInPictureSettings: PictureInPictureSettings
     private(set) var floatingAppsSettings: FloatingAppsSettings
     private(set) var spaceControlSettings: SpaceControlSettings
+    private(set) var workspaceSwitcherSettings: WorkspaceSwitcherSettings
     private(set) var integrationsSettings: IntegrationsSettings
     private(set) var profileSettings: ProfileSettings
 
@@ -29,6 +30,7 @@ final class SettingsRepository: ObservableObject {
         pictureInPictureSettings,
         floatingAppsSettings,
         spaceControlSettings,
+        workspaceSwitcherSettings,
         integrationsSettings,
         profileSettings
     ]
@@ -46,6 +48,7 @@ final class SettingsRepository: ObservableObject {
         pictureInPictureSettings: PictureInPictureSettings,
         floatingAppsSettings: FloatingAppsSettings,
         spaceControlSettings: SpaceControlSettings,
+        workspaceSwitcherSettings: WorkspaceSwitcherSettings,
         integrationsSettings: IntegrationsSettings,
         profileSettings: ProfileSettings
     ) {
@@ -57,6 +60,7 @@ final class SettingsRepository: ObservableObject {
         self.pictureInPictureSettings = pictureInPictureSettings
         self.floatingAppsSettings = floatingAppsSettings
         self.spaceControlSettings = spaceControlSettings
+        self.workspaceSwitcherSettings = workspaceSwitcherSettings
         self.integrationsSettings = integrationsSettings
         self.profileSettings = profileSettings
 
