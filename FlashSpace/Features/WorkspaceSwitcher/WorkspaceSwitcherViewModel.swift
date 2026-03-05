@@ -20,7 +20,7 @@ struct WorkspaceSwitcherItem: Identifiable {
 final class WorkspaceSwitcherViewModel: ObservableObject {
     @Published private(set) var workspaces: [WorkspaceSwitcherItem] = []
     @Published private(set) var selectedIndex = 0
-    @Published private(set) var visibleSlots = 6
+    @Published private(set) var visibleSlots = 5
     @Published private(set) var showScreenshots = true
 
     var itemSize: CGSize {
@@ -33,8 +33,8 @@ final class WorkspaceSwitcherViewModel: ObservableObject {
         let spacing: CGFloat = 18
         let scrollViewPadding: CGFloat = 36
         let verticalPadding: CGFloat = 18
-        let visibleSlots = min(visibleSlots, workspaces.count)
-        let containerWidth = CGFloat(visibleSlots) * (itemSize.width + spacing) - spacing + 2 * scrollViewPadding
+        let slotCount = min(visibleSlots, workspaces.count)
+        let containerWidth = CGFloat(slotCount) * (itemSize.width + spacing) - spacing + 2 * scrollViewPadding
         let containerHeight = itemSize.height + 2 * verticalPadding
 
         let screenWidth = NSScreen.main?.frame.width ?? 1440
