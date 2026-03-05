@@ -66,7 +66,7 @@ extension WorkspaceSwitcherSettings: SettingsProtocol {
         enableWorkspaceSwitcher = appSettings.enableWorkspaceSwitcher ?? true
         showWorkspaceSwitcher = appSettings.showWorkspaceSwitcher ?? AppHotKey(value: "opt+tab")
         workspaceSwitcherShowScreenshots = appSettings.workspaceSwitcherShowScreenshots ?? true
-        workspaceSwitcherVisibleWorkspaces = max(1, appSettings.workspaceSwitcherVisibleWorkspaces ?? 6)
+        workspaceSwitcherVisibleWorkspaces = max(1, appSettings.workspaceSwitcherVisibleWorkspaces ?? 5)
         workspaceSwitcherSortByLastActivation = appSettings.workspaceSwitcherSortByLastActivation ?? false
         workspaceSwitcherCurrentDisplayWorkspaces = appSettings.workspaceSwitcherCurrentDisplayWorkspaces ?? true
         observe()
