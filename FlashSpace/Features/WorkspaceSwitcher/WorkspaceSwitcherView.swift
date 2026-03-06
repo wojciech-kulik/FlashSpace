@@ -53,8 +53,10 @@ struct WorkspaceSwitcherView: View {
                 .padding(.horizontal, 36)
             }
             .onChange(of: viewModel.selectedIndex) { _, newValue in
-                withAnimation(.easeInOut(duration: 0.18)) {
-                    proxy.scrollTo(newValue, anchor: .center)
+                if viewModel.isAutoScrollEnabled {
+                    withAnimation(.easeInOut(duration: 0.18)) {
+                        proxy.scrollTo(newValue, anchor: .center)
+                    }
                 }
             }
             .onAppear {
@@ -91,6 +93,7 @@ struct WorkspaceSwitcherView: View {
                 .fill(Color.white.opacity(isSelected ? 0.12 : 0.0))
                 .padding(1)
         )
+        .contentShape(Rectangle())
     }
 
     private func switcherItemWithScreenshot(
@@ -138,5 +141,6 @@ struct WorkspaceSwitcherView: View {
                 .fill(Color.white.opacity(isSelected ? 0.12 : 0.0))
                 .padding(1)
         )
+        .contentShape(Rectangle())
     }
 }

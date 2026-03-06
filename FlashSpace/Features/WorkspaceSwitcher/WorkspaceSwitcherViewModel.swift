@@ -23,6 +23,8 @@ final class WorkspaceSwitcherViewModel: ObservableObject {
     @Published private(set) var visibleSlots = 5
     @Published private(set) var showScreenshots = true
 
+    private(set) var isAutoScrollEnabled = true
+
     var itemSize: CGSize {
         showScreenshots
             ? CGSize(width: 260, height: 190)
@@ -106,6 +108,7 @@ final class WorkspaceSwitcherViewModel: ObservableObject {
     }
 
     func onWorkspaceTap(_ index: Int) {
+        isAutoScrollEnabled = false
         selectedIndex = index
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
