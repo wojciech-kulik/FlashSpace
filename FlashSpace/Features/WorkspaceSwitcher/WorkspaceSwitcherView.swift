@@ -29,7 +29,7 @@ struct WorkspaceSwitcherView: View {
     private var content: some View {
         ScrollViewReader { proxy in
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 18) {
+                HStack(spacing: viewModel.itemSpacing) {
                     ForEach(Array(viewModel.workspaces.enumerated()), id: \.element.id) { index, workspace in
                         if viewModel.showScreenshots {
                             switcherItemWithScreenshot(
@@ -86,7 +86,7 @@ struct WorkspaceSwitcherView: View {
         .background(
             RoundedRectangle(cornerRadius: 16, style: .continuous)
                 .stroke(Color.white.opacity(isSelected ? 0.9 : 0.0), lineWidth: 0.8)
-                .fill(Color.white.opacity(isSelected ? 0.14 : 0.0))
+                .fill(Color.white.opacity(isSelected ? 0.12 : 0.0))
                 .padding(1)
         )
     }
@@ -133,7 +133,7 @@ struct WorkspaceSwitcherView: View {
         .background(
             RoundedRectangle(cornerRadius: 16, style: .continuous)
                 .stroke(Color.white.opacity(isSelected ? 0.9 : 0.0), lineWidth: 0.8)
-                .fill(Color.white.opacity(isSelected ? 0.14 : 0.0))
+                .fill(Color.white.opacity(isSelected ? 0.12 : 0.0))
                 .padding(1)
         )
     }

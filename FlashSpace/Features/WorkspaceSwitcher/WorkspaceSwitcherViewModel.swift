@@ -29,12 +29,15 @@ final class WorkspaceSwitcherViewModel: ObservableObject {
             : CGSize(width: 180, height: 120)
     }
 
+    var itemSpacing: CGFloat {
+        workspaces.count > visibleSlots ? 36 : 18
+    }
+
     var containerSize: CGSize {
-        let spacing: CGFloat = 18
         let scrollViewPadding: CGFloat = 36
         let verticalPadding: CGFloat = 18
         let slotCount = min(visibleSlots, workspaces.count)
-        let containerWidth = CGFloat(slotCount) * (itemSize.width + spacing) - spacing + 2 * scrollViewPadding
+        let containerWidth = CGFloat(slotCount) * (itemSize.width + itemSpacing) - itemSpacing + 2 * scrollViewPadding
         let containerHeight = itemSize.height + 2 * verticalPadding
 
         let screenWidth = NSScreen.main?.frame.width ?? 1440
