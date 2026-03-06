@@ -38,6 +38,7 @@ struct WorkspaceSwitcherView: View {
                                 itemSize: viewModel.itemSize
                             )
                             .id(index)
+                            .onTapGesture { viewModel.onWorkspaceTap(workspace) }
                         } else {
                             switcherItem(
                                 workspace,
@@ -45,6 +46,7 @@ struct WorkspaceSwitcherView: View {
                                 itemSize: viewModel.itemSize
                             )
                             .id(index)
+                            .onTapGesture { viewModel.onWorkspaceTap(workspace) }
                         }
                     }
                 }

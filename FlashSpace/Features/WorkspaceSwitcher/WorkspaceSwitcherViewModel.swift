@@ -105,6 +105,11 @@ final class WorkspaceSwitcherViewModel: ObservableObject {
         } ?? 0
     }
 
+    func onWorkspaceTap(_ workspace: WorkspaceSwitcherItem) {
+        WorkspaceSwitcher.cancel()
+        workspaceManager.activateWorkspace(workspace.originalWorkspace, setFocus: true)
+    }
+
     func advanceSelection(step: Int) {
         guard !workspaces.isEmpty else { return }
         selectedIndex = (selectedIndex + step + workspaces.count) % workspaces.count
