@@ -12,11 +12,10 @@ struct WhatsNewView: View {
     @Environment(\.dismissWindow) private var dismissWindow
 
     private let features: [String] = [
-        "Slightly improved Workspace Switcher UI.",
-        "Enabled mouse click support for the Workspace Switcher."
     ]
 
     private let bugFixes: [String] = [
+        "Updated support for Picture-in-Picture mode in Chrome."
     ]
 
     var body: some View {
