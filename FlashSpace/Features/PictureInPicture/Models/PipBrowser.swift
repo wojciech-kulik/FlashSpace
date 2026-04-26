@@ -24,7 +24,9 @@ enum PipBrowser: String, CaseIterable {
 
     var title: String? {
         switch self {
-        case .chrome, .vivaldi, .brave, .opera, .comet, .edge:
+        case .chrome:
+            return "Picture-in-picture"
+        case .vivaldi, .brave, .opera, .comet, .edge:
             return "Picture in Picture"
         case .zen, .firefox:
             return "Picture-in-Picture"
