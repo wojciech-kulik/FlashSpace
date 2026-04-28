@@ -42,22 +42,7 @@ enum Integrations {
     }
 
     private static func runScript(_ script: String, synchronous: Bool = false) {
-        guard settings.enableIntegrations, !script.isEmpty else { return }
-
-        let shell = getDefaultShell() ?? "/bin/sh"
-        let task = Process()
-        task.launchPath = shell
-        task.arguments = ["-c", script]
-        task.launch()
-
-        if synchronous {
-            task.waitUntilExit()
-        }
-    }
-
-    private static func getDefaultShell() -> String? {
-        guard let pw = getpwuid(getuid()), let shellCString = pw.pointee.pw_shell else { return nil }
-
-        return String(cString: shellCString)
+        guard settings.enableIntegrations else { return }
+        Terminal.runScript(script, synchronous: synchronous)
     }
 }

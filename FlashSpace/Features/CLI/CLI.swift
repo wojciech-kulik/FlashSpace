@@ -9,15 +9,21 @@ import Foundation
 
 enum CLI {
     static var cliPath: String { Bundle.main.bundlePath + "/Contents/Resources/flashspace" }
+    static var symlinkDirPath: String { "/usr/local/bin" }
     static var symlinkPath: String { "/usr/local/bin/flashspace" }
-    static var isInstalled: Bool { FileManager.default.fileExists(atPath: symlinkPath) }
+    static var homebrewSymlinkPath: String { "/opt/homebrew/bin/flashspace" }
+
+    static var isInstalled: Bool {
+        FileManager.default.fileExists(atPath: symlinkPath) ||
+            FileManager.default.fileExists(atPath: homebrewSymlinkPath)
+    }
 
     static func install() {
         guard !isInstalled else {
             return print("✅ CLI already installed at \(symlinkPath)")
         }
 
-        if runSudoScript("ln -s '\(cliPath)' '\(symlinkPath)'") {
+        if Terminal.runSudoScript("ln -s '\(cliPath)' '\(symlinkPath)'") {
             Logger.log("✅ CLI installed from \(symlinkPath)")
         }
     }
@@ -25,34 +31,8 @@ enum CLI {
     static func uninstall() {
         guard isInstalled else { return print("✅ CLI already uninstalled") }
 
-        if runSudoScript("rm '\(symlinkPath)'") {
-            Logger.log("✅ CLI uninstalled from \(symlinkPath)")
+        if Terminal.runSudoScript("rm -f '\(symlinkPath)' '\(homebrewSymlinkPath)'") {
+            Logger.log("✅ CLI uninstalled")
         }
-    }
-
-    private static func runSudoScript(_ script: String) -> Bool {
-        let appleScript =
-            "do shell script \"sudo \(script)\" with administrator privileges"
-
-        guard let scriptObject = NSAppleScript(source: appleScript) else {
-            Logger.log("❌ Error: Failed to create AppleScript object")
-            Alert.showOkAlert(title: "Error", message: "Could not run script")
-            return false
-        }
-
-        var error: NSDictionary?
-        scriptObject.executeAndReturnError(&error)
-
-        if let error {
-            Logger.log("❌ Error: \(error)")
-            if let errorNumber = error["NSAppleScriptErrorNumber"],
-               errorNumber as? NSNumber != -128,
-               let errorMessage = error["NSAppleScriptErrorMessage"] as? String {
-                Alert.showOkAlert(title: "Error", message: errorMessage)
-            }
-            return false
-        }
-
-        return true
     }
 }
