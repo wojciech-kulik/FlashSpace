@@ -15,7 +15,7 @@ struct WhatsNewView: View {
     ]
 
     private let bugFixes: [String] = [
-        "Updated support for Picture-in-Picture mode in Chrome."
+        "Fixed CLI detection when installed via Homebrew."
     ]
 
     var body: some View {

@@ -9,7 +9,6 @@ import Foundation
 
 enum CLI {
     static var cliPath: String { Bundle.main.bundlePath + "/Contents/Resources/flashspace" }
-    static var symlinkDirPath: String { "/usr/local/bin" }
     static var symlinkPath: String { "/usr/local/bin/flashspace" }
     static var homebrewSymlinkPath: String { "/opt/homebrew/bin/flashspace" }
 
