@@ -82,6 +82,7 @@ The app allows workspaces to be switched independently on each display.
 - [x] [CLI](#-command-line-interface) - interact with the app using the command line interface
 - [x] [Picture-in-Picture](#-picture-in-picture-support) support
 - [x] [SketchyBar] integration
+- [x] [Raycast extension] created by [krmbzds](https://github.com/krmbzds)
 
 ## ⚖️ Project Values
 
@@ -343,6 +344,15 @@ custom global shortcuts. You can use it also with FlashSpace through the CLI.
 You could even define some shortcuts that are not available in FlashSpace, like
 switching between specific profiles.
 
+### 👉 Raycast Extension
+
+<img height="400" alt="image" src="https://github.com/user-attachments/assets/93404797-990d-44d8-947b-ae21871dacb2" />
+
+If you are a Raycast user, you can use the [Raycast extension] to manage
+FlashSpace without leaving your keyboard.
+
+Big thanks to [krmbzds](https://github.com/krmbzds) for creating this extension!
+
 ## 💛 Sponsors
 
 Big thanks to all the sponsors who support this project 🍻!
@@ -399,3 +409,4 @@ Big thanks to all the sponsors who support this project 🍻!
 [Releases Page]: https://github.com/wojciech-kulik/FlashSpace/releases
 [SKHD]: https://github.com/koekeishiya/skhd
 [XcodeProjectCLI]: https://github.com/wojciech-kulik/XcodeProjectCLI
+[Raycast extension]: https://www.raycast.com/krmbzds/flashspace
