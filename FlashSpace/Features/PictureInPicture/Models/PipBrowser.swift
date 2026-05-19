@@ -30,7 +30,6 @@ enum PipBrowser: String, CaseIterable {
             // "Picture-in-picture" (document PiP, some sites/older builds).
             return ["Picture in Picture", "Picture-in-picture"]
         case .zen, .firefox:
-            // Gecko-based browsers use a single hyphenated title.
             return ["Picture-in-Picture"]
         case .arc, .dia:
             return []
