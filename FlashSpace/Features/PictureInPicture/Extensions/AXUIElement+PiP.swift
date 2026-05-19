@@ -23,7 +23,7 @@ extension AXUIElement {
                 return true
             }
 
-            if let pipWindowTitle = browser.title, windowTitle == pipWindowTitle {
+            if let windowTitle, browser.titles.contains(windowTitle) {
                 return true
             }
 

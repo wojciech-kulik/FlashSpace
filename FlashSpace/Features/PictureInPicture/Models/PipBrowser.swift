@@ -22,16 +22,17 @@ enum PipBrowser: String, CaseIterable {
 
     var bundleId: String { rawValue }
 
-    var title: String? {
+    var titles: [String] {
         switch self {
         case .chrome:
-            return "Picture-in-picture"
+            // Chrome has shipped both variants across versions.
+            return ["Picture-in-picture", "Picture in Picture"]
         case .vivaldi, .brave, .opera, .comet, .edge:
-            return "Picture in Picture"
+            return ["Picture in Picture"]
         case .zen, .firefox:
-            return "Picture-in-Picture"
+            return ["Picture-in-Picture"]
         case .arc, .dia:
-            return nil
+            return []
         }
     }
 
