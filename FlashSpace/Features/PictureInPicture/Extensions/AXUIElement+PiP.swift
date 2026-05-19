@@ -19,11 +19,13 @@ extension AXUIElement {
 
         if let browser {
             if let partialTitle = browser.partialTitle,
-               title?.contains(partialTitle) == true {
+               windowTitle?.range(of: partialTitle, options: .caseInsensitive) != nil {
                 return true
             }
 
-            if let windowTitle, browser.titles.contains(windowTitle) {
+            if let windowTitle, browser.titles.contains(where: {
+                windowTitle.caseInsensitiveCompare($0) == .orderedSame
+            }) {
                 return true
             }
 

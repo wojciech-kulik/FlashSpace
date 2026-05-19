@@ -24,12 +24,13 @@ enum PipBrowser: String, CaseIterable {
 
     var titles: [String] {
         switch self {
-        case .chrome:
-            // Chrome has shipped both variants across versions.
-            return ["Picture-in-picture", "Picture in Picture"]
-        case .vivaldi, .brave, .opera, .comet, .edge:
-            return ["Picture in Picture"]
+        case .chrome, .vivaldi, .brave, .opera, .comet, .edge:
+            // Chromium-based browsers ship two variants of the PiP window title:
+            // "Picture in Picture" (macOS video-element PiP) and
+            // "Picture-in-picture" (document PiP, some sites/older builds).
+            return ["Picture in Picture", "Picture-in-picture"]
         case .zen, .firefox:
+            // Gecko-based browsers use a single hyphenated title.
             return ["Picture-in-Picture"]
         case .arc, .dia:
             return []
