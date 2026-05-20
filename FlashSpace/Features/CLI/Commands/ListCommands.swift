@@ -9,6 +9,7 @@ import AppKit
 import Foundation
 
 final class ListCommands: CommandExecutor {
+    var workspaceManager: WorkspaceManager { AppDependencies.shared.workspaceManager }
     var workspaceRepository: WorkspaceRepository { AppDependencies.shared.workspaceRepository }
     var profilesRepository: ProfilesRepository { AppDependencies.shared.profilesRepository }
     var settingsRepository: SettingsRepository { AppDependencies.shared.settingsRepository }
@@ -16,7 +17,7 @@ final class ListCommands: CommandExecutor {
     // swiftlint:disable:next function_body_length
     func execute(command: CommandRequest) -> CommandResponse? {
         switch command {
-        case .listWorkspaces(let withDisplay, let profileName):
+        case .listWorkspaces(let withDisplay, let profileName, let active):
             let profile = profileName != nil
                 ? profilesRepository.profiles.first { $0.name == profileName }
                 : profilesRepository.selectedProfile
@@ -24,13 +25,16 @@ final class ListCommands: CommandExecutor {
             if let profile {
                 let result: String
 
+                let activeWorkspaces = Set(workspaceManager.activeWorkspace.values.map(\.id))
+                let workspaces = profile.workspaces.filter { !active || activeWorkspaces.contains($0.id) }
+
                 if withDisplay {
-                    result = profile.workspaces.map {
+                    result = workspaces.map {
                         let displays = $0.displays.joined(separator: ",")
                         return "\($0.name),\(displays.isEmpty ? "None" : displays)"
                     }.joined(separator: "\n")
                 } else {
-                    result = profile.workspaces.map(\.name).joined(separator: "\n")
+                    result = workspaces.map(\.name).joined(separator: "\n")
                 }
 
                 return CommandResponse(success: true, message: result)

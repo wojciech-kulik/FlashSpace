@@ -14,6 +14,9 @@ struct ListWorkspacesCommand: ParsableCommand {
         abstract: "List workspaces"
     )
 
+    @Flag(help: "Active workspaces only")
+    var active = false
+
     @Flag(help: "Include assigned display name")
     var withDisplay = false
 
@@ -21,7 +24,7 @@ struct ListWorkspacesCommand: ParsableCommand {
     var profile: String?
 
     func run() throws {
-        sendCommand(.listWorkspaces(withDisplay: withDisplay, profile: profile))
+        sendCommand(.listWorkspaces(withDisplay: withDisplay, profile: profile, active: active))
         runWithTimeout()
     }
 }

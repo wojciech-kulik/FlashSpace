@@ -41,7 +41,7 @@ enum CommandRequest: Codable {
     case openSpaceControl
 
     case listProfiles
-    case listWorkspaces(withDisplay: Bool, profile: String?)
+    case listWorkspaces(withDisplay: Bool, profile: String?, active: Bool)
     case listApps(
         workspace: String,
         profile: String?,
