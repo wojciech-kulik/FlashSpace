@@ -5,16 +5,26 @@
 //  Copyright © 2025 Wojciech Kulik. All rights reserved.
 //
 
+import Foundation
+
 enum MenuBarTitle {
     static let settings = AppDependencies.shared.menuBarSettings
     static let workspaceManager = AppDependencies.shared.workspaceManager
     static let profilesRepository = AppDependencies.shared.profilesRepository
 
-    static func get() -> String? {
+    @MainActor
+    static func get() async -> String? {
         let template = settings.menuBarTitleTemplate.trimmingCharacters(in: .whitespaces)
+        let useScript = settings.menuBarTitleUseScript
+        let scriptPath = settings.menuBarTitleScriptPath.trimmingCharacters(in: .whitespaces)
 
-        guard settings.showMenuBarTitle, !template.isEmpty else { return nil }
+        guard settings.showMenuBarTitle, !template.isEmpty || useScript else { return nil }
         guard let activeWorkspace = workspaceManager.activeWorkspaceDetails else { return nil }
+
+        if useScript {
+            guard scriptPath.isNotEmpty, FileManager.default.fileExists(atPath: scriptPath) else { return nil }
+            return await Terminal.runScriptWithOutput(scriptPath)
+        }
 
         return template
             .replacingOccurrences(of: "$WORKSPACE_NUMBER", with: activeWorkspace.number ?? "")

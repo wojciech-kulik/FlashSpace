@@ -13,6 +13,8 @@ final class MenuBarSettings: ObservableObject {
 
     @Published var showMenuBarTitle = true
     @Published var showMenuBarIcon = true
+    @Published var menuBarTitleUseScript = false
+    @Published var menuBarTitleScriptPath = ""
     @Published var menuBarTitleTemplate = MenuBarSettings.defaultMenuBarTitleTemplate
     @Published var menuBarDisplayAliases = ""
 
@@ -25,6 +27,8 @@ final class MenuBarSettings: ObservableObject {
         observer = Publishers.MergeMany(
             $showMenuBarTitle.settingsPublisher(),
             $showMenuBarIcon.settingsPublisher(),
+            $menuBarTitleUseScript.settingsPublisher(),
+            $menuBarTitleScriptPath.settingsPublisher(debounce: true),
             $menuBarTitleTemplate.settingsPublisher(debounce: true),
             $menuBarDisplayAliases.settingsPublisher(debounce: true)
         )
@@ -42,6 +46,8 @@ extension MenuBarSettings: SettingsProtocol {
         observer = nil
         showMenuBarTitle = appSettings.showMenuBarTitle ?? true
         showMenuBarIcon = appSettings.showMenuBarIcon ?? true
+        menuBarTitleScriptPath = appSettings.menuBarTitleScriptPath ?? ""
+        menuBarTitleUseScript = appSettings.menuBarTitleUseScript ?? false
         menuBarTitleTemplate = appSettings.menuBarTitleTemplate ?? Self.defaultMenuBarTitleTemplate
         menuBarDisplayAliases = appSettings.menuBarDisplayAliases ?? ""
         observe()
@@ -50,6 +56,8 @@ extension MenuBarSettings: SettingsProtocol {
     func update(_ appSettings: inout AppSettings) {
         appSettings.showMenuBarTitle = showMenuBarTitle
         appSettings.showMenuBarIcon = showMenuBarIcon
+        appSettings.menuBarTitleScriptPath = menuBarTitleScriptPath
+        appSettings.menuBarTitleUseScript = menuBarTitleUseScript
         appSettings.menuBarTitleTemplate = menuBarTitleTemplate
         appSettings.menuBarDisplayAliases = menuBarDisplayAliases
     }

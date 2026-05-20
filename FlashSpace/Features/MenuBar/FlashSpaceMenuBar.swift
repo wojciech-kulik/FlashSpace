@@ -16,6 +16,8 @@ struct FlashSpaceMenuBar: Scene {
     @StateObject private var workspaceRepository = AppDependencies.shared.workspaceRepository
 
     @State var menuBarId = UUID()
+    @State var title: String?
+    @State var image: Image?
 
     var body: some Scene {
         MenuBarExtra(isInserted: .constant(true)) {
@@ -123,13 +125,32 @@ struct FlashSpaceMenuBar: Scene {
             }.keyboardShortcut("q")
         } label: {
             HStack {
-                let title = MenuBarTitle.get()
-                if title == nil || settingsRepository.menuBarSettings.showMenuBarIcon {
-                    Image(systemName: workspaceManager.activeWorkspaceDetails?.symbolIconName ?? .defaultIconSymbol)
-                }
+                if let image { image }
                 if let title { Text(title) }
             }
-            .id(settingsRepository.menuBarSettings.menuBarTitleTemplate)
+            .onChange(of: [
+                workspaceManager.activeWorkspace.values.map(\.id.uuidString).joined(separator: ","),
+                (workspaceManager.activeWorkspaceDetails?.id).flatMap(\.uuidString) ?? "",
+                String(settingsRepository.menuBarSettings.showMenuBarTitle),
+                String(settingsRepository.menuBarSettings.showMenuBarIcon),
+                String(settingsRepository.menuBarSettings.menuBarTitleUseScript),
+                settingsRepository.menuBarSettings.menuBarTitleTemplate,
+                settingsRepository.menuBarSettings.menuBarTitleScriptPath,
+                settingsRepository.menuBarSettings.menuBarDisplayAliases
+
+            ]) { _, _ in updateMenuBar() }
+            .onAppear { updateMenuBar() }
+        }
+    }
+
+    private func updateMenuBar() {
+        Task { @MainActor in
+            title = await MenuBarTitle.get()
+            if title == nil || settingsRepository.menuBarSettings.showMenuBarIcon {
+                image = Image(systemName: workspaceManager.activeWorkspaceDetails?.symbolIconName ?? .defaultIconSymbol)
+            } else {
+                image = nil
+            }
         }
     }
 }

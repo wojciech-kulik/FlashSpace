@@ -15,10 +15,36 @@ enum Terminal {
         let task = Process()
         task.launchPath = shell
         task.arguments = ["-c", script]
+        setEnvironment(for: task)
+
         task.launch()
 
         if synchronous {
             task.waitUntilExit()
+        }
+    }
+
+    static func runScriptWithOutput(_ script: String) async -> String? {
+        guard !script.isEmpty else { return nil }
+
+        let shell = getDefaultShell() ?? "/bin/sh"
+        let task = Process()
+        task.launchPath = shell
+        task.arguments = ["-c", script]
+        setEnvironment(for: task)
+
+        return await withCheckedContinuation { continuation in
+            let pipe = Pipe()
+            task.standardOutput = pipe
+            do {
+                try task.run()
+                let data = pipe.fileHandleForReading.readDataToEndOfFile()
+                let output = String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines)
+                continuation.resume(with: .success(output))
+            } catch {
+                Logger.log("❌ Error running script: \(error)")
+                continuation.resume(with: .success(nil))
+            }
         }
     }
 
@@ -52,5 +78,18 @@ enum Terminal {
         guard let pw = getpwuid(getuid()), let shellCString = pw.pointee.pw_shell else { return nil }
 
         return String(cString: shellCString)
+    }
+
+    private static func setEnvironment(for process: Process) {
+        var environment = ProcessInfo.processInfo.environment
+        let existingPath = environment["PATH"] ?? "/usr/bin:/bin:/usr/sbin:/sbin"
+        let commonPaths = [
+            "/opt/homebrew/bin",
+            "/usr/local/bin",
+            "/opt/homebrew/sbin",
+            existingPath
+        ]
+        environment["PATH"] = commonPaths.joined(separator: ":")
+        process.environment = environment
     }
 }

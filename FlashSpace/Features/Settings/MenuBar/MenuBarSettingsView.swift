@@ -16,27 +16,41 @@ struct MenuBarSettingsView: View {
                 Toggle("Show Title", isOn: $settings.showMenuBarTitle)
                 Toggle("Show Icon", isOn: $settings.showMenuBarIcon)
                     .disabled(!settings.showMenuBarTitle)
+                Toggle("Use Script To Generate Title", isOn: $settings.menuBarTitleUseScript)
+                    .disabled(!settings.showMenuBarTitle)
+                    .opacity(settings.showMenuBarTitle ? 1 : 0.5)
 
-                HStack {
-                    Text("Title Template")
-                    TextField("", text: $settings.menuBarTitleTemplate)
-                        .foregroundColor(.secondary)
-                        .standardPlaceholder(settings.menuBarTitleTemplate.isEmpty)
+                if settings.menuBarTitleUseScript {
+                    HStack {
+                        Text("Script Path")
+                        TextField("", text: $settings.menuBarTitleScriptPath)
+                            .foregroundColor(.secondary)
+                            .standardPlaceholder(settings.menuBarTitleScriptPath.isEmpty)
+                    }
+                    .disabled(!settings.showMenuBarTitle)
+                    .opacity(settings.showMenuBarTitle ? 1 : 0.5)
+                } else {
+                    HStack {
+                        Text("Title Template")
+                        TextField("", text: $settings.menuBarTitleTemplate)
+                            .foregroundColor(.secondary)
+                            .standardPlaceholder(settings.menuBarTitleTemplate.isEmpty)
+                    }
+                    .disabled(!settings.showMenuBarTitle)
+                    .opacity(settings.showMenuBarTitle ? 1 : 0.5)
+
+                    Text(
+                        """
+                        $WORKSPACE will be replaced with the active workspace name
+                        $WORKSPACE_NUMBER will be replaced with the active workspace number
+                        $DISPLAY will be replaced with the corresponding display name
+                        $PROFILE will be replaced with the active profile name
+                        """
+                    )
+                    .foregroundStyle(.secondary)
+                    .font(.callout)
+                    .opacity(settings.showMenuBarTitle ? 1 : 0.5)
                 }
-                .disabled(!settings.showMenuBarTitle)
-                .opacity(settings.showMenuBarTitle ? 1 : 0.5)
-
-                Text(
-                    """
-                    $WORKSPACE will be replaced with the active workspace name
-                    $WORKSPACE_NUMBER will be replaced with the active workspace number
-                    $DISPLAY will be replaced with the corresponding display name
-                    $PROFILE will be replaced with the active profile name
-                    """
-                )
-                .foregroundStyle(.secondary)
-                .font(.callout)
-                .opacity(settings.showMenuBarTitle ? 1 : 0.5)
             }
 
             Section {
