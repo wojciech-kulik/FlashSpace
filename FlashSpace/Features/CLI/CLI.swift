@@ -13,8 +13,11 @@ enum CLI {
     static var homebrewSymlinkPath: String { "/opt/homebrew/bin/flashspace" }
 
     static var isInstalled: Bool {
-        FileManager.default.fileExists(atPath: symlinkPath) ||
-            FileManager.default.fileExists(atPath: homebrewSymlinkPath)
+        FileManager.default.fileExists(atPath: symlinkPath) || isInstalledViaHomebrew
+    }
+
+    static var isInstalledViaHomebrew: Bool {
+        FileManager.default.fileExists(atPath: homebrewSymlinkPath)
     }
 
     static func install() {

@@ -39,9 +39,14 @@ struct CLISettingsView: View {
                             .foregroundColor(.green)
                         Text("FlashSpace CLI Installation")
                         Spacer()
-                        Button("Uninstall FlashSpace CLI") {
-                            CLI.uninstall()
-                            isInstalled = CLI.isInstalled
+                        if CLI.isInstalledViaHomebrew {
+                            Text("Installed via Homebrew")
+                                .foregroundColor(.secondary)
+                        } else {
+                            Button("Uninstall FlashSpace CLI") {
+                                CLI.uninstall()
+                                isInstalled = CLI.isInstalled
+                            }
                         }
                     } else {
                         Image(systemName: "xmark.circle.fill")
@@ -56,9 +61,18 @@ struct CLISettingsView: View {
                 }
 
                 VStack(alignment: .leading) {
+                    let note =
+                        if CLI.isInstalledViaHomebrew {
+                            "Tool is installed via Homebrew at: \(CLI.homebrewSymlinkPath)"
+                        } else if CLI.isInstalled {
+                            "Tool is installed at: \(CLI.symlinkPath)"
+                        } else {
+                            "Tool will be installed at: \(CLI.symlinkPath)"
+                        }
+
                     Text(
                         """
-                        Tool will be installed in /usr/local/bin/flashspace.
+                        \(note)
 
                         You can also access it directly from the app bundle at:
                         """
