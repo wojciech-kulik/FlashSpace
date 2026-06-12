@@ -382,7 +382,8 @@ Big thanks to all the sponsors who support this project 🍻!
         <td><a href="https://github.com/konpa"><img src="https://avatars.githubusercontent.com/u/778731" width="40" height="40" alt="@konpa" title="konpa"></a></td>
         <td><a href="https://github.com/nbargnesi"><img src="https://avatars.githubusercontent.com/u/1265294" width="40" height="40" alt="@nbargnesi" title="nbargnesi"></a></td>
         <td><a href="https://github.com/bchopson"><img src="https://avatars.githubusercontent.com/u/14081421" width="40" height="40" alt="@bchopson" title="bchopson"></a></td>
-        <td><a href="https://github.com/NextMerge"><img src="https://avatars.githubusercontent.com/u/178944810" width="40" height="40" alt="@NextMerge" title="NextMerge"></a></td>
+        <td><a href="https://github.com/NextMerge"><img src="https://avatars.githubusercontent.com/u/178944810" width="40" height="40" alt="@NextMerge" title="NextMerge"></a></td>        
+        <td><a href="https://github.com/v1adko"><img src="https://avatars.githubusercontent.com/u/11582927" width="40" height="40" alt="@v1adko" title="v1adko"></a></td>
     </tr>
 </table>
 
