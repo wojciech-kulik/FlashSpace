@@ -8,34 +8,49 @@
 import Carbon
 
 enum KeyCodesMap {
-    private(set) static var toKeyCode = create()
-
-    static let toString = toKeyCode.reduce(into: [RawKeyCode: String]()) { result, pair in
-        result[pair.value] = pair.key
-
-        if pair.key == "+" {
-            result[pair.value] = "plus"
-        }
-
-        for (alias, keyCode) in getAliases() {
-            result[keyCode] = alias
-        }
-    }
+    private(set) static var toKeyCode = createToKeyCode()
+    private(set) static var toString = createToString()
 
     static subscript(key: String) -> RawKeyCode? { toKeyCode[key] }
 
     static func refresh() {
-        toKeyCode = create()
+        toKeyCode = createToKeyCode()
+        toString = createToString()
     }
 
-    private static func create() -> [String: RawKeyCode] {
+    private static func createToKeyCode() -> [String: RawKeyCode] {
+        var keyCodes = create(
+            for: TISCopyCurrentKeyboardInputSource().takeRetainedValue()
+        )
+        let fallbackKeyCodes = create(
+            for: TISCopyCurrentASCIICapableKeyboardLayoutInputSource().takeRetainedValue()
+        )
+
+        keyCodes.merge(fallbackKeyCodes) { current, _ in current }
+        return keyCodes
+    }
+
+    private static func createToString() -> [RawKeyCode: String] {
+        create(for: TISCopyCurrentASCIICapableKeyboardLayoutInputSource().takeRetainedValue())
+            .reduce(into: [RawKeyCode: String]()) { result, pair in
+                result[pair.value] = pair.key
+
+                if pair.key == "+" {
+                    result[pair.value] = "plus"
+                }
+
+                for (alias, keyCode) in getAliases() {
+                    result[keyCode] = alias
+                }
+            }
+    }
+
+    private static func create(for keyboard: TISInputSource) -> [String: RawKeyCode] {
         var stringToKeyCodes: [String: RawKeyCode] = [:]
-        var currentKeyboard = TISCopyCurrentKeyboardInputSource().takeRetainedValue()
-        var rawLayoutData = TISGetInputSourceProperty(currentKeyboard, kTISPropertyUnicodeKeyLayoutData)
-        if rawLayoutData == nil {
-            currentKeyboard = TISCopyCurrentASCIICapableKeyboardLayoutInputSource().takeUnretainedValue()
-            rawLayoutData = TISGetInputSourceProperty(currentKeyboard, kTISPropertyUnicodeKeyLayoutData)
-        }
+        guard let rawLayoutData = TISGetInputSourceProperty(
+            keyboard,
+            kTISPropertyUnicodeKeyLayoutData
+        ) else { return getAliases() }
 
         let layoutData = unsafeBitCast(rawLayoutData, to: CFData.self)
         let layout: UnsafePointer<UCKeyboardLayout> = unsafeBitCast(
