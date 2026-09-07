@@ -36,6 +36,7 @@ struct FlashSpaceMenuBar: Scene {
             Divider()
 
             Button("Open") {
+                DockIconManager.shared.showDockIcon()
                 openWindow(id: "main")
                 NSApp.activate(ignoringOtherApps: true)
             }
@@ -56,6 +57,7 @@ struct FlashSpaceMenuBar: Scene {
             Divider()
 
             Button("Settings") {
+                DockIconManager.shared.showDockIcon()
                 openWindow(id: "settings")
                 NSApp.activate(ignoringOtherApps: true)
             }.keyboardShortcut(",")
@@ -98,6 +100,7 @@ struct FlashSpaceMenuBar: Scene {
 
             Button("Donate") {
                 SettingsNavigationManager.shared.selectedTab = "Donate"
+                DockIconManager.shared.showDockIcon()
                 openWindow(id: "settings")
                 NSApp.activate(ignoringOtherApps: true)
             }
