@@ -26,23 +26,21 @@ enum KeyCodesMap {
             for: TISCopyCurrentASCIICapableKeyboardLayoutInputSource().takeRetainedValue()
         )
 
-        keyCodes.merge(fallbackKeyCodes) { current, _ in current }
+        keyCodes.merge(fallbackKeyCodes) { _, fallback in fallback }
         return keyCodes
     }
 
     private static func createToString() -> [RawKeyCode: String] {
-        create(for: TISCopyCurrentASCIICapableKeyboardLayoutInputSource().takeRetainedValue())
+        var keyStrings = create(for: TISCopyCurrentASCIICapableKeyboardLayoutInputSource().takeRetainedValue())
             .reduce(into: [RawKeyCode: String]()) { result, pair in
-                result[pair.value] = pair.key
-
-                if pair.key == "+" {
-                    result[pair.value] = "plus"
-                }
-
-                for (alias, keyCode) in getAliases() {
-                    result[keyCode] = alias
-                }
+                result[pair.value] = pair.key == "+" ? "plus" : pair.key
             }
+
+        for (alias, keyCode) in getAliases() {
+            keyStrings[keyCode] = alias
+        }
+
+        return keyStrings
     }
 
     private static func create(for keyboard: TISInputSource) -> [String: RawKeyCode] {
