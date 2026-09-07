@@ -21,6 +21,11 @@ struct ActiveWorkspace {
 
 // swiftlint:disable:next type_body_length
 final class WorkspaceManager: ObservableObject {
+    private struct HideAppsRequest {
+        let workspace: Workspace
+        let extraAppsToHide: [MacApp]
+    }
+
     @Published private(set) var activeWorkspaceDetails: ActiveWorkspace?
 
     private(set) var lastFocusedApp: [ProfileId: [WorkspaceID: MacApp]] = [:]
@@ -32,7 +37,7 @@ final class WorkspaceManager: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     private var observeFocusCancellable: AnyCancellable?
     private var appsHiddenManually: [WorkspaceID: [MacApp]] = [:]
-    private let hideAgainSubject = PassthroughSubject<Workspace, Never>()
+    private let hideAgainSubject = PassthroughSubject<HideAppsRequest, Never>()
 
     private lazy var focusedWindowTracker = AppDependencies.shared.focusedWindowTracker
 
@@ -67,7 +72,7 @@ final class WorkspaceManager: ObservableObject {
     private func observe() {
         hideAgainSubject
             .debounce(for: 0.2, scheduler: RunLoop.main)
-            .sink { [weak self] in self?.hideApps(in: $0) }
+            .sink { [weak self] in self?.hideApps(in: $0.workspace, alsoHide: $0.extraAppsToHide) }
             .store(in: &cancellables)
 
         NotificationCenter.default
@@ -190,7 +195,7 @@ final class WorkspaceManager: ObservableObject {
         }
     }
 
-    private func hideApps(in workspace: Workspace) {
+    private func hideApps(in workspace: Workspace, alsoHide appsToHide: [MacApp]) {
         let regularApps = NSWorkspace.shared.runningRegularApps
         let workspaceApps = workspace.apps + floatingAppsSettings.floatingApps
         let isAnyWorkspaceAppRunning = regularApps
@@ -207,7 +212,7 @@ final class WorkspaceManager: ObservableObject {
                     (!workspaceSettings.keepUnassignedAppsOnSwitch || allAssignedApps.contains($0.bundleIdentifier ?? ""))
             }
             .filter { isAnyWorkspaceAppRunning || $0.bundleURL?.fileName != "Finder" }
-            .filter { $0.isOnAnyDisplay(displays) }
+            .filter { $0.isOnAnyDisplay(displays) || appsToHide.containsApp($0) }
 
         for app in appsToHide {
             Logger.log("HIDE: \(app.localizedName ?? "")")
@@ -337,6 +342,31 @@ final class WorkspaceManager: ObservableObject {
         }
     }
 
+    /// In the dynamic mode a workspace is assigned to the displays where its apps are
+    /// currently located. The app doesn't track windows moved between displays, so the
+    /// displays must be resolved upon each activation. Otherwise, a workspace replaced
+    /// on one display could stay visible on another one.
+    private func findReplacedWorkspaces(
+        activating workspace: Workspace,
+        on displays: Set<DisplayName>
+    ) -> Set<Workspace> {
+        guard workspaceSettings.displayMode == .dynamic else { return [] }
+
+        return activeWorkspace.values.asSet
+            .filter { $0.id != workspace.id && !$0.displays.isDisjoint(with: displays) }
+    }
+
+    private func deactivateWorkspaces(_ workspaces: Set<Workspace>) {
+        let replacedIds = workspaces.map(\.id).asSet
+        let displaysToDeactivate = activeWorkspace.filter { replacedIds.contains($0.value.id) }
+
+        for (display, workspace) in displaysToDeactivate {
+            Logger.log("DEACTIVATE: \(workspace.name) on display: \(display)")
+            mostRecentWorkspace[display] = workspace
+            activeWorkspace.removeValue(forKey: display)
+        }
+    }
+
     private func deactivateActiveWorkspace(on display: DisplayName) {
         workspaceTransitionManager.showTransitionIfNeeded(for: nil, on: [display])
         rememberHiddenApps(workspaceToActivate: nil)
@@ -389,19 +419,23 @@ extension WorkspaceManager {
         focusedWindowTracker.stopTracking()
         defer { focusedWindowTracker.startTracking() }
 
+        let replacedWorkspaces = findReplacedWorkspaces(activating: workspace, on: displays)
+        let extraAppsToHide = replacedWorkspaces.flatMap(\.apps)
+
         workspaceTransitionManager.showTransitionIfNeeded(for: workspace, on: displays)
 
         rememberHiddenApps(workspaceToActivate: workspace.id)
         updateLastActivationTime(for: workspace)
         updateActiveWorkspace(workspace, on: displays)
+        deactivateWorkspaces(replacedWorkspaces)
         openAppsIfNeeded(in: workspace)
         showApps(in: workspace, setFocus: setFocus, on: displays)
-        hideApps(in: workspace)
+        hideApps(in: workspace, alsoHide: extraAppsToHide)
         runIntegrationAfterActivation(for: workspace)
 
         // Some apps may not hide properly,
         // so we hide apps in the workspace after a short delay
-        hideAgainSubject.send(workspace)
+        hideAgainSubject.send(.init(workspace: workspace, extraAppsToHide: extraAppsToHide))
     }
 
     private func runIntegrationAfterActivation(for workspace: Workspace) {
