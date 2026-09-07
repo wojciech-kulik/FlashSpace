@@ -18,10 +18,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         AppDependencies.shared.hotKeysManager.enableAll()
+        DockIconManager.shared.startObserving()
 
         NotificationCenter.default
             .publisher(for: .openMainWindow)
             .sink { [weak self] _ in
+                DockIconManager.shared.showDockIcon()
                 self?.openWindow(id: "main")
                 NSApp.activate(ignoringOtherApps: true)
             }
@@ -29,6 +31,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
         if firstLaunch {
             firstLaunch = false
+            DockIconManager.shared.showDockIcon()
         } else {
             dismissWindow(id: "main")
 
