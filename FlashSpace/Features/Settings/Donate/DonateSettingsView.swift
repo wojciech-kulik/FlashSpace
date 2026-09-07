@@ -11,9 +11,6 @@ struct DonateSettingsView: View {
     @State private var copiedBTC = false
     @State private var copiedETH = false
 
-    let btcAddress = "bc1qqs4ct2tje2xuu4e9y5tjkzardefckvw6rv4emh"
-    let ethAddress = "0x9Fb744Fdcf6Be6ADb70d4D841deeAD779Ab6e6e2"
-
     var body: some View {
         Form {
             Section("GitHub Sponsors") {
@@ -36,41 +33,13 @@ struct DonateSettingsView: View {
                 }
             }
 
-            Section("Bitcoin") {
-                VStack(alignment: .leading, spacing: 8) {
-                    HStack {
-                        Text("BTC Address")
-                            .font(.headline)
-                        Spacer()
-                        Button(copiedBTC ? "Copied!" : "Copy Address") {
-                            copyBTCAddress()
-                        }
-                        .disabled(copiedBTC)
+            Section("Buy Snippety") {
+                HStack {
+                    Text("Support by buying Snippety")
+                    Spacer()
+                    Button("Snippety.app") {
+                        openUrl("https://snippety.app")
                     }
-
-                    Text(btcAddress)
-                        .font(.system(.body, design: .monospaced))
-                        .textSelection(.enabled)
-                        .foregroundStyle(.secondary)
-                }
-            }
-
-            Section("Ethereum") {
-                VStack(alignment: .leading, spacing: 8) {
-                    HStack {
-                        Text("ETH Address")
-                            .font(.headline)
-                        Spacer()
-                        Button(copiedETH ? "Copied!" : "Copy Address") {
-                            copyETHAddress()
-                        }
-                        .disabled(copiedETH)
-                    }
-
-                    Text(ethAddress)
-                        .font(.system(.body, design: .monospaced))
-                        .textSelection(.enabled)
-                        .foregroundStyle(.secondary)
                 }
             }
         }
@@ -83,21 +52,5 @@ struct DonateSettingsView: View {
         if let url = URL(string: url) {
             NSWorkspace.shared.open(url)
         }
-    }
-
-    private func copyETHAddress() {
-        NSPasteboard.general.clearContents()
-        NSPasteboard.general.setString(ethAddress, forType: .string)
-
-        copiedETH = true
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { copiedETH = false }
-    }
-
-    private func copyBTCAddress() {
-        NSPasteboard.general.clearContents()
-        NSPasteboard.general.setString(btcAddress, forType: .string)
-
-        copiedBTC = true
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { copiedBTC = false }
     }
 }
