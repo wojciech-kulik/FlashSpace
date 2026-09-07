@@ -12,14 +12,13 @@ struct WhatsNewView: View {
     @Environment(\.dismissWindow) private var dismissWindow
 
     private let features: [String] = [
-        "Added a menu bar setting that allows using a script for title formatting.",
-        "Added '--active' flag to 'flashspace list-workspaces' command to show only active workspaces.",
-        "You can now use FlashSpace via the Raycast extension, thanks to Kerem Bozdas! 🎊"
+        "The Dock icon now appears when either the main window or the settings window is open."
     ]
 
     private let bugFixes: [String] = [
-        "Fixed Picture-in-Picture support for Chrome.",
-        "Fixed CLI detection when installed via Homebrew."
+        "Fixed hiding apps in dynamic mode when using multiple displays.",
+        "Fixed issues with non-ASCII shortcuts.",
+        "Fixed script integration issues."
     ]
 
     var body: some View {
