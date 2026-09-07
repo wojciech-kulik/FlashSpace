@@ -55,18 +55,18 @@ final class WorkspaceTransitionManager {
     private func hideTransition(for workspace: Workspace?) {
         guard !windows.isEmpty else { return }
 
-        NSAnimationContext.runAnimationGroup({ [weak self] context in
+        NSAnimationContext.runAnimationGroup { [weak self] context in
             context.duration = self?.settings.workspaceTransitionDuration ?? 0.3
             context.timingFunction = CAMediaTimingFunction(name: .easeIn)
             self?.windows.forEach { window in
                 window.animator().alphaValue = 0.0
             }
-        }, completionHandler: { [weak self] in
+        } completionHandler: { [weak self] in
             self?.windows.forEach { window in
                 window.orderOut(nil)
             }
             self?.windows.removeAll()
             NotificationCenter.default.post(name: .workspaceTransitionFinished, object: workspace)
-        })
+        }
     }
 }

@@ -16,9 +16,6 @@ final class UpdatesManager {
         set { updaterController.updater.automaticallyChecksForUpdates = newValue }
     }
 
-    private var lastCheckDate = Date.distantPast
-    private var detectedNewRelease = false
-
     private let updaterController = SPUStandardUpdaterController(
         startingUpdater: true,
         updaterDelegate: nil,

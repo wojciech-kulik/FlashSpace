@@ -51,12 +51,12 @@ enum Toast {
         window.orderFrontRegardless()
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-            NSAnimationContext.runAnimationGroup({ context in
+            NSAnimationContext.runAnimationGroup { context in
                 context.duration = 0.3
                 window.animator().alphaValue = 0.0
-            }, completionHandler: {
+            } completionHandler: {
                 window.orderOut(nil)
-            })
+            }
         }
     }
 }

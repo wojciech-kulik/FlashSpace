@@ -116,13 +116,13 @@ enum SpaceControl {
     private static func fadeInWindow() {
         transitionInProgress = true
 
-        NSAnimationContext.runAnimationGroup({ context in
+        NSAnimationContext.runAnimationGroup { context in
             context.duration = 0.16
             context.timingFunction = CAMediaTimingFunction(name: .easeIn)
             window?.animator().alphaValue = 1
-        }, completionHandler: {
+        } completionHandler: {
             transitionInProgress = false
-        })
+        }
     }
 
     private static func fadeOutWindow(completion: @escaping () -> ()) {
@@ -132,14 +132,14 @@ enum SpaceControl {
             viewModel?.isVisible = false
         }
 
-        NSAnimationContext.runAnimationGroup({ context in
+        NSAnimationContext.runAnimationGroup { context in
             context.duration = 0.16
             context.timingFunction = CAMediaTimingFunction(name: .easeIn)
             window?.animator().alphaValue = 0
-        }, completionHandler: {
+        } completionHandler: {
             completion()
             transitionInProgress = false
-        })
+        }
     }
 
     private static func validate() -> Bool {
