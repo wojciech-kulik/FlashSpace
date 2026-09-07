@@ -433,6 +433,11 @@ extension WorkspaceManager {
         hideApps(in: workspace, alsoHide: extraAppsToHide)
         runIntegrationAfterActivation(for: workspace)
 
+        // Showing and hiding apps, as well as integration scripts, may take a while.
+        // The system reports focus changes caused by these operations with a delay,
+        // so the activation time is refreshed to make sure they are ignored.
+        lastWorkspaceActivation = Date()
+
         // Some apps may not hide properly,
         // so we hide apps in the workspace after a short delay
         hideAgainSubject.send(.init(workspace: workspace, extraAppsToHide: extraAppsToHide))
