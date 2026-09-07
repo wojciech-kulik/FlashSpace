@@ -6,7 +6,7 @@
             <title>#version#</title>
             <pubDate>#date#</pubDate>
             <link>https://github.com/wojciech-kulik/FlashSpace/releases/tag/v#version#</link>
-            <sparkle:releaseNotesLink>https://wojciechkulik.pl/FlashSpace/release-notes.html</sparkle:releaseNotesLink>
+            <sparkle:releaseNotesLink>https://wojciechkulik.pl/FlashSpace/release-notes.md</sparkle:releaseNotesLink>
             <sparkle:fullReleaseNotesLink>https://github.com/wojciech-kulik/FlashSpace/releases</sparkle:fullReleaseNotesLink>
             <sparkle:version>#build#</sparkle:version>
             <sparkle:shortVersionString>#version#</sparkle:shortVersionString>
