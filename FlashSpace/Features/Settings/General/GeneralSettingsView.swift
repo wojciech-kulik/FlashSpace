@@ -17,7 +17,20 @@ struct GeneralSettingsView: View {
         Form {
             Section {
                 Toggle("Launch at startup", isOn: $isAutostartEnabled)
-                Toggle("Check for updates automatically", isOn: $settings.checkForUpdatesAutomatically)
+                Toggle("Automatically check for updates", isOn: $settings.checkForUpdatesAutomatically)
+                Button {
+                    UpdatesManager.shared.checkForUpdates()
+                } label: {
+                    HStack {
+                        Text("Check for updates")
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .font(.footnote.weight(.semibold))
+                            .foregroundStyle(.secondary)
+                    }
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
             }
 
             Section("Permissions") {
