@@ -157,6 +157,7 @@ struct WorkspaceConfigurationView: View {
             }
 
             Button(action: {
+                DockIconManager.shared.showDockIcon()
                 openWindow(id: "settings")
             }, label: {
                 Image(systemName: "gearshape")
