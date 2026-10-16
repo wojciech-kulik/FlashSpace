@@ -37,21 +37,21 @@ extension NSRunningApplication {
         // A workaround is to simply skip this app.
         guard !isPython else { return nil }
 
-        let appElement = AXUIElementCreateApplication(processIdentifier)
+        let appElement = AXUIElementCreateApplication(safeProcessIdentifier)
         return appElement.getAttribute(.mainWindow)
     }
 
     var focusedWindow: AXUIElement? {
         guard !isPython else { return nil }
 
-        let appElement = AXUIElementCreateApplication(processIdentifier)
+        let appElement = AXUIElementCreateApplication(safeProcessIdentifier)
         return appElement.getAttribute(.focusedWindow)
     }
 
     var allWindows: [(window: AXUIElement, frame: CGRect)] {
         guard !isPython else { return [] }
 
-        let appElement = AXUIElementCreateApplication(processIdentifier)
+        let appElement = AXUIElementCreateApplication(safeProcessIdentifier)
         let windows: [AXUIElement]? = appElement.getAttribute(.windows)
 
         return windows?

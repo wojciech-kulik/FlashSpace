@@ -24,6 +24,24 @@ enum Terminal {
         }
     }
 
+    static func getProcessIdentifier(name: String) -> String? {
+        let task = Process()
+        task.launchPath = "/usr/bin/pgrep"
+        task.arguments = ["-n", name]
+
+        let pipe = Pipe()
+        task.standardOutput = pipe
+
+        do {
+            try task.run()
+            let data = pipe.fileHandleForReading.readDataToEndOfFile()
+            return String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines)
+        } catch {
+            Logger.log("❌ Error running script: \(error)")
+            return nil
+        }
+    }
+
     static func runScriptWithOutput(_ script: String) async -> String? {
         guard !script.isEmpty else { return nil }
 
