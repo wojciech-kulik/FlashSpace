@@ -204,11 +204,11 @@ final class PictureInPictureManager {
             NotificationCenter.default.post(name: .pipFocusChanged, object: nil)
         }
 
-        let result = AXObserverCreate(app.processIdentifier, callback, &windowFocusObserver)
+        let result = AXObserverCreate(app.safeProcessIdentifier, callback, &windowFocusObserver)
 
         guard result == .success, let observer = windowFocusObserver else { return }
 
-        let appRef = AXUIElementCreateApplication(app.processIdentifier)
+        let appRef = AXUIElementCreateApplication(app.safeProcessIdentifier)
         AXObserverAddNotification(observer, appRef, kAXFocusedWindowChangedNotification as CFString, nil)
         CFRunLoopAddSource(CFRunLoopGetCurrent(), AXObserverGetRunLoopSource(observer), .defaultMode)
     }

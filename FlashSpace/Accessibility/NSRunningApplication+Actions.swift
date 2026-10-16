@@ -42,7 +42,7 @@ extension NSRunningApplication {
     }
 
     func runWithoutAnimations(action: () -> ()) {
-        let appElement = AXUIElementCreateApplication(processIdentifier)
+        let appElement = AXUIElementCreateApplication(safeProcessIdentifier)
         let wasEnabled = appElement.enhancedUserInterface
 
         if wasEnabled { appElement.setAttribute(.enchancedUserInterface, value: false) }
