@@ -72,7 +72,7 @@ final class FocusedWindowTracker {
         let shouldActivate = workspaceSettings.activeWorkspaceOnFocusChange &&
             (!workspaceSettings.autoAssignAppsToWorkspaces || !workspaceSettings.autoAssignAlreadyAssignedApps)
 
-        guard force || shouldActivate else { return }
+        guard force || shouldActivate, !app.isDesktop else { return }
 
         let activeWorkspaces = workspaceManager.activeWorkspace.values
 
