@@ -13,6 +13,9 @@ jobs:
       - name: Install Dependencies
         run: brew bundle
 
+      - name: Upgrade SwiftFormat
+        run: brew update && brew upgrade swiftformat
+
       - name: Run SwiftLint
         uses: cirruslabs/swiftlint-action@v1
         with:
