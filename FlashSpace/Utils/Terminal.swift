@@ -8,19 +8,44 @@
 import Foundation
 
 enum Terminal {
-    static func runScript(_ script: String, synchronous: Bool = false) {
+    /// Runs `script` in the user's shell.
+    /// - synchronous: blocks the caller until the script exits or `timeout` elapses.
+    ///   Uses a semaphore, so the run loop is NOT pumped (no re-entrant notifications).
+    /// - timeout: max seconds to wait when synchronous. On expiry the process gets
+    ///   SIGTERM, then SIGKILL after `killGrace` seconds.
+    static func runScript(
+        _ script: String,
+        synchronous: Bool = false,
+        timeout: TimeInterval = 2,
+        killGrace: TimeInterval = 1
+    ) {
         guard !script.isEmpty else { return }
 
         let shell = getDefaultShell() ?? "/bin/sh"
         let task = Process()
-        task.launchPath = shell
+        task.executableURL = URL(fileURLWithPath: shell)
         task.arguments = ["-c", script]
         setEnvironment(for: task)
 
-        task.launch()
+        let finished = DispatchSemaphore(value: 0)
+        task.terminationHandler = { _ in finished.signal() }
 
-        if synchronous {
-            task.waitUntilExit()
+        do {
+            try task.run()
+        } catch {
+            Logger.log("Failed to run script: \(error)")
+            return
+        }
+
+        guard synchronous else { return }
+
+        if finished.wait(timeout: .now() + timeout) == .timedOut {
+            Logger.log("Script timed out after \(timeout)s, terminating: \(script)")
+            task.terminate()
+
+            if finished.wait(timeout: .now() + killGrace) == .timedOut {
+                kill(task.processIdentifier, SIGKILL) // still alive, force kill
+            }
         }
     }
 
