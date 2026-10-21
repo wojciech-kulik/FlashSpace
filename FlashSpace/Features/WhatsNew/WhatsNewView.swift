@@ -15,7 +15,7 @@ struct WhatsNewView: View {
     ]
 
     private let bugFixes: [String] = [
-        "Fixed hiding DeviceHub application."
+        "Fixed the undesired activation of a workspace with Finder after clicking on Desktop."
     ]
 
     var body: some View {
