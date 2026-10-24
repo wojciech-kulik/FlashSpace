@@ -35,26 +35,17 @@ final class HotKeysManager {
         self.profilesRepository = profilesRepository
 
         observe()
-
-        KeyboardShortcuts.onPausedKeyDown = { [weak self] shortcut in
-            guard let self else { return }
-
-            if let conflict = allHotKeys.first(where: { $0.hotKey.toShortcut() == shortcut })?.scope {
-                Alert.showOkAlert(
-                    title: "Conflict",
-                    message: "This shortcut is already assigned within the \(conflict) scope."
-                )
-            }
-        }
     }
 
     func refresh() {
-        disableAll()
-        enableAll()
+        Task { @MainActor in
+            disableAll()
+            enableAll()
+        }
     }
 
     // swiftlint:disable:next function_body_length cyclomatic_complexity
-    func enableAll() {
+    @MainActor func enableAll() {
         KeyboardShortcuts.removeAllHandlers()
         allHotKeys.removeAll()
 
@@ -159,6 +150,7 @@ final class HotKeysManager {
         }
     }
 
+    @MainActor
     func disableAll() {
         KeyboardShortcuts.removeAllHandlers()
     }

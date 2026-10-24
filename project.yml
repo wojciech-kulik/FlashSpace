@@ -14,16 +14,16 @@ options:
 packages:
   SymbolPicker:
     github: xnth97/SymbolPicker
-    from: 1.6.0
+    from: 1.6.2
   TOMLKit:
     github: LebJe/TOMLKit
     from: 0.6.0
   Yams:
     github: jpsim/Yams
-    from: 5.2.0
+    from: 6.2.2
   Sparkle:
     github: sparkle-project/Sparkle
-    from: 2.7.0
+    from: 2.10.0
   KeyboardShortcuts:
     github: wojciech-kulik/KeyboardShortcuts
     branch: main

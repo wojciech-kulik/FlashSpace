@@ -83,7 +83,7 @@ struct WorkspaceConfigurationView: View {
     private func activeShortcuts(for selectedWorkspaceId: WorkspaceID) -> some View {
         HStack {
             VStack(alignment: .leading) {
-                Text("Activate Workspace:")
+                Text("Activate:")
                 HotKeyControl(
                     name: .activateWorkspace(selectedWorkspaceId),
                     shortcut: $viewModel.workspaceShortcut
@@ -103,7 +103,7 @@ struct WorkspaceConfigurationView: View {
     private var inactiveShortcut: some View {
         HStack {
             VStack(alignment: .leading) {
-                Text("Activate Workspace:")
+                Text("Activate:")
                 HotKeyControl(name: .inactiveShortcut, shortcut: .constant(nil))
                     .disabled(true)
             }

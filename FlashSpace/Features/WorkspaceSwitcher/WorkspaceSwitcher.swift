@@ -250,7 +250,7 @@ enum WorkspaceSwitcher {
 
     private static func startEventMonitoring() {
         stopEventMonitoring()
-        hotKeysManager.disableAll()
+        Task { await hotKeysManager.disableAll() }
 
         let localKeyUpMonitor = createLocalKeyUpMonitor()
         let localKeyDownMonitor = createLocalKeyDownMonitor()
@@ -265,7 +265,7 @@ enum WorkspaceSwitcher {
     private static func stopEventMonitoring() {
         eventMonitors.forEach { NSEvent.removeMonitor($0) }
         eventMonitors.removeAll()
-        hotKeysManager.enableAll()
+        Task { await hotKeysManager.enableAll() }
     }
 
     private static func createGlobalKeyUpMonitor() -> Any? {
