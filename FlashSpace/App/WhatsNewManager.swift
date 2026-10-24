@@ -10,6 +10,7 @@ import Foundation
 final class WhatsNewManager {
     static let shared = WhatsNewManager()
 
+    private let importantChanges = false
     private let lastShownVersionKey = "lastShownWhatsNewVersion"
 
     private init() {}
@@ -17,7 +18,7 @@ final class WhatsNewManager {
     var shouldShowWhatsNew: Bool {
         let currentVersion = AppConstants.version
         let lastShownVersion = UserDefaults.standard.string(forKey: lastShownVersionKey)
-        return lastShownVersion != currentVersion
+        return lastShownVersion != currentVersion && importantChanges
     }
 
     func markWhatsNewAsShown() {

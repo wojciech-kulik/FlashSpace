@@ -9,6 +9,11 @@ import Combine
 import Foundation
 
 final class MenuBarSettings: ObservableObject {
+    enum Constants {
+        static let maxMinWidth = 300
+        static let maxIconSpacing = 40
+    }
+
     static let defaultMenuBarTitleTemplate = "$WORKSPACE"
 
     @Published var showMenuBar = true
@@ -18,6 +23,11 @@ final class MenuBarSettings: ObservableObject {
     @Published var menuBarTitleScriptPath = ""
     @Published var menuBarTitleTemplate = MenuBarSettings.defaultMenuBarTitleTemplate
     @Published var menuBarDisplayAliases = ""
+    @Published var menuBarUseMonospaceFont = false
+    @Published var menuBarMinWidth = 20
+    @Published var menuBarIconSpacing = 4
+    @Published var menuBarBoldTitle = false
+    @Published var menuBarBoldIcon = false
 
     private var observer: AnyCancellable?
     private let updateSubject = PassthroughSubject<(), Never>()
@@ -32,10 +42,23 @@ final class MenuBarSettings: ObservableObject {
             $menuBarTitleUseScript.settingsPublisher(),
             $menuBarTitleScriptPath.settingsPublisher(debounce: true),
             $menuBarTitleTemplate.settingsPublisher(debounce: true),
-            $menuBarDisplayAliases.settingsPublisher(debounce: true)
+            $menuBarDisplayAliases.settingsPublisher(debounce: true),
+            $menuBarUseMonospaceFont.settingsPublisher(),
+            $menuBarMinWidth.settingsPublisher(debounce: true),
+            $menuBarIconSpacing.settingsPublisher(debounce: true),
+            $menuBarBoldTitle.settingsPublisher(),
+            $menuBarBoldIcon.settingsPublisher()
         )
         .receive(on: DispatchQueue.main)
-        .sink { [weak self] in self?.updateSubject.send() }
+        .sink { [weak self] in
+            self?.validate()
+            self?.updateSubject.send()
+        }
+    }
+
+    private func validate() {
+        menuBarMinWidth = max(0, min(Constants.maxMinWidth, menuBarMinWidth))
+        menuBarIconSpacing = max(0, min(Constants.maxIconSpacing, menuBarIconSpacing))
     }
 }
 
@@ -53,6 +76,11 @@ extension MenuBarSettings: SettingsProtocol {
         menuBarTitleUseScript = appSettings.menuBarTitleUseScript ?? false
         menuBarTitleTemplate = appSettings.menuBarTitleTemplate ?? Self.defaultMenuBarTitleTemplate
         menuBarDisplayAliases = appSettings.menuBarDisplayAliases ?? ""
+        menuBarUseMonospaceFont = appSettings.menuBarUseMonospaceFont ?? false
+        menuBarMinWidth = appSettings.menuBarMinWidth ?? 20
+        menuBarIconSpacing = appSettings.menuBarIconSpacing ?? 4
+        menuBarBoldTitle = appSettings.menuBarBoldTitle ?? false
+        menuBarBoldIcon = appSettings.menuBarBoldIcon ?? false
         observe()
     }
 
@@ -64,5 +92,10 @@ extension MenuBarSettings: SettingsProtocol {
         appSettings.menuBarTitleUseScript = menuBarTitleUseScript
         appSettings.menuBarTitleTemplate = menuBarTitleTemplate
         appSettings.menuBarDisplayAliases = menuBarDisplayAliases
+        appSettings.menuBarUseMonospaceFont = menuBarUseMonospaceFont
+        appSettings.menuBarMinWidth = menuBarMinWidth
+        appSettings.menuBarIconSpacing = menuBarIconSpacing
+        appSettings.menuBarBoldTitle = menuBarBoldTitle
+        appSettings.menuBarBoldIcon = menuBarBoldIcon
     }
 }
