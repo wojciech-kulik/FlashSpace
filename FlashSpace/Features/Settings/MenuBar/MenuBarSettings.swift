@@ -11,6 +11,7 @@ import Foundation
 final class MenuBarSettings: ObservableObject {
     static let defaultMenuBarTitleTemplate = "$WORKSPACE"
 
+    @Published var showMenuBar = true
     @Published var showMenuBarTitle = true
     @Published var showMenuBarIcon = true
     @Published var menuBarTitleUseScript = false
@@ -25,6 +26,7 @@ final class MenuBarSettings: ObservableObject {
 
     private func observe() {
         observer = Publishers.MergeMany(
+            $showMenuBar.settingsPublisher(),
             $showMenuBarTitle.settingsPublisher(),
             $showMenuBarIcon.settingsPublisher(),
             $menuBarTitleUseScript.settingsPublisher(),
@@ -44,6 +46,7 @@ extension MenuBarSettings: SettingsProtocol {
 
     func load(from appSettings: AppSettings) {
         observer = nil
+        showMenuBar = appSettings.showMenuBar ?? true
         showMenuBarTitle = appSettings.showMenuBarTitle ?? true
         showMenuBarIcon = appSettings.showMenuBarIcon ?? true
         menuBarTitleScriptPath = appSettings.menuBarTitleScriptPath ?? ""
@@ -54,6 +57,7 @@ extension MenuBarSettings: SettingsProtocol {
     }
 
     func update(_ appSettings: inout AppSettings) {
+        appSettings.showMenuBar = showMenuBar
         appSettings.showMenuBarTitle = showMenuBarTitle
         appSettings.showMenuBarIcon = showMenuBarIcon
         appSettings.menuBarTitleScriptPath = menuBarTitleScriptPath

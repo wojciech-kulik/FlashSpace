@@ -14,13 +14,14 @@ struct FlashSpaceMenuBar: Scene {
     @StateObject private var settingsRepository = AppDependencies.shared.settingsRepository
     @StateObject private var profilesRepository = AppDependencies.shared.profilesRepository
     @StateObject private var workspaceRepository = AppDependencies.shared.workspaceRepository
+    @StateObject private var settings = AppDependencies.shared.menuBarSettings
 
     @State var menuBarId = UUID()
     @State var title: String?
     @State var image: Image?
 
     var body: some Scene {
-        MenuBarExtra(isInserted: .constant(true)) {
+        MenuBarExtra(isInserted: .constant(settings.showMenuBar)) {
             Text("FlashSpace v\(AppConstants.version)")
 
             Button(settingsRepository.workspaceSettings.isPaused ? "Resume" : "Pause") {
