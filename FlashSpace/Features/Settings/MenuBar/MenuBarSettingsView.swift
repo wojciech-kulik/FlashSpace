@@ -107,6 +107,8 @@ struct MenuBarSettingsView: View {
                         guard oldValue != newValue else { return }
                         settings.menuBarMinWidth = min(MenuBarSettings.Constants.maxMinWidth, newValue)
                     }
+                    .multilineTextAlignment(.trailing)
+                    .frame(width: 40, alignment: .trailing)
                     .fixedSize()
                     .labelsHidden()
                 Stepper(
@@ -126,6 +128,8 @@ struct MenuBarSettingsView: View {
                         guard oldValue != newValue else { return }
                         settings.menuBarIconSpacing = min(MenuBarSettings.Constants.maxIconSpacing, newValue)
                     }
+                    .multilineTextAlignment(.trailing)
+                    .frame(width: 40, alignment: .trailing)
                     .fixedSize()
                     .labelsHidden()
                 Stepper(
