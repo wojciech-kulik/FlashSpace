@@ -11,7 +11,7 @@ extension NSRunningApplication {
     func raise() {
         guard let mainWindow else {
             unhide()
-            if let bundleURL {
+            if let bundleURL, hasVisibleWindow() {
                 NSWorkspace.shared.openApplication(at: bundleURL, configuration: .init())
             }
             return
@@ -53,5 +53,18 @@ extension NSRunningApplication {
         action()
 
         if wasEnabled { appElement.setAttribute(.enchancedUserInterface, value: true) }
+    }
+
+    private func hasVisibleWindow() -> Bool {
+        let windows = CGWindowListCopyWindowInfo(
+            [.optionOnScreenOnly, .excludeDesktopElements],
+            kCGNullWindowID
+        ) as? [[String: Any]]
+
+        guard let windows else { return false }
+
+        return windows.contains {
+            ($0[kCGWindowOwnerPID as String] as? pid_t) == processIdentifier
+        }
     }
 }
