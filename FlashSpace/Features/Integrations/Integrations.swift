@@ -59,7 +59,7 @@ enum Integrations {
         guard settings.enableIntegrations, !script.isEmpty else { return }
 
         if waitForCompletion {
-            workspaceScriptsQueue.sync { Terminal.runScript(script, synchronous: true) }
+            Terminal.runScript(script, synchronous: true)
         } else {
             workspaceScriptsQueue.async { Terminal.runScript(script, synchronous: true) }
         }
