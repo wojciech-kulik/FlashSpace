@@ -23,6 +23,16 @@ struct HotKeyControl: NSViewRepresentable {
 
     func updateNSView(_ nsView: KeyboardShortcuts.RecorderCocoa, context: Context) {
         nsView.shortcutName = name
+        nsView.bezelStyle = .squareBezel
+        nsView.validateShortcut = { shortcut in
+            let allHotKeys = AppDependencies.shared.hotKeysManager.allHotKeys
+
+            if let conflict = allHotKeys.first(where: { $0.hotKey.toShortcut() == shortcut })?.scope {
+                return .disallow(reason: "This shortcut is already assigned within the \(conflict) scope.")
+            }
+
+            return .allow
+        }
         context.coordinator.parent = self
         context.coordinator.observe()
     }
@@ -48,22 +58,25 @@ struct HotKeyControl: NSViewRepresentable {
             NotificationCenter.default
                 .publisher(for: .shortcutByNameDidChange)
                 .filter { _ in HotKeyControl.isListeningForChanges }
-                .receive(on: DispatchQueue.main)
                 .sink { [weak self] notification in
-                    guard let self,
-                          let name = notification.userInfo?["name"] as? KeyboardShortcuts.Name,
-                          name == self.parent.name else { return }
-
-                    if let shortcut = KeyboardShortcuts.getShortcut(for: name), let key = shortcut.key {
-                        self.parent.shortcut = .init(
-                            keyCode: UInt16(key.rawValue),
-                            modifiers: shortcut.modifiers.rawValue
-                        )
-                    } else {
-                        self.parent.shortcut = nil
-                    }
+                    Task { await self?.handleNotification(notification) }
                 }
                 .store(in: &cancellables)
+        }
+
+        @MainActor
+        private func handleNotification(_ notification: Notification) {
+            guard let name = notification.userInfo?["name"] as? KeyboardShortcuts.Name,
+                  name == parent.name else { return }
+
+            if let shortcut = KeyboardShortcuts.getShortcut(for: name), let key = shortcut.key {
+                parent.shortcut = .init(
+                    keyCode: UInt16(key.rawValue),
+                    modifiers: shortcut.modifiers.rawValue
+                )
+            } else {
+                parent.shortcut = nil
+            }
         }
     }
 }
