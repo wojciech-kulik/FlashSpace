@@ -11,6 +11,9 @@ extension NSRunningApplication {
     func raise() {
         guard let mainWindow else {
             unhide()
+            if let bundleURL {
+                NSWorkspace.shared.openApplication(at: bundleURL, configuration: .init())
+            }
             return
         }
 
