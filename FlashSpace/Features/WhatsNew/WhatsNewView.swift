@@ -12,10 +12,14 @@ struct WhatsNewView: View {
     @Environment(\.dismissWindow) private var dismissWindow
 
     private let features: [String] = [
+        "Added menu bar appearance settings.",
+        "Added option to remove the app from menu bar."
     ]
 
     private let bugFixes: [String] = [
-        "Fixed the undesired activation of a workspace with Finder after clicking on Desktop."
+        "Fixed resizing issues with the menu bar icon.",
+        "Fixed crash when quickly switching between workspaces with Integrations enabled.",
+        "Fixed showing electron apps."
     ]
 
     var body: some View {
