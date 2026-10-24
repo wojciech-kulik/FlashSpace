@@ -14,6 +14,7 @@ struct AppSettings: Codable {
     var pauseResumeFlashSpace: AppHotKey?
 
     // Menu Bar
+    var showMenuBar: Bool?
     var showMenuBarTitle: Bool?
     var showMenuBarIcon: Bool?
     var menuBarTitleScriptPath: String?
