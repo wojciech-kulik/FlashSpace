@@ -19,6 +19,7 @@ struct FlashSpaceMenuBar: Scene {
     @State var menuBarId = UUID()
     @State var title: String?
     @State var image: Image?
+    @State var workspaceImage: Image?
 
     var body: some Scene {
         MenuBarExtra(isInserted: .constant(settings.showMenuBar)) {
@@ -128,32 +129,63 @@ struct FlashSpaceMenuBar: Scene {
                 NSApp.terminate(nil)
             }.keyboardShortcut("q")
         } label: {
-            HStack {
-                if let image { image }
-                if let title { Text(title) }
-            }
-            .onChange(of: [
-                workspaceManager.activeWorkspace.values.map(\.id.uuidString).joined(separator: ","),
-                (workspaceManager.activeWorkspaceDetails?.id).flatMap(\.uuidString) ?? "",
-                String(settingsRepository.menuBarSettings.showMenuBarTitle),
-                String(settingsRepository.menuBarSettings.showMenuBarIcon),
-                String(settingsRepository.menuBarSettings.menuBarTitleUseScript),
-                settingsRepository.menuBarSettings.menuBarTitleTemplate,
-                settingsRepository.menuBarSettings.menuBarTitleScriptPath,
-                settingsRepository.menuBarSettings.menuBarDisplayAliases
-
-            ]) { _, _ in updateMenuBar() }
-            .onAppear { updateMenuBar() }
+            image
+                .onChange(of: [
+                    workspaceManager.activeWorkspace.values.map(\.id.uuidString).joined(separator: ","),
+                    (workspaceManager.activeWorkspaceDetails?.id).flatMap(\.uuidString) ?? "",
+                    String(settings.showMenuBarTitle),
+                    String(settings.showMenuBarIcon),
+                    String(settings.menuBarTitleUseScript),
+                    settings.menuBarTitleTemplate,
+                    settings.menuBarTitleScriptPath,
+                    settings.menuBarDisplayAliases,
+                    String(settings.menuBarUseMonospaceFont),
+                    String(Int(settings.menuBarMinWidth)),
+                    String(Int(settings.menuBarIconSpacing)),
+                    String(settings.menuBarBoldIcon),
+                    String(settings.menuBarBoldTitle)
+                ]) { _, _ in updateMenuBar() }
+                .onAppear { updateMenuBar() }
         }
+    }
+
+    private var menuBar: some View {
+        HStack(spacing: CGFloat(settings.menuBarIconSpacing)) {
+            if let workspaceImage {
+                workspaceImage
+                    .fontWeight(settings.menuBarBoldIcon ? .bold : nil)
+            }
+            if let title {
+                Text(title)
+                    .fontDesign(settings.menuBarUseMonospaceFont ? .monospaced : nil)
+                    .fontWeight(settings.menuBarBoldTitle ? .bold : nil)
+            }
+        }
+        .frame(minWidth: CGFloat(settings.menuBarMinWidth))
+        .foregroundStyle(.black)
+        .environment(\.colorScheme, .light)
     }
 
     private func updateMenuBar() {
         Task { @MainActor in
             title = await MenuBarTitle.get()
-            if title == nil || settingsRepository.menuBarSettings.showMenuBarIcon {
-                image = Image(systemName: workspaceManager.activeWorkspaceDetails?.symbolIconName ?? .defaultIconSymbol)
+
+            if title == nil || settings.showMenuBarIcon {
+                workspaceImage = Image(
+                    systemName: workspaceManager.activeWorkspaceDetails?
+                        .symbolIconName ?? .defaultIconSymbol
+                )
             } else {
-                image = nil
+                workspaceImage = nil
+            }
+
+            let renderer = ImageRenderer(content: menuBar)
+            renderer.scale = NSScreen.main?.backingScaleFactor ?? 2
+            renderer.isOpaque = false
+
+            if let nsImage = renderer.nsImage {
+                nsImage.isTemplate = true
+                image = Image(nsImage: nsImage)
             }
         }
     }

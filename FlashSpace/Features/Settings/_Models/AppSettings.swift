@@ -5,6 +5,8 @@
 //  Copyright © 2025 Wojciech Kulik. All rights reserved.
 //
 
+import Foundation
+
 struct AppSettings: Codable {
     // General
     var checkForUpdatesAutomatically: Bool?
@@ -21,6 +23,11 @@ struct AppSettings: Codable {
     var menuBarTitleUseScript: Bool?
     var menuBarTitleTemplate: String?
     var menuBarDisplayAliases: String?
+    var menuBarUseMonospaceFont: Bool?
+    var menuBarMinWidth: Int?
+    var menuBarIconSpacing: Int?
+    var menuBarBoldTitle: Bool?
+    var menuBarBoldIcon: Bool?
 
     // Focus Manager
     var enableFocusManagement: Bool?
