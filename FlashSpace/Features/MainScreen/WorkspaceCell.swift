@@ -34,6 +34,7 @@ struct WorkspaceCell: View {
                 )
             Spacer()
         }
+        .frame(minHeight: 22)
         .contentShape(Rectangle())
         .dropDestination(for: MacAppWithWorkspace.self) { apps, _ in
             guard let sourceWorkspaceId = apps.first?.workspaceId else { return false }

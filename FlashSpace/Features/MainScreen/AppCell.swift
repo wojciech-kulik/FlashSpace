@@ -32,6 +32,7 @@ struct AppCell: View {
                 ))
             }
         }
+        .frame(minHeight: 22)
         .draggable(MacAppWithWorkspace(app: app, workspaceId: workspaceId))
     }
 }
