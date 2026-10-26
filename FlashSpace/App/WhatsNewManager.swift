@@ -10,7 +10,7 @@ import Foundation
 final class WhatsNewManager {
     static let shared = WhatsNewManager()
 
-    private let importantChanges = true
+    private let importantChanges = false
     private let lastShownVersionKey = "lastShownWhatsNewVersion"
 
     private init() {}

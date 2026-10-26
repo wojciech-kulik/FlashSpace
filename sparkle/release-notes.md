@@ -1,3 +1,8 @@
+🪲 Fixed unintended restoration of minimized apps.
+🪲 Fixed issue with rendering emoji in the menu bar icon.
+
+## Previous Version
+
 ### Features
 
 🎨 Added menu bar appearance settings.
