@@ -149,44 +149,25 @@ struct FlashSpaceMenuBar: Scene {
         }
     }
 
-    private var menuBar: some View {
-        HStack(spacing: CGFloat(settings.menuBarIconSpacing)) {
-            if let workspaceImage {
-                workspaceImage
-                    .fontWeight(settings.menuBarBoldIcon ? .bold : nil)
-            }
-            if let title {
-                Text(title)
-                    .fontDesign(settings.menuBarUseMonospaceFont ? .monospaced : nil)
-                    .fontWeight(settings.menuBarBoldTitle ? .bold : nil)
-            }
-        }
-        .frame(minWidth: CGFloat(settings.menuBarMinWidth))
-        .foregroundStyle(.black)
-        .environment(\.colorScheme, .light)
-    }
-
     private func updateMenuBar() {
         Task { @MainActor in
             title = await MenuBarTitle.get()
 
-            if title == nil || settings.showMenuBarIcon {
-                workspaceImage = Image(
-                    systemName: workspaceManager.activeWorkspaceDetails?
-                        .symbolIconName ?? .defaultIconSymbol
-                )
-            } else {
-                workspaceImage = nil
-            }
+            let showIcon = title == nil || settings.showMenuBarIcon
+            let symbolName = showIcon
+                ? (workspaceManager.activeWorkspaceDetails?.symbolIconName ?? .defaultIconSymbol)
+                : nil
 
-            let renderer = ImageRenderer(content: menuBar)
-            renderer.scale = NSScreen.main?.backingScaleFactor ?? 2
-            renderer.isOpaque = false
-
-            if let nsImage = renderer.nsImage {
-                nsImage.isTemplate = true
-                image = Image(nsImage: nsImage)
-            }
+            let nsImage = MenuBarImageFactory.make(
+                symbolName: symbolName,
+                title: title,
+                bold: settings.menuBarBoldTitle,
+                boldIcon: settings.menuBarBoldIcon,
+                monospaced: settings.menuBarUseMonospaceFont,
+                spacing: CGFloat(settings.menuBarIconSpacing),
+                minWidth: CGFloat(settings.menuBarMinWidth)
+            )
+            image = Image(nsImage: nsImage)
         }
     }
 }
