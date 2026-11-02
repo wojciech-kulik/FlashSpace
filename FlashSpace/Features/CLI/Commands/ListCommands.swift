@@ -59,7 +59,7 @@ final class ListCommands: CommandExecutor {
                 return CommandResponse(success: false, error: "Workspace not found")
             }
 
-            let runningApps = NSWorkspace.shared.runningApplications.map(\.bundleIdentifier).asSet
+            let runningApps = NSWorkspace.shared.runningApplications.map(\.workspaceBundleIdentifier).asSet
 
             let result = workspace.apps
                 .filter { !onlyRunning || runningApps.contains($0.bundleIdentifier) }

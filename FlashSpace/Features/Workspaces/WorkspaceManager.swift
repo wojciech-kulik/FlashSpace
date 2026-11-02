@@ -209,7 +209,7 @@ final class WorkspaceManager: ObservableObject {
         let appsToHide = regularApps
             .filter {
                 !$0.isHidden && !workspaceApps.containsApp($0) &&
-                    (!workspaceSettings.keepUnassignedAppsOnSwitch || allAssignedApps.contains($0.bundleIdentifier ?? ""))
+                    (!workspaceSettings.keepUnassignedAppsOnSwitch || allAssignedApps.contains($0.workspaceBundleIdentifier ?? ""))
             }
             .filter { isAnyWorkspaceAppRunning || $0.bundleURL?.fileName != "Finder" }
             .filter { $0.isOnAnyDisplay(displays) || appsToHide.containsApp($0) }
@@ -293,7 +293,7 @@ final class WorkspaceManager: ObservableObject {
         guard workspace.openAppsOnActivation == true else { return }
 
         let runningBundleIds = NSWorkspace.shared.runningApplications
-            .compactMap(\.bundleIdentifier)
+            .compactMap(\.workspaceBundleIdentifier)
             .asSet
 
         workspace.apps
@@ -301,7 +301,7 @@ final class WorkspaceManager: ObservableObject {
                 !runningBundleIds.contains($0.bundleIdentifier) &&
                     $0.autoOpen == true
             }
-            .compactMap { NSWorkspace.shared.urlForApplication(withBundleIdentifier: $0.bundleIdentifier) }
+            .compactMap { RunningAppIdentity.applicationURL(for: $0.bundleIdentifier) }
             .forEach { appUrl in
                 Logger.log("Open App: \(appUrl)")
 
@@ -592,7 +592,7 @@ extension WorkspaceManager {
 
         if skipEmpty {
             let runningApps = NSWorkspace.shared.runningRegularApps
-                .compactMap(\.bundleIdentifier)
+                .compactMap(\.workspaceBundleIdentifier)
                 .asSet
 
             selectedWorkspace = (nextWorkspaces + (loop ? workspacesToLoop : []))

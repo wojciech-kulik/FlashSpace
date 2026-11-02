@@ -13,7 +13,7 @@ extension [MacApp] {
     }
 
     func firstIndex(of app: NSRunningApplication) -> Int? {
-        firstIndex { $0.bundleIdentifier == app.bundleIdentifier }
+        firstIndex { $0.bundleIdentifier == app.workspaceBundleIdentifier }
     }
 
     func containsApp(with bundleIdentifier: BundleId?) -> Bool {
@@ -21,6 +21,6 @@ extension [MacApp] {
     }
 
     func containsApp(_ app: NSRunningApplication) -> Bool {
-        contains { $0.bundleIdentifier == app.bundleIdentifier }
+        contains { $0.bundleIdentifier == app.workspaceBundleIdentifier }
     }
 }

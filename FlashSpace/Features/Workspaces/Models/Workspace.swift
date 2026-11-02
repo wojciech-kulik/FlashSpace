@@ -82,7 +82,7 @@ extension Workspace {
 extension [Workspace] {
     func skipWithoutRunningApps() -> [Workspace] {
         let runningBundleIds = NSWorkspace.shared.runningRegularApps
-            .compactMap(\.bundleIdentifier)
+            .compactMap(\.workspaceBundleIdentifier)
             .asSet
 
         return filter {

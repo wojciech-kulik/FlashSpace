@@ -22,7 +22,7 @@ final class WorkspaceSettingsViewModel: ObservableObject {
         settings.addCornerHiddenApp(
             CornerHiddenApp(
                 name: bundle.localizedAppName,
-                bundleIdentifier: bundle.bundleIdentifier ?? ""
+                bundleIdentifier: appUrl.flatMap { RunningAppIdentity.identifier(for: $0) } ?? ""
             )
         )
     }
