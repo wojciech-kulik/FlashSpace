@@ -6,12 +6,12 @@ enum RunningAppIdentity {
     struct Launcher {
         let id: String
         let target: String
-        let home: String
+        let home: String?
         let dataDirectory: String?
     }
 
     private static var copies: [String: String] = [:]
-    private static var launchers: [Launcher] = []
+    private static var launchers: [String: [Launcher]] = [:]
     private static var refreshed = Date.distantPast
     private static var cache: [pid_t: (Date, String)] = [:]
 
@@ -19,30 +19,29 @@ enum RunningAppIdentity {
         guard let original = app.bundleIdentifier else { return nil }
         let now = Date()
         if now.timeIntervalSince(refreshed) > 5 {
-            launchers = discoverLaunchers()
+            launchers = Dictionary(grouping: discoverLaunchers(), by: \.target)
             refreshed = now
             cache.removeAll()
         }
-        guard launchers.contains(where: { $0.target == original }) else { return app.bundleURL.flatMap { copies[$0.standardizedFileURL.path] } ?? original }
+        let fallback = app.bundleURL.flatMap { copies[$0.standardizedFileURL.path] } ?? original
+        guard let candidates = launchers[original] else { return fallback }
         if let entry = cache[app.processIdentifier], now.timeIntervalSince(entry.0) < 1 { return entry.1 }
         let bytes = processBytes(pid: app.processIdentifier) ?? []
         let home = home(in: bytes)
         let arguments = arguments(in: bytes)
-        let selected = launcherIdentifier(target: original, home: home, arguments: arguments, launchers: launchers)
-        let id = selected ?? app.bundleURL.flatMap { copies[$0.standardizedFileURL.path] } ?? original
+        let selected = launcherIdentifier(target: original, home: home, arguments: arguments, launchers: candidates)
+        let id = selected ?? fallback
         cache[app.processIdentifier] = (now, id)
         return id
     }
 
     static func launcherIdentifier(target: String, home: String?, arguments: [String], launchers: [Launcher]) -> String? {
-        let matches = launchers.filter { launcher in
-            guard launcher.target == target else { return false }
-            if let data = launcher.dataDirectory {
-                return arguments.contains("--user-data-dir=\(data)") ||
-                    zip(arguments, arguments.dropFirst()).contains { $0 == "--user-data-dir" && $1 == data }
-            }
-            return launcher.home == home
-        }
+        let candidates = launchers.filter { $0.target == target }
+        let dataDirectory = ParallShortcut.profileDirectory(in: arguments)
+        let profileMatches = candidates.filter { $0.dataDirectory != nil && $0.dataDirectory == dataDirectory }
+        let matches = profileMatches.isEmpty
+            ? candidates.filter { $0.dataDirectory == nil && $0.home != nil && $0.home == home }
+            : profileMatches
         return matches.count == 1 ? matches[0].id : nil
     }
 
@@ -57,14 +56,9 @@ enum RunningAppIdentity {
                 guard let bundle = Bundle(url: url), let info = bundle.infoDictionary,
                       let id = bundle.bundleIdentifier else { continue }
                 bundles[id, default: []].append(url)
-                guard
-                      let target = info["ParallAppBundleId"] as? String,
-                      let home = info["ParallHomeDirectory"] as? String, !home.isEmpty else { continue }
-                let arguments = info["ParallArguments"] as? String ?? ""
-                let storage = info["ParallDataStorage"] as? String
-                let data = storage.map { $0 + "/data" }
-                let usesData = data.map { arguments.contains("--user-data-dir=\"\($0)\"") || arguments == "--user-data-dir=\($0)" } ?? false
-                result.append(Launcher(id: id, target: target, home: home, dataDirectory: usesData ? data : nil))
+                if let launcher = ParallShortcut.launcher(id: id, info: info) {
+                    result.append(launcher)
+                }
             }
             return result
         }
@@ -87,7 +81,7 @@ enum RunningAppIdentity {
 
     static func identifier(for url: URL) -> String? {
         if Date().timeIntervalSince(refreshed) > 5 {
-            launchers = discoverLaunchers()
+            launchers = Dictionary(grouping: discoverLaunchers(), by: \.target)
             refreshed = Date()
             cache.removeAll()
         }

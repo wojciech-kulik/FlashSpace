@@ -25,7 +25,30 @@ let homeLauncher = RunningAppIdentity.Launcher(id: "home", target: "cursor", hom
 assert(RunningAppIdentity.launcherIdentifier(target: "cursor", home: home, arguments: [], launchers: [homeLauncher]) == "home")
 let argv = ["Cursor", "--user-data-dir=/path with spaces"]
 assert(RunningAppIdentity.arguments(in: buffer(arguments: argv, environment: ["HOME=/normal"])) == argv)
-for app in NSWorkspace.shared.runningApplications where app.bundleIdentifier == "com.todesktop.230313mzl4w4u92" {
-    print("Cursor PID \(app.processIdentifier): \(app.workspaceBundleIdentifier ?? "unknown")")
+let claudeTarget = "com.anthropic.claudefordesktop"
+let cursorTarget = "com.todesktop.230313mzl4w4u92"
+let claudePath = "/profiles/Claude 2"
+let cursorPath = "/profiles/Cursor 2/data"
+let claude = ParallShortcut.launcher(id: "claude-copy", info: [
+    "ParallAppBundleId": claudeTarget,
+    "ParallHomeDirectory": "",
+    "ParallArguments": "--user-data-dir=\"\(claudePath)\""
+])!
+let cursor = ParallShortcut.launcher(id: "cursor-copy", info: [
+    "ParallAppBundleId": cursorTarget,
+    "ParallHomeDirectory": home,
+    "ParallArguments": "--other-flag --user-data-dir '\(cursorPath)'"
+])!
+assert(RunningAppIdentity.launcherIdentifier(
+    target: claudeTarget, home: nil, arguments: ["--user-data-dir=\(claudePath)"], launchers: [claude, cursor]
+) == "claude-copy")
+assert(RunningAppIdentity.launcherIdentifier(
+    target: cursorTarget, home: home, arguments: ["--user-data-dir=\(cursorPath)"], launchers: [claude, cursor]
+) == "cursor-copy")
+assert(RunningAppIdentity.launcherIdentifier(
+    target: claudeTarget, home: nil, arguments: [], launchers: [claude]
+) == nil)
+for app in NSWorkspace.shared.runningApplications where app.activationPolicy == .regular && [claudeTarget, cursorTarget].contains(app.bundleIdentifier ?? "") {
+    print("\(app.localizedName ?? "App") PID \(app.processIdentifier): \(app.workspaceBundleIdentifier ?? "unknown")")
 }
 print("Instance identity checks passed")
