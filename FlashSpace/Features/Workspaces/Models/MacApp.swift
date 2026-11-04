@@ -29,8 +29,15 @@ struct MacApp: Codable, Hashable, Equatable {
 
     init(app: NSRunningApplication) {
         self.name = app.localizedName ?? ""
-        self.bundleIdentifier = app.bundleIdentifier ?? ""
+        self.bundleIdentifier = app.workspaceBundleIdentifier ?? ""
         self.iconPath = app.iconPath
+        if self.bundleIdentifier != app.bundleIdentifier,
+           let url = RunningAppIdentity.applicationURL(for: self.bundleIdentifier),
+           let bundle = Bundle(url: url) {
+            self.name = bundle.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String
+                ?? url.deletingPathExtension().lastPathComponent
+            self.iconPath = url.iconPath
+        }
     }
 
     init(from decoder: any Decoder) throws {
@@ -42,7 +49,7 @@ struct MacApp: Codable, Hashable, Equatable {
             self.name = app
 
             if let runningApp {
-                self.bundleIdentifier = runningApp.bundleIdentifier ?? ""
+                self.bundleIdentifier = runningApp.workspaceBundleIdentifier ?? ""
                 self.iconPath = runningApp.iconPath
             } else if let bundle = Bundle(path: "/Applications/\(app).app") {
                 self.bundleIdentifier = bundle.bundleIdentifier ?? ""

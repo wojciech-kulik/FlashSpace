@@ -249,8 +249,8 @@ extension MainViewModel {
         guard let appUrl else { return }
 
         let appName = appUrl.appName
-        let appBundleId = appUrl.bundleIdentifier ?? ""
-        let runningApp = NSWorkspace.shared.runningApplications.first { $0.bundleIdentifier == appBundleId }
+        let appBundleId = RunningAppIdentity.identifier(for: appUrl) ?? ""
+        let runningApp = NSWorkspace.shared.runningApplications.first { $0.workspaceBundleIdentifier == appBundleId }
         let isAgent = appUrl.bundle?.isAgent == true && (runningApp == nil || runningApp?.activationPolicy != .regular)
 
         guard !isAgent else {

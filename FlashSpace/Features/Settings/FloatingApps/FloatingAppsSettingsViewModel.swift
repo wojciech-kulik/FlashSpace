@@ -16,7 +16,7 @@ final class FloatingAppsSettingsViewModel: ObservableObject {
         settings.addFloatingAppIfNeeded(
             app: .init(
                 name: bundle.localizedAppName,
-                bundleIdentifier: bundle.bundleIdentifier ?? "",
+                bundleIdentifier: appUrl.flatMap { RunningAppIdentity.identifier(for: $0) } ?? "",
                 iconPath: bundle.iconPath,
                 autoOpen: nil
             )

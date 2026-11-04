@@ -16,13 +16,13 @@ extension [NSRunningApplication] {
     func find(_ app: MacApp?) -> NSRunningApplication? {
         guard let app else { return nil }
 
-        return first { $0.bundleIdentifier == app.bundleIdentifier }
+        return first { $0.workspaceBundleIdentifier == app.bundleIdentifier }
     }
 
     func findFirstMatch(with apps: [MacApp]) -> NSRunningApplication? {
         let bundleIdentifiers = apps.map(\.bundleIdentifier).asSet
 
-        return first { bundleIdentifiers.contains($0.bundleIdentifier ?? "") }
+        return first { bundleIdentifiers.contains($0.workspaceBundleIdentifier ?? "") }
     }
 
     func excludeFloatingAppsOnDifferentScreen() -> [NSRunningApplication] {
